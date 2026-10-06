@@ -1,0 +1,54 @@
+name: route_ticket
+
+fields:
+  subject:        { type: text,   required: true,  max_chars: 300,  author: customer }
+  body:           { type: text,   required: true,  max_chars: 3000, truncate: middle, author: customer }
+  product:        { type: text,   source: crm }
+  payment.status: { type: enum,   values: [pending, settled, failed], source: payments }
+
+reads: [subject, body]
+
+facts:
+  legal_threat:
+    check: The customer threatens legal action against us.
+    excludes: [quoting someone else's threat, merely mentioning a lawyer]
+    target: 0.98
+    examples:
+      - { input: { subject: Final notice, body: My lawyer will file suit on Monday. }, value: true }
+      - { input: { subject: Question, body: My lawyer asked me to request an invoice. }, value: false }
+
+  refund_requested:
+    check: The customer asks to receive money back for a charge.
+    excludes: [asking about future prices]
+
+  disputes_payment_status:
+    reads: [body, payment.status]
+    check: The customer disputes the recorded payment status.
+
+  topic:
+    pick: What is the message mainly about?
+    options:
+      billing:   charges, invoices, payments, plans
+      technical: the product is broken, erroring, slow or unavailable
+      account:   login, profile, access, data
+      hardware:
+        description: a physical device is damaged or not working
+        requires: product in ["router", "modem"]
+    allow_none: true
+
+  urgency:
+    rate: How urgent is the customer's situation?
+    levels: [can wait, today, immediately]
+
+cases:
+  - { id: legal,           when: legal_threat,                                       then: legal }
+  - { id: refund_settled,  when: 'refund_requested and payment.status == "settled"', then: refund_review }
+  - { id: payment_dispute, when: exists(payment.status) and disputes_payment_status, then: billing_escalation }
+  - { id: refund_other,    when: refund_requested,                                   then: billing }
+  - { id: tech_urgent,     when: 'topic == "technical" and urgency >= "today"',      then: tech_priority }
+  - { id: tech,            when: 'topic == "technical" or topic == "hardware"',      then: tech }
+otherwise: general
+
+tests:
+  - input: { subject: Complaint, body: "Broken again. Refund me or my lawyer will file a lawsuit." }
+    expect: legal

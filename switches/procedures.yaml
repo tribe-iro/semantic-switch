@@ -1,0 +1,28 @@
+name: procedures
+
+fields:
+  machine: { type: text, required: true }
+  active_alarms: { type: json }
+  report: { type: text, required: true, author: technician }
+
+reads: [machine, active_alarms, report]
+
+facts:
+  procedures:
+    select: Which maintenance procedures apply to this situation?
+    catalog: procedures.cards.yaml
+    max_claims: 8
+  leak:
+    check: There is a visible hydraulic leak.
+    unstated: true
+    reads: [report]
+
+cases:
+  - { id: emergency, when: 'procedures has "P09"', then: emergency_shutdown }
+  - { id: leak_first, when: 'leak and not procedures has "P03"', then: inspect_leak }
+  - { id: repair, when: not procedures is empty, then: follow_procedure }
+otherwise: no_procedure
+
+tests:
+  - input: { machine: MX-120A, active_alarms: [E17], report: "MX-120A won't start after restarting and shows E17. No leak." }
+    expect: follow_procedure

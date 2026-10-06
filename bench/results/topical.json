@@ -1,0 +1,68 @@
+{
+  "judge": {
+    "accuracy": 1.0,
+    "settled": 80,
+    "wrong": 0,
+    "ms": 457.8
+  },
+  "embedding@10": {
+    "head_accuracy": 0.537,
+    "threshold": null,
+    "head_settled": 0,
+    "head_wrong": 0,
+    "cascade_settled": 80,
+    "cascade_wrong": 0,
+    "judge_calls": 1.0,
+    "cascade_ms": 462.3
+  },
+  "lexical@10": {
+    "head_accuracy": 0.762,
+    "threshold": 0.5,
+    "head_settled": 7,
+    "head_wrong": 0,
+    "cascade_settled": 80,
+    "cascade_wrong": 0,
+    "judge_calls": 0.912,
+    "cascade_ms": 417.9
+  },
+  "embedding@30": {
+    "head_accuracy": 0.55,
+    "threshold": null,
+    "head_settled": 0,
+    "head_wrong": 0,
+    "cascade_settled": 80,
+    "cascade_wrong": 0,
+    "judge_calls": 1.0,
+    "cascade_ms": 462.3
+  },
+  "lexical@30": {
+    "head_accuracy": 0.762,
+    "threshold": 0.5,
+    "head_settled": 21,
+    "head_wrong": 0,
+    "cascade_settled": 80,
+    "cascade_wrong": 0,
+    "judge_calls": 0.738,
+    "cascade_ms": 337.8
+  },
+  "embedding@100": {
+    "head_accuracy": 0.525,
+    "threshold": 0.5,
+    "head_settled": 7,
+    "head_wrong": 0,
+    "cascade_settled": 80,
+    "cascade_wrong": 0,
+    "judge_calls": 0.912,
+    "cascade_ms": 422.2
+  },
+  "lexical@100": {
+    "head_accuracy": 0.738,
+    "threshold": 0.5,
+    "head_settled": 48,
+    "head_wrong": 3,
+    "cascade_settled": 80,
+    "cascade_wrong": 3,
+    "judge_calls": 0.4,
+    "cascade_ms": 183.3
+  }
+}

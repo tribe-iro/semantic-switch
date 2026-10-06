@@ -1,0 +1,594 @@
+{
+  "summary": {
+    "Qwen3-0.6B-Q4_K_M": {
+      "model": "Qwen3-0.6B-Q4_K_M",
+      "adapter": "chat@1:5da44855",
+      "file_mb": 378,
+      "rss_mb": 1482,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.738,
+      "pair_ordering": 0.892,
+      "auc": 0.845,
+      "brier": 0.184,
+      "ece": 0.065,
+      "coverage_0.9": 0.138,
+      "precision_0.9": 0.97,
+      "pick_accuracy": 0.833,
+      "ms_p50": 138.3,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 0.68,
+        "double_negation": 0.79,
+        "exception": 1.0,
+        "hypothetical": 0.7,
+        "implicit": 0.8,
+        "keyword": 0.79,
+        "negation": 0.73,
+        "plain": 0.88,
+        "reported": 0.58,
+        "role": 0.73,
+        "temporal": 0.65
+      },
+      "by_lang": {
+        "en": 0.75,
+        "pt": 0.72
+      },
+      "at_95": {
+        "coverage": 0.071,
+        "precision": 0.882
+      }
+    },
+    "Qwen3-0.6B-Q8_0": {
+      "model": "Qwen3-0.6B-Q8_0",
+      "adapter": "chat@1:57f1fd00",
+      "file_mb": 610,
+      "rss_mb": 1648,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.692,
+      "pair_ordering": 0.908,
+      "auc": 0.846,
+      "brier": 0.196,
+      "ece": 0.145,
+      "coverage_0.9": 0.358,
+      "precision_0.9": 0.895,
+      "pick_accuracy": 0.792,
+      "ms_p50": 179.3,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 0.64,
+        "double_negation": 0.64,
+        "exception": 0.83,
+        "hypothetical": 0.7,
+        "implicit": 0.65,
+        "keyword": 0.68,
+        "negation": 0.8,
+        "plain": 0.88,
+        "reported": 0.67,
+        "role": 0.62,
+        "temporal": 0.65
+      },
+      "by_lang": {
+        "en": 0.71,
+        "pt": 0.68
+      },
+      "at_95": {
+        "coverage": 0.15,
+        "precision": 0.944
+      }
+    },
+    "Qwen3-1.7B-Q4_K_M": {
+      "model": "Qwen3-1.7B-Q4_K_M",
+      "adapter": "chat@1:8428c815",
+      "file_mb": 1056,
+      "rss_mb": 2731,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.762,
+      "pair_ordering": 0.917,
+      "auc": 0.89,
+      "brier": 0.216,
+      "ece": 0.217,
+      "coverage_0.9": 0.917,
+      "precision_0.9": 0.795,
+      "pick_accuracy": 0.958,
+      "ms_p50": 348.5,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 0.71,
+        "double_negation": 0.64,
+        "exception": 0.83,
+        "hypothetical": 0.7,
+        "implicit": 0.85,
+        "keyword": 0.74,
+        "negation": 0.73,
+        "plain": 1.0,
+        "reported": 0.67,
+        "role": 0.65,
+        "temporal": 0.85
+      },
+      "by_lang": {
+        "en": 0.82,
+        "pt": 0.71
+      },
+      "at_95": {
+        "coverage": 0.0,
+        "precision": null
+      }
+    },
+    "Qwen3-1.7B-Q8_0": {
+      "model": "Qwen3-1.7B-Q8_0",
+      "adapter": "chat@1:57f1fd00",
+      "file_mb": 1749,
+      "rss_mb": 2793,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.842,
+      "pair_ordering": 0.925,
+      "auc": 0.925,
+      "brier": 0.155,
+      "ece": 0.16,
+      "coverage_0.9": 0.967,
+      "precision_0.9": 0.845,
+      "pick_accuracy": 0.917,
+      "ms_p50": 438.6,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 0.86,
+        "double_negation": 0.86,
+        "exception": 1.0,
+        "hypothetical": 0.8,
+        "implicit": 1.0,
+        "keyword": 0.84,
+        "negation": 0.87,
+        "plain": 1.0,
+        "reported": 0.67,
+        "role": 0.65,
+        "temporal": 0.82
+      },
+      "by_lang": {
+        "en": 0.87,
+        "pt": 0.82
+      },
+      "at_95": {
+        "coverage": 0.0,
+        "precision": null
+      }
+    },
+    "Qwen3.5-0.8B-Q4_0": {
+      "model": "Qwen3.5-0.8B-Q4_0",
+      "adapter": "chat@1:273d8e0e",
+      "file_mb": 537,
+      "rss_mb": 1426,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.675,
+      "pair_ordering": 0.808,
+      "auc": 0.782,
+      "brier": 0.211,
+      "ece": 0.098,
+      "coverage_0.9": 0.296,
+      "precision_0.9": 0.887,
+      "pick_accuracy": 0.625,
+      "ms_p50": 255.9,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 0.86,
+        "double_negation": 0.79,
+        "exception": 0.5,
+        "hypothetical": 0.6,
+        "implicit": 0.5,
+        "keyword": 0.63,
+        "negation": 0.7,
+        "plain": 0.81,
+        "reported": 0.58,
+        "role": 0.69,
+        "temporal": 0.62
+      },
+      "by_lang": {
+        "en": 0.68,
+        "pt": 0.68
+      },
+      "at_95": {
+        "coverage": 0.146,
+        "precision": 0.857
+      }
+    },
+    "Qwen3.5-0.8B-Q4_K_M": {
+      "model": "Qwen3.5-0.8B-Q4_K_M",
+      "adapter": "chat@1:7f0e5290",
+      "file_mb": 508,
+      "rss_mb": 1443,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.771,
+      "pair_ordering": 0.85,
+      "auc": 0.834,
+      "brier": 0.169,
+      "ece": 0.084,
+      "coverage_0.9": 0.292,
+      "precision_0.9": 0.914,
+      "pick_accuracy": 0.625,
+      "ms_p50": 363.3,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 0.79,
+        "double_negation": 0.93,
+        "exception": 1.0,
+        "hypothetical": 0.5,
+        "implicit": 0.8,
+        "keyword": 0.76,
+        "negation": 0.87,
+        "plain": 0.88,
+        "reported": 0.67,
+        "role": 0.69,
+        "temporal": 0.7
+      },
+      "by_lang": {
+        "en": 0.78,
+        "pt": 0.76
+      },
+      "at_95": {
+        "coverage": 0.212,
+        "precision": 0.961
+      }
+    },
+    "Qwen3.5-0.8B-Q8_0": {
+      "model": "Qwen3.5-0.8B-Q8_0",
+      "adapter": "chat@1:273d8e0e",
+      "file_mb": 795,
+      "rss_mb": 1655,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.713,
+      "pair_ordering": 0.817,
+      "auc": 0.796,
+      "brier": 0.203,
+      "ece": 0.117,
+      "coverage_0.9": 0.35,
+      "precision_0.9": 0.833,
+      "pick_accuracy": 0.667,
+      "ms_p50": 414.5,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 0.68,
+        "double_negation": 0.86,
+        "exception": 0.67,
+        "hypothetical": 0.5,
+        "implicit": 0.65,
+        "keyword": 0.68,
+        "negation": 0.83,
+        "plain": 0.88,
+        "reported": 0.67,
+        "role": 0.69,
+        "temporal": 0.68
+      },
+      "by_lang": {
+        "en": 0.74,
+        "pt": 0.68
+      },
+      "at_95": {
+        "coverage": 0.154,
+        "precision": 0.919
+      }
+    },
+    "Qwen3.5-2B-Q4_K_M": {
+      "model": "Qwen3.5-2B-Q4_K_M",
+      "adapter": "chat@1:7f0e5290",
+      "file_mb": 1222,
+      "rss_mb": 2389,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.779,
+      "pair_ordering": 0.992,
+      "auc": 0.956,
+      "brier": 0.141,
+      "ece": 0.107,
+      "coverage_0.9": 0.667,
+      "precision_0.9": 0.931,
+      "pick_accuracy": 0.917,
+      "ms_p50": 573.4,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 0.64,
+        "double_negation": 0.86,
+        "exception": 0.83,
+        "hypothetical": 0.6,
+        "implicit": 0.85,
+        "keyword": 0.84,
+        "negation": 0.73,
+        "plain": 1.0,
+        "reported": 0.58,
+        "role": 0.77,
+        "temporal": 0.8
+      },
+      "by_lang": {
+        "en": 0.8,
+        "pt": 0.76
+      },
+      "at_95": {
+        "coverage": 0.396,
+        "precision": 0.884
+      }
+    },
+    "Qwen3.5-2B-Q8_0": {
+      "model": "Qwen3.5-2B-Q8_0",
+      "adapter": "chat@1:7f0e5290",
+      "file_mb": 1919,
+      "rss_mb": 2754,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.896,
+      "pair_ordering": 0.975,
+      "auc": 0.954,
+      "brier": 0.083,
+      "ece": 0.044,
+      "coverage_0.9": 0.683,
+      "precision_0.9": 0.945,
+      "pick_accuracy": 0.917,
+      "ms_p50": 688.2,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 0.86,
+        "double_negation": 1.0,
+        "exception": 1.0,
+        "hypothetical": 0.8,
+        "implicit": 1.0,
+        "keyword": 0.92,
+        "negation": 0.83,
+        "plain": 1.0,
+        "reported": 0.92,
+        "role": 0.88,
+        "temporal": 0.82
+      },
+      "by_lang": {
+        "en": 0.92,
+        "pt": 0.88
+      },
+      "at_95": {
+        "coverage": 0.475,
+        "precision": 0.904
+      }
+    },
+    "gemma-3-1b-it-Q8_0": {
+      "model": "gemma-3-1b-it-Q8_0",
+      "adapter": "chat@1:7de1c58e",
+      "file_mb": 1020,
+      "rss_mb": 1313,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.7,
+      "pair_ordering": 0.875,
+      "auc": 0.79,
+      "brier": 0.289,
+      "ece": 0.289,
+      "coverage_0.9": 0.958,
+      "precision_0.9": 0.709,
+      "pick_accuracy": 0.875,
+      "ms_p50": 301.1,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 0.68,
+        "double_negation": 0.71,
+        "exception": 1.0,
+        "hypothetical": 0.8,
+        "implicit": 0.6,
+        "keyword": 0.79,
+        "negation": 0.77,
+        "plain": 0.81,
+        "reported": 0.58,
+        "role": 0.62,
+        "temporal": 0.6
+      },
+      "by_lang": {
+        "en": 0.73,
+        "pt": 0.67
+      },
+      "at_95": {
+        "coverage": 0.0,
+        "precision": null
+      }
+    },
+    "gemma-4-E2B-it-Q4_0": {
+      "model": "gemma-4-E2B-it-Q4_0",
+      "adapter": "chat@1:0a2c8073",
+      "file_mb": 2710,
+      "rss_mb": 3834,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.95,
+      "pair_ordering": 0.992,
+      "auc": 0.986,
+      "brier": 0.04,
+      "ece": 0.038,
+      "coverage_0.9": 0.921,
+      "precision_0.9": 0.977,
+      "pick_accuracy": 0.958,
+      "ms_p50": 269.6,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 1.0,
+        "double_negation": 1.0,
+        "exception": 0.83,
+        "hypothetical": 0.9,
+        "implicit": 1.0,
+        "keyword": 0.95,
+        "negation": 0.9,
+        "plain": 1.0,
+        "reported": 0.92,
+        "role": 0.96,
+        "temporal": 0.93
+      },
+      "by_lang": {
+        "en": 0.97,
+        "pt": 0.93
+      },
+      "at_95": {
+        "coverage": 0.971,
+        "precision": 0.961
+      }
+    },
+    "gemma-4-E2B-it-Q8_0": {
+      "model": "gemma-4-E2B-it-Q8_0",
+      "adapter": "chat@1:0a2c8073",
+      "file_mb": 4737,
+      "rss_mb": 4987,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.963,
+      "pair_ordering": 0.992,
+      "auc": 0.991,
+      "brier": 0.038,
+      "ece": 0.041,
+      "coverage_0.9": 0.988,
+      "precision_0.9": 0.962,
+      "pick_accuracy": 0.917,
+      "ms_p50": 479.1,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 1.0,
+        "double_negation": 1.0,
+        "exception": 1.0,
+        "hypothetical": 0.9,
+        "implicit": 1.0,
+        "keyword": 0.95,
+        "negation": 0.93,
+        "plain": 1.0,
+        "reported": 0.92,
+        "role": 0.96,
+        "temporal": 0.95
+      },
+      "by_lang": {
+        "en": 0.97,
+        "pt": 0.95
+      },
+      "at_95": {
+        "coverage": 1.0,
+        "precision": 0.963
+      }
+    },
+    "gemma-4-E2B_q4_0-it": {
+      "model": "gemma-4-E2B_q4_0-it",
+      "adapter": "chat@1:0a2c8073",
+      "file_mb": 3194,
+      "rss_mb": 4225,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.942,
+      "pair_ordering": 0.992,
+      "auc": 0.986,
+      "brier": 0.039,
+      "ece": 0.041,
+      "coverage_0.9": 0.921,
+      "precision_0.9": 0.977,
+      "pick_accuracy": 0.958,
+      "ms_p50": 264.9,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 1.0,
+        "double_negation": 1.0,
+        "exception": 0.83,
+        "hypothetical": 0.9,
+        "implicit": 1.0,
+        "keyword": 0.95,
+        "negation": 0.9,
+        "plain": 1.0,
+        "reported": 0.83,
+        "role": 0.92,
+        "temporal": 0.93
+      },
+      "by_lang": {
+        "en": 0.96,
+        "pt": 0.93
+      },
+      "at_95": {
+        "coverage": 0.988,
+        "precision": 0.949
+      }
+    },
+    "gemma-4-E4B_q4_0-it": {
+      "model": "gemma-4-E4B_q4_0-it",
+      "adapter": "chat@1:0a2c8073",
+      "file_mb": 4916,
+      "rss_mb": 7481,
+      "suite": "1",
+      "items": 240,
+      "accuracy": 0.975,
+      "pair_ordering": 1.0,
+      "auc": 0.994,
+      "brier": 0.021,
+      "ece": 0.018,
+      "coverage_0.9": 0.95,
+      "precision_0.9": 0.987,
+      "pick_accuracy": 0.958,
+      "ms_p50": 525.2,
+      "errors": 0,
+      "by_tag": {
+        "contrast": 1.0,
+        "double_negation": 1.0,
+        "exception": 1.0,
+        "hypothetical": 1.0,
+        "implicit": 1.0,
+        "keyword": 0.95,
+        "negation": 1.0,
+        "plain": 1.0,
+        "reported": 0.92,
+        "role": 0.88,
+        "temporal": 1.0
+      },
+      "by_lang": {
+        "en": 0.97,
+        "pt": 0.97
+      },
+      "at_95": {
+        "coverage": 1.0,
+        "precision": 0.975
+      }
+    }
+  },
+  "quantisation_shift": {
+    "Qwen3-0.6B-Q4_K_M vs Qwen3-0.6B-Q8_0": {
+      "mean_abs_dp": 0.101,
+      "p95_abs_dp": 0.267,
+      "flips_0.5": 27,
+      "settle_changes_0.9": 57
+    },
+    "Qwen3-1.7B-Q4_K_M vs Qwen3-1.7B-Q8_0": {
+      "mean_abs_dp": 0.113,
+      "p95_abs_dp": 0.902,
+      "flips_0.5": 29,
+      "settle_changes_0.9": 39
+    },
+    "Qwen3.5-0.8B-Q4_0 vs Qwen3.5-0.8B-Q8_0": {
+      "mean_abs_dp": 0.272,
+      "p95_abs_dp": 0.557,
+      "flips_0.5": 93,
+      "settle_changes_0.9": 95
+    },
+    "Qwen3.5-0.8B-Q4_K_M vs Qwen3.5-0.8B-Q8_0": {
+      "mean_abs_dp": 0.092,
+      "p95_abs_dp": 0.254,
+      "flips_0.5": 26,
+      "settle_changes_0.9": 44
+    },
+    "Qwen3.5-2B-Q4_K_M vs Qwen3.5-2B-Q8_0": {
+      "mean_abs_dp": 0.114,
+      "p95_abs_dp": 0.476,
+      "flips_0.5": 34,
+      "settle_changes_0.9": 58
+    },
+    "gemma-4-E2B-it-Q4_0 vs gemma-4-E2B-it-Q8_0": {
+      "mean_abs_dp": 0.035,
+      "p95_abs_dp": 0.179,
+      "flips_0.5": 5,
+      "settle_changes_0.9": 16
+    },
+    "gemma-4-E2B_q4_0-it vs gemma-4-E2B-it-Q8_0": {
+      "mean_abs_dp": 0.035,
+      "p95_abs_dp": 0.186,
+      "flips_0.5": 7,
+      "settle_changes_0.9": 18
+    }
+  }
+}

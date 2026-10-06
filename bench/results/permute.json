@@ -1,0 +1,44 @@
+{
+ "selection": {
+  "n": 24,
+  "one_order": {
+   "settled": 22,
+   "wrong": 1
+  },
+  "two_orders": {
+   "settled": 21,
+   "wrong": 1
+  },
+  "top_answer_flips_with_order": 0,
+  "ms_one": 456.1,
+  "ms_two": 624.5
+ },
+ "fresh": {
+  "n": 20,
+  "one_order": {
+   "settled": 20,
+   "wrong": 0
+  },
+  "two_orders": {
+   "settled": 20,
+   "wrong": 0
+  },
+  "top_answer_flips_with_order": 0,
+  "ms_one": 594.0,
+  "ms_two": 835.4
+ },
+ "selection-20": {
+  "n": 24,
+  "one_order": {
+   "settled": 23,
+   "wrong": 0
+  },
+  "two_orders": {
+   "settled": 20,
+   "wrong": 0
+  },
+  "top_answer_flips_with_order": 1,
+  "ms_one": 1044.6,
+  "ms_two": 1737.9
+ }
+}

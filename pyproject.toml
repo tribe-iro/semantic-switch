@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "semantic-switch"
+version = "0.21.0"
+description = "Language-based judgments inside ordinary code: local, cheap, multilingual."
+requires-python = ">=3.12"
+dependencies = ["numpy", "pyyaml", "pydantic>=2", "typer", "jinja2", "llama-cpp-python>=0.3.30", "huggingface_hub"]
+
+[project.optional-dependencies]
+train = ["scikit-learn", "scipy"]
+dev = ["pytest", "scikit-learn", "scipy"]
+
+[project.scripts]
+ss = "semantic_switch.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["semantic_switch*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: needs the real llama.cpp models"]

@@ -1,0 +1,1003 @@
+{
+ "report": {
+  "1": {
+   "top1": 21,
+   "settled": 23,
+   "wrong_settled": 3,
+   "mean_p": 0.867,
+   "n": 24
+  },
+  "5": {
+   "top1": 24,
+   "settled": 24,
+   "wrong_settled": 0,
+   "mean_p": 0.998,
+   "n": 24
+  },
+  "10": {
+   "top1": 24,
+   "settled": 24,
+   "wrong_settled": 0,
+   "mean_p": 0.996,
+   "n": 24
+  },
+  "15": {
+   "top1": 24,
+   "settled": 24,
+   "wrong_settled": 0,
+   "mean_p": 0.998,
+   "n": 24
+  },
+  "20": {
+   "top1": 24,
+   "settled": 24,
+   "wrong_settled": 0,
+   "mean_p": 0.998,
+   "n": 24
+  },
+  "all_slots_correct": 21,
+  "texts": 24
+ },
+ "rows": [
+  {
+   "text": "I was charged twice for May.",
+   "slot": 1,
+   "top": true,
+   "p": 0.999087138720566,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I was charged twice for May.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9995491505201477,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I was charged twice for May.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9973796365618958,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I was charged twice for May.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9990145295023373,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I was charged twice for May.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9986278397167616,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The app crashes as soon as I open it.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9980547254210085,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The app crashes as soon as I open it.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9988680230170323,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The app crashes as soon as I open it.",
+   "slot": 10,
+   "top": true,
+   "p": 0.997346336420568,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The app crashes as soon as I open it.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9981476441357716,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The app crashes as soon as I open it.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9985018965712827,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I forgot my password and can't get in.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9994552634129354,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I forgot my password and can't get in.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9998896057431857,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I forgot my password and can't get in.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9996203211280527,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I forgot my password and can't get in.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9998186587666688,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I forgot my password and can't get in.",
+   "slot": 20,
+   "top": true,
+   "p": 0.999378576722755,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "My package was due Monday and it's still not here.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9975710719797625,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "My package was due Monday and it's still not here.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9990984455694368,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "My package was due Monday and it's still not here.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9974751501504726,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "My package was due Monday and it's still not here.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9993594765350174,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "My package was due Monday and it's still not here.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9992286217735292,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "What does the pro plan cost per year?",
+   "slot": 1,
+   "top": true,
+   "p": 0.9975731821360895,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "What does the pro plan cost per year?",
+   "slot": 5,
+   "top": true,
+   "p": 0.9981976402214656,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "What does the pro plan cost per year?",
+   "slot": 10,
+   "top": true,
+   "p": 0.9949692317379865,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "What does the pro plan cost per year?",
+   "slot": 15,
+   "top": true,
+   "p": 0.9965446909334962,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "What does the pro plan cost per year?",
+   "slot": 20,
+   "top": true,
+   "p": 0.9976123147864245,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The checkout page throws error 500 when I try to pay.",
+   "slot": 1,
+   "top": false,
+   "p": 0.06880140757242202,
+   "settled": true,
+   "wrong_settled": true
+  },
+  {
+   "text": "The checkout page throws error 500 when I try to pay.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9943208319154623,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The checkout page throws error 500 when I try to pay.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9932376210395889,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The checkout page throws error 500 when I try to pay.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9965832441041038,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The checkout page throws error 500 when I try to pay.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9971866392428707,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I can't log in, so I can't even see my invoices.",
+   "slot": 1,
+   "top": true,
+   "p": 0.7704501722996893,
+   "settled": false,
+   "wrong_settled": false
+  },
+  {
+   "text": "I can't log in, so I can't even see my invoices.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9990440466284883,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I can't log in, so I can't even see my invoices.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9971128092136191,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I can't log in, so I can't even see my invoices.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9982931669102731,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "I can't log in, so I can't even see my invoices.",
+   "slot": 20,
+   "top": true,
+   "p": 0.997623883832873,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The refund you promised still hasn't reached my bank.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9991652345583827,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The refund you promised still hasn't reached my bank.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9975092820227052,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The refund you promised still hasn't reached my bank.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9987887862926329,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The refund you promised still hasn't reached my bank.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9989069543493033,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The refund you promised still hasn't reached my bank.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9978997717031879,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Please update the email on my profile.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9990851162720841,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Please update the email on my profile.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9998851091968034,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Please update the email on my profile.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9994527132758585,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Please update the email on my profile.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9997078242159962,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Please update the email on my profile.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9987272373656323,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The tracking page says delivered but the box isn't here.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9996540553712197,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The tracking page says delivered but the box isn't here.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9997858304945446,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The tracking page says delivered but the box isn't here.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9985659573389023,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The tracking page says delivered but the box isn't here.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9996939381533715,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "The tracking page says delivered but the box isn't here.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9994909243774072,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Is there a discount if I buy ten licenses?",
+   "slot": 1,
+   "top": true,
+   "p": 0.9980812338572796,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Is there a discount if I buy ten licenses?",
+   "slot": 5,
+   "top": true,
+   "p": 0.9984372812591435,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Is there a discount if I buy ten licenses?",
+   "slot": 10,
+   "top": true,
+   "p": 0.9960851741009517,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Is there a discount if I buy ten licenses?",
+   "slot": 15,
+   "top": true,
+   "p": 0.9972296603828495,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Is there a discount if I buy ten licenses?",
+   "slot": 20,
+   "top": true,
+   "p": 0.9981082616708383,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Everything is slow since your update; pages take a minute.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9995153464251338,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Everything is slow since your update; pages take a minute.",
+   "slot": 5,
+   "top": true,
+   "p": 0.999650189781474,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Everything is slow since your update; pages take a minute.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9986204340496352,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Everything is slow since your update; pages take a minute.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9991627511086141,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Everything is slow since your update; pages take a minute.",
+   "slot": 20,
+   "top": true,
+   "p": 0.99886725908949,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Fui cobrado duas vezes em maio.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9984558536445536,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Fui cobrado duas vezes em maio.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9993932220304483,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Fui cobrado duas vezes em maio.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9967471346911267,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Fui cobrado duas vezes em maio.",
+   "slot": 15,
+   "top": true,
+   "p": 0.998598401339498,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Fui cobrado duas vezes em maio.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9977895284873622,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O aplicativo fecha assim que abro.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9940668537383074,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O aplicativo fecha assim que abro.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9982954682606836,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O aplicativo fecha assim que abro.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9964563517248264,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O aplicativo fecha assim que abro.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9973892300820641,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O aplicativo fecha assim que abro.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9973071417925038,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Esqueci minha senha e n\u00e3o consigo entrar.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9992522428684693,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Esqueci minha senha e n\u00e3o consigo entrar.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9998362159468369,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Esqueci minha senha e n\u00e3o consigo entrar.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9994593202059207,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Esqueci minha senha e n\u00e3o consigo entrar.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9997866070658402,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Esqueci minha senha e n\u00e3o consigo entrar.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9992013068542026,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Meu pedido era para segunda e ainda n\u00e3o chegou.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9985898525057655,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Meu pedido era para segunda e ainda n\u00e3o chegou.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9989800232675505,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Meu pedido era para segunda e ainda n\u00e3o chegou.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9964949320671136,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Meu pedido era para segunda e ainda n\u00e3o chegou.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9992411269073908,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Meu pedido era para segunda e ainda n\u00e3o chegou.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9989726852877778,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Quanto custa o plano pro por ano?",
+   "slot": 1,
+   "top": true,
+   "p": 0.9977325867267673,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Quanto custa o plano pro por ano?",
+   "slot": 5,
+   "top": true,
+   "p": 0.9981316962485708,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Quanto custa o plano pro por ano?",
+   "slot": 10,
+   "top": true,
+   "p": 0.9960999026519395,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Quanto custa o plano pro por ano?",
+   "slot": 15,
+   "top": true,
+   "p": 0.9968866542682332,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Quanto custa o plano pro por ano?",
+   "slot": 20,
+   "top": true,
+   "p": 0.997849010145126,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "A p\u00e1gina de pagamento d\u00e1 erro 500 quando tento pagar.",
+   "slot": 1,
+   "top": false,
+   "p": 0.0024856360031979344,
+   "settled": true,
+   "wrong_settled": true
+  },
+  {
+   "text": "A p\u00e1gina de pagamento d\u00e1 erro 500 quando tento pagar.",
+   "slot": 5,
+   "top": true,
+   "p": 0.972674256426023,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "A p\u00e1gina de pagamento d\u00e1 erro 500 quando tento pagar.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9845623958490913,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "A p\u00e1gina de pagamento d\u00e1 erro 500 quando tento pagar.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9906201314206162,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "A p\u00e1gina de pagamento d\u00e1 erro 500 quando tento pagar.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9943805591588526,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "N\u00e3o consigo entrar, ent\u00e3o nem vejo minhas faturas.",
+   "slot": 1,
+   "top": false,
+   "p": 0.010066101465777667,
+   "settled": true,
+   "wrong_settled": true
+  },
+  {
+   "text": "N\u00e3o consigo entrar, ent\u00e3o nem vejo minhas faturas.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9955152992205647,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "N\u00e3o consigo entrar, ent\u00e3o nem vejo minhas faturas.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9875066015600885,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "N\u00e3o consigo entrar, ent\u00e3o nem vejo minhas faturas.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9898661641858083,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "N\u00e3o consigo entrar, ent\u00e3o nem vejo minhas faturas.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9927585018204261,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O estorno prometido ainda n\u00e3o caiu na minha conta.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9988776849186723,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O estorno prometido ainda n\u00e3o caiu na minha conta.",
+   "slot": 5,
+   "top": true,
+   "p": 0.998437191796269,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O estorno prometido ainda n\u00e3o caiu na minha conta.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9982325617367858,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O estorno prometido ainda n\u00e3o caiu na minha conta.",
+   "slot": 15,
+   "top": true,
+   "p": 0.998833450672092,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O estorno prometido ainda n\u00e3o caiu na minha conta.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9979865801839536,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Atualizem o e-mail do meu perfil, por favor.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9987248322220653,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Atualizem o e-mail do meu perfil, por favor.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9997920478626006,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Atualizem o e-mail do meu perfil, por favor.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9992837206858399,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Atualizem o e-mail do meu perfil, por favor.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9996077635142713,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Atualizem o e-mail do meu perfil, por favor.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9984225291987538,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O rastreio diz entregue, mas a caixa n\u00e3o est\u00e1 aqui.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9994767144539467,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O rastreio diz entregue, mas a caixa n\u00e3o est\u00e1 aqui.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9997166999523175,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O rastreio diz entregue, mas a caixa n\u00e3o est\u00e1 aqui.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9982219932366704,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O rastreio diz entregue, mas a caixa n\u00e3o est\u00e1 aqui.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9993589883526479,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "O rastreio diz entregue, mas a caixa n\u00e3o est\u00e1 aqui.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9991454966635364,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Tem desconto se eu comprar dez licen\u00e7as?",
+   "slot": 1,
+   "top": true,
+   "p": 0.9932452125443206,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Tem desconto se eu comprar dez licen\u00e7as?",
+   "slot": 5,
+   "top": true,
+   "p": 0.9961692742817736,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Tem desconto se eu comprar dez licen\u00e7as?",
+   "slot": 10,
+   "top": true,
+   "p": 0.9944557226621822,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Tem desconto se eu comprar dez licen\u00e7as?",
+   "slot": 15,
+   "top": true,
+   "p": 0.995689892658654,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Tem desconto se eu comprar dez licen\u00e7as?",
+   "slot": 20,
+   "top": true,
+   "p": 0.9963812885745092,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Est\u00e1 tudo lento desde a atualiza\u00e7\u00e3o; as p\u00e1ginas levam um minuto.",
+   "slot": 1,
+   "top": true,
+   "p": 0.9988803528920952,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Est\u00e1 tudo lento desde a atualiza\u00e7\u00e3o; as p\u00e1ginas levam um minuto.",
+   "slot": 5,
+   "top": true,
+   "p": 0.9993874264033348,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Est\u00e1 tudo lento desde a atualiza\u00e7\u00e3o; as p\u00e1ginas levam um minuto.",
+   "slot": 10,
+   "top": true,
+   "p": 0.9977538836819438,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Est\u00e1 tudo lento desde a atualiza\u00e7\u00e3o; as p\u00e1ginas levam um minuto.",
+   "slot": 15,
+   "top": true,
+   "p": 0.9988876191737479,
+   "settled": true,
+   "wrong_settled": false
+  },
+  {
+   "text": "Est\u00e1 tudo lento desde a atualiza\u00e7\u00e3o; as p\u00e1ginas levam um minuto.",
+   "slot": 20,
+   "top": true,
+   "p": 0.9983661007203473,
+   "settled": true,
+   "wrong_settled": false
+  }
+ ]
+}

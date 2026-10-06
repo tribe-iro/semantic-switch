@@ -1,0 +1,5875 @@
+{
+  "fictional": true,
+  "cases": [
+    {
+      "id": "AX-410:old_firmware:en",
+      "tag": "old_firmware",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 2,
+        "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+        "pressure_bar": 0.99
+      },
+      "expected": "P0_thermal"
+    },
+    {
+      "id": "AX-410:old_firmware:pt",
+      "tag": "old_firmware",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 2,
+        "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+        "pressure_bar": 0.99
+      },
+      "expected": "P0_thermal"
+    },
+    {
+      "id": "AX-410:new_low_pressure:en",
+      "tag": "new_low_pressure",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+        "pressure_bar": 0.99
+      },
+      "expected": "P0_coolant"
+    },
+    {
+      "id": "AX-410:new_low_pressure:pt",
+      "tag": "new_low_pressure",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+        "pressure_bar": 0.99
+      },
+      "expected": "P0_coolant"
+    },
+    {
+      "id": "AX-410:pressure_boundary:en",
+      "tag": "pressure_boundary",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+        "pressure_bar": 1.0
+      },
+      "expected": "P0_sensor"
+    },
+    {
+      "id": "AX-410:pressure_boundary:pt",
+      "tag": "pressure_boundary",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+        "pressure_bar": 1.0
+      },
+      "expected": "P0_sensor"
+    },
+    {
+      "id": "AX-410:leak_priority:en",
+      "tag": "leak_priority",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "Coolant is dripping from this unit right now. Temperature alarm too. Use the sensor reset, I think.",
+        "pressure_bar": 0.99
+      },
+      "expected": "P0_leak"
+    },
+    {
+      "id": "AX-410:leak_priority:pt",
+      "tag": "leak_priority",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "O l\u00edquido est\u00e1 pingando desta unidade agora. Alarme de temperatura tamb\u00e9m. Acho que deve resetar o sensor.",
+        "pressure_bar": 0.99
+      },
+      "expected": "P0_leak"
+    },
+    {
+      "id": "AX-410:other_unit_past:en",
+      "tag": "other_unit_past",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "Yesterday the AX-401B leaked; this unit has no coolant leak. This unit has a persistent temperature alarm now.",
+        "pressure_bar": 1.01
+      },
+      "expected": "P0_sensor"
+    },
+    {
+      "id": "AX-410:other_unit_past:pt",
+      "tag": "other_unit_past",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "Ontem a AX-401B vazou; esta unidade n\u00e3o tem vazamento. Esta unidade tem um alarme de temperatura persistente agora.",
+        "pressure_bar": 1.01
+      },
+      "expected": "P0_sensor"
+    },
+    {
+      "id": "AX-410:resolved:en",
+      "tag": "resolved",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "The temperature alarm was fixed yesterday. This unit operates normally now. No coolant leak.",
+        "pressure_bar": 0.99
+      },
+      "expected": "NO_PROCEDURE"
+    },
+    {
+      "id": "AX-410:resolved:pt",
+      "tag": "resolved",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "O alarme de temperatura foi resolvido ontem. Esta unidade funciona normalmente agora. Sem vazamento.",
+        "pressure_bar": 0.99
+      },
+      "expected": "NO_PROCEDURE"
+    },
+    {
+      "id": "AX-410:hypothetical:en",
+      "tag": "hypothetical",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "The AX-4100 beside it overheats. This unit is working normally and has no coolant leak. What if it overheats later?",
+        "pressure_bar": 0.99
+      },
+      "expected": "NO_PROCEDURE"
+    },
+    {
+      "id": "AX-410:hypothetical:pt",
+      "tag": "hypothetical",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "A AX-4100 ao lado superaquece. Esta unidade funciona normalmente e n\u00e3o vaza. E se ela superaquecer depois?",
+        "pressure_bar": 0.99
+      },
+      "expected": "NO_PROCEDURE"
+    },
+    {
+      "id": "AX-410:missing_pressure:en",
+      "tag": "missing_pressure",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer."
+      },
+      "expected": "NEEDS_INPUT"
+    },
+    {
+      "id": "AX-410:missing_pressure:pt",
+      "tag": "missing_pressure",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410",
+        "firmware_major": 3,
+        "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o."
+      },
+      "expected": "NEEDS_INPUT"
+    },
+    {
+      "id": "AX-410B:old_firmware:en",
+      "tag": "old_firmware",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 2,
+        "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+        "pressure_bar": 0.99
+      },
+      "expected": "P1_thermal"
+    },
+    {
+      "id": "AX-410B:old_firmware:pt",
+      "tag": "old_firmware",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 2,
+        "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+        "pressure_bar": 0.99
+      },
+      "expected": "P1_thermal"
+    },
+    {
+      "id": "AX-410B:new_low_pressure:en",
+      "tag": "new_low_pressure",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+        "pressure_bar": 0.99
+      },
+      "expected": "P1_coolant"
+    },
+    {
+      "id": "AX-410B:new_low_pressure:pt",
+      "tag": "new_low_pressure",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+        "pressure_bar": 0.99
+      },
+      "expected": "P1_coolant"
+    },
+    {
+      "id": "AX-410B:pressure_boundary:en",
+      "tag": "pressure_boundary",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+        "pressure_bar": 1.0
+      },
+      "expected": "P1_sensor"
+    },
+    {
+      "id": "AX-410B:pressure_boundary:pt",
+      "tag": "pressure_boundary",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+        "pressure_bar": 1.0
+      },
+      "expected": "P1_sensor"
+    },
+    {
+      "id": "AX-410B:leak_priority:en",
+      "tag": "leak_priority",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "Coolant is dripping from this unit right now. Temperature alarm too. Use the sensor reset, I think.",
+        "pressure_bar": 0.99
+      },
+      "expected": "P1_leak"
+    },
+    {
+      "id": "AX-410B:leak_priority:pt",
+      "tag": "leak_priority",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "O l\u00edquido est\u00e1 pingando desta unidade agora. Alarme de temperatura tamb\u00e9m. Acho que deve resetar o sensor.",
+        "pressure_bar": 0.99
+      },
+      "expected": "P1_leak"
+    },
+    {
+      "id": "AX-410B:other_unit_past:en",
+      "tag": "other_unit_past",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "Yesterday the AX-401B leaked; this unit has no coolant leak. This unit has a persistent temperature alarm now.",
+        "pressure_bar": 1.01
+      },
+      "expected": "P1_sensor"
+    },
+    {
+      "id": "AX-410B:other_unit_past:pt",
+      "tag": "other_unit_past",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "Ontem a AX-401B vazou; esta unidade n\u00e3o tem vazamento. Esta unidade tem um alarme de temperatura persistente agora.",
+        "pressure_bar": 1.01
+      },
+      "expected": "P1_sensor"
+    },
+    {
+      "id": "AX-410B:resolved:en",
+      "tag": "resolved",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "The temperature alarm was fixed yesterday. This unit operates normally now. No coolant leak.",
+        "pressure_bar": 0.99
+      },
+      "expected": "NO_PROCEDURE"
+    },
+    {
+      "id": "AX-410B:resolved:pt",
+      "tag": "resolved",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "O alarme de temperatura foi resolvido ontem. Esta unidade funciona normalmente agora. Sem vazamento.",
+        "pressure_bar": 0.99
+      },
+      "expected": "NO_PROCEDURE"
+    },
+    {
+      "id": "AX-410B:hypothetical:en",
+      "tag": "hypothetical",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "The AX-4100 beside it overheats. This unit is working normally and has no coolant leak. What if it overheats later?",
+        "pressure_bar": 0.99
+      },
+      "expected": "NO_PROCEDURE"
+    },
+    {
+      "id": "AX-410B:hypothetical:pt",
+      "tag": "hypothetical",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "A AX-4100 ao lado superaquece. Esta unidade funciona normalmente e n\u00e3o vaza. E se ela superaquecer depois?",
+        "pressure_bar": 0.99
+      },
+      "expected": "NO_PROCEDURE"
+    },
+    {
+      "id": "AX-410B:missing_pressure:en",
+      "tag": "missing_pressure",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer."
+      },
+      "expected": "NEEDS_INPUT"
+    },
+    {
+      "id": "AX-410B:missing_pressure:pt",
+      "tag": "missing_pressure",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410B",
+        "firmware_major": 3,
+        "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o."
+      },
+      "expected": "NEEDS_INPUT"
+    },
+    {
+      "id": "unsupported:en",
+      "tag": "unsupported_machine",
+      "lang": "en",
+      "input": {
+        "machine": "AX-410BX",
+        "firmware_major": 3,
+        "pressure_bar": 0.99,
+        "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer."
+      },
+      "expected": "NO_PROCEDURE"
+    },
+    {
+      "id": "unsupported:pt",
+      "tag": "unsupported_machine",
+      "lang": "pt",
+      "input": {
+        "machine": "AX-410BX",
+        "firmware_major": 3,
+        "pressure_bar": 0.99,
+        "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o."
+      },
+      "expected": "NO_PROCEDURE"
+    }
+  ],
+  "catalogue": [
+    {
+      "id": "P0_thermal",
+      "title": "AX-410 thermal procedure",
+      "aliases": [
+        "AX-410"
+      ],
+      "requires": "machine == \"AX-410\" and firmware_major < 3",
+      "applies_when": [
+        {
+          "fact": "hot"
+        }
+      ],
+      "excludes": [
+        {
+          "fact": "leak"
+        }
+      ]
+    },
+    {
+      "id": "P0_coolant",
+      "title": "AX-410 coolant procedure",
+      "aliases": [
+        "AX-410"
+      ],
+      "requires": "machine == \"AX-410\" and firmware_major >= 3 and pressure_bar < 1.0",
+      "applies_when": [
+        {
+          "fact": "hot"
+        }
+      ],
+      "excludes": [
+        {
+          "fact": "leak"
+        }
+      ]
+    },
+    {
+      "id": "P0_sensor",
+      "title": "AX-410 sensor procedure",
+      "aliases": [
+        "AX-410"
+      ],
+      "requires": "machine == \"AX-410\" and firmware_major >= 3 and pressure_bar >= 1.0",
+      "applies_when": [
+        {
+          "fact": "hot"
+        }
+      ],
+      "excludes": [
+        {
+          "fact": "leak"
+        }
+      ]
+    },
+    {
+      "id": "P0_leak",
+      "title": "AX-410 leak procedure",
+      "aliases": [
+        "AX-410"
+      ],
+      "requires": "machine == \"AX-410\" and firmware_major >= 0",
+      "applies_when": [
+        {
+          "fact": "leak"
+        }
+      ],
+      "excludes": [],
+      "supersedes": [
+        "P0_thermal",
+        "P0_coolant",
+        "P0_sensor",
+        "P1_thermal",
+        "P1_coolant",
+        "P1_sensor",
+        "P2_thermal",
+        "P2_coolant",
+        "P2_sensor",
+        "P3_thermal",
+        "P3_coolant",
+        "P3_sensor"
+      ]
+    },
+    {
+      "id": "P1_thermal",
+      "title": "AX-410B thermal procedure",
+      "aliases": [
+        "AX-410B"
+      ],
+      "requires": "machine == \"AX-410B\" and firmware_major < 3",
+      "applies_when": [
+        {
+          "fact": "hot"
+        }
+      ],
+      "excludes": [
+        {
+          "fact": "leak"
+        }
+      ]
+    },
+    {
+      "id": "P1_coolant",
+      "title": "AX-410B coolant procedure",
+      "aliases": [
+        "AX-410B"
+      ],
+      "requires": "machine == \"AX-410B\" and firmware_major >= 3 and pressure_bar < 1.0",
+      "applies_when": [
+        {
+          "fact": "hot"
+        }
+      ],
+      "excludes": [
+        {
+          "fact": "leak"
+        }
+      ]
+    },
+    {
+      "id": "P1_sensor",
+      "title": "AX-410B sensor procedure",
+      "aliases": [
+        "AX-410B"
+      ],
+      "requires": "machine == \"AX-410B\" and firmware_major >= 3 and pressure_bar >= 1.0",
+      "applies_when": [
+        {
+          "fact": "hot"
+        }
+      ],
+      "excludes": [
+        {
+          "fact": "leak"
+        }
+      ]
+    },
+    {
+      "id": "P1_leak",
+      "title": "AX-410B leak procedure",
+      "aliases": [
+        "AX-410B"
+      ],
+      "requires": "machine == \"AX-410B\" and firmware_major >= 0",
+      "applies_when": [
+        {
+          "fact": "leak"
+        }
+      ],
+      "excludes": [],
+      "supersedes": [
+        "P0_thermal",
+        "P0_coolant",
+        "P0_sensor",
+        "P1_thermal",
+        "P1_coolant",
+        "P1_sensor",
+        "P2_thermal",
+        "P2_coolant",
+        "P2_sensor",
+        "P3_thermal",
+        "P3_coolant",
+        "P3_sensor"
+      ]
+    },
+    {
+      "id": "P2_thermal",
+      "title": "AX-401B thermal procedure",
+      "aliases": [
+        "AX-401B"
+      ],
+      "requires": "machine == \"AX-401B\" and firmware_major < 3",
+      "applies_when": [
+        {
+          "fact": "hot"
+        }
+      ],
+      "excludes": [
+        {
+          "fact": "leak"
+        }
+      ]
+    },
+    {
+      "id": "P2_coolant",
+      "title": "AX-401B coolant procedure",
+      "aliases": [
+        "AX-401B"
+      ],
+      "requires": "machine == \"AX-401B\" and firmware_major >= 3 and pressure_bar < 1.0",
+      "applies_when": [
+        {
+          "fact": "hot"
+        }
+      ],
+      "excludes": [
+        {
+          "fact": "leak"
+        }
+      ]
+    },
+    {
+      "id": "P2_sensor",
+      "title": "AX-401B sensor procedure",
+      "aliases": [
+        "AX-401B"
+      ],
+      "requires": "machine == \"AX-401B\" and firmware_major >= 3 and pressure_bar >= 1.0",
+      "applies_when": [
+        {
+          "fact": "hot"
+        }
+      ],
+      "excludes": [
+        {
+          "fact": "leak"
+        }
+      ]
+    },
+    {
+      "id": "P2_leak",
+      "title": "AX-401B leak procedure",
+      "aliases": [
+        "AX-401B"
+      ],
+      "requires": "machine == \"AX-401B\" and firmware_major >= 0",
+      "applies_when": [
+        {
+          "fact": "leak"
+        }
+      ],
+      "excludes": [],
+      "supersedes": [
+        "P0_thermal",
+        "P0_coolant",
+        "P0_sensor",
+        "P1_thermal",
+        "P1_coolant",
+        "P1_sensor",
+        "P2_thermal",
+        "P2_coolant",
+        "P2_sensor",
+        "P3_thermal",
+        "P3_coolant",
+        "P3_sensor"
+      ]
+    },
+    {
+      "id": "P3_thermal",
+      "title": "AX-4100 thermal procedure",
+      "aliases": [
+        "AX-4100"
+      ],
+      "requires": "machine == \"AX-4100\" and firmware_major < 3",
+      "applies_when": [
+        {
+          "fact": "hot"
+        }
+      ],
+      "excludes": [
+        {
+          "fact": "leak"
+        }
+      ]
+    },
+    {
+      "id": "P3_coolant",
+      "title": "AX-4100 coolant procedure",
+      "aliases": [
+        "AX-4100"
+      ],
+      "requires": "machine == \"AX-4100\" and firmware_major >= 3 and pressure_bar < 1.0",
+      "applies_when": [
+        {
+          "fact": "hot"
+        }
+      ],
+      "excludes": [
+        {
+          "fact": "leak"
+        }
+      ]
+    },
+    {
+      "id": "P3_sensor",
+      "title": "AX-4100 sensor procedure",
+      "aliases": [
+        "AX-4100"
+      ],
+      "requires": "machine == \"AX-4100\" and firmware_major >= 3 and pressure_bar >= 1.0",
+      "applies_when": [
+        {
+          "fact": "hot"
+        }
+      ],
+      "excludes": [
+        {
+          "fact": "leak"
+        }
+      ]
+    },
+    {
+      "id": "P3_leak",
+      "title": "AX-4100 leak procedure",
+      "aliases": [
+        "AX-4100"
+      ],
+      "requires": "machine == \"AX-4100\" and firmware_major >= 0",
+      "applies_when": [
+        {
+          "fact": "leak"
+        }
+      ],
+      "excludes": [],
+      "supersedes": [
+        "P0_thermal",
+        "P0_coolant",
+        "P0_sensor",
+        "P1_thermal",
+        "P1_coolant",
+        "P1_sensor",
+        "P2_thermal",
+        "P2_coolant",
+        "P2_sensor",
+        "P3_thermal",
+        "P3_coolant",
+        "P3_sensor"
+      ]
+    }
+  ],
+  "results": {
+    "gemma/pipeline": {
+      "rows": [
+        {
+          "id": "AX-410:old_firmware:en",
+          "tag": "old_firmware",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 2,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P0_thermal",
+          "got": "P0_thermal",
+          "ms": 1444.2183449864388,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_thermal",
+            "case": "P0_thermal",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P0_thermal"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P0_thermal",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "applicable",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "rejected",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1443.77
+            }
+          }
+        },
+        {
+          "id": "AX-410:old_firmware:pt",
+          "tag": "old_firmware",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 2,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P0_thermal",
+          "got": "P0_thermal",
+          "ms": 1878.0771779711358,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_thermal",
+            "case": "P0_thermal",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P0_thermal"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P0_thermal",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "applicable",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "rejected",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1877.76
+            }
+          }
+        },
+        {
+          "id": "AX-410:new_low_pressure:en",
+          "tag": "new_low_pressure",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P0_coolant",
+          "got": "P0_coolant",
+          "ms": 1893.9810010488145,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_coolant",
+            "case": "P0_coolant",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P0_coolant"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P0_coolant",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "applicable",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "rejected",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1893.6
+            }
+          }
+        },
+        {
+          "id": "AX-410:new_low_pressure:pt",
+          "tag": "new_low_pressure",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P0_coolant",
+          "got": "P0_coolant",
+          "ms": 1879.3295919895172,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_coolant",
+            "case": "P0_coolant",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P0_coolant"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P0_coolant",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "applicable",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "rejected",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1878.96
+            }
+          }
+        },
+        {
+          "id": "AX-410:pressure_boundary:en",
+          "tag": "pressure_boundary",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+            "pressure_bar": 1.0
+          },
+          "expected": "P0_sensor",
+          "got": "P0_sensor",
+          "ms": 1887.5399560201913,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_sensor",
+            "case": "P0_sensor",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P0_sensor"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P0_sensor",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "applicable",
+                  "P0_leak": "rejected",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1887.25
+            }
+          }
+        },
+        {
+          "id": "AX-410:pressure_boundary:pt",
+          "tag": "pressure_boundary",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+            "pressure_bar": 1.0
+          },
+          "expected": "P0_sensor",
+          "got": "P0_sensor",
+          "ms": 1971.723475959152,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_sensor",
+            "case": "P0_sensor",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P0_sensor"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P0_sensor",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "applicable",
+                  "P0_leak": "rejected",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1971.39
+            }
+          }
+        },
+        {
+          "id": "AX-410:leak_priority:en",
+          "tag": "leak_priority",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Coolant is dripping from this unit right now. Temperature alarm too. Use the sensor reset, I think.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P0_leak",
+          "got": "P0_leak",
+          "ms": 1372.7174759842455,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_leak",
+            "case": "P0_leak",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": true,
+                "settled": true,
+                "score": 0.9894197307416766,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9894197307416766,
+                  "false": 0.009475012647846526,
+                  "unstated": 0.0011052566104769043
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P0_leak"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P0_leak",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "rejected",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "applicable",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 113,
+              "ms": 1372.39
+            }
+          }
+        },
+        {
+          "id": "AX-410:leak_priority:pt",
+          "tag": "leak_priority",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "O l\u00edquido est\u00e1 pingando desta unidade agora. Alarme de temperatura tamb\u00e9m. Acho que deve resetar o sensor.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P0_leak",
+          "got": "P0_leak",
+          "ms": 1364.971696981229,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_leak",
+            "case": "P0_leak",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": true,
+                "settled": true,
+                "score": 0.9722142794497612,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9722142794497612,
+                  "false": 0.02375724057973078,
+                  "unstated": 0.00402847997050789
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P0_leak"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P0_leak",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "rejected",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "applicable",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 114,
+              "ms": 1364.65
+            }
+          }
+        },
+        {
+          "id": "AX-410:other_unit_past:en",
+          "tag": "other_unit_past",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Yesterday the AX-401B leaked; this unit has no coolant leak. This unit has a persistent temperature alarm now.",
+            "pressure_bar": 1.01
+          },
+          "expected": "P0_sensor",
+          "got": "REVIEW",
+          "ms": 1387.9246729775332,
+          "detail": {
+            "status": "uncertain",
+            "answer": null,
+            "case": null,
+            "missing": [],
+            "invalid": [],
+            "uncertain": [
+              "procedures"
+            ],
+            "blocked_by": "P0_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.889339358320672,
+                "source": "judge",
+                "why": "uncertain",
+                "scores": {
+                  "true": 0.0860181455386644,
+                  "false": 0.889339358320672,
+                  "unstated": 0.02464249614066369
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": false,
+                "score": null,
+                "source": "judge",
+                "why": "unresolved: P0_sensor (not examined (over max_claims)), P0_leak (uncertain)",
+                "complete": false,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "unexamined",
+                  "P0_leak": "unresolved",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {
+                  "P0_sensor": "not examined (over max_claims)",
+                  "P0_leak": "uncertain"
+                },
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 117,
+              "ms": 1387.34
+            }
+          }
+        },
+        {
+          "id": "AX-410:other_unit_past:pt",
+          "tag": "other_unit_past",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Ontem a AX-401B vazou; esta unidade n\u00e3o tem vazamento. Esta unidade tem um alarme de temperatura persistente agora.",
+            "pressure_bar": 1.01
+          },
+          "expected": "P0_sensor",
+          "got": "REVIEW",
+          "ms": 1502.5725190062076,
+          "detail": {
+            "status": "uncertain",
+            "answer": null,
+            "case": null,
+            "missing": [],
+            "invalid": [],
+            "uncertain": [
+              "procedures"
+            ],
+            "blocked_by": "P0_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.8649382836139936,
+                "source": "judge",
+                "why": "uncertain",
+                "scores": {
+                  "true": 0.09619155242791604,
+                  "false": 0.8649382836139936,
+                  "unstated": 0.0388701639580903
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": false,
+                "score": null,
+                "source": "judge",
+                "why": "unresolved: P0_sensor (not examined (over max_claims)), P0_leak (uncertain)",
+                "complete": false,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "unexamined",
+                  "P0_leak": "unresolved",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {
+                  "P0_sensor": "not examined (over max_claims)",
+                  "P0_leak": "uncertain"
+                },
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 122,
+              "ms": 1502.22
+            }
+          }
+        },
+        {
+          "id": "AX-410:resolved:en",
+          "tag": "resolved",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "The temperature alarm was fixed yesterday. This unit operates normally now. No coolant leak.",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NO_PROCEDURE",
+          "ms": 1760.8934710151516,
+          "detail": {
+            "status": "ok",
+            "answer": "NO_PROCEDURE",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": false,
+                "settled": true,
+                "score": 0.9973258144490659,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.0026741855509340904,
+                  "false": 0.9973258144490659
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9468043584405771,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.031054847584523225,
+                  "false": 0.9468043584405771,
+                  "unstated": 0.022140793974899597
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "rejected",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "rejected",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 178,
+              "ms": 1760.47
+            }
+          }
+        },
+        {
+          "id": "AX-410:resolved:pt",
+          "tag": "resolved",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "O alarme de temperatura foi resolvido ontem. Esta unidade funciona normalmente agora. Sem vazamento.",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NO_PROCEDURE",
+          "ms": 1801.2718530371785,
+          "detail": {
+            "status": "ok",
+            "answer": "NO_PROCEDURE",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": false,
+                "settled": true,
+                "score": 0.9957034097223348,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.004296590277665246,
+                  "false": 0.9957034097223348
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9161855403389243,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.04842496640564217,
+                  "false": 0.9161855403389243,
+                  "unstated": 0.03538949325543364
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "rejected",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "rejected",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 184,
+              "ms": 1800.9
+            }
+          }
+        },
+        {
+          "id": "AX-410:hypothetical:en",
+          "tag": "hypothetical",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "The AX-4100 beside it overheats. This unit is working normally and has no coolant leak. What if it overheats later?",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NEEDS_INPUT",
+          "ms": 1490.0656759855337,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "P0_leak: fact:leak"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P0_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.5644054702023102,
+                "source": "judge",
+                "why": "not stated in the input",
+                "scores": {
+                  "true": 0.03808859563992044,
+                  "false": 0.3975059341577693,
+                  "unstated": 0.5644054702023102
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": false,
+                "score": null,
+                "source": "judge",
+                "why": "unresolved: P0_coolant (not examined (over max_claims)), P0_leak (not stated: P0_leak: fact:leak)",
+                "complete": false,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "unexamined",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "unresolved",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {
+                  "P0_coolant": "not examined (over max_claims)",
+                  "P0_leak": "not stated: P0_leak: fact:leak"
+                },
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 121,
+              "ms": 1489.51
+            }
+          }
+        },
+        {
+          "id": "AX-410:hypothetical:pt",
+          "tag": "hypothetical",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "A AX-4100 ao lado superaquece. Esta unidade funciona normalmente e n\u00e3o vaza. E se ela superaquecer depois?",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NEEDS_INPUT",
+          "ms": 1490.7722470234148,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "P0_leak: fact:leak"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P0_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.909656493087229,
+                "source": "judge",
+                "why": "not stated in the input",
+                "scores": {
+                  "true": 0.04043169301258086,
+                  "false": 0.04991181390019017,
+                  "unstated": 0.909656493087229
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": false,
+                "score": null,
+                "source": "judge",
+                "why": "unresolved: P0_coolant (not examined (over max_claims)), P0_leak (not stated: P0_leak: fact:leak)",
+                "complete": false,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "unexamined",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "unresolved",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {
+                  "P0_coolant": "not examined (over max_claims)",
+                  "P0_leak": "not stated: P0_leak: fact:leak"
+                },
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 121,
+              "ms": 1490.22
+            }
+          }
+        },
+        {
+          "id": "AX-410:missing_pressure:en",
+          "tag": "missing_pressure",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer."
+          },
+          "expected": "NEEDS_INPUT",
+          "got": "NEEDS_INPUT",
+          "ms": 1920.8460919908248,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "pressure_bar"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P0_coolant",
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": false,
+                "score": null,
+                "source": "judge",
+                "why": "unresolved: P0_coolant (missing: pressure_bar), P0_sensor (missing: pressure_bar)",
+                "complete": true,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "unresolved",
+                  "P0_sensor": "unresolved",
+                  "P0_leak": "rejected",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {
+                  "P0_coolant": "missing: pressure_bar",
+                  "P0_sensor": "missing: pressure_bar"
+                },
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1920.39
+            }
+          }
+        },
+        {
+          "id": "AX-410:missing_pressure:pt",
+          "tag": "missing_pressure",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o."
+          },
+          "expected": "NEEDS_INPUT",
+          "got": "NEEDS_INPUT",
+          "ms": 1928.7068950361572,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "pressure_bar"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P0_coolant",
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": false,
+                "score": null,
+                "source": "judge",
+                "why": "unresolved: P0_coolant (missing: pressure_bar), P0_sensor (missing: pressure_bar)",
+                "complete": true,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "unresolved",
+                  "P0_sensor": "unresolved",
+                  "P0_leak": "rejected",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {
+                  "P0_coolant": "missing: pressure_bar",
+                  "P0_sensor": "missing: pressure_bar"
+                },
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1928.06
+            }
+          }
+        },
+        {
+          "id": "AX-410B:old_firmware:en",
+          "tag": "old_firmware",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 2,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P1_thermal",
+          "got": "P1_thermal",
+          "ms": 2723.3998209703714,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_thermal",
+            "case": "P1_thermal",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P1_thermal"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P1_thermal",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "applicable",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "rejected",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 2723.1
+            }
+          }
+        },
+        {
+          "id": "AX-410B:old_firmware:pt",
+          "tag": "old_firmware",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 2,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P1_thermal",
+          "got": "P1_thermal",
+          "ms": 1958.5144899901934,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_thermal",
+            "case": "P1_thermal",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P1_thermal"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P1_thermal",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "applicable",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "rejected",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1958.02
+            }
+          }
+        },
+        {
+          "id": "AX-410B:new_low_pressure:en",
+          "tag": "new_low_pressure",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P1_coolant",
+          "got": "P1_coolant",
+          "ms": 1932.5804670224898,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_coolant",
+            "case": "P1_coolant",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P1_coolant"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P1_coolant",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "applicable",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "rejected",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1932.25
+            }
+          }
+        },
+        {
+          "id": "AX-410B:new_low_pressure:pt",
+          "tag": "new_low_pressure",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P1_coolant",
+          "got": "P1_coolant",
+          "ms": 1994.3983090342954,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_coolant",
+            "case": "P1_coolant",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P1_coolant"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P1_coolant",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "applicable",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "rejected",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1993.99
+            }
+          }
+        },
+        {
+          "id": "AX-410B:pressure_boundary:en",
+          "tag": "pressure_boundary",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+            "pressure_bar": 1.0
+          },
+          "expected": "P1_sensor",
+          "got": "P1_sensor",
+          "ms": 1908.8522039819509,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_sensor",
+            "case": "P1_sensor",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P1_sensor"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P1_sensor",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "applicable",
+                  "P1_leak": "rejected",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1908.53
+            }
+          }
+        },
+        {
+          "id": "AX-410B:pressure_boundary:pt",
+          "tag": "pressure_boundary",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+            "pressure_bar": 1.0
+          },
+          "expected": "P1_sensor",
+          "got": "P1_sensor",
+          "ms": 1941.6204639710486,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_sensor",
+            "case": "P1_sensor",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P1_sensor"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P1_sensor",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "applicable",
+                  "P1_leak": "rejected",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1941.28
+            }
+          }
+        },
+        {
+          "id": "AX-410B:leak_priority:en",
+          "tag": "leak_priority",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Coolant is dripping from this unit right now. Temperature alarm too. Use the sensor reset, I think.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P1_leak",
+          "got": "P1_leak",
+          "ms": 1388.3690169896,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_leak",
+            "case": "P1_leak",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": true,
+                "settled": true,
+                "score": 0.9894197307416766,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9894197307416766,
+                  "false": 0.009475012647846526,
+                  "unstated": 0.0011052566104769043
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P1_leak"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P1_leak",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "rejected",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "applicable",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 113,
+              "ms": 1387.92
+            }
+          }
+        },
+        {
+          "id": "AX-410B:leak_priority:pt",
+          "tag": "leak_priority",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "O l\u00edquido est\u00e1 pingando desta unidade agora. Alarme de temperatura tamb\u00e9m. Acho que deve resetar o sensor.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P1_leak",
+          "got": "P1_leak",
+          "ms": 1390.2212620014325,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_leak",
+            "case": "P1_leak",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": true,
+                "settled": true,
+                "score": 0.9722142794497612,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9722142794497612,
+                  "false": 0.02375724057973078,
+                  "unstated": 0.00402847997050789
+                }
+              },
+              "procedures": {
+                "value": [
+                  "P1_leak"
+                ],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [
+                  {
+                    "id": "P1_leak",
+                    "source": {},
+                    "payload": null
+                  }
+                ],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "rejected",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "applicable",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 114,
+              "ms": 1389.78
+            }
+          }
+        },
+        {
+          "id": "AX-410B:other_unit_past:en",
+          "tag": "other_unit_past",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Yesterday the AX-401B leaked; this unit has no coolant leak. This unit has a persistent temperature alarm now.",
+            "pressure_bar": 1.01
+          },
+          "expected": "P1_sensor",
+          "got": "REVIEW",
+          "ms": 1446.2982679833658,
+          "detail": {
+            "status": "uncertain",
+            "answer": null,
+            "case": null,
+            "missing": [],
+            "invalid": [],
+            "uncertain": [
+              "procedures"
+            ],
+            "blocked_by": "P1_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.889339358320672,
+                "source": "judge",
+                "why": "uncertain",
+                "scores": {
+                  "true": 0.0860181455386644,
+                  "false": 0.889339358320672,
+                  "unstated": 0.02464249614066369
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": false,
+                "score": null,
+                "source": "judge",
+                "why": "unresolved: P1_sensor (not examined (over max_claims)), P1_leak (uncertain)",
+                "complete": false,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "unexamined",
+                  "P1_leak": "unresolved",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {
+                  "P1_sensor": "not examined (over max_claims)",
+                  "P1_leak": "uncertain"
+                },
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 117,
+              "ms": 1445.8
+            }
+          }
+        },
+        {
+          "id": "AX-410B:other_unit_past:pt",
+          "tag": "other_unit_past",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Ontem a AX-401B vazou; esta unidade n\u00e3o tem vazamento. Esta unidade tem um alarme de temperatura persistente agora.",
+            "pressure_bar": 1.01
+          },
+          "expected": "P1_sensor",
+          "got": "REVIEW",
+          "ms": 1537.275914044585,
+          "detail": {
+            "status": "uncertain",
+            "answer": null,
+            "case": null,
+            "missing": [],
+            "invalid": [],
+            "uncertain": [
+              "procedures"
+            ],
+            "blocked_by": "P1_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.8649382836139936,
+                "source": "judge",
+                "why": "uncertain",
+                "scores": {
+                  "true": 0.09619155242791604,
+                  "false": 0.8649382836139936,
+                  "unstated": 0.0388701639580903
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": false,
+                "score": null,
+                "source": "judge",
+                "why": "unresolved: P1_sensor (not examined (over max_claims)), P1_leak (uncertain)",
+                "complete": false,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "unexamined",
+                  "P1_leak": "unresolved",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {
+                  "P1_sensor": "not examined (over max_claims)",
+                  "P1_leak": "uncertain"
+                },
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 122,
+              "ms": 1537.0
+            }
+          }
+        },
+        {
+          "id": "AX-410B:resolved:en",
+          "tag": "resolved",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "The temperature alarm was fixed yesterday. This unit operates normally now. No coolant leak.",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NO_PROCEDURE",
+          "ms": 1885.72723796824,
+          "detail": {
+            "status": "ok",
+            "answer": "NO_PROCEDURE",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": false,
+                "settled": true,
+                "score": 0.9973258144490659,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.0026741855509340904,
+                  "false": 0.9973258144490659
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9468043584405771,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.031054847584523225,
+                  "false": 0.9468043584405771,
+                  "unstated": 0.022140793974899597
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "rejected",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "rejected",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 178,
+              "ms": 1885.39
+            }
+          }
+        },
+        {
+          "id": "AX-410B:resolved:pt",
+          "tag": "resolved",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "O alarme de temperatura foi resolvido ontem. Esta unidade funciona normalmente agora. Sem vazamento.",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NO_PROCEDURE",
+          "ms": 1791.3788929581642,
+          "detail": {
+            "status": "ok",
+            "answer": "NO_PROCEDURE",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": false,
+                "settled": true,
+                "score": 0.9957034097223348,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.004296590277665246,
+                  "false": 0.9957034097223348
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9161855403389243,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.04842496640564217,
+                  "false": 0.9161855403389243,
+                  "unstated": 0.03538949325543364
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": true,
+                "score": null,
+                "source": "judge",
+                "why": null,
+                "complete": true,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "rejected",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "rejected",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 184,
+              "ms": 1791.04
+            }
+          }
+        },
+        {
+          "id": "AX-410B:hypothetical:en",
+          "tag": "hypothetical",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "The AX-4100 beside it overheats. This unit is working normally and has no coolant leak. What if it overheats later?",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NEEDS_INPUT",
+          "ms": 1445.827120973263,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "P1_leak: fact:leak"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P1_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.5644054702023102,
+                "source": "judge",
+                "why": "not stated in the input",
+                "scores": {
+                  "true": 0.03808859563992044,
+                  "false": 0.3975059341577693,
+                  "unstated": 0.5644054702023102
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": false,
+                "score": null,
+                "source": "judge",
+                "why": "unresolved: P1_coolant (not examined (over max_claims)), P1_leak (not stated: P1_leak: fact:leak)",
+                "complete": false,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "unexamined",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "unresolved",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {
+                  "P1_coolant": "not examined (over max_claims)",
+                  "P1_leak": "not stated: P1_leak: fact:leak"
+                },
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 121,
+              "ms": 1445.51
+            }
+          }
+        },
+        {
+          "id": "AX-410B:hypothetical:pt",
+          "tag": "hypothetical",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "A AX-4100 ao lado superaquece. Esta unidade funciona normalmente e n\u00e3o vaza. E se ela superaquecer depois?",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NEEDS_INPUT",
+          "ms": 1437.9208810278215,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "P1_leak: fact:leak"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P1_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.909656493087229,
+                "source": "judge",
+                "why": "not stated in the input",
+                "scores": {
+                  "true": 0.04043169301258086,
+                  "false": 0.04991181390019017,
+                  "unstated": 0.909656493087229
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": false,
+                "score": null,
+                "source": "judge",
+                "why": "unresolved: P1_coolant (not examined (over max_claims)), P1_leak (not stated: P1_leak: fact:leak)",
+                "complete": false,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "unexamined",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "unresolved",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {
+                  "P1_coolant": "not examined (over max_claims)",
+                  "P1_leak": "not stated: P1_leak: fact:leak"
+                },
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 121,
+              "ms": 1437.55
+            }
+          }
+        },
+        {
+          "id": "AX-410B:missing_pressure:en",
+          "tag": "missing_pressure",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer."
+          },
+          "expected": "NEEDS_INPUT",
+          "got": "NEEDS_INPUT",
+          "ms": 1879.0059860330075,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "pressure_bar"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P1_coolant",
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": false,
+                "score": null,
+                "source": "judge",
+                "why": "unresolved: P1_coolant (missing: pressure_bar), P1_sensor (missing: pressure_bar)",
+                "complete": true,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "unresolved",
+                  "P1_sensor": "unresolved",
+                  "P1_leak": "rejected",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {
+                  "P1_coolant": "missing: pressure_bar",
+                  "P1_sensor": "missing: pressure_bar"
+                },
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1878.36
+            }
+          }
+        },
+        {
+          "id": "AX-410B:missing_pressure:pt",
+          "tag": "missing_pressure",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o."
+          },
+          "expected": "NEEDS_INPUT",
+          "got": "NEEDS_INPUT",
+          "ms": 1935.4787589982152,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "pressure_bar"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P1_coolant",
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              },
+              "procedures": {
+                "value": [],
+                "settled": false,
+                "score": null,
+                "source": "judge",
+                "why": "unresolved: P1_coolant (missing: pressure_bar), P1_sensor (missing: pressure_bar)",
+                "complete": true,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "unresolved",
+                  "P1_sensor": "unresolved",
+                  "P1_leak": "rejected",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {
+                  "P1_coolant": "missing: pressure_bar",
+                  "P1_sensor": "missing: pressure_bar"
+                },
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1935.06
+            }
+          }
+        },
+        {
+          "id": "unsupported:en",
+          "tag": "unsupported_machine",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410BX",
+            "firmware_major": 3,
+            "pressure_bar": 0.99,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer."
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NO_PROCEDURE",
+          "ms": 0.34658698132261634,
+          "detail": {
+            "status": "ok",
+            "answer": "NO_PROCEDURE",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "procedures": {
+                "value": [],
+                "settled": true,
+                "score": null,
+                "source": "rule",
+                "why": null,
+                "complete": true,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 0,
+              "rounds": 0,
+              "tokens": 0,
+              "ms": 0.16
+            }
+          }
+        },
+        {
+          "id": "unsupported:pt",
+          "tag": "unsupported_machine",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410BX",
+            "firmware_major": 3,
+            "pressure_bar": 0.99,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o."
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NO_PROCEDURE",
+          "ms": 0.24903396843001246,
+          "detail": {
+            "status": "ok",
+            "answer": "NO_PROCEDURE",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "procedures": {
+                "value": [],
+                "settled": true,
+                "score": null,
+                "source": "rule",
+                "why": null,
+                "complete": true,
+                "cards": [],
+                "states": {
+                  "P0_thermal": "ineligible",
+                  "P0_coolant": "ineligible",
+                  "P0_sensor": "ineligible",
+                  "P0_leak": "ineligible",
+                  "P1_thermal": "ineligible",
+                  "P1_coolant": "ineligible",
+                  "P1_sensor": "ineligible",
+                  "P1_leak": "ineligible",
+                  "P2_thermal": "ineligible",
+                  "P2_coolant": "ineligible",
+                  "P2_sensor": "ineligible",
+                  "P2_leak": "ineligible",
+                  "P3_thermal": "ineligible",
+                  "P3_coolant": "ineligible",
+                  "P3_sensor": "ineligible",
+                  "P3_leak": "ineligible"
+                },
+                "unresolved": {},
+                "superseded": {},
+                "scores": {}
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 0,
+              "rounds": 0,
+              "tokens": 0,
+              "ms": 0.08
+            }
+          }
+        }
+      ],
+      "summary": {
+        "correct": 26,
+        "total": 34,
+        "accuracy": 0.7647058823529411,
+        "coverage": 0.6470588235294118,
+        "accepted_precision": 1.0,
+        "wrong_procedures": 0,
+        "review": 4,
+        "missed_procedures": 0,
+        "ineligible_selections": 0,
+        "missing_correct": 4,
+        "median_ms": 1796.3,
+        "by_tag": {
+          "hypothetical": {
+            "correct": 0,
+            "total": 4
+          },
+          "leak_priority": {
+            "correct": 4,
+            "total": 4
+          },
+          "missing_pressure": {
+            "correct": 4,
+            "total": 4
+          },
+          "new_low_pressure": {
+            "correct": 4,
+            "total": 4
+          },
+          "old_firmware": {
+            "correct": 4,
+            "total": 4
+          },
+          "other_unit_past": {
+            "correct": 0,
+            "total": 4
+          },
+          "pressure_boundary": {
+            "correct": 4,
+            "total": 4
+          },
+          "resolved": {
+            "correct": 4,
+            "total": 4
+          },
+          "unsupported_machine": {
+            "correct": 2,
+            "total": 2
+          }
+        }
+      }
+    },
+    "gemma/facts-and-cases": {
+      "rows": [
+        {
+          "id": "AX-410:old_firmware:en",
+          "tag": "old_firmware",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 2,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P0_thermal",
+          "got": "P0_thermal",
+          "ms": 1426.852541975677,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_thermal",
+            "case": "P0_thermal",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1426.63
+            }
+          }
+        },
+        {
+          "id": "AX-410:old_firmware:pt",
+          "tag": "old_firmware",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 2,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P0_thermal",
+          "got": "P0_thermal",
+          "ms": 1889.3219910096377,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_thermal",
+            "case": "P0_thermal",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1889.16
+            }
+          }
+        },
+        {
+          "id": "AX-410:new_low_pressure:en",
+          "tag": "new_low_pressure",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P0_coolant",
+          "got": "P0_coolant",
+          "ms": 1866.8567979475483,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_coolant",
+            "case": "P0_coolant",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1866.66
+            }
+          }
+        },
+        {
+          "id": "AX-410:new_low_pressure:pt",
+          "tag": "new_low_pressure",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P0_coolant",
+          "got": "P0_coolant",
+          "ms": 1898.4886300168,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_coolant",
+            "case": "P0_coolant",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1898.23
+            }
+          }
+        },
+        {
+          "id": "AX-410:pressure_boundary:en",
+          "tag": "pressure_boundary",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+            "pressure_bar": 1.0
+          },
+          "expected": "P0_sensor",
+          "got": "P0_sensor",
+          "ms": 1859.7846410120837,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_sensor",
+            "case": "P0_sensor",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1859.49
+            }
+          }
+        },
+        {
+          "id": "AX-410:pressure_boundary:pt",
+          "tag": "pressure_boundary",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+            "pressure_bar": 1.0
+          },
+          "expected": "P0_sensor",
+          "got": "P0_sensor",
+          "ms": 1916.3911880459636,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_sensor",
+            "case": "P0_sensor",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1916.19
+            }
+          }
+        },
+        {
+          "id": "AX-410:leak_priority:en",
+          "tag": "leak_priority",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Coolant is dripping from this unit right now. Temperature alarm too. Use the sensor reset, I think.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P0_leak",
+          "got": "P0_leak",
+          "ms": 1541.5112190530635,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_leak",
+            "case": "P0_leak",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": true,
+                "settled": true,
+                "score": 0.9894197307416766,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9894197307416766,
+                  "false": 0.009475012647846526,
+                  "unstated": 0.0011052566104769043
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 113,
+              "ms": 1541.22
+            }
+          }
+        },
+        {
+          "id": "AX-410:leak_priority:pt",
+          "tag": "leak_priority",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "O l\u00edquido est\u00e1 pingando desta unidade agora. Alarme de temperatura tamb\u00e9m. Acho que deve resetar o sensor.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P0_leak",
+          "got": "P0_leak",
+          "ms": 1465.6126670306548,
+          "detail": {
+            "status": "ok",
+            "answer": "P0_leak",
+            "case": "P0_leak",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": true,
+                "settled": true,
+                "score": 0.9722142794497612,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9722142794497612,
+                  "false": 0.02375724057973078,
+                  "unstated": 0.00402847997050789
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 114,
+              "ms": 1465.44
+            }
+          }
+        },
+        {
+          "id": "AX-410:other_unit_past:en",
+          "tag": "other_unit_past",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Yesterday the AX-401B leaked; this unit has no coolant leak. This unit has a persistent temperature alarm now.",
+            "pressure_bar": 1.01
+          },
+          "expected": "P0_sensor",
+          "got": "REVIEW",
+          "ms": 1433.3961570519023,
+          "detail": {
+            "status": "uncertain",
+            "answer": null,
+            "case": null,
+            "missing": [],
+            "invalid": [],
+            "uncertain": [
+              "leak"
+            ],
+            "blocked_by": "P0_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.889339358320672,
+                "source": "judge",
+                "why": "uncertain",
+                "scores": {
+                  "true": 0.0860181455386644,
+                  "false": 0.889339358320672,
+                  "unstated": 0.02464249614066369
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 117,
+              "ms": 1433.24
+            }
+          }
+        },
+        {
+          "id": "AX-410:other_unit_past:pt",
+          "tag": "other_unit_past",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Ontem a AX-401B vazou; esta unidade n\u00e3o tem vazamento. Esta unidade tem um alarme de temperatura persistente agora.",
+            "pressure_bar": 1.01
+          },
+          "expected": "P0_sensor",
+          "got": "REVIEW",
+          "ms": 1536.920171987731,
+          "detail": {
+            "status": "uncertain",
+            "answer": null,
+            "case": null,
+            "missing": [],
+            "invalid": [],
+            "uncertain": [
+              "leak"
+            ],
+            "blocked_by": "P0_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.8649382836139936,
+                "source": "judge",
+                "why": "uncertain",
+                "scores": {
+                  "true": 0.09619155242791604,
+                  "false": 0.8649382836139936,
+                  "unstated": 0.0388701639580903
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 122,
+              "ms": 1536.75
+            }
+          }
+        },
+        {
+          "id": "AX-410:resolved:en",
+          "tag": "resolved",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "The temperature alarm was fixed yesterday. This unit operates normally now. No coolant leak.",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NO_PROCEDURE",
+          "ms": 1888.4048149921,
+          "detail": {
+            "status": "ok",
+            "answer": "NO_PROCEDURE",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": false,
+                "settled": true,
+                "score": 0.9973258144490659,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.0026741855509340904,
+                  "false": 0.9973258144490659
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9468043584405771,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.031054847584523225,
+                  "false": 0.9468043584405771,
+                  "unstated": 0.022140793974899597
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 178,
+              "ms": 1888.12
+            }
+          }
+        },
+        {
+          "id": "AX-410:resolved:pt",
+          "tag": "resolved",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "O alarme de temperatura foi resolvido ontem. Esta unidade funciona normalmente agora. Sem vazamento.",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NO_PROCEDURE",
+          "ms": 1804.2303930269554,
+          "detail": {
+            "status": "ok",
+            "answer": "NO_PROCEDURE",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": false,
+                "settled": true,
+                "score": 0.9957034097223348,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.004296590277665246,
+                  "false": 0.9957034097223348
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9161855403389243,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.04842496640564217,
+                  "false": 0.9161855403389243,
+                  "unstated": 0.03538949325543364
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 184,
+              "ms": 1804.05
+            }
+          }
+        },
+        {
+          "id": "AX-410:hypothetical:en",
+          "tag": "hypothetical",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "The AX-4100 beside it overheats. This unit is working normally and has no coolant leak. What if it overheats later?",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NEEDS_INPUT",
+          "ms": 1462.1356669813395,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "fact:leak"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P0_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.5644054702023102,
+                "source": "judge",
+                "why": "not stated in the input",
+                "scores": {
+                  "true": 0.03808859563992044,
+                  "false": 0.3975059341577693,
+                  "unstated": 0.5644054702023102
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 121,
+              "ms": 1461.92
+            }
+          }
+        },
+        {
+          "id": "AX-410:hypothetical:pt",
+          "tag": "hypothetical",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "A AX-4100 ao lado superaquece. Esta unidade funciona normalmente e n\u00e3o vaza. E se ela superaquecer depois?",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NEEDS_INPUT",
+          "ms": 1469.8314239503816,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "fact:leak"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P0_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.909656493087229,
+                "source": "judge",
+                "why": "not stated in the input",
+                "scores": {
+                  "true": 0.04043169301258086,
+                  "false": 0.04991181390019017,
+                  "unstated": 0.909656493087229
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 121,
+              "ms": 1469.66
+            }
+          }
+        },
+        {
+          "id": "AX-410:missing_pressure:en",
+          "tag": "missing_pressure",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer."
+          },
+          "expected": "NEEDS_INPUT",
+          "got": "NEEDS_INPUT",
+          "ms": 1919.4626180105843,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "pressure_bar"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P0_coolant",
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1919.28
+            }
+          }
+        },
+        {
+          "id": "AX-410:missing_pressure:pt",
+          "tag": "missing_pressure",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410",
+            "firmware_major": 3,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o."
+          },
+          "expected": "NEEDS_INPUT",
+          "got": "NEEDS_INPUT",
+          "ms": 1980.8384050265886,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "pressure_bar"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P0_coolant",
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1980.62
+            }
+          }
+        },
+        {
+          "id": "AX-410B:old_firmware:en",
+          "tag": "old_firmware",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 2,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P1_thermal",
+          "got": "P1_thermal",
+          "ms": 1885.4719850351103,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_thermal",
+            "case": "P1_thermal",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1885.16
+            }
+          }
+        },
+        {
+          "id": "AX-410B:old_firmware:pt",
+          "tag": "old_firmware",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 2,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P1_thermal",
+          "got": "P1_thermal",
+          "ms": 1981.2090689665638,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_thermal",
+            "case": "P1_thermal",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1980.93
+            }
+          }
+        },
+        {
+          "id": "AX-410B:new_low_pressure:en",
+          "tag": "new_low_pressure",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P1_coolant",
+          "got": "P1_coolant",
+          "ms": 1908.71472802246,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_coolant",
+            "case": "P1_coolant",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1908.39
+            }
+          }
+        },
+        {
+          "id": "AX-410B:new_low_pressure:pt",
+          "tag": "new_low_pressure",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P1_coolant",
+          "got": "P1_coolant",
+          "ms": 1918.115863983985,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_coolant",
+            "case": "P1_coolant",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1917.86
+            }
+          }
+        },
+        {
+          "id": "AX-410B:pressure_boundary:en",
+          "tag": "pressure_boundary",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer.",
+            "pressure_bar": 1.0
+          },
+          "expected": "P1_sensor",
+          "got": "P1_sensor",
+          "ms": 1874.9920609989204,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_sensor",
+            "case": "P1_sensor",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1874.77
+            }
+          }
+        },
+        {
+          "id": "AX-410B:pressure_boundary:pt",
+          "tag": "pressure_boundary",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o.",
+            "pressure_bar": 1.0
+          },
+          "expected": "P1_sensor",
+          "got": "P1_sensor",
+          "ms": 1941.703267977573,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_sensor",
+            "case": "P1_sensor",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1941.53
+            }
+          }
+        },
+        {
+          "id": "AX-410B:leak_priority:en",
+          "tag": "leak_priority",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Coolant is dripping from this unit right now. Temperature alarm too. Use the sensor reset, I think.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P1_leak",
+          "got": "P1_leak",
+          "ms": 1371.4434720459394,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_leak",
+            "case": "P1_leak",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": true,
+                "settled": true,
+                "score": 0.9894197307416766,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9894197307416766,
+                  "false": 0.009475012647846526,
+                  "unstated": 0.0011052566104769043
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 113,
+              "ms": 1371.31
+            }
+          }
+        },
+        {
+          "id": "AX-410B:leak_priority:pt",
+          "tag": "leak_priority",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "O l\u00edquido est\u00e1 pingando desta unidade agora. Alarme de temperatura tamb\u00e9m. Acho que deve resetar o sensor.",
+            "pressure_bar": 0.99
+          },
+          "expected": "P1_leak",
+          "got": "P1_leak",
+          "ms": 1331.2285839929245,
+          "detail": {
+            "status": "ok",
+            "answer": "P1_leak",
+            "case": "P1_leak",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": true,
+                "settled": true,
+                "score": 0.9722142794497612,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9722142794497612,
+                  "false": 0.02375724057973078,
+                  "unstated": 0.00402847997050789
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 114,
+              "ms": 1331.01
+            }
+          }
+        },
+        {
+          "id": "AX-410B:other_unit_past:en",
+          "tag": "other_unit_past",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Yesterday the AX-401B leaked; this unit has no coolant leak. This unit has a persistent temperature alarm now.",
+            "pressure_bar": 1.01
+          },
+          "expected": "P1_sensor",
+          "got": "REVIEW",
+          "ms": 1442.011982027907,
+          "detail": {
+            "status": "uncertain",
+            "answer": null,
+            "case": null,
+            "missing": [],
+            "invalid": [],
+            "uncertain": [
+              "leak"
+            ],
+            "blocked_by": "P1_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.889339358320672,
+                "source": "judge",
+                "why": "uncertain",
+                "scores": {
+                  "true": 0.0860181455386644,
+                  "false": 0.889339358320672,
+                  "unstated": 0.02464249614066369
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 117,
+              "ms": 1441.85
+            }
+          }
+        },
+        {
+          "id": "AX-410B:other_unit_past:pt",
+          "tag": "other_unit_past",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Ontem a AX-401B vazou; esta unidade n\u00e3o tem vazamento. Esta unidade tem um alarme de temperatura persistente agora.",
+            "pressure_bar": 1.01
+          },
+          "expected": "P1_sensor",
+          "got": "REVIEW",
+          "ms": 1492.351407010574,
+          "detail": {
+            "status": "uncertain",
+            "answer": null,
+            "case": null,
+            "missing": [],
+            "invalid": [],
+            "uncertain": [
+              "leak"
+            ],
+            "blocked_by": "P1_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.8649382836139936,
+                "source": "judge",
+                "why": "uncertain",
+                "scores": {
+                  "true": 0.09619155242791604,
+                  "false": 0.8649382836139936,
+                  "unstated": 0.0388701639580903
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 122,
+              "ms": 1492.13
+            }
+          }
+        },
+        {
+          "id": "AX-410B:resolved:en",
+          "tag": "resolved",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "The temperature alarm was fixed yesterday. This unit operates normally now. No coolant leak.",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NO_PROCEDURE",
+          "ms": 1774.6649120235816,
+          "detail": {
+            "status": "ok",
+            "answer": "NO_PROCEDURE",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": false,
+                "settled": true,
+                "score": 0.9973258144490659,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.0026741855509340904,
+                  "false": 0.9973258144490659
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9468043584405771,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.031054847584523225,
+                  "false": 0.9468043584405771,
+                  "unstated": 0.022140793974899597
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 178,
+              "ms": 1774.44
+            }
+          }
+        },
+        {
+          "id": "AX-410B:resolved:pt",
+          "tag": "resolved",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "O alarme de temperatura foi resolvido ontem. Esta unidade funciona normalmente agora. Sem vazamento.",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NO_PROCEDURE",
+          "ms": 1752.086649008561,
+          "detail": {
+            "status": "ok",
+            "answer": "NO_PROCEDURE",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": false,
+                "settled": true,
+                "score": 0.9957034097223348,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.004296590277665246,
+                  "false": 0.9957034097223348
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9161855403389243,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.04842496640564217,
+                  "false": 0.9161855403389243,
+                  "unstated": 0.03538949325543364
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 184,
+              "ms": 1751.84
+            }
+          }
+        },
+        {
+          "id": "AX-410B:hypothetical:en",
+          "tag": "hypothetical",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "The AX-4100 beside it overheats. This unit is working normally and has no coolant leak. What if it overheats later?",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NEEDS_INPUT",
+          "ms": 1432.5355420005508,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "fact:leak"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P1_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.5644054702023102,
+                "source": "judge",
+                "why": "not stated in the input",
+                "scores": {
+                  "true": 0.03808859563992044,
+                  "false": 0.3975059341577693,
+                  "unstated": 0.5644054702023102
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 121,
+              "ms": 1432.23
+            }
+          }
+        },
+        {
+          "id": "AX-410B:hypothetical:pt",
+          "tag": "hypothetical",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "A AX-4100 ao lado superaquece. Esta unidade funciona normalmente e n\u00e3o vaza. E se ela superaquecer depois?",
+            "pressure_bar": 0.99
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NEEDS_INPUT",
+          "ms": 1466.4792330004275,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "fact:leak"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P1_leak",
+            "errors": {},
+            "facts": {
+              "leak": {
+                "value": null,
+                "settled": false,
+                "score": 0.909656493087229,
+                "source": "judge",
+                "why": "not stated in the input",
+                "scores": {
+                  "true": 0.04043169301258086,
+                  "false": 0.04991181390019017,
+                  "unstated": 0.909656493087229
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 1,
+              "rounds": 1,
+              "tokens": 121,
+              "ms": 1466.33
+            }
+          }
+        },
+        {
+          "id": "AX-410B:missing_pressure:en",
+          "tag": "missing_pressure",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer."
+          },
+          "expected": "NEEDS_INPUT",
+          "got": "NEEDS_INPUT",
+          "ms": 1840.243028011173,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "pressure_bar"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P1_coolant",
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9998239097805671,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9998239097805671,
+                  "false": 0.00017609021943288314
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9484117689618098,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.032520217387912706,
+                  "false": 0.9484117689618098,
+                  "unstated": 0.019068013650277497
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 212,
+              "ms": 1840.03
+            }
+          }
+        },
+        {
+          "id": "AX-410B:missing_pressure:pt",
+          "tag": "missing_pressure",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410B",
+            "firmware_major": 3,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o."
+          },
+          "expected": "NEEDS_INPUT",
+          "got": "NEEDS_INPUT",
+          "ms": 1910.0017769960687,
+          "detail": {
+            "status": "needs_input",
+            "answer": null,
+            "case": null,
+            "missing": [
+              "pressure_bar"
+            ],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": "P1_coolant",
+            "errors": {},
+            "facts": {
+              "hot": {
+                "value": true,
+                "settled": true,
+                "score": 0.9997179818596462,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.9997179818596462,
+                  "false": 0.00028201814035374407
+                }
+              },
+              "leak": {
+                "value": false,
+                "settled": true,
+                "score": 0.9118509715254999,
+                "source": "judge",
+                "why": null,
+                "scores": {
+                  "true": 0.036645071064920424,
+                  "false": 0.9118509715254999,
+                  "unstated": 0.051503957409579665
+                }
+              }
+            },
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 2,
+              "rounds": 2,
+              "tokens": 218,
+              "ms": 1909.82
+            }
+          }
+        },
+        {
+          "id": "unsupported:en",
+          "tag": "unsupported_machine",
+          "lang": "en",
+          "input": {
+            "machine": "AX-410BX",
+            "firmware_major": 3,
+            "pressure_bar": 0.99,
+            "report": "Persistent temperature alarm on this unit now. No coolant leak on this unit. I suspect the thermal reset for the AX-4100 beside it is the answer."
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NO_PROCEDURE",
+          "ms": 0.11327897664159536,
+          "detail": {
+            "status": "ok",
+            "answer": "NO_PROCEDURE",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {},
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 0,
+              "rounds": 0,
+              "tokens": 0,
+              "ms": 0.06
+            }
+          }
+        },
+        {
+          "id": "unsupported:pt",
+          "tag": "unsupported_machine",
+          "lang": "pt",
+          "input": {
+            "machine": "AX-410BX",
+            "firmware_major": 3,
+            "pressure_bar": 0.99,
+            "report": "Alarme de temperatura persistente nesta unidade agora. Sem vazamento de l\u00edquido nesta unidade. Acho que o reset t\u00e9rmico da AX-4100 ao lado \u00e9 a solu\u00e7\u00e3o."
+          },
+          "expected": "NO_PROCEDURE",
+          "got": "NO_PROCEDURE",
+          "ms": 0.08027703734114766,
+          "detail": {
+            "status": "ok",
+            "answer": "NO_PROCEDURE",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {},
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 9,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 0,
+              "rounds": 0,
+              "tokens": 0,
+              "ms": 0.04
+            }
+          }
+        }
+      ],
+      "summary": {
+        "correct": 26,
+        "total": 34,
+        "accuracy": 0.7647058823529411,
+        "coverage": 0.6470588235294118,
+        "accepted_precision": 1.0,
+        "wrong_procedures": 0,
+        "review": 4,
+        "missed_procedures": 0,
+        "ineligible_selections": 0,
+        "missing_correct": 4,
+        "median_ms": 1789.4,
+        "by_tag": {
+          "hypothetical": {
+            "correct": 0,
+            "total": 4
+          },
+          "leak_priority": {
+            "correct": 4,
+            "total": 4
+          },
+          "missing_pressure": {
+            "correct": 4,
+            "total": 4
+          },
+          "new_low_pressure": {
+            "correct": 4,
+            "total": 4
+          },
+          "old_firmware": {
+            "correct": 4,
+            "total": 4
+          },
+          "other_unit_past": {
+            "correct": 0,
+            "total": 4
+          },
+          "pressure_boundary": {
+            "correct": 4,
+            "total": 4
+          },
+          "resolved": {
+            "correct": 4,
+            "total": 4
+          },
+          "unsupported_machine": {
+            "correct": 2,
+            "total": 2
+          }
+        }
+      }
+    }
+  },
+  "model_sources": {
+    "qwen": "unsloth/Qwen3-0.6B-GGUF:Qwen3-0.6B-Q4_K_M.gguf",
+    "gemma": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+    "qwen35-0.8b": "unsloth/Qwen3.5-0.8B-GGUF:Qwen3.5-0.8B-Q4_K_M.gguf",
+    "qwen35-2b": "unsloth/Qwen3.5-2B-GGUF:Qwen3.5-2B-Q4_K_M.gguf",
+    "jev": "jev-1.13.0"
+  },
+  "device": "cpu",
+  "threads": 16,
+  "note": "34 synthetic cases, including translated pairs; descriptive smoke test, not proof of general superiority. Over-budget allows one unsettled claim per call; exact eligibility still applies. No fine-tuning. Switches use default per-atom thresholds; whole-catalogue uses inline top-1 acceptance and also reports a 0.9 cutoff."
+}

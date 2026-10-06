@@ -1,0 +1,39 @@
+{
+  "task": "The customer requests money back for a charge already made.",
+  "seed": 7,
+  "items": 24,
+  "judges": {
+    "Qwen/Qwen3-1.7B-GGUF:Qwen3-1.7B-Q8_0.gguf": {
+      "zero_shot": {
+        "accuracy": 0.917,
+        "settled": 24,
+        "settled_correct": 22,
+        "items": 24,
+        "ms_per_item": 469.2
+      },
+      "examples_draw_0": {
+        "accuracy": 0.875,
+        "settled": 20,
+        "settled_correct": 18,
+        "items": 24,
+        "ms_per_item": 1323.4
+      }
+    },
+    "Qwen/Qwen3-0.6B-GGUF:Qwen3-0.6B-Q8_0.gguf": {
+      "zero_shot": {
+        "accuracy": 0.792,
+        "settled": 4,
+        "settled_correct": 4,
+        "items": 24,
+        "ms_per_item": 221.0
+      },
+      "examples_draw_0": {
+        "accuracy": 0.583,
+        "settled": 4,
+        "settled_correct": 4,
+        "items": 24,
+        "ms_per_item": 507.9
+      }
+    }
+  }
+}

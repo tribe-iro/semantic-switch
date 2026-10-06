@@ -1,0 +1,34 @@
+- id: P01
+  title: MX-120 startup fault E17
+  aliases: [MX-120, E17]
+  requires: 'machine == "MX-120" and mentions(active_alarms, "E17")'
+  applies_when: The machine fails to start or restart.
+  excludes: [{ fact: leak }]
+  source: { manual: Maintenance manual rev 7, section: "7.2", pages: "138-141" }
+  payload: { instructions: procedures/P01.md }
+- id: P02
+  title: MX-120A startup fault E17
+  aliases: [MX-120A, Mixer 120 Advanced, E17]
+  requires: 'machine == "MX-120A" and mentions(active_alarms, "E17")'
+  applies_when: The machine fails to start or restart.
+  excludes: [{ fact: leak }]
+  source: { manual: Maintenance manual rev 7, section: "7.3", pages: "142-145" }
+  payload: { instructions: procedures/P02.md }
+- id: P03
+  title: Hydraulic leak
+  applies_when: There is a visible hydraulic leak, such as fluid or oil pooling or dripping.
+  source: { manual: Maintenance manual rev 7, section: "9.1", pages: "201-204" }
+  payload: { instructions: procedures/P03.md }
+- id: P04
+  title: MX-120A sensor fault E71
+  aliases: [MX-120A, E71]
+  requires: 'machine == "MX-120A" and mentions(active_alarms, "E71")'
+  applies_when: The machine reports a sensor fault.
+  source: { manual: Maintenance manual rev 7, section: "7.8", pages: "160-161" }
+  payload: { instructions: procedures/P04.md }
+- id: P09
+  title: Emergency shutdown
+  applies_when: There is smoke, fire, sparks or a burning smell.
+  supersedes: [P01, P02, P03, P04]
+  source: { manual: Maintenance manual rev 7, section: "1.1", pages: "3-4" }
+  payload: { instructions: procedures/P09.md }

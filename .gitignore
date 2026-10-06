@@ -1,0 +1,41 @@
+# Python environments, bytecode and tool caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# Packaging and coverage output
+build/
+dist/
+*.egg-info/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Local credentials (keep documented environment templates)
+.env
+.env.*
+!.env.example
+!.env.sample
+.aws/
+
+# Downloaded models and generated benchmark feature caches
+*.gguf
+*.safetensors
+/bench/results/*.npz
+
+# Runtime logs, editor leftovers and OS metadata
+*.log
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Keep benchmark JSON reports and switch examples, tests and lock files:
+# these describe measured results and reproducible decision behaviour.

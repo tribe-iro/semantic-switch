@@ -1,0 +1,12 @@
+{"model": "Qwen3-0.6B-Q8_0.gguf", "threads": 16, "check_p50": 111, "ask10_p50": 652, "per_q_in_ask": 65}
+{"model": "Qwen3-0.6B-Q4_K_M.gguf", "threads": 16, "check_p50": 99, "ask10_p50": 539, "per_q_in_ask": 54}
+{"model": "Qwen3-1.7B-Q8_0.gguf", "threads": 16, "check_p50": 290, "ask10_p50": 2022, "per_q_in_ask": 202}
+{"model": "Qwen3-1.7B-Q4_K_M.gguf", "threads": 16, "check_p50": 306, "ask10_p50": 1592, "per_q_in_ask": 159}
+{"model": "Qwen3.5-0.8B-Q4_K_M.gguf", "threads": 16, "check_p50": 194, "ask10_p50": 796, "per_q_in_ask": 80}
+{"model": "Qwen3.5-0.8B-Q8_0.gguf", "threads": 16, "check_p50": 215, "ask10_p50": 1006, "per_q_in_ask": 101}
+{"model": "Qwen3.5-2B-Q8_0.gguf", "threads": 16, "check_p50": 540, "ask10_p50": 2157, "per_q_in_ask": 216}
+{"model": "Qwen3.5-2B-Q4_K_M.gguf", "threads": 16, "check_p50": 348, "ask10_p50": 1973, "per_q_in_ask": 197}
+{"model": "gemma-4-E2B-it-Q8_0.gguf", "threads": 16, "check_p50": 440, "ask10_p50": 2891, "per_q_in_ask": 289}
+{"model": "gemma-4-E2B_q4_0-it.gguf", "threads": 16, "check_p50": 264, "ask10_p50": 1495, "per_q_in_ask": 149}
+{"model": "gemma-4-E4B_q4_0-it.gguf", "threads": 16, "check_p50": 572, "ask10_p50": 3180, "per_q_in_ask": 318}
+{"model": "gemma-3-1b-it-Q8_0.gguf", "threads": 16, "check_p50": 210, "ask10_p50": 1005, "per_q_in_ask": 101}

@@ -1,0 +1,86 @@
+{
+  "20 tokens/first_case_decides": {
+    "staged": {
+      "ms": 243.4,
+      "answer": "legal",
+      "judged": 1,
+      "rounds": 1
+    },
+    "eager": {
+      "ms": 942.0,
+      "answer": "legal",
+      "judged": 4,
+      "rounds": 1
+    }
+  },
+  "20 tokens/late_case_decides": {
+    "staged": {
+      "ms": 972.4,
+      "answer": "tech_priority",
+      "judged": 4,
+      "rounds": 2
+    },
+    "eager": {
+      "ms": 941.1,
+      "answer": "tech_priority",
+      "judged": 4,
+      "rounds": 1
+    }
+  },
+  "20 tokens/otherwise": {
+    "staged": {
+      "ms": 1147.8,
+      "answer": "general",
+      "judged": 4,
+      "rounds": 2
+    },
+    "eager": {
+      "ms": 1141.1,
+      "answer": "general",
+      "judged": 4,
+      "rounds": 1
+    }
+  },
+  "261 tokens/first_case_decides": {
+    "staged": {
+      "ms": 314.5,
+      "answer": "legal",
+      "judged": 1,
+      "rounds": 1
+    },
+    "eager": {
+      "ms": 1267.7,
+      "answer": "legal",
+      "judged": 4,
+      "rounds": 1
+    }
+  },
+  "261 tokens/late_case_decides": {
+    "staged": {
+      "ms": 1322.4,
+      "answer": "tech_priority",
+      "judged": 4,
+      "rounds": 2
+    },
+    "eager": {
+      "ms": 1237.8,
+      "answer": "tech_priority",
+      "judged": 4,
+      "rounds": 1
+    }
+  },
+  "261 tokens/otherwise": {
+    "staged": {
+      "ms": 1333.8,
+      "answer": "general",
+      "judged": 4,
+      "rounds": 2
+    },
+    "eager": {
+      "ms": 1229.2,
+      "answer": "general",
+      "judged": 4,
+      "rounds": 1
+    }
+  }
+}

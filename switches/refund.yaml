@@ -1,0 +1,10 @@
+name: refund
+
+fields:
+  message: { type: text, required: true, author: customer }
+
+reads: [message]
+
+facts:
+  refund:
+    check: The customer requests money back for a charge already made.

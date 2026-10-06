@@ -1,0 +1,206 @@
+{
+ "report": {
+  "items": 24,
+  "top1_correct": 20,
+  "settled": 23,
+  "settled_wrong": 3,
+  "order_stable_pairs": 12,
+  "pairs": 12,
+  "goal_sensitive_scenarios": 4,
+  "scenarios": 6
+ },
+ "rows": [
+  {
+   "q": "Which option best fits a team that prioritises simple maintenance?",
+   "want": "pg",
+   "top": "pg",
+   "p": 0.916,
+   "status": "ok",
+   "value": "pg"
+  },
+  {
+   "q": "Which option best fits a team that prioritises simple maintenance?",
+   "want": "pg",
+   "top": "pg",
+   "p": 0.927,
+   "status": "ok",
+   "value": "pg"
+  },
+  {
+   "q": "Which option best handles millions of writes per second across regions?",
+   "want": "cass",
+   "top": "cass",
+   "p": 0.975,
+   "status": "ok",
+   "value": "cass"
+  },
+  {
+   "q": "Which option best handles millions of writes per second across regions?",
+   "want": "cass",
+   "top": "cass",
+   "p": 0.99,
+   "status": "ok",
+   "value": "cass"
+  },
+  {
+   "q": "Which reply best calms the customer without promising money back?",
+   "want": "sorry",
+   "top": "sorry",
+   "p": 0.974,
+   "status": "ok",
+   "value": "sorry"
+  },
+  {
+   "q": "Which reply best calms the customer without promising money back?",
+   "want": "sorry",
+   "top": "sorry",
+   "p": 0.905,
+   "status": "ok",
+   "value": "sorry"
+  },
+  {
+   "q": "Which reply best resolves it if the customer only wants their money back?",
+   "want": "refund",
+   "top": "refund",
+   "p": 0.989,
+   "status": "ok",
+   "value": "refund"
+  },
+  {
+   "q": "Which reply best resolves it if the customer only wants their money back?",
+   "want": "refund",
+   "top": "refund",
+   "p": 0.985,
+   "status": "ok",
+   "value": "refund"
+  },
+  {
+   "q": "Which option is the cheapest and healthiest?",
+   "want": "bike",
+   "top": "bike",
+   "p": 0.989,
+   "status": "ok",
+   "value": "bike"
+  },
+  {
+   "q": "Which option is the cheapest and healthiest?",
+   "want": "bike",
+   "top": "bike",
+   "p": 0.991,
+   "status": "ok",
+   "value": "bike"
+  },
+  {
+   "q": "Which option keeps us dry if a storm starts?",
+   "want": "car",
+   "top": "bike",
+   "p": 0.924,
+   "status": "ok",
+   "value": "bike"
+  },
+  {
+   "q": "Which option keeps us dry if a storm starts?",
+   "want": "car",
+   "top": "bike",
+   "p": 0.94,
+   "status": "ok",
+   "value": "bike"
+  },
+  {
+   "q": "Which option ships fastest with the least operational work?",
+   "want": "rails",
+   "top": "rails",
+   "p": 0.941,
+   "status": "ok",
+   "value": "rails"
+  },
+  {
+   "q": "Which option ships fastest with the least operational work?",
+   "want": "rails",
+   "top": "rails",
+   "p": 0.981,
+   "status": "ok",
+   "value": "rails"
+  },
+  {
+   "q": "Which option lets forty independent teams deploy separately?",
+   "want": "micro",
+   "top": "micro",
+   "p": 0.996,
+   "status": "ok",
+   "value": "micro"
+  },
+  {
+   "q": "Which option lets forty independent teams deploy separately?",
+   "want": "micro",
+   "top": "micro",
+   "p": 0.99,
+   "status": "ok",
+   "value": "micro"
+  },
+  {
+   "q": "Qual resposta atende o pedido do cliente de forma mais direta?",
+   "want": "link",
+   "top": "link",
+   "p": 0.988,
+   "status": "ok",
+   "value": "link"
+  },
+  {
+   "q": "Qual resposta atende o pedido do cliente de forma mais direta?",
+   "want": "link",
+   "top": "link",
+   "p": 0.996,
+   "status": "ok",
+   "value": "link"
+  },
+  {
+   "q": "Qual resposta tenta reter o cliente?",
+   "want": "offer",
+   "top": "offer",
+   "p": 0.966,
+   "status": "ok",
+   "value": "offer"
+  },
+  {
+   "q": "Qual resposta tenta reter o cliente?",
+   "want": "offer",
+   "top": "offer",
+   "p": 0.99,
+   "status": "ok",
+   "value": "offer"
+  },
+  {
+   "q": "Which option minimises monthly cost?",
+   "want": "cold",
+   "top": "cold",
+   "p": 0.997,
+   "status": "ok",
+   "value": "cold"
+  },
+  {
+   "q": "Which option minimises monthly cost?",
+   "want": "cold",
+   "top": "cold",
+   "p": 0.998,
+   "status": "ok",
+   "value": "cold"
+  },
+  {
+   "q": "Which option gives the lowest read latency regardless of cost?",
+   "want": "ram",
+   "top": "cold",
+   "p": 0.641,
+   "status": "uncertain",
+   "value": null
+  },
+  {
+   "q": "Which option gives the lowest read latency regardless of cost?",
+   "want": "ram",
+   "top": "cold",
+   "p": 0.954,
+   "status": "ok",
+   "value": "cold"
+  }
+ ]
+}

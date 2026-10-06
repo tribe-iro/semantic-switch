@@ -1,0 +1,98 @@
+{
+  "task": "The customer requests money back for a charge already made.",
+  "synthetic": true,
+  "python": "3.14.7",
+  "machine": "x86_64",
+  "configuration": {
+    "sizes": "0,10",
+    "seeds": "7",
+    "test_pairs": 6,
+    "threads": 16,
+    "device": "cpu",
+    "judge": "Qwen/Qwen3-1.7B-GGUF:Qwen3-1.7B-Q8_0.gguf",
+    "embed": "keisuke-miyako/multilingual-e5-small-gguf-q8_0:multilingual-e5-small-Q8_0.gguf",
+    "output": "bench/results/learning-curve-smoke.json"
+  },
+  "judge_startup_ms": 330.543,
+  "thresholds": [
+    0.9,
+    0.1
+  ],
+  "max_prompt_examples": 4,
+  "notes": [
+    "Training and test sentence families are disjoint; test pairs include negation.",
+    "Exact overrides are disabled. Thresholds are fixed, not tuned on test labels.",
+    "Judge sees at most four examples; heads train on all included points.",
+    "Tokens and judge calls are compute proxies, not measured dollar costs.",
+    "Synthetic results do not establish real-world or Jev parity."
+  ],
+  "curves": [
+    {
+      "seed": 7,
+      "points_per_class": 0,
+      "training_points": 0,
+      "judge": {
+        "items": 12,
+        "accepted": 11,
+        "coverage": 0.9166666666666666,
+        "accepted_accuracy": 1.0,
+        "wrong_accepted": 0,
+        "failed": 0,
+        "silent_misses": 0,
+        "judge_calls": 12,
+        "head_settled": 0,
+        "exact_matches": 0,
+        "tokens": 843,
+        "latency_ms": {
+          "p50": 501.162,
+          "p95": 526.837,
+          "mean": 501.857
+        }
+      },
+      "cascade": null,
+      "train_ms": null
+    },
+    {
+      "seed": 7,
+      "points_per_class": 10,
+      "training_points": 20,
+      "judge": {
+        "items": 12,
+        "accepted": 11,
+        "coverage": 0.9166666666666666,
+        "accepted_accuracy": 1.0,
+        "wrong_accepted": 0,
+        "failed": 0,
+        "silent_misses": 0,
+        "judge_calls": 12,
+        "head_settled": 0,
+        "exact_matches": 0,
+        "tokens": 843,
+        "latency_ms": {
+          "p50": 483.219,
+          "p95": 499.378,
+          "mean": 485.585
+        }
+      },
+      "cascade": {
+        "items": 12,
+        "accepted": 11,
+        "coverage": 0.9166666666666666,
+        "accepted_accuracy": 1.0,
+        "wrong_accepted": 0,
+        "failed": 0,
+        "silent_misses": 0,
+        "judge_calls": 12,
+        "head_settled": 0,
+        "exact_matches": 0,
+        "tokens": 843,
+        "latency_ms": {
+          "p50": 475.993,
+          "p95": 549.992,
+          "mean": 477.447
+        }
+      },
+      "train_ms": 657.8
+    }
+  ]
+}

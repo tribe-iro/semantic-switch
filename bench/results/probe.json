@@ -1,0 +1,79 @@
+{
+ "A_generic_probe_fresh": {
+  "accuracy": 0.881,
+  "auc": 0.894,
+  "coverage_0.9": 0.95,
+  "precision_0.9": 0.882
+ },
+ "B_per_claim_probe_fresh_loo": {
+  "accuracy": 0.925,
+  "auc": 0.986,
+  "coverage_0.9": 0.812,
+  "precision_0.9": 0.977
+ },
+ "curve_fresh_2_pairs": {
+  "accuracy": 0.819,
+  "auc": 0.864,
+  "coverage_0.9": 0.738,
+  "precision_0.9": 0.89
+ },
+ "curve_fresh_4_pairs": {
+  "accuracy": 0.887,
+  "auc": 0.951,
+  "coverage_0.9": 0.825,
+  "precision_0.9": 0.947
+ },
+ "curve_fresh_6_pairs": {
+  "accuracy": 0.912,
+  "auc": 0.953,
+  "coverage_0.9": 0.794,
+  "precision_0.9": 0.953
+ },
+ "curve_fresh_9_pairs": {
+  "accuracy": 0.925,
+  "auc": 0.986,
+  "coverage_0.9": 0.812,
+  "precision_0.9": 0.977
+ },
+ "judge_fresh": {
+  "accuracy": 0.856,
+  "auc": 0.916,
+  "coverage_0.9": 0.906,
+  "precision_0.9": 0.89
+ },
+ "curve_selection_2_pairs": {
+  "accuracy": 0.954,
+  "auc": 0.987,
+  "coverage_0.9": 0.887,
+  "precision_0.9": 0.977
+ },
+ "curve_selection_4_pairs": {
+  "accuracy": 0.967,
+  "auc": 0.988,
+  "coverage_0.9": 0.938,
+  "precision_0.9": 0.982
+ },
+ "curve_selection_6_pairs": {
+  "accuracy": 0.963,
+  "auc": 0.991,
+  "coverage_0.9": 0.938,
+  "precision_0.9": 0.982
+ },
+ "curve_selection_9_pairs": {
+  "accuracy": 0.975,
+  "auc": 0.994,
+  "coverage_0.9": 0.963,
+  "precision_0.9": 0.983
+ },
+ "judge_selection": {
+  "accuracy": 0.963,
+  "auc": 0.987,
+  "coverage_0.9": 0.933,
+  "precision_0.9": 0.987
+ },
+ "n": {
+  "selection": 240,
+  "fresh": 160,
+  "dim": 1536
+ }
+}

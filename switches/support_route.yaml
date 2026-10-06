@@ -1,0 +1,21 @@
+name: support_route
+
+fields:
+  message: { type: text, required: true, author: customer }
+
+reads: [message]
+
+facts:
+  refund:
+    check: The customer asks to receive money back for a charge.
+
+cases:
+  billing: refund
+
+otherwise: support
+
+tests:
+  - input: { message: "I was charged twice, please refund one of the charges." }
+    expect: billing
+  - input: { message: "How do I change my password?" }
+    expect: support

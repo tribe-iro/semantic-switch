@@ -1,0 +1,147 @@
+{
+  "gemma-4-E2B-it-Q4_0": {
+    "suite": "1",
+    "items": 160,
+    "accuracy": 0.856,
+    "pair_ordering": 0.95,
+    "auc": 0.917,
+    "brier": 0.12,
+    "ece": 0.119,
+    "coverage_0.9": 0.9,
+    "precision_0.9": 0.889,
+    "pick_accuracy": 1.0,
+    "ms_p50": 374.7,
+    "errors": 0,
+    "by_tag": {
+      "contrast": 0.8,
+      "double_negation": 1.0,
+      "hypothetical": 0.7,
+      "implicit": 0.8,
+      "keyword": 1.0,
+      "negation": 0.82,
+      "plain": 1.0,
+      "role": 0.89,
+      "temporal": 0.82
+    },
+    "by_lang": {
+      "en": 0.85,
+      "pt": 0.86
+    }
+  },
+  "gemma-4-E4B_q4_0-it": {
+    "suite": "1",
+    "items": 160,
+    "accuracy": 0.931,
+    "pair_ordering": 0.975,
+    "auc": 0.969,
+    "brier": 0.058,
+    "ece": 0.054,
+    "coverage_0.9": 0.95,
+    "precision_0.9": 0.947,
+    "pick_accuracy": 1.0,
+    "ms_p50": 578.2,
+    "errors": 0,
+    "by_tag": {
+      "contrast": 1.0,
+      "double_negation": 1.0,
+      "hypothetical": 1.0,
+      "implicit": 0.8,
+      "keyword": 0.92,
+      "negation": 0.91,
+      "plain": 1.0,
+      "role": 0.89,
+      "temporal": 0.96
+    },
+    "by_lang": {
+      "en": 0.94,
+      "pt": 0.93
+    }
+  },
+  "Qwen3-1.7B-Q8_0": {
+    "suite": "1",
+    "items": 160,
+    "accuracy": 0.794,
+    "pair_ordering": 0.9,
+    "auc": 0.868,
+    "brier": 0.186,
+    "ece": 0.196,
+    "coverage_0.9": 0.925,
+    "precision_0.9": 0.831,
+    "pick_accuracy": 0.95,
+    "ms_p50": 382.0,
+    "errors": 0,
+    "by_tag": {
+      "contrast": 0.75,
+      "double_negation": 1.0,
+      "hypothetical": 0.8,
+      "implicit": 0.75,
+      "keyword": 0.92,
+      "negation": 0.86,
+      "plain": 1.0,
+      "role": 0.75,
+      "temporal": 0.64
+    },
+    "by_lang": {
+      "en": 0.84,
+      "pt": 0.75
+    }
+  },
+  "Qwen3.5-2B-Q8_0": {
+    "suite": "1",
+    "items": 160,
+    "accuracy": 0.844,
+    "pair_ordering": 0.963,
+    "auc": 0.938,
+    "brier": 0.102,
+    "ece": 0.063,
+    "coverage_0.9": 0.662,
+    "precision_0.9": 0.953,
+    "pick_accuracy": 1.0,
+    "ms_p50": 418.5,
+    "errors": 0,
+    "by_tag": {
+      "contrast": 0.85,
+      "double_negation": 1.0,
+      "hypothetical": 0.9,
+      "implicit": 0.85,
+      "keyword": 0.83,
+      "negation": 0.86,
+      "plain": 0.75,
+      "role": 0.86,
+      "temporal": 0.79
+    },
+    "by_lang": {
+      "en": 0.88,
+      "pt": 0.81
+    }
+  },
+  "Qwen3-0.6B-Q4_K_M": {
+    "suite": "1",
+    "items": 160,
+    "accuracy": 0.656,
+    "pair_ordering": 0.75,
+    "auc": 0.72,
+    "brier": 0.222,
+    "ece": 0.141,
+    "coverage_0.9": 0.125,
+    "precision_0.9": 0.9,
+    "pick_accuracy": 0.9,
+    "ms_p50": 136.0,
+    "errors": 0,
+    "by_tag": {
+      "contrast": 0.6,
+      "double_negation": 1.0,
+      "hypothetical": 1.0,
+      "implicit": 0.75,
+      "keyword": 0.58,
+      "negation": 0.82,
+      "plain": 0.58,
+      "role": 0.57,
+      "temporal": 0.43
+    },
+    "by_lang": {
+      "en": 0.69,
+      "pt": 0.62
+    }
+  }
+}

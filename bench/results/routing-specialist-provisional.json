@@ -1,0 +1,2150 @@
+{
+ "arms": {
+  "base-e2b-q8": {
+   "judge": "/home/tribeiro/.cache/semantic-switch/trainer/models/google--gemma-4-E2B-it/3e22461f65e89153144f8adb70e3b8c2cc9845a7/llama.cpp-a4cb4c61fd9d9c2066c7c1747821d3d65b8943bd/Q8_0.gguf",
+   "provider": null,
+   "identity": {
+    "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489"
+   },
+   "native": {
+    "source": "/home/tribeiro/.cache/semantic-switch/trainer/models/google--gemma-4-E2B-it/3e22461f65e89153144f8adb70e3b8c2cc9845a7/llama.cpp-a4cb4c61fd9d9c2066c7c1747821d3d65b8943bd/Q8_0.gguf",
+    "adapter": "chat",
+    "device": "cpu",
+    "n_ctx": 2048,
+    "n_batch": 512,
+    "threads": 16,
+    "max_input_tokens": 1024,
+    "prefix_slots": 4,
+    "quality_profile": null,
+    "repack": true
+   },
+   "sets": {
+    "provisional_check": {
+     "raw_correct": 162,
+     "submitted": 200,
+     "predicted": 200,
+     "failures": 0,
+     "accepted_correct": 162,
+     "accepted_wrong": 37,
+     "per_class": {
+      "billing": {
+       "gold": 40,
+       "predicted": 41,
+       "correct": 32
+      },
+      "technical": {
+       "gold": 40,
+       "predicted": 39,
+       "correct": 33
+      },
+      "security": {
+       "gold": 49,
+       "predicted": 45,
+       "correct": 40
+      },
+      "retention": {
+       "gold": 43,
+       "predicted": 60,
+       "correct": 43
+      },
+      "clarify": {
+       "gold": 28,
+       "predicted": 15,
+       "correct": 14
+      }
+     },
+     "gold_vs_predicted": {
+      "billing": {
+       "billing": 32,
+       "retention": 3,
+       "technical": 4,
+       "security": 1
+      },
+      "technical": {
+       "technical": 33,
+       "retention": 4,
+       "security": 2,
+       "clarify": 1
+      },
+      "retention": {
+       "retention": 43
+      },
+      "security": {
+       "security": 40,
+       "retention": 2,
+       "billing": 6,
+       "technical": 1
+      },
+      "clarify": {
+       "clarify": 14,
+       "billing": 3,
+       "retention": 8,
+       "security": 2,
+       "technical": 1
+      }
+     },
+     "contrast_pairs": {
+      "pairs": 111,
+      "both_correct": 70
+     },
+     "languages": {
+      "en": {
+       "raw_correct": 116,
+       "submitted": 146
+      },
+      "pt": {
+       "raw_correct": 46,
+       "submitted": 54
+      }
+     },
+     "families_all_correct": 32,
+     "families": 62,
+     "p50_ms": 2189.5,
+     "p95_ms": 3449.8,
+     "failure_examples": [],
+     "matched_raw_correct": 162,
+     "matched_submitted": 200
+    },
+    "cohort_v2_routing": {
+     "raw_correct": 66,
+     "submitted": 82,
+     "predicted": 82,
+     "failures": 0,
+     "accepted_correct": 65,
+     "accepted_wrong": 15,
+     "per_class": {
+      "billing": {
+       "gold": 32,
+       "predicted": 21,
+       "correct": 20
+      },
+      "technical": {
+       "gold": 12,
+       "predicted": 14,
+       "correct": 11
+      },
+      "security": {
+       "gold": 10,
+       "predicted": 15,
+       "correct": 10
+      },
+      "retention": {
+       "gold": 22,
+       "predicted": 27,
+       "correct": 21
+      },
+      "clarify": {
+       "gold": 6,
+       "predicted": 5,
+       "correct": 4
+      }
+     },
+     "gold_vs_predicted": {
+      "billing": {
+       "billing": 20,
+       "security": 5,
+       "technical": 3,
+       "retention": 4
+      },
+      "security": {
+       "security": 10
+      },
+      "technical": {
+       "technical": 11,
+       "retention": 1
+      },
+      "retention": {
+       "retention": 21,
+       "clarify": 1
+      },
+      "clarify": {
+       "clarify": 4,
+       "retention": 1,
+       "billing": 1
+      }
+     },
+     "contrast_pairs": {
+      "pairs": 52,
+      "both_correct": 34
+     },
+     "languages": {
+      "en": {
+       "raw_correct": 31,
+       "submitted": 41
+      },
+      "pt": {
+       "raw_correct": 35,
+       "submitted": 41
+      }
+     },
+     "families_all_correct": 2,
+     "families": 11,
+     "p50_ms": 1755.5,
+     "p95_ms": 3019.0,
+     "failure_examples": [],
+     "matched_raw_correct": 66,
+     "matched_submitted": 82
+    }
+   }
+  },
+  "specialist-100": {
+   "judge": "/home/tribeiro/.cache/semantic-switch/routing-specialist/runs/fit-100/deployment/specialist.gguf",
+   "provider": null,
+   "identity": {
+    "sha256": "ecfb362c48ff9fe9faa3157438f9e1a2e2b49fd8b9fcbcc4581d2d4e3b961ada"
+   },
+   "native": {
+    "source": "/home/tribeiro/.cache/semantic-switch/routing-specialist/runs/fit-100/deployment/specialist.gguf",
+    "adapter": "chat",
+    "device": "cpu",
+    "n_ctx": 2048,
+    "n_batch": 512,
+    "threads": 16,
+    "max_input_tokens": 1024,
+    "prefix_slots": 4,
+    "quality_profile": null,
+    "repack": true
+   },
+   "sets": {
+    "provisional_check": {
+     "raw_correct": 183,
+     "submitted": 200,
+     "predicted": 200,
+     "failures": 0,
+     "accepted_correct": 174,
+     "accepted_wrong": 11,
+     "per_class": {
+      "billing": {
+       "gold": 40,
+       "predicted": 46,
+       "correct": 38
+      },
+      "technical": {
+       "gold": 40,
+       "predicted": 38,
+       "correct": 38
+      },
+      "security": {
+       "gold": 49,
+       "predicted": 43,
+       "correct": 42
+      },
+      "retention": {
+       "gold": 43,
+       "predicted": 43,
+       "correct": 40
+      },
+      "clarify": {
+       "gold": 28,
+       "predicted": 30,
+       "correct": 25
+      }
+     },
+     "gold_vs_predicted": {
+      "billing": {
+       "billing": 38,
+       "clarify": 2
+      },
+      "technical": {
+       "technical": 38,
+       "billing": 1,
+       "clarify": 1
+      },
+      "retention": {
+       "retention": 40,
+       "billing": 2,
+       "clarify": 1
+      },
+      "security": {
+       "security": 42,
+       "retention": 2,
+       "billing": 4,
+       "clarify": 1
+      },
+      "clarify": {
+       "clarify": 25,
+       "billing": 1,
+       "security": 1,
+       "retention": 1
+      }
+     },
+     "contrast_pairs": {
+      "pairs": 111,
+      "both_correct": 96
+     },
+     "languages": {
+      "en": {
+       "raw_correct": 133,
+       "submitted": 146
+      },
+      "pt": {
+       "raw_correct": 50,
+       "submitted": 54
+      }
+     },
+     "families_all_correct": 50,
+     "families": 62,
+     "p50_ms": 2296.0,
+     "p95_ms": 3879.9,
+     "failure_examples": [],
+     "vs_base": {
+      "matched": 200,
+      "fixes": 29,
+      "regressions": 8,
+      "family_fixes": [
+       "group:routing-check-0005",
+       "group:routing-check-0009",
+       "group:routing-check-0010",
+       "group:routing-check-0019",
+       "group:routing-check-0020",
+       "group:routing-check-0022",
+       "group:routing-check-0024",
+       "group:routing-check-0027",
+       "group:routing-check-0030",
+       "group:routing-check-0033",
+       "group:routing-check-0034",
+       "group:routing-check-0038",
+       "group:routing-check-0041",
+       "group:routing-check-0042",
+       "group:routing-check-0045",
+       "group:routing-check-0051",
+       "group:routing-check-0053",
+       "group:routing-check-0058",
+       "group:routing-check-0059",
+       "group:routing-check-0060",
+       "group:routing-check-0061"
+      ],
+      "family_regressions": [
+       "group:routing-check-0012",
+       "group:routing-check-0023",
+       "group:routing-check-0035"
+      ],
+      "class_regressions": {
+       "retention": {
+        "base": 43,
+        "arm": 40
+       }
+      },
+      "families_with_more_wrong_by_class": {
+       "billing": [
+        "group:routing-check-0035",
+        "group:routing-check-0046"
+       ],
+       "retention": [
+        "group:routing-check-0012",
+        "group:routing-check-0057"
+       ],
+       "security": [
+        "group:routing-check-0023",
+        "group:routing-check-0032"
+       ],
+       "technical": [
+        "group:routing-check-0012"
+       ]
+      }
+     },
+     "matched_raw_correct": 183,
+     "matched_submitted": 200
+    },
+    "cohort_v2_routing": {
+     "raw_correct": 75,
+     "submitted": 82,
+     "predicted": 82,
+     "failures": 0,
+     "accepted_correct": 71,
+     "accepted_wrong": 5,
+     "per_class": {
+      "billing": {
+       "gold": 32,
+       "predicted": 28,
+       "correct": 27
+      },
+      "technical": {
+       "gold": 12,
+       "predicted": 13,
+       "correct": 12
+      },
+      "security": {
+       "gold": 10,
+       "predicted": 11,
+       "correct": 10
+      },
+      "retention": {
+       "gold": 22,
+       "predicted": 21,
+       "correct": 21
+      },
+      "clarify": {
+       "gold": 6,
+       "predicted": 9,
+       "correct": 5
+      }
+     },
+     "gold_vs_predicted": {
+      "billing": {
+       "billing": 27,
+       "clarify": 3,
+       "security": 1,
+       "technical": 1
+      },
+      "security": {
+       "security": 10
+      },
+      "technical": {
+       "technical": 12
+      },
+      "retention": {
+       "retention": 21,
+       "clarify": 1
+      },
+      "clarify": {
+       "clarify": 5,
+       "billing": 1
+      }
+     },
+     "contrast_pairs": {
+      "pairs": 52,
+      "both_correct": 45
+     },
+     "languages": {
+      "en": {
+       "raw_correct": 39,
+       "submitted": 41
+      },
+      "pt": {
+       "raw_correct": 36,
+       "submitted": 41
+      }
+     },
+     "families_all_correct": 6,
+     "families": 11,
+     "p50_ms": 1468.3,
+     "p95_ms": 1813.3,
+     "failure_examples": [],
+     "vs_base": {
+      "matched": 82,
+      "fixes": 12,
+      "regressions": 3,
+      "family_fixes": [
+       "group:cohort-routing-02",
+       "group:cohort-routing-07",
+       "group:cohort-routing-08",
+       "group:cohort-routing-11"
+      ],
+      "family_regressions": [],
+      "class_regressions": {},
+      "families_with_more_wrong_by_class": {
+       "billing": [
+        "group:cohort-routing-05",
+        "group:cohort-routing-06",
+        "group:cohort-routing-09"
+       ]
+      }
+     },
+     "matched_raw_correct": 75,
+     "matched_submitted": 82
+    }
+   }
+  },
+  "specialist-300": {
+   "judge": "/home/tribeiro/.cache/semantic-switch/routing-specialist/runs/fit-300/deployment/specialist.gguf",
+   "provider": null,
+   "identity": {
+    "sha256": "5916a5b59fe5c17fa5f9ccaca1c8c5c45521187075e42b5d45311247506397ac"
+   },
+   "native": {
+    "source": "/home/tribeiro/.cache/semantic-switch/routing-specialist/runs/fit-300/deployment/specialist.gguf",
+    "adapter": "chat",
+    "device": "cpu",
+    "n_ctx": 2048,
+    "n_batch": 512,
+    "threads": 16,
+    "max_input_tokens": 1024,
+    "prefix_slots": 4,
+    "quality_profile": null,
+    "repack": true
+   },
+   "sets": {
+    "provisional_check": {
+     "raw_correct": 186,
+     "submitted": 200,
+     "predicted": 200,
+     "failures": 0,
+     "accepted_correct": 180,
+     "accepted_wrong": 6,
+     "per_class": {
+      "billing": {
+       "gold": 40,
+       "predicted": 41,
+       "correct": 37
+      },
+      "technical": {
+       "gold": 40,
+       "predicted": 41,
+       "correct": 38
+      },
+      "security": {
+       "gold": 49,
+       "predicted": 47,
+       "correct": 46
+      },
+      "retention": {
+       "gold": 43,
+       "predicted": 45,
+       "correct": 42
+      },
+      "clarify": {
+       "gold": 28,
+       "predicted": 26,
+       "correct": 23
+      }
+     },
+     "gold_vs_predicted": {
+      "billing": {
+       "billing": 37,
+       "clarify": 1,
+       "technical": 2
+      },
+      "technical": {
+       "technical": 38,
+       "security": 1,
+       "clarify": 1
+      },
+      "retention": {
+       "retention": 42,
+       "clarify": 1
+      },
+      "security": {
+       "security": 46,
+       "billing": 2,
+       "retention": 1
+      },
+      "clarify": {
+       "clarify": 23,
+       "billing": 2,
+       "retention": 2,
+       "technical": 1
+      }
+     },
+     "contrast_pairs": {
+      "pairs": 111,
+      "both_correct": 92
+     },
+     "languages": {
+      "en": {
+       "raw_correct": 135,
+       "submitted": 146
+      },
+      "pt": {
+       "raw_correct": 51,
+       "submitted": 54
+      }
+     },
+     "families_all_correct": 50,
+     "families": 62,
+     "p50_ms": 1779.7,
+     "p95_ms": 2362.7,
+     "failure_examples": [],
+     "vs_base": {
+      "matched": 200,
+      "fixes": 26,
+      "regressions": 2,
+      "family_fixes": [
+       "group:routing-check-0005",
+       "group:routing-check-0010",
+       "group:routing-check-0014",
+       "group:routing-check-0019",
+       "group:routing-check-0020",
+       "group:routing-check-0022",
+       "group:routing-check-0024",
+       "group:routing-check-0030",
+       "group:routing-check-0031",
+       "group:routing-check-0033",
+       "group:routing-check-0034",
+       "group:routing-check-0038",
+       "group:routing-check-0042",
+       "group:routing-check-0043",
+       "group:routing-check-0045",
+       "group:routing-check-0051",
+       "group:routing-check-0053",
+       "group:routing-check-0058",
+       "group:routing-check-0061"
+      ],
+      "family_regressions": [
+       "group:routing-check-0035"
+      ],
+      "class_regressions": {
+       "retention": {
+        "base": 43,
+        "arm": 42
+       }
+      },
+      "families_with_more_wrong_by_class": {
+       "billing": [
+        "group:routing-check-0035"
+       ],
+       "retention": [
+        "group:routing-check-0057"
+       ]
+      }
+     },
+     "matched_raw_correct": 186,
+     "matched_submitted": 200
+    },
+    "cohort_v2_routing": {
+     "raw_correct": 78,
+     "submitted": 82,
+     "predicted": 82,
+     "failures": 0,
+     "accepted_correct": 71,
+     "accepted_wrong": 4,
+     "per_class": {
+      "billing": {
+       "gold": 32,
+       "predicted": 29,
+       "correct": 29
+      },
+      "technical": {
+       "gold": 12,
+       "predicted": 13,
+       "correct": 12
+      },
+      "security": {
+       "gold": 10,
+       "predicted": 12,
+       "correct": 10
+      },
+      "retention": {
+       "gold": 22,
+       "predicted": 21,
+       "correct": 21
+      },
+      "clarify": {
+       "gold": 6,
+       "predicted": 7,
+       "correct": 6
+      }
+     },
+     "gold_vs_predicted": {
+      "billing": {
+       "billing": 29,
+       "security": 2,
+       "technical": 1
+      },
+      "security": {
+       "security": 10
+      },
+      "technical": {
+       "technical": 12
+      },
+      "retention": {
+       "retention": 21,
+       "clarify": 1
+      },
+      "clarify": {
+       "clarify": 6
+      }
+     },
+     "contrast_pairs": {
+      "pairs": 52,
+      "both_correct": 48
+     },
+     "languages": {
+      "en": {
+       "raw_correct": 40,
+       "submitted": 41
+      },
+      "pt": {
+       "raw_correct": 38,
+       "submitted": 41
+      }
+     },
+     "families_all_correct": 8,
+     "families": 11,
+     "p50_ms": 1337.9,
+     "p95_ms": 1535.8,
+     "failure_examples": [],
+     "vs_base": {
+      "matched": 82,
+      "fixes": 12,
+      "regressions": 0,
+      "family_fixes": [
+       "group:cohort-routing-02",
+       "group:cohort-routing-05",
+       "group:cohort-routing-07",
+       "group:cohort-routing-08",
+       "group:cohort-routing-10",
+       "group:cohort-routing-11"
+      ],
+      "family_regressions": [],
+      "class_regressions": {},
+      "families_with_more_wrong_by_class": {}
+     },
+     "matched_raw_correct": 78,
+     "matched_submitted": 82
+    }
+   }
+  },
+  "gemma-4-31b": {
+   "judge": "openrouter:google/gemma-4-31b-it",
+   "provider": "Io Net",
+   "identity": {
+    "source": "openrouter",
+    "model": "google/gemma-4-31b-it",
+    "provider": "Io Net",
+    "protocol": "chat-logprobs"
+   },
+   "native": null,
+   "sets": {
+    "provisional_check": {
+     "raw_correct": 200,
+     "submitted": 200,
+     "predicted": 200,
+     "failures": 0,
+     "accepted_correct": 200,
+     "accepted_wrong": 0,
+     "per_class": {
+      "billing": {
+       "gold": 40,
+       "predicted": 40,
+       "correct": 40
+      },
+      "technical": {
+       "gold": 40,
+       "predicted": 40,
+       "correct": 40
+      },
+      "security": {
+       "gold": 49,
+       "predicted": 49,
+       "correct": 49
+      },
+      "retention": {
+       "gold": 43,
+       "predicted": 43,
+       "correct": 43
+      },
+      "clarify": {
+       "gold": 28,
+       "predicted": 28,
+       "correct": 28
+      }
+     },
+     "gold_vs_predicted": {
+      "billing": {
+       "billing": 40
+      },
+      "technical": {
+       "technical": 40
+      },
+      "retention": {
+       "retention": 43
+      },
+      "security": {
+       "security": 49
+      },
+      "clarify": {
+       "clarify": 28
+      }
+     },
+     "contrast_pairs": {
+      "pairs": 111,
+      "both_correct": 111
+     },
+     "languages": {
+      "en": {
+       "raw_correct": 146,
+       "submitted": 146
+      },
+      "pt": {
+       "raw_correct": 54,
+       "submitted": 54
+      }
+     },
+     "families_all_correct": 62,
+     "families": 62,
+     "p50_ms": 520.4,
+     "p95_ms": 2802.4,
+     "failure_examples": [],
+     "vs_base": {
+      "matched": 200,
+      "fixes": 38,
+      "regressions": 0,
+      "family_fixes": [
+       "group:routing-check-0005",
+       "group:routing-check-0009",
+       "group:routing-check-0010",
+       "group:routing-check-0014",
+       "group:routing-check-0019",
+       "group:routing-check-0020",
+       "group:routing-check-0022",
+       "group:routing-check-0024",
+       "group:routing-check-0026",
+       "group:routing-check-0027",
+       "group:routing-check-0030",
+       "group:routing-check-0031",
+       "group:routing-check-0032",
+       "group:routing-check-0033",
+       "group:routing-check-0034",
+       "group:routing-check-0038",
+       "group:routing-check-0041",
+       "group:routing-check-0042",
+       "group:routing-check-0043",
+       "group:routing-check-0044",
+       "group:routing-check-0045",
+       "group:routing-check-0046",
+       "group:routing-check-0051",
+       "group:routing-check-0053",
+       "group:routing-check-0055",
+       "group:routing-check-0057",
+       "group:routing-check-0058",
+       "group:routing-check-0059",
+       "group:routing-check-0060",
+       "group:routing-check-0061"
+      ],
+      "family_regressions": [],
+      "class_regressions": {},
+      "families_with_more_wrong_by_class": {}
+     },
+     "matched_raw_correct": 200,
+     "matched_submitted": 200
+    },
+    "cohort_v2_routing": {
+     "raw_correct": 79,
+     "submitted": 82,
+     "predicted": 82,
+     "failures": 0,
+     "accepted_correct": 79,
+     "accepted_wrong": 2,
+     "per_class": {
+      "billing": {
+       "gold": 32,
+       "predicted": 29,
+       "correct": 29
+      },
+      "technical": {
+       "gold": 12,
+       "predicted": 12,
+       "correct": 12
+      },
+      "security": {
+       "gold": 10,
+       "predicted": 13,
+       "correct": 10
+      },
+      "retention": {
+       "gold": 22,
+       "predicted": 22,
+       "correct": 22
+      },
+      "clarify": {
+       "gold": 6,
+       "predicted": 6,
+       "correct": 6
+      }
+     },
+     "gold_vs_predicted": {
+      "billing": {
+       "billing": 29,
+       "security": 3
+      },
+      "security": {
+       "security": 10
+      },
+      "technical": {
+       "technical": 12
+      },
+      "retention": {
+       "retention": 22
+      },
+      "clarify": {
+       "clarify": 6
+      }
+     },
+     "contrast_pairs": {
+      "pairs": 52,
+      "both_correct": 49
+     },
+     "languages": {
+      "en": {
+       "raw_correct": 40,
+       "submitted": 41
+      },
+      "pt": {
+       "raw_correct": 39,
+       "submitted": 41
+      }
+     },
+     "families_all_correct": 10,
+     "families": 11,
+     "p50_ms": 532.2,
+     "p95_ms": 2800.5,
+     "failure_examples": [],
+     "vs_base": {
+      "matched": 82,
+      "fixes": 15,
+      "regressions": 2,
+      "family_fixes": [
+       "group:cohort-routing-02",
+       "group:cohort-routing-04",
+       "group:cohort-routing-06",
+       "group:cohort-routing-07",
+       "group:cohort-routing-08",
+       "group:cohort-routing-09",
+       "group:cohort-routing-10",
+       "group:cohort-routing-11"
+      ],
+      "family_regressions": [],
+      "class_regressions": {},
+      "families_with_more_wrong_by_class": {
+       "billing": [
+        "group:cohort-routing-05"
+       ]
+      }
+     },
+     "matched_raw_correct": 79,
+     "matched_submitted": 82
+    }
+   }
+  },
+  "jev-1.13": {
+   "judge": "openrouter:typesafe/jev-1.13",
+   "provider": null,
+   "identity": {
+    "source": "openrouter",
+    "model": "typesafe/jev-1.13",
+    "provider": null,
+    "protocol": "systemone"
+   },
+   "native": null,
+   "sets": {
+    "provisional_check": {
+     "raw_correct": 197,
+     "submitted": 200,
+     "predicted": 200,
+     "failures": 0,
+     "accepted_correct": 179,
+     "accepted_wrong": 0,
+     "per_class": {
+      "billing": {
+       "gold": 40,
+       "predicted": 41,
+       "correct": 40
+      },
+      "technical": {
+       "gold": 40,
+       "predicted": 40,
+       "correct": 40
+      },
+      "security": {
+       "gold": 49,
+       "predicted": 49,
+       "correct": 49
+      },
+      "retention": {
+       "gold": 43,
+       "predicted": 45,
+       "correct": 43
+      },
+      "clarify": {
+       "gold": 28,
+       "predicted": 25,
+       "correct": 25
+      }
+     },
+     "gold_vs_predicted": {
+      "billing": {
+       "billing": 40
+      },
+      "technical": {
+       "technical": 40
+      },
+      "retention": {
+       "retention": 43
+      },
+      "security": {
+       "security": 49
+      },
+      "clarify": {
+       "clarify": 25,
+       "retention": 2,
+       "billing": 1
+      }
+     },
+     "contrast_pairs": {
+      "pairs": 111,
+      "both_correct": 107
+     },
+     "languages": {
+      "en": {
+       "raw_correct": 143,
+       "submitted": 146
+      },
+      "pt": {
+       "raw_correct": 54,
+       "submitted": 54
+      }
+     },
+     "families_all_correct": 59,
+     "families": 62,
+     "p50_ms": 431.2,
+     "p95_ms": 517.4,
+     "failure_examples": [],
+     "vs_base": {
+      "matched": 200,
+      "fixes": 35,
+      "regressions": 0,
+      "family_fixes": [
+       "group:routing-check-0005",
+       "group:routing-check-0009",
+       "group:routing-check-0010",
+       "group:routing-check-0014",
+       "group:routing-check-0019",
+       "group:routing-check-0022",
+       "group:routing-check-0024",
+       "group:routing-check-0026",
+       "group:routing-check-0027",
+       "group:routing-check-0030",
+       "group:routing-check-0031",
+       "group:routing-check-0032",
+       "group:routing-check-0033",
+       "group:routing-check-0034",
+       "group:routing-check-0038",
+       "group:routing-check-0041",
+       "group:routing-check-0042",
+       "group:routing-check-0044",
+       "group:routing-check-0045",
+       "group:routing-check-0046",
+       "group:routing-check-0051",
+       "group:routing-check-0053",
+       "group:routing-check-0055",
+       "group:routing-check-0057",
+       "group:routing-check-0058",
+       "group:routing-check-0060",
+       "group:routing-check-0061"
+      ],
+      "family_regressions": [],
+      "class_regressions": {},
+      "families_with_more_wrong_by_class": {}
+     },
+     "matched_raw_correct": 197,
+     "matched_submitted": 200
+    },
+    "cohort_v2_routing": {
+     "raw_correct": 75,
+     "submitted": 82,
+     "predicted": 82,
+     "failures": 0,
+     "accepted_correct": 70,
+     "accepted_wrong": 0,
+     "per_class": {
+      "billing": {
+       "gold": 32,
+       "predicted": 29,
+       "correct": 27
+      },
+      "technical": {
+       "gold": 12,
+       "predicted": 12,
+       "correct": 12
+      },
+      "security": {
+       "gold": 10,
+       "predicted": 15,
+       "correct": 10
+      },
+      "retention": {
+       "gold": 22,
+       "predicted": 22,
+       "correct": 22
+      },
+      "clarify": {
+       "gold": 6,
+       "predicted": 4,
+       "correct": 4
+      }
+     },
+     "gold_vs_predicted": {
+      "billing": {
+       "billing": 27,
+       "security": 5
+      },
+      "security": {
+       "security": 10
+      },
+      "technical": {
+       "technical": 12
+      },
+      "retention": {
+       "retention": 22
+      },
+      "clarify": {
+       "clarify": 4,
+       "billing": 2
+      }
+     },
+     "contrast_pairs": {
+      "pairs": 52,
+      "both_correct": 45
+     },
+     "languages": {
+      "en": {
+       "raw_correct": 38,
+       "submitted": 41
+      },
+      "pt": {
+       "raw_correct": 37,
+       "submitted": 41
+      }
+     },
+     "families_all_correct": 8,
+     "families": 11,
+     "p50_ms": 419.6,
+     "p95_ms": 508.7,
+     "failure_examples": [],
+     "vs_base": {
+      "matched": 82,
+      "fixes": 12,
+      "regressions": 3,
+      "family_fixes": [
+       "group:cohort-routing-02",
+       "group:cohort-routing-04",
+       "group:cohort-routing-06",
+       "group:cohort-routing-07",
+       "group:cohort-routing-08",
+       "group:cohort-routing-11"
+      ],
+      "family_regressions": [],
+      "class_regressions": {},
+      "families_with_more_wrong_by_class": {
+       "billing": [
+        "group:cohort-routing-05"
+       ],
+       "clarify": [
+        "group:cohort-routing-10"
+       ]
+      }
+     },
+     "matched_raw_correct": 75,
+     "matched_submitted": 82
+    }
+   }
+  }
+ },
+ "matched": {
+  "provisional_check": {
+   "rows": 200,
+   "scored_by_every_arm": 200
+  },
+  "cohort_v2_routing": {
+   "rows": 82,
+   "scored_by_every_arm": 82
+  }
+ },
+ "curve": {
+  "fit-100": {
+   "roles": {
+    "fit": {
+     "observations": 131,
+     "families": 30
+    },
+    "model_select": {
+     "observations": 323,
+     "families": 92
+    },
+    "acceptance_fit": {
+     "observations": 258,
+     "families": 68
+    }
+   },
+   "fitting": {
+    "device": "xpu:0",
+    "precision": "bfloat16",
+    "threads": 16,
+    "attention": "eager",
+    "gradient_checkpointing": true
+   },
+   "placement": {
+    "": "xpu:0",
+    "model.language_model.embed_tokens_per_layer": "cpu:file-mapped"
+   },
+   "trainable_parameters": 24158208,
+   "fit_wall_seconds": 1952.3,
+   "epochs": [
+    {
+     "epoch": 1,
+     "loss": 0.8711,
+     "seconds": 283.6,
+     "steps": 17,
+     "step_seconds": 16.68,
+     "peak_device_bytes": 6298492928,
+     "tokens": 131978,
+     "fit_predicted": {
+      "billing": 30.5,
+      "clarify": 17.0,
+      "retention": 29.5,
+      "security": 27.0,
+      "technical": 27.0
+     }
+    },
+    {
+     "epoch": 2,
+     "loss": 0.2452,
+     "seconds": 421.6,
+     "steps": 17,
+     "step_seconds": 24.8,
+     "peak_device_bytes": 6300538880,
+     "tokens": 131978,
+     "fit_predicted": {
+      "billing": 27.0,
+      "clarify": 21.0,
+      "retention": 29.0,
+      "security": 27.0,
+      "technical": 27.0
+     }
+    },
+    {
+     "epoch": 3,
+     "loss": 0.084,
+     "seconds": 371.6,
+     "steps": 17,
+     "step_seconds": 21.86,
+     "peak_device_bytes": 6304670720,
+     "tokens": 131978,
+     "fit_predicted": {
+      "billing": 28.0,
+      "clarify": 21.0,
+      "retention": 28.0,
+      "security": 28.0,
+      "technical": 26.0
+     }
+    }
+   ],
+   "peak_device_bytes": 6304670720,
+   "peak_host_bytes": 14411870208,
+   "max_hf_native_base_logp_difference": 3.978,
+   "fit_all_presentations_correct": {
+    "before": 105,
+    "after": 129,
+    "of": 131
+   },
+   "selected": "epoch-3",
+   "specialist_sha256": "ecfb362c48ff9fe9faa3157438f9e1a2e2b49fd8b9fcbcc4581d2d4e3b961ada",
+   "model_select": {
+    "observations": 323,
+    "families": 92,
+    "candidates": [
+     {
+      "name": "base",
+      "epoch": null,
+      "raw_correct": 270,
+      "submitted": 323,
+      "failures": 0,
+      "class_regressions": [],
+      "family_fixes": [],
+      "family_regressions": [],
+      "pairs": {
+       "pairs": 215,
+       "both_correct": 154
+      },
+      "p50_ms": 2443.3403690345585,
+      "per_class_correct": {
+       "routing_reference:billing": 4,
+       "routing_reference:technical": 21,
+       "routing_reference:security": 24,
+       "routing_reference:retention": 12,
+       "routing_reference:clarify": 0,
+       "routing:billing": 34,
+       "routing:technical": 50,
+       "routing:security": 73,
+       "routing:retention": 41,
+       "routing:clarify": 11
+      }
+     },
+     {
+      "name": "epoch-1",
+      "epoch": 1,
+      "raw_correct": 271,
+      "submitted": 323,
+      "failures": 0,
+      "class_regressions": [
+       "routing:retention",
+       "routing:security",
+       "routing_reference:security"
+      ],
+      "family_fixes": [
+       "group:routing-0269",
+       "group:routing-0271",
+       "group:routing-0333",
+       "group:routing-0452",
+       "group:routing-0502",
+       "group:routing-0547",
+       "group:routing-0570",
+       "group:routing-0571"
+      ],
+      "family_regressions": [
+       "group:routing-0246",
+       "group:routing-0361",
+       "group:routing-0466",
+       "group:routing-0583"
+      ],
+      "pairs": {
+       "pairs": 215,
+       "both_correct": 157
+      },
+      "p50_ms": 2728.7991199991666,
+      "per_class_correct": {
+       "routing_reference:billing": 6,
+       "routing_reference:technical": 22,
+       "routing_reference:security": 21,
+       "routing_reference:retention": 13,
+       "routing_reference:clarify": 2,
+       "routing:billing": 35,
+       "routing:technical": 51,
+       "routing:security": 68,
+       "routing:retention": 40,
+       "routing:clarify": 13
+      }
+     },
+     {
+      "name": "epoch-2",
+      "epoch": 2,
+      "raw_correct": 266,
+      "submitted": 323,
+      "failures": 0,
+      "class_regressions": [
+       "routing:retention",
+       "routing:security",
+       "routing:technical",
+       "routing_reference:security",
+       "routing_reference:technical"
+      ],
+      "family_fixes": [
+       "group:routing-0037",
+       "group:routing-0039",
+       "group:routing-0271",
+       "group:routing-0287",
+       "group:routing-0305",
+       "group:routing-0320",
+       "group:routing-0333",
+       "group:routing-0363",
+       "group:routing-0371",
+       "group:routing-0452",
+       "group:routing-0455",
+       "group:routing-0488",
+       "group:routing-0494",
+       "group:routing-0502",
+       "group:routing-0544",
+       "group:routing-0547",
+       "group:routing-0570",
+       "group:routing-0571"
+      ],
+      "family_regressions": [
+       "group:routing-0084",
+       "group:routing-0131",
+       "group:routing-0177",
+       "group:routing-0246",
+       "group:routing-0340",
+       "group:routing-0341",
+       "group:routing-0360",
+       "group:routing-0361",
+       "group:routing-0466",
+       "group:routing-0505",
+       "group:routing-0538",
+       "group:routing-0578"
+      ],
+      "pairs": {
+       "pairs": 215,
+       "both_correct": 154
+      },
+      "p50_ms": 2356.9972770055756,
+      "per_class_correct": {
+       "routing_reference:billing": 10,
+       "routing_reference:technical": 16,
+       "routing_reference:security": 21,
+       "routing_reference:retention": 13,
+       "routing_reference:clarify": 6,
+       "routing:billing": 35,
+       "routing:technical": 40,
+       "routing:security": 62,
+       "routing:retention": 40,
+       "routing:clarify": 23
+      }
+     },
+     {
+      "name": "epoch-3",
+      "epoch": 3,
+      "raw_correct": 281,
+      "submitted": 323,
+      "failures": 0,
+      "class_regressions": [
+       "routing:retention",
+       "routing:security",
+       "routing_reference:security"
+      ],
+      "family_fixes": [
+       "group:routing-0025",
+       "group:routing-0037",
+       "group:routing-0039",
+       "group:routing-0161",
+       "group:routing-0260",
+       "group:routing-0269",
+       "group:routing-0271",
+       "group:routing-0276",
+       "group:routing-0287",
+       "group:routing-0305",
+       "group:routing-0333",
+       "group:routing-0346",
+       "group:routing-0363",
+       "group:routing-0371",
+       "group:routing-0452",
+       "group:routing-0455",
+       "group:routing-0488",
+       "group:routing-0494",
+       "group:routing-0502",
+       "group:routing-0547",
+       "group:routing-0570",
+       "group:routing-0571",
+       "group:routing-0611"
+      ],
+      "family_regressions": [
+       "group:routing-0131",
+       "group:routing-0153",
+       "group:routing-0229",
+       "group:routing-0246",
+       "group:routing-0341",
+       "group:routing-0342",
+       "group:routing-0361",
+       "group:routing-0420",
+       "group:routing-0466",
+       "group:routing-0505",
+       "group:routing-0538"
+      ],
+      "pairs": {
+       "pairs": 215,
+       "both_correct": 171
+      },
+      "p50_ms": 2526.9089430221356,
+      "per_class_correct": {
+       "routing_reference:billing": 9,
+       "routing_reference:technical": 21,
+       "routing_reference:security": 22,
+       "routing_reference:retention": 13,
+       "routing_reference:clarify": 6,
+       "routing:billing": 36,
+       "routing:technical": 51,
+       "routing:security": 61,
+       "routing:retention": 40,
+       "routing:clarify": 22
+      }
+     }
+    ]
+   },
+   "acceptance": {
+    "policies": {
+     "routing": {
+      "answer": 0.9977240475383156
+     },
+     "routing_reference": {
+      "answer": 0.9985838853362434
+     }
+    },
+    "provisional_check": {
+     "families": 62,
+     "submitted": 200,
+     "predicted": 200,
+     "raw_correct": 183,
+     "raw_wrong": 17,
+     "accuracy_given_prediction": 0.915,
+     "correct_per_submission": 0.915,
+     "accepted": 128,
+     "correct_accepted": 125,
+     "wrong_accepted": 3,
+     "coverage": 0.64,
+     "precision": 0.9765625,
+     "correct_accepted_rate": 0.625,
+     "correct_rejected": 58,
+     "wrong_rejected": 14
+    }
+   }
+  },
+  "fit-300": {
+   "roles": {
+    "fit": {
+     "observations": 377,
+     "families": 100
+    },
+    "model_select": {
+     "observations": 323,
+     "families": 92
+    },
+    "acceptance_fit": {
+     "observations": 258,
+     "families": 68
+    }
+   },
+   "fitting": {
+    "device": "xpu:0",
+    "precision": "bfloat16",
+    "threads": 16,
+    "attention": "eager",
+    "gradient_checkpointing": true
+   },
+   "placement": {
+    "": "xpu:0",
+    "model.language_model.embed_tokens_per_layer": "cpu:file-mapped"
+   },
+   "trainable_parameters": 24158208,
+   "fit_wall_seconds": 3701.0,
+   "epochs": [
+    {
+     "epoch": 1,
+     "loss": 0.6492,
+     "seconds": 686.9,
+     "steps": 48,
+     "step_seconds": 14.31,
+     "peak_device_bytes": 6310449664,
+     "tokens": 371252,
+     "fit_predicted": {
+      "billing": 70.0,
+      "clarify": 70.5,
+      "retention": 81.0,
+      "security": 73.0,
+      "technical": 82.5
+     }
+    },
+    {
+     "epoch": 2,
+     "loss": 0.2505,
+     "seconds": 682.3,
+     "steps": 48,
+     "step_seconds": 14.21,
+     "peak_device_bytes": 6311319040,
+     "tokens": 371252,
+     "fit_predicted": {
+      "billing": 74.0,
+      "clarify": 76.5,
+      "retention": 78.0,
+      "security": 77.0,
+      "technical": 71.5
+     }
+    },
+    {
+     "epoch": 3,
+     "loss": 0.192,
+     "seconds": 681.7,
+     "steps": 48,
+     "step_seconds": 14.2,
+     "peak_device_bytes": 6333698048,
+     "tokens": 371252,
+     "fit_predicted": {
+      "billing": 78.0,
+      "clarify": 69.5,
+      "retention": 79.0,
+      "security": 73.0,
+      "technical": 77.5
+     }
+    }
+   ],
+   "peak_device_bytes": 6333698048,
+   "peak_host_bytes": 15008915456,
+   "max_hf_native_base_logp_difference": 3.978,
+   "fit_all_presentations_correct": {
+    "before": 287,
+    "after": 372,
+    "of": 377
+   },
+   "selected": "epoch-3",
+   "specialist_sha256": "5916a5b59fe5c17fa5f9ccaca1c8c5c45521187075e42b5d45311247506397ac",
+   "model_select": {
+    "observations": 323,
+    "families": 92,
+    "candidates": [
+     {
+      "name": "base",
+      "epoch": null,
+      "raw_correct": 270,
+      "submitted": 323,
+      "failures": 0,
+      "class_regressions": [],
+      "family_fixes": [],
+      "family_regressions": [],
+      "pairs": {
+       "pairs": 215,
+       "both_correct": 154
+      },
+      "p50_ms": 1683.5703140241094,
+      "per_class_correct": {
+       "routing_reference:billing": 4,
+       "routing_reference:technical": 21,
+       "routing_reference:security": 24,
+       "routing_reference:retention": 12,
+       "routing_reference:clarify": 0,
+       "routing:billing": 34,
+       "routing:technical": 50,
+       "routing:security": 73,
+       "routing:retention": 41,
+       "routing:clarify": 11
+      }
+     },
+     {
+      "name": "epoch-1",
+      "epoch": 1,
+      "raw_correct": 297,
+      "submitted": 323,
+      "failures": 0,
+      "class_regressions": [
+       "routing:retention",
+       "routing:technical"
+      ],
+      "family_fixes": [
+       "group:routing-0004",
+       "group:routing-0025",
+       "group:routing-0037",
+       "group:routing-0039",
+       "group:routing-0161",
+       "group:routing-0260",
+       "group:routing-0271",
+       "group:routing-0287",
+       "group:routing-0333",
+       "group:routing-0346",
+       "group:routing-0353",
+       "group:routing-0371",
+       "group:routing-0382",
+       "group:routing-0450",
+       "group:routing-0452",
+       "group:routing-0472",
+       "group:routing-0474",
+       "group:routing-0481",
+       "group:routing-0488",
+       "group:routing-0502",
+       "group:routing-0509",
+       "group:routing-0544",
+       "group:routing-0547",
+       "group:routing-0571",
+       "group:routing-0611"
+      ],
+      "family_regressions": [
+       "group:routing-0177",
+       "group:routing-0360",
+       "group:routing-0361",
+       "group:routing-0505",
+       "group:routing-0538"
+      ],
+      "pairs": {
+       "pairs": 215,
+       "both_correct": 187
+      },
+      "p50_ms": 1694.0064660157077,
+      "per_class_correct": {
+       "routing_reference:billing": 9,
+       "routing_reference:technical": 21,
+       "routing_reference:security": 27,
+       "routing_reference:retention": 12,
+       "routing_reference:clarify": 4,
+       "routing:billing": 36,
+       "routing:technical": 49,
+       "routing:security": 80,
+       "routing:retention": 40,
+       "routing:clarify": 19
+      }
+     },
+     {
+      "name": "epoch-2",
+      "epoch": 2,
+      "raw_correct": 275,
+      "submitted": 323,
+      "failures": 0,
+      "class_regressions": [
+       "routing:security",
+       "routing_reference:security",
+       "routing_reference:technical"
+      ],
+      "family_fixes": [
+       "group:routing-0025",
+       "group:routing-0037",
+       "group:routing-0039",
+       "group:routing-0189",
+       "group:routing-0255",
+       "group:routing-0260",
+       "group:routing-0269",
+       "group:routing-0271",
+       "group:routing-0305",
+       "group:routing-0333",
+       "group:routing-0353",
+       "group:routing-0452",
+       "group:routing-0488",
+       "group:routing-0494",
+       "group:routing-0502",
+       "group:routing-0547",
+       "group:routing-0570",
+       "group:routing-0571",
+       "group:routing-0611"
+      ],
+      "family_regressions": [
+       "group:routing-0183",
+       "group:routing-0229",
+       "group:routing-0246",
+       "group:routing-0341",
+       "group:routing-0342",
+       "group:routing-0361",
+       "group:routing-0505",
+       "group:routing-0538",
+       "group:routing-0550",
+       "group:routing-0583"
+      ],
+      "pairs": {
+       "pairs": 215,
+       "both_correct": 163
+      },
+      "p50_ms": 1689.6151719847694,
+      "per_class_correct": {
+       "routing_reference:billing": 10,
+       "routing_reference:technical": 20,
+       "routing_reference:security": 20,
+       "routing_reference:retention": 13,
+       "routing_reference:clarify": 4,
+       "routing:billing": 37,
+       "routing:technical": 53,
+       "routing:security": 61,
+       "routing:retention": 42,
+       "routing:clarify": 15
+      }
+     },
+     {
+      "name": "epoch-3",
+      "epoch": 3,
+      "raw_correct": 297,
+      "submitted": 323,
+      "failures": 0,
+      "class_regressions": [
+       "routing:retention"
+      ],
+      "family_fixes": [
+       "group:routing-0029",
+       "group:routing-0037",
+       "group:routing-0039",
+       "group:routing-0260",
+       "group:routing-0271",
+       "group:routing-0276",
+       "group:routing-0287",
+       "group:routing-0305",
+       "group:routing-0333",
+       "group:routing-0346",
+       "group:routing-0353",
+       "group:routing-0371",
+       "group:routing-0382",
+       "group:routing-0450",
+       "group:routing-0452",
+       "group:routing-0472",
+       "group:routing-0474",
+       "group:routing-0481",
+       "group:routing-0488",
+       "group:routing-0494",
+       "group:routing-0502",
+       "group:routing-0509",
+       "group:routing-0544",
+       "group:routing-0547",
+       "group:routing-0571",
+       "group:routing-0611"
+      ],
+      "family_regressions": [
+       "group:routing-0177",
+       "group:routing-0246",
+       "group:routing-0360",
+       "group:routing-0361",
+       "group:routing-0495",
+       "group:routing-0505",
+       "group:routing-0538"
+      ],
+      "pairs": {
+       "pairs": 215,
+       "both_correct": 187
+      },
+      "p50_ms": 1689.5909419981763,
+      "per_class_correct": {
+       "routing_reference:billing": 9,
+       "routing_reference:technical": 21,
+       "routing_reference:security": 25,
+       "routing_reference:retention": 12,
+       "routing_reference:clarify": 5,
+       "routing:billing": 36,
+       "routing:technical": 50,
+       "routing:security": 79,
+       "routing:retention": 39,
+       "routing:clarify": 21
+      }
+     }
+    ]
+   },
+   "acceptance": {
+    "policies": {
+     "routing": {
+      "answer": 0.9420334238341554
+     },
+     "routing_reference": {
+      "answer": 0.9962147643738898
+     }
+    },
+    "provisional_check": {
+     "families": 62,
+     "submitted": 200,
+     "predicted": 200,
+     "raw_correct": 186,
+     "raw_wrong": 14,
+     "accuracy_given_prediction": 0.93,
+     "correct_per_submission": 0.93,
+     "accepted": 175,
+     "correct_accepted": 171,
+     "wrong_accepted": 4,
+     "coverage": 0.875,
+     "precision": 0.9771428571428571,
+     "correct_accepted_rate": 0.855,
+     "correct_rejected": 15,
+     "wrong_rejected": 10
+    }
+   }
+  },
+  "fit-1000": {
+   "roles": {
+    "fit": {
+     "observations": 1204,
+     "families": 338
+    },
+    "model_select": {
+     "observations": 323,
+     "families": 92
+    },
+    "acceptance_fit": {
+     "observations": 258,
+     "families": 68
+    }
+   },
+   "fitting": {
+    "device": "xpu:0",
+    "precision": "bfloat16",
+    "threads": 16,
+    "attention": "eager",
+    "gradient_checkpointing": true
+   },
+   "placement": {
+    "": "xpu:0",
+    "model.language_model.embed_tokens_per_layer": "cpu:file-mapped"
+   },
+   "trainable_parameters": 24158208,
+   "fit_wall_seconds": 11715.0,
+   "epochs": [
+    {
+     "epoch": 1,
+     "loss": 0.52,
+     "seconds": 2184.7,
+     "steps": 151,
+     "step_seconds": 14.47,
+     "peak_device_bytes": 6308555264,
+     "tokens": 1168152,
+     "fit_predicted": {
+      "billing": 278.0,
+      "clarify": 100.0,
+      "retention": 273.5,
+      "security": 276.5,
+      "technical": 276.0
+     }
+    },
+    {
+     "epoch": 2,
+     "loss": 0.199,
+     "seconds": 2183.6,
+     "steps": 151,
+     "step_seconds": 14.46,
+     "peak_device_bytes": 6339462144,
+     "tokens": 1168152,
+     "fit_predicted": {
+      "billing": 279.5,
+      "clarify": 111.0,
+      "retention": 271.5,
+      "security": 270.0,
+      "technical": 272.0
+     }
+    },
+    {
+     "epoch": 3,
+     "loss": 0.1628,
+     "seconds": 2181.8,
+     "steps": 151,
+     "step_seconds": 14.45,
+     "peak_device_bytes": 6337366528,
+     "tokens": 1168152,
+     "fit_predicted": {
+      "billing": 271.0,
+      "clarify": 119.0,
+      "retention": 264.5,
+      "security": 277.0,
+      "technical": 272.5
+     }
+    }
+   ],
+   "peak_device_bytes": 6339462144,
+   "peak_host_bytes": 14752399360,
+   "max_hf_native_base_logp_difference": 3.978,
+   "fit_all_presentations_correct": {
+    "before": 1003,
+    "after": 1182,
+    "of": 1204
+   },
+   "selected": "epoch-3",
+   "specialist_sha256": "6a790729be5667577c8f2b049a4c4928131e5fcab6a868f3e22d6d4e0747a220",
+   "model_select": {
+    "observations": 323,
+    "families": 92,
+    "candidates": [
+     {
+      "name": "base",
+      "epoch": null,
+      "raw_correct": 270,
+      "submitted": 323,
+      "failures": 0,
+      "class_regressions": [],
+      "family_fixes": [],
+      "family_regressions": [],
+      "pairs": {
+       "pairs": 215,
+       "both_correct": 154
+      },
+      "p50_ms": 1680.528064025566,
+      "per_class_correct": {
+       "routing_reference:billing": 4,
+       "routing_reference:technical": 21,
+       "routing_reference:security": 24,
+       "routing_reference:retention": 12,
+       "routing_reference:clarify": 0,
+       "routing:billing": 34,
+       "routing:technical": 50,
+       "routing:security": 73,
+       "routing:retention": 41,
+       "routing:clarify": 11
+      }
+     },
+     {
+      "name": "epoch-1",
+      "epoch": 1,
+      "raw_correct": 282,
+      "submitted": 323,
+      "failures": 0,
+      "class_regressions": [
+       "routing:clarify",
+       "routing:retention"
+      ],
+      "family_fixes": [
+       "group:routing-0004",
+       "group:routing-0025",
+       "group:routing-0161",
+       "group:routing-0189",
+       "group:routing-0255",
+       "group:routing-0260",
+       "group:routing-0269",
+       "group:routing-0271",
+       "group:routing-0333",
+       "group:routing-0346",
+       "group:routing-0382",
+       "group:routing-0450",
+       "group:routing-0452",
+       "group:routing-0472",
+       "group:routing-0474",
+       "group:routing-0481",
+       "group:routing-0488",
+       "group:routing-0494",
+       "group:routing-0502",
+       "group:routing-0547",
+       "group:routing-0571"
+      ],
+      "family_regressions": [
+       "group:routing-0112",
+       "group:routing-0177",
+       "group:routing-0360",
+       "group:routing-0361",
+       "group:routing-0466",
+       "group:routing-0538",
+       "group:routing-0542",
+       "group:routing-0550",
+       "group:routing-0578",
+       "group:routing-0583",
+       "group:routing-0616"
+      ],
+      "pairs": {
+       "pairs": 215,
+       "both_correct": 161
+      },
+      "p50_ms": 1685.5696289567277,
+      "per_class_correct": {
+       "routing_reference:billing": 10,
+       "routing_reference:technical": 21,
+       "routing_reference:security": 27,
+       "routing_reference:retention": 12,
+       "routing_reference:clarify": 1,
+       "routing:billing": 38,
+       "routing:technical": 50,
+       "routing:security": 79,
+       "routing:retention": 37,
+       "routing:clarify": 7
+      }
+     },
+     {
+      "name": "epoch-2",
+      "epoch": 2,
+      "raw_correct": 286,
+      "submitted": 323,
+      "failures": 0,
+      "class_regressions": [
+       "routing:retention",
+       "routing:security",
+       "routing_reference:security"
+      ],
+      "family_fixes": [
+       "group:routing-0037",
+       "group:routing-0039",
+       "group:routing-0189",
+       "group:routing-0269",
+       "group:routing-0271",
+       "group:routing-0276",
+       "group:routing-0287",
+       "group:routing-0305",
+       "group:routing-0320",
+       "group:routing-0333",
+       "group:routing-0346",
+       "group:routing-0353",
+       "group:routing-0363",
+       "group:routing-0371",
+       "group:routing-0417",
+       "group:routing-0444",
+       "group:routing-0455",
+       "group:routing-0488",
+       "group:routing-0502",
+       "group:routing-0544",
+       "group:routing-0547",
+       "group:routing-0570",
+       "group:routing-0571",
+       "group:routing-0611"
+      ],
+      "family_regressions": [
+       "group:routing-0177",
+       "group:routing-0229",
+       "group:routing-0246",
+       "group:routing-0341",
+       "group:routing-0342",
+       "group:routing-0361",
+       "group:routing-0392",
+       "group:routing-0495",
+       "group:routing-0505"
+      ],
+      "pairs": {
+       "pairs": 215,
+       "both_correct": 179
+      },
+      "p50_ms": 1688.7495810515247,
+      "per_class_correct": {
+       "routing_reference:billing": 8,
+       "routing_reference:technical": 21,
+       "routing_reference:security": 20,
+       "routing_reference:retention": 12,
+       "routing_reference:clarify": 8,
+       "routing:billing": 35,
+       "routing:technical": 53,
+       "routing:security": 65,
+       "routing:retention": 39,
+       "routing:clarify": 25
+      }
+     },
+     {
+      "name": "epoch-3",
+      "epoch": 3,
+      "raw_correct": 292,
+      "submitted": 323,
+      "failures": 0,
+      "class_regressions": [
+       "routing:security",
+       "routing_reference:security",
+       "routing_reference:technical"
+      ],
+      "family_fixes": [
+       "group:routing-0004",
+       "group:routing-0025",
+       "group:routing-0037",
+       "group:routing-0039",
+       "group:routing-0189",
+       "group:routing-0260",
+       "group:routing-0269",
+       "group:routing-0271",
+       "group:routing-0287",
+       "group:routing-0305",
+       "group:routing-0320",
+       "group:routing-0333",
+       "group:routing-0353",
+       "group:routing-0363",
+       "group:routing-0371",
+       "group:routing-0452",
+       "group:routing-0472",
+       "group:routing-0488",
+       "group:routing-0502",
+       "group:routing-0544",
+       "group:routing-0547",
+       "group:routing-0570",
+       "group:routing-0571",
+       "group:routing-0611"
+      ],
+      "family_regressions": [
+       "group:routing-0246",
+       "group:routing-0342",
+       "group:routing-0361",
+       "group:routing-0505",
+       "group:routing-0538"
+      ],
+      "pairs": {
+       "pairs": 215,
+       "both_correct": 184
+      },
+      "p50_ms": 1695.356009004172,
+      "per_class_correct": {
+       "routing_reference:billing": 10,
+       "routing_reference:technical": 20,
+       "routing_reference:security": 19,
+       "routing_reference:retention": 13,
+       "routing_reference:clarify": 6,
+       "routing:billing": 36,
+       "routing:technical": 53,
+       "routing:security": 72,
+       "routing:retention": 41,
+       "routing:clarify": 22
+      }
+     }
+    ]
+   },
+   "acceptance": {
+    "policies": {
+     "routing": {
+      "answer": 0.9989686314315775
+     },
+     "routing_reference": {
+      "answer": null
+     }
+    },
+    "provisional_check": {
+     "families": 62,
+     "submitted": 200,
+     "predicted": 200,
+     "raw_correct": 181,
+     "raw_wrong": 19,
+     "accuracy_given_prediction": 0.905,
+     "correct_per_submission": 0.905,
+     "accepted": 84,
+     "correct_accepted": 79,
+     "wrong_accepted": 5,
+     "coverage": 0.42,
+     "precision": 0.9404761904761905,
+     "correct_accepted_rate": 0.395,
+     "correct_rejected": 102,
+     "wrong_rejected": 14
+    }
+   }
+  }
+ }
+}

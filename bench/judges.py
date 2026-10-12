@@ -2,8 +2,8 @@
 
 Run from the repository root:
     python -m bench.judges --judges "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf,unsloth/Qwen3-0.6B-GGUF:Qwen3-0.6B-Q4_K_M.gguf"
-    python -m bench.judges --analyze bench/results/judges
-Each judge writes bench/results/judges/<file>.json with per-item probabilities; --analyze summarises all of them.
+Each completed judge is appended to <output>.journal.jsonl with per-item probabilities; an interrupted run resumes
+the missing judges, and the summary in <output> is recomputed from all recorded judges.
 Acceptance follows execution: low answer mass is never settled.
 """
 from __future__ import annotations
@@ -12,75 +12,56 @@ import argparse
 import json
 import os
 import re
-import time
 from pathlib import Path
 
 import numpy as np
 
-from semantic_switch import Model, Runtime, quality
+from semantic_switch import Model
+from semantic_switch.judgment import Policy
+from semantic_switch.artifacts import artifact_digest
+from bench import quality
+from bench import diagnostics
+from semantic_switch.metrics import Progress
+from bench.outcomes import configuration, failure, finish, measure, resumable, resumed, runtime, work_key
 
-OUT = Path("bench/results/judges")
+OUT = Path("bench/results/judges.json")
 GRID = np.round(np.arange(0.50, 1.0, 0.01), 2)
 
 
-def rss_mb() -> float:
-    for line in Path("/proc/self/status").read_text().splitlines():
-        if line.startswith("VmRSS"):
-            return int(line.split()[1]) / 1024
-    return float("nan")
+def run(rt, model: Model) -> dict:
+    load = measure(lambda: bool(rt.judge()), runtime=rt)
+    if load.error:
+        return failure(load, source=model.source, stage="load")
+    scored = measure(lambda: quality.run(rt), runtime=rt)
+    if scored.error:
+        return failure(scored, source=model.source, stage="score")
+    return {"outcome": "predicted", "provenance": diagnostics.provenance(rt, list(quality.check_items()), boundary="public SDK"), "source": model.source,
+            "adapter": rt.info()["identity"]["template"], "shared": rt.info()["capabilities"]["shared"],
+            "file_mb": round(os.path.getsize(model.path()) / 2**20), "load_peak_rss_mb": round(load.peak_rss_bytes / 2**20),
+            "peak_rss_mb": round(scored.peak_rss_bytes / 2**20), "load_s": round(load.ms / 1000, 1),
+            "threads": model.threads or os.cpu_count(), **scored.output}
 
 
-def run(source: str, adapter: str, threads: int | None, shared: bool | None) -> dict:
-    before = rss_mb()
-    t0 = time.perf_counter()
-    rt = Runtime({"judge": Model(source, adapter=adapter, threads=threads)})
-    judge = rt.judge()
-    if shared is not None:
-        judge.scorer.shared = shared
-    load_s = time.perf_counter() - t0
-    res = quality.run(rt)
-    out = {"source": source, "adapter": judge.adapter.name, "shared": judge.scorer.shared,
-           "file_mb": round(os.path.getsize(Model(source).path()) / 2**20), "rss_mb": round(rss_mb() - before),
-           "load_s": round(load_s, 1), "threads": threads or os.cpu_count(), **res}
-    rt.close()
-    return out
+def _best_threshold(rows, target: float, min_settled: int = 10):
+    return next((float(t) for t in GRID if (s := quality.selective(rows, float(t)))["accepted"] >= min_settled and s["precision"] >= target), None)
 
 
-def _settle(p, t):
-    return np.where(p >= t, 1, np.where(p <= 1 - t, 0, -1))
-
-
-def _best_threshold(p, y, target: float, min_settled: int = 10):
-    for t in GRID:
-        s = _settle(p, t)
-        m = s >= 0
-        if m.sum() >= min_settled and ((s[m] == 1) == y[m]).mean() >= target:
-            return float(t)
-    return None
-
-
-def coverage_at(p, y, facts, target: float = 0.95) -> dict:
-    names = sorted(set(facts))
+def coverage_at(rows, target: float = 0.95) -> dict:
+    names = sorted({r["fact"] for r in rows})
     halves = (set(names[0::2]), set(names[1::2]))
     settled = correct = 0
     for tune, test in (halves, halves[::-1]):
-        a = np.array([f in tune for f in facts])
-        b = np.array([f in test for f in facts])
-        t = _best_threshold(p[a], y[a], target)
+        t = _best_threshold([r for r in rows if r["fact"] in tune], target)
         if t is None:
             continue
-        s = _settle(p[b], t)
-        settled += int((s >= 0).sum())
-        correct += int(((s == 1) == y[b])[s >= 0].sum())
-    return {"coverage": round(settled / len(p), 3), "precision": round(correct / settled, 3) if settled else None}
+        s = quality.selective([r for r in rows if r["fact"] in test], t)
+        settled, correct = settled + s["accepted"], correct + s["correct"]
+    return {"coverage": round(settled / len(rows), 3), "precision": round(correct / settled, 3) if settled else None}
 
 
 def summarize(res: dict) -> dict:
-    rows = [r for r in res["checks"] if r["p"] is not None and (r["mass"] is None or r["mass"] >= 0.5)]
-    p = np.array([r["p"] for r in rows])
-    y = np.array([r["label"] for r in rows])
     return {"model": Path(res["source"].split(":")[-1]).stem, "adapter": res["adapter"], "file_mb": res["file_mb"],
-            "rss_mb": res["rss_mb"], **quality.summarize(res), "at_95": coverage_at(p, y, [r["fact"] for r in rows])}
+            "peak_rss_mb": res["peak_rss_mb"], **quality.summarize(res), "at_95": coverage_at(res["checks"])}
 
 
 def family(name: str) -> str:
@@ -93,39 +74,42 @@ def shift(a: dict, b: dict) -> dict:
     return {"mean_abs_dp": round(float(np.nanmean(np.abs(pa - pb))), 3),
             "p95_abs_dp": round(float(np.nanpercentile(np.abs(pa - pb), 95)), 3),
             "flips_0.5": int(((pa >= 0.5) != (pb >= 0.5)).sum()),
-            "settle_changes_0.9": int((_settle(pa, 0.9) != _settle(pb, 0.9)).sum())}
+            "settle_changes_0.9": sum(quality.decision(x, Policy(.9, .9)) != quality.decision(y, Policy(.9, .9)) for x, y in zip(a["checks"], b["checks"]))}
 
 
-def analyze(folder: Path) -> dict:
-    results = {p.stem: json.loads(p.read_text()) for p in sorted(folder.glob("*.json")) if p.stem != "summary"}
-    table = {k: summarize(v) for k, v in results.items()}
+def analyze(rows: list) -> dict:
+    results = {row["name"]: row for row in rows if row["outcome"] != "failed"}
     shifts = {}
     for k, v in results.items():
         ref = [r for r in results if r != k and family(r) == family(k) and "q8" in r.lower()]
         if ref and "q8" not in k.lower():
             shifts[f"{k} vs {ref[0]}"] = shift(results[ref[0]], v)
-    report = {"summary": table, "quantisation_shift": shifts}
-    (folder / "summary.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
-    return report
+    return {"summary": {k: summarize(v) for k, v in results.items()}, "quantisation_shift": shifts,
+            "failed": sorted(row["name"] for row in rows if row["outcome"] == "failed"), "judges": rows}
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--judges", default="")
+    ap.add_argument("--judges", required=True)
     ap.add_argument("--adapter", default="chat")
     ap.add_argument("--threads", type=int, default=None)
-    ap.add_argument("--shared", choices=["auto", "on", "off"], default="auto")
-    ap.add_argument("--analyze", type=Path, default=None)
+    ap.add_argument("--output", type=Path, default=OUT)
+    ap.add_argument("--fresh", action="store_true")
     args = ap.parse_args()
-    OUT.mkdir(parents=True, exist_ok=True)
-    shared = {"auto": None, "on": True, "off": False}[args.shared]
-    for source in filter(None, args.judges.split(",")):
-        res = run(source, args.adapter, args.threads, shared)
-        name = Path(source.split(":")[-1]).stem + ("" if args.adapter == "chat" else f"@{args.adapter}")
-        (OUT / f"{name}.json").write_text(json.dumps(res), encoding="utf-8")
-        print(json.dumps(summarize(res)), flush=True)
-    if args.analyze:
-        print(json.dumps(analyze(args.analyze), indent=2))
+    models = {Path(source.split(":")[-1]).stem + ("" if args.adapter == "chat" else f"@{args.adapter}"): Model(source, adapter=args.adapter, threads=args.threads)
+              for source in args.judges.split(",")}
+    cohort = artifact_digest([quality.SUITE_VERSION, quality.CHECKS, quality.PICKS, quality.TOPICS, quality.TOPIC_QUESTION])
+    keys = {work_key(name): name for name in models}
+    with resumable(args.output, configuration("bench.judges", args, *models.values(), cohort=cohort), fresh=args.fresh) as journal:
+        todo = journal.pending(keys)
+        progress = Progress("bench.judges", len(keys), unit="judges", resumed=resumed(journal, keys, todo))
+        for key in todo:
+            with runtime(models[keys[key]]) as rt:
+                res = {"name": keys[key], **run(rt, models[keys[key]])}
+            journal.commit([(key, res)])
+            progress.record([res])
+        progress.finish()
+        print(json.dumps({k: v for k, v in finish(journal, args.output, analyze).items() if k != "judges"}, indent=2))
 
 
 if __name__ == "__main__":

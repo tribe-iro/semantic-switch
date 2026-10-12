@@ -1,21 +1,24 @@
 from __future__ import annotations
 
 import hashlib
+from collections import Counter
 import json
+import math
 import re
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, Literal
 
-import yaml
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
 
 from .context import Bm25
+from .guidance import bind, resolve_catalog
 from .errors import ConfigError, suggest
-from .judgment import Judgment, Policy
+from .judgment import MAX_OPTIONS, Judgment, Label, Policy, authored_budget, authored_levels, authored_text, authored_bool, authored_strings
 from .kernel import F, T, U, Card, Exact, Node, Sem, atom, atoms_of, conj, const, disj, k_and, k_not, k_or, neg
+from .presentation import candidate, definition
+from .results import freeze, thaw
 
-MAX_OPTIONS = 20
 NO_OPTION = "\u2205"
 MAX_FACTS = 32
 
@@ -27,7 +30,7 @@ class Spec(BaseModel):
 class FieldSpec(Spec):
     type: Literal["text", "number", "bool", "enum", "json"] = "text"
     required: bool = False
-    max_chars: int | None = None
+    max_chars: int | None = Field(None, gt=0, strict=True)
     truncate: Literal["end", "middle"] = "end"
     values: list[str] | None = None
     author: str | None = None
@@ -43,7 +46,19 @@ class FieldSpec(Spec):
 class OptionSpec(Spec):
     description: str
     requires: str | None = None
+    excludes: list[str] = []
     aliases: list[str] = []
+
+    @model_validator(mode="before")
+    @classmethod
+    def _label(cls, value):
+        if isinstance(value, dict):
+            Label.of({k: v for k, v in value.items() if k != "requires"})
+        return value
+
+    @property
+    def label(self) -> Label:
+        return Label(self.description, tuple(self.excludes), tuple(self.aliases))
 
 
 class FactRef(Spec):
@@ -63,6 +78,7 @@ class CardSpec(Spec):
     supersedes: list[str] = []
     source: dict = {}
     payload: Any = None
+    guidance: list[str] | None = None
 
     @field_validator("applies_when", "excludes", mode="before")
     @classmethod
@@ -77,38 +93,63 @@ class ExampleSpec(Spec):
 
 def _cycle(cards: list[CardSpec]) -> list[str] | None:
     edges = {c.id: c.supersedes for c in cards}
-    state: dict[str, int] = {}
-
-    def visit(n: str, path: list[str]) -> list[str] | None:
-        state[n] = 1
-        for m in edges.get(n, ()):
-            if state.get(m) == 1:
-                return path + [n, m]
-            if m not in state and (found := visit(m, path + [n])):
-                return found
-        state[n] = 2
-        return None
-
-    for c in cards:
-        if c.id not in state and (found := visit(c.id, [])):
-            return found[found.index(found[-1]):]
+    done, active = set(), set()
+    for root in edges:
+        if root in done:
+            continue
+        path, stack = [root], [(root, iter(edges[root]))]
+        active.add(root)
+        while stack:
+            node, children = stack[-1]
+            child = next(children, None)
+            if child is None:
+                stack.pop(); path.pop(); active.remove(node); done.add(node)
+            elif child in active:
+                return path[path.index(child):] + [child]
+            elif child not in done:
+                active.add(child); path.append(child); stack.append((child, iter(edges[child])))
     return None
 
 
+_COMMON = {"guidance", "reads", "excludes", "min_score", "target", "specialize", "examples"}
+_KIND_FIELDS = {
+    "check": _COMMON | {"check", "unstated"},
+    "pick": _COMMON | {"pick", "options", "allow_none", "focus"},
+    "rate": _COMMON | {"rate", "levels"},
+    "select": {"guidance", "select", "reads", "catalog", "cards", "max_claims", "exclusive"},
+    "labels": {"guidance", "select", "reads", "labels", "excludes", "unstated", "min_score", "target", "max_claims"},
+}
+
+
+def _kind(fs) -> str:
+    kind = next(k for k in ("check", "pick", "rate", "select") if getattr(fs, k) is not None)
+    return "labels" if kind == "select" and fs.labels is not None else kind
+
+
+def _specs(options) -> dict:
+    return {k: v if isinstance(v, OptionSpec) else OptionSpec(description=v) for k, v in options.items()}
+
+
+def _candidates(fs) -> list[str]:
+    return list(fs.labels) if fs.labels is not None else [c.id for c in fs.cards]
+
+
 class FactSpec(Spec):
+    guidance: list[str] | None = None
     check: str | None = None
     pick: str | None = None
     rate: str | None = None
     select: str | None = None
     excludes: list[str] = []
     options: dict[str, str | OptionSpec] = {}
+    labels: dict[str, str | OptionSpec] | None = None
     levels: list[str] = []
     allow_none: bool = False
     unstated: bool = False
     focus: Literal["mentions"] | None = None
     catalog: str | None = None
     cards: list[CardSpec] = []
-    max_claims: int = Field(16, ge=1, le=256)
+    max_claims: int | None = None
     exclusive: bool = False
     specialize: Literal["lexical"] | None = None
     min_score: float | None = None
@@ -116,20 +157,63 @@ class FactSpec(Spec):
     target: float = 0.95
     examples: list[ExampleSpec] = []
 
+    @field_validator("check", "pick", "rate", "select", mode="before")
+    @classmethod
+    def _criterion(cls, value):
+        return None if value is None else authored_text(value)
+
+    @field_validator("max_claims", mode="before")
+    @classmethod
+    def _budget(cls, value):
+        return authored_budget(value)
+
+    @field_validator("unstated", "allow_none", "exclusive", mode="before")
+    @classmethod
+    def _boolean(cls, value, info):
+        return authored_bool(value, info.field_name)
+
+    @field_validator("excludes", "levels", mode="before")
+    @classmethod
+    def _strings(cls, value, info):
+        return list(authored_strings(value, info.field_name))
+
+    @field_validator("options", "labels", mode="before")
+    @classmethod
+    def _descriptions(cls, value):
+        if isinstance(value, dict):
+            for key, description in value.items():
+                authored_text(key, "label key")
+                if not isinstance(description, (dict, OptionSpec)):
+                    Label.of(description)
+        return value
+
+    @field_validator("min_score", "target", mode="before")
+    @classmethod
+    def _finite_policy(cls, value):
+        if value is not None and (isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value)):
+            raise ValueError("policy values must be finite numbers")
+        return value
+
     @model_validator(mode="after")
     def _one_kind(self):
         kinds = [k for k in ("check", "pick", "rate", "select") if getattr(self, k) is not None]
         if len(kinds) != 1:
             raise ValueError("a fact needs exactly one of check, pick, rate, select")
-        if self.unstated and self.check is None:
-            raise ValueError("unstated applies to check facts only")
+        kind = _kind(self)
+        inactive = self.model_fields_set - _KIND_FIELDS[kind]
+        if inactive:
+            name = sorted(inactive)[0]
+            raise ValueError(f"{name} does not apply to {'select labels' if kind == 'labels' else kind}; use a named check fact for claim policies")
         if self.focus and self.pick is None:
             raise ValueError("focus applies to pick facts only")
-        if self.select is not None:
+        if kind == "labels" and not self.labels:
+            raise ValueError("select labels must be a nonempty mapping")
+        if kind == "select":
+            self.max_claims = 16 if self.max_claims is None else self.max_claims
             if not self.cards:
-                raise ValueError("select needs a catalog with at least one card")
+                raise ValueError("select needs labels, cards or a catalog with at least one card")
             ids = [c.id for c in self.cards]
-            dupes = sorted({i for i in ids if ids.count(i) > 1})
+            dupes = sorted(i for i, count in Counter(ids).items() if count > 1)
             if dupes:
                 raise ValueError(f"duplicate card ids {dupes}")
             unknown = sorted({s for c in self.cards for s in c.supersedes} - set(ids))
@@ -146,10 +230,8 @@ class FactSpec(Spec):
             raise ValueError("'none' is reserved for allow_none; rename that option")
         if len(self.options) + self.allow_none > MAX_OPTIONS:
             raise ValueError(f"a pick fact can have at most {MAX_OPTIONS} options (including none)")
-        if self.rate is not None and (len(self.levels) < 2 or len(set(self.levels)) != len(self.levels)):
-            raise ValueError("rate needs at least two distinct levels")
-        if len(self.levels) > MAX_OPTIONS:
-            raise ValueError(f"rate takes at most {MAX_OPTIONS} levels")
+        if self.rate is not None:
+            authored_levels(self.levels)
         if not 0.5 <= self.target <= 1:
             raise ValueError("target must be within [0.5, 1]")
         if self.min_score is not None and not 0.5 < self.min_score <= 1:
@@ -157,18 +239,42 @@ class FactSpec(Spec):
         return self
 
 
+def _payload(value):
+    from .context import ContextError, json_value
+    try:
+        return json_value(value)
+    except ContextError as error:
+        raise ValueError(str(error)) from None
+
+
 class CaseSpec(Spec):
     id: str | None = None
     when: str
     then: Any = None
 
+    @field_validator("then", mode="before")
+    @classmethod
+    def _action(cls, value):
+        return _payload(value)
+
 
 class TestSpec(Spec):
     input: dict
-    expect: Any
+    expect: Any = None
+    expect_status: Literal["ok", "none", "uncertain", "needs_input", "failed"] | None = None
+    expect_case: Any = None
+    expect_facts: dict[str, Any] | None = None
+    expect_complete: dict[str, bool] | None = None
+
+    @model_validator(mode="after")
+    def _expectation(self):
+        if not self.model_fields_set - {"input"}:
+            raise ValueError("test needs an expectation")
+        return self
 
 
 class SwitchSpec(Spec):
+    guidance: dict[str, dict[str, str]] = {}
     name: str
     fields: dict[str, FieldSpec] = {}
     reads: list[str] = []
@@ -178,6 +284,43 @@ class SwitchSpec(Spec):
     resolve: Literal["first", "all"] = "first"
     exact_override: bool = True
     tests: list[TestSpec] = []
+
+    @field_validator("otherwise", mode="before")
+    @classmethod
+    def _fallback(cls, value):
+        return _payload(value)
+
+
+@dataclass(frozen=True, slots=True)
+class TestPlan:
+    input: object
+    expect: object = None
+    expect_status: str | None = None
+    expect_case: object = None
+    expect_facts: object = None
+    expect_complete: object = None
+    model_fields_set: frozenset = frozenset()
+
+    @classmethod
+    def of(cls, spec):
+        return cls(freeze(spec.input), freeze(spec.expect), spec.expect_status, freeze(spec.expect_case),
+                   freeze(spec.expect_facts), freeze(spec.expect_complete), frozenset(spec.model_fields_set))
+
+
+@dataclass(frozen=True, slots=True)
+class FieldPlan:
+    type: str
+    required: bool
+    max_chars: int | None
+    truncate: str
+    values: tuple | None
+    author: str | None
+    source: str | None
+
+    @classmethod
+    def of(cls, spec):
+        return cls(spec.type, spec.required, spec.max_chars, spec.truncate,
+                   tuple(spec.values) if spec.values is not None else None, spec.author, spec.source)
 
 
 @dataclass(frozen=True, slots=True)
@@ -212,6 +355,11 @@ class FactPlan:
     exclusive: bool = False
     hidden: bool = False
     ranking: object = field(default=None, compare=False)
+    context_reads: tuple[str, ...] = ()
+    incoming: tuple = ()
+    claim_cards: object = field(default=None, compare=False)
+    member: tuple[str, str] | None = None
+    labels: bool = False
 
     @property
     def kind(self) -> str:
@@ -220,6 +368,14 @@ class FactPlan:
     @property
     def text(self) -> str:
         return self.judgment.text
+
+    @property
+    def path(self) -> tuple[str, ...]:
+        return self.member or (self.name,)
+
+    @property
+    def shown(self) -> str:
+        return f'{self.member[0]} has "{self.member[1]}"' if self.member else self.text if self.hidden else self.name
 
     @property
     def keys(self) -> tuple[str, ...]:
@@ -282,9 +438,22 @@ class Plan:
     def visible(self) -> tuple[FactPlan, ...]:
         return tuple(f for f in self.facts if not f.hidden)
 
+    @property
+    def observed(self) -> tuple[int, ...]:
+        return tuple(f for f, fact in enumerate(self.facts) if fact.member or not (fact.hidden or fact.cards))
+
+    def at(self, name: str, member: str | None = None) -> FactPlan:
+        fact = self.fact(name)
+        if member is None:
+            return fact
+        keys = [card.id for card in fact.cards] if fact.labels else []
+        if member not in keys:
+            raise ConfigError(f"{member!r} is not a label of {name}{suggest(str(member), keys)}")
+        return self.facts[fact.cards[keys.index(member)].claims[0]]
+
 
 def digest(obj) -> str:
-    return hashlib.sha256(json.dumps(obj, sort_keys=True, ensure_ascii=False, default=str).encode()).hexdigest()
+    return hashlib.sha256(json.dumps(thaw(obj), sort_keys=True, ensure_ascii=False, allow_nan=False).encode()).hexdigest()
 
 
 _TOKEN = re.compile(r"""\s*(?:(?P<str>"[^"]*"|'[^']*')|(?P<num>-?\d+(?:\.\d+)?)|(?P<op>==|!=|<=|>=|<|>|\(|\)|\[|\]|,)|(?P<name>[A-Za-z_][\w.]*))""")
@@ -315,11 +484,24 @@ def tokenize(src: str) -> list[tuple[str, Any]]:
     return out
 
 
+def _flatten(node: Node) -> Node:
+    kind = node[0]
+    if kind == "not":
+        return ("not", _flatten(node[1]))
+    if kind not in ("and", "or"):
+        return node
+    parts = []
+    for child in map(_flatten, node[1]):
+        parts.extend(child[1] if child[0] == kind else (child,))
+    return (kind, tuple(parts))
+
+
 class Builder:
     def __init__(self, spec: SwitchSpec, facts: dict[str, int], fact_specs: list[FactSpec]):
         self.spec = spec
         self.facts = facts
         self.fact_specs = fact_specs
+        self.card_ids = [{key: k for k, key in enumerate(_candidates(fact))} for fact in fact_specs]
         self.atoms: list = []
         self.keys: list[str] = []
         self.index: dict = {}
@@ -435,9 +617,11 @@ class Builder:
             if spec.type != "bool":
                 raise ConfigError(f"{name} is not a bool field; compare it with a value")
             op, arg = "==", True
+        if op in ("<", "<=", ">", ">=") and spec.type not in ("number", "text", "enum"):
+            raise ConfigError(f"{name} ({spec.type}) does not support ordering")
         for v in arg if op in ("in", "not in") else [arg]:
             ok = {
-                "number": isinstance(v, (int, float)) and not isinstance(v, bool),
+                "number": isinstance(v, (int, float)) and not isinstance(v, bool) and (isinstance(v, int) or math.isfinite(v)),
                 "bool": isinstance(v, bool),
                 "text": isinstance(v, str),
                 "enum": isinstance(v, str) and v in (spec.values or []),
@@ -451,21 +635,21 @@ class Builder:
 
     def select_atom(self, name: str) -> Node:
         f = self.facts[name]
-        ids = [c.id for c in self.fact_specs[f].cards]
+        ids = self.card_ids[f]
         if self.peek("kw", "has"):
             self.take()
             card = self.take("lit")
             if card not in ids:
                 raise ConfigError(f"{card!r} is not a card of {name}{suggest(str(card), ids)}")
-            return self.register(Card(f, ids.index(card)), f'{name} has "{card}"')
+            return self.register(Card(f, ids[card]), f'{name} has "{card}"')
         self.take("kw", "is")
         self.take("kw", "empty")
         return self.register(Card(f, None), f"{name} is empty")
 
     def implicit(self, name: str) -> None:
         f = self.facts[name]
-        for k, c in enumerate(self.fact_specs[f].cards):
-            self.register(Card(f, k), f'{name} has "{c.id}"')
+        for k, key in enumerate(_candidates(self.fact_specs[f])):
+            self.register(Card(f, k), f'{name} has "{key}"')
         self.register(Card(f, None), f"{name} is empty")
 
     def values(self, f: int) -> list[str]:
@@ -509,7 +693,7 @@ class Builder:
                              ">": lambda k: k > i, "<": lambda k: k < i, "<=": lambda k: k <= i}[op])
 
     def lower(self, node: Node) -> Node:
-        node = self._lower(node)
+        node = self._lower(_flatten(node))
         return self.emit(node) if node[0] == "pred" else node
 
     def _lower(self, node: Node) -> Node:
@@ -549,18 +733,20 @@ def _cases(spec: SwitchSpec) -> list[CaseSpec]:
         return [CaseSpec(id=k, when=v, then=k) for k, v in spec.cases.items()]
     out = []
     for k, c in enumerate(spec.cases):
-        if c.id is None and c.then is None:
+        given = "then" in c.model_fields_set
+        if c.id is None and (not given or c.then is None):
             raise ConfigError(f"case {k + 1} needs an id or a then")
-        out.append(CaseSpec(id=c.id or str(c.then), when=c.when, then=c.id if c.then is None else c.then))
+        out.append(CaseSpec(id=c.id or str(c.then), when=c.when, then=c.then if given else c.id))
     ids = [c.id for c in out]
-    dupes = sorted({i for i in ids if ids.count(i) > 1})
+    dupes = sorted(i for i, count in Counter(ids).items() if count > 1)
     if dupes:
         raise ConfigError(f"duplicate case ids {dupes}; give each case a unique id")
     return out
 
 
-def _meaning(spec: SwitchSpec, kind: str, text: str, keys, descs, excludes, unstated: bool, reqs, reads) -> str:
-    return digest({"kind": kind, "text": text, "excludes": list(excludes), "unstated": unstated, "keys": list(keys),
+def _meaning(spec: SwitchSpec, kind: str, text: str, keys, descs, excludes, unstated: bool, reqs, reads, guidance=None, member=None) -> str:
+    return digest({**({"guidance": guidance.digest} if guidance else {}), **({"candidate": member} if member else {}),
+                   "kind": kind, "text": text, "excludes": list(excludes), "unstated": unstated, "keys": list(keys),
                    "descriptions": list(descs), "requires": reqs, "reads": list(reads),
                    "render": {r: spec.fields[r].model_dump(mode="json") for r in reads}})[:8]
 
@@ -574,9 +760,9 @@ def _fact_plan(b: Builder, spec: SwitchSpec, name: str, fs: FactSpec) -> FactPla
         j = Judgment.check(text, fs.excludes, fs.unstated)
         reqs = (None,) * len(j.keys)
     elif kind == "pick":
-        opts = {k: v if isinstance(v, OptionSpec) else OptionSpec(description=v) for k, v in fs.options.items()}
+        opts = _specs(fs.options)
         keys = tuple(opts) + (("none",) if fs.allow_none else ())
-        descs = tuple(o.description for o in opts.values()) + (("none of the above",) if fs.allow_none else ())
+        descs = tuple(definition(o.description, o.excludes) for o in opts.values()) + (("none of the above",) if fs.allow_none else ())
         j = Judgment("pick", text, keys, descs, tuple(fs.excludes))
         reqs = tuple(b.parse(o.requires, fields_only=True) if o.requires else None for o in opts.values())
         reqs += (None,) if fs.allow_none else ()
@@ -585,36 +771,91 @@ def _fact_plan(b: Builder, spec: SwitchSpec, name: str, fs: FactSpec) -> FactPla
     elif kind == "rate":
         j = Judgment("rate", text, tuple(fs.levels), tuple(fs.levels), tuple(fs.excludes))
         reqs = (None,) * len(fs.levels)
+    elif fs.labels is not None:
+        opts = _specs(fs.labels)
+        j = Judgment("select", text, tuple(opts), tuple(definition(o.description, o.excludes) for o in opts.values()),
+                     tuple(fs.excludes), fs.unstated)
+        reqs = tuple(b.parse(o.requires, fields_only=True) if o.requires else None for o in opts.values())
+        req_src = [o.requires for o in opts.values()]
     else:
         j = Judgment("select", text, tuple(c.id for c in fs.cards), tuple(c.id for c in fs.cards))
         reqs = tuple(b.parse(c.requires, fields_only=True) if c.requires else None for c in fs.cards)
         req_src = [c.model_dump(mode="json", exclude={"payload", "source", "title"}) for c in fs.cards]
-    rev = _meaning(spec, kind, text, j.keys, j.descriptions, j.excludes, j.unstated, req_src, reads)
+    j = replace(j, guidance=bind(b.guidance, fs.guidance))
+    used = set(reads) | {b.atoms[i].field for r in reqs if r for i in atoms_of(r)}
+    context_reads = tuple(reads) + tuple(sorted(used - set(reads)))
+    rev = _meaning(spec, kind, text, j.keys, j.descriptions, j.excludes, j.unstated, req_src, context_reads, j.guidance)
     return FactPlan(name, j, reqs, fs.allow_none, reads, fs.target, fs.specialize, Policy.of(fs.min_score), rev,
-                    tuple((e.input, e.value) for e in fs.examples), aliases, fs.focus, (), fs.max_claims,
-                    fs.exclusive)
+                    tuple((freeze(e.input), freeze(e.value)) for e in fs.examples), aliases, fs.focus, (), fs.max_claims,
+                    fs.exclusive, context_reads=context_reads)
 
 
-def _claim_fact(spec: SwitchSpec, text: str, exclusion: bool, reads) -> FactPlan:
-    j = Judgment.check(text, (), exclusion)
-    rev = _meaning(spec, "check", text, j.keys, j.descriptions, (), exclusion, [], reads)
+def _claim_fact(spec: SwitchSpec, text: str, exclusion: bool, reads, guidance) -> FactPlan:
+    j = Judgment.check(text, (), exclusion, guidance)
+    rev = _meaning(spec, "check", text, j.keys, j.descriptions, (), exclusion, [], reads, guidance)
     return FactPlan(f"~{rev}", j, (None,) * len(j.keys), False, tuple(reads), 0.95, None, Policy(), rev, (),
-                    hidden=True)
+                    hidden=True, context_reads=tuple(reads))
 
 
-def _compile_cards(b: Builder, spec: SwitchSpec, facts: list[FactPlan], index: dict, f: int,
-                   fs: FactSpec) -> FactPlan:
+def memberships(instruction: str, labels, excludes=(), unstated: bool = False, guidance=None) -> tuple[Judgment, ...]:
+    return tuple(Judgment.check(instruction, (), unstated, guidance, candidate(key, label.description, (*label.excludes, *excludes)))
+                 for key, label in labels.items())
+
+
+def membership_cards(labels, nodes, claims, requires) -> tuple[CardPlan, ...]:
+    return tuple(CardPlan(key, label.description, req, (key, *label.aliases), (claim,), (), base, base, freeze({"id": key}))
+                 for (key, label), node, claim, req in zip(labels.items(), nodes, claims, requires)
+                 for base in (conj(req, node) if req else node,))
+
+
+def document(card: CardPlan, texts) -> str:
+    return " ".join((card.title, *card.aliases, *texts))
+
+
+def _members(b: Builder, spec: SwitchSpec, facts: list[FactPlan], index: dict, plan: FactPlan, fs: FactSpec):
+    labels = {key: o.label for key, o in _specs(fs.labels).items()}
+    nodes, claims = [], []
+    for key, j in zip(labels, memberships(plan.text, labels, plan.excludes, plan.unstated, plan.judgment.guidance)):
+        rev = _meaning(spec, "check", j.text, j.keys, j.descriptions, (), j.unstated, [], plan.context_reads, j.guidance, [plan.name, key, j.candidate])
+        member = FactPlan(f"~{rev}", j, (None,) * len(j.keys), False, plan.reads, plan.target, None, plan.policy, rev, (),
+                          hidden=True, context_reads=plan.context_reads, member=(plan.name, key))
+        index[member.name] = len(facts)
+        claims.append(len(facts))
+        facts.append(member)
+        nodes.append(b.register(Sem(claims[-1], j.main), member.shown))
+    return membership_cards(labels, nodes, claims, plan.requires), [[] for _ in labels]
+
+
+def _compile_select(b: Builder, spec: SwitchSpec, facts: list[FactPlan], index: dict, f: int, fs: FactSpec) -> FactPlan:
     plan = facts[f]
+    cards, over = (_members if fs.labels is not None else _cards)(b, spec, facts, index, plan, fs)
+    rev = digest([plan.meaning_rev, [[facts[k].meaning_rev for k in card.claims] for card in cards],
+                  [card.supersedes for card in cards]])[:8]
+    claim_cards = {}
+    for j, card in enumerate(cards):
+        for k in card.claims:
+            claim_cards.setdefault(k, []).append(j)
+    ranking = Bm25([document(card, (facts[k].text for k in card.claims)) for card in cards])
+    return replace(plan, cards=cards, meaning_rev=rev, ranking=ranking, incoming=tuple(map(tuple, over)),
+                   claim_cards=freeze(claim_cards), labels=fs.labels is not None)
+
+
+def _cards(b: Builder, spec: SwitchSpec, facts: list[FactPlan], index: dict, plan: FactPlan, fs: FactSpec):
     by_rev = {x.meaning_rev: k for k, x in enumerate(facts) if x.hidden}
 
-    def claim(c, exclusion: bool) -> Node:
+    def claim(c, exclusion: bool, guidance, explicit=False) -> Node:
         if isinstance(c, FactRef):
             if c.fact not in index or facts[index[c.fact]].kind != "check":
                 raise ConfigError(f"card claim {{fact: {c.fact}}} must name a check fact"
                                   f"{suggest(c.fact, [n for n in index if not n.startswith('~')])}")
             k = index[c.fact]
+            if explicit and facts[k].judgment.guidance.digest != guidance.digest:
+                raise ConfigError(f"card claim {c.fact!r} has an incompatible guidance binding")
+            if exclusion and not facts[k].unstated:
+                raise ConfigError(f"card exclusion {{fact: {c.fact}}} must name a three-way check (unstated: true): "
+                                  f"an exclusion fires only when the input states it, and silence must not exclude")
         else:
-            made = _claim_fact(spec, c, exclusion, plan.reads)
+            made = _claim_fact(spec, c, exclusion, plan.reads, guidance)
             if made.meaning_rev not in by_rev:
                 by_rev[made.meaning_rev] = index[made.name] = len(facts)
                 facts.append(made)
@@ -624,19 +865,20 @@ def _compile_cards(b: Builder, spec: SwitchSpec, facts: list[FactPlan], index: d
     ids = [c.id for c in fs.cards]
     bases, claims = [], []
     for c, req in zip(fs.cards, plan.requires):
-        when = [claim(x, False) for x in c.applies_when]
-        unless = [neg(claim(x, True)) for x in c.excludes]
+        guidance = bind(b.guidance, c.guidance) if c.guidance is not None else plan.judgment.guidance
+        when = [claim(x, False, guidance, c.guidance is not None) for x in c.applies_when]
+        unless = [neg(claim(x, True, guidance, c.guidance is not None)) for x in c.excludes]
         bases.append(conj(req or const(T), *when, *unless))
         claims.append(tuple(dict.fromkeys(b.atoms[n[1]].fact for n in when + [u[1] for u in unless])))
-    over = [[j for j, o in enumerate(fs.cards) if c.id in o.supersedes] for c in fs.cards]
-    cards = tuple(CardPlan(c.id, c.title, req, tuple(c.aliases), claims[k], tuple(ids.index(s) for s in c.supersedes),
-                           bases[k], conj(bases[k], neg(disj(*(bases[j] for j in over[k])))) if over[k] else bases[k],
-                           c.model_dump(mode="json"))
-                  for k, (c, req) in enumerate(zip(fs.cards, plan.requires)))
-    rev = digest([plan.meaning_rev, [[facts[k].meaning_rev for k in card.claims] for card in cards],
-                  [card.supersedes for card in cards]])[:8]
-    index = Bm25([" ".join((c.title, *c.aliases, *(facts[k].text for k in c.claims))) for c in cards])
-    return replace(plan, cards=cards, meaning_rev=rev, ranking=index)
+    id_index = {name: k for k, name in enumerate(ids)}
+    over = [[] for _ in fs.cards]
+    for j, c in enumerate(fs.cards):
+        for target in c.supersedes:
+            over[id_index[target]].append(j)
+    return tuple(CardPlan(c.id, c.title, req, tuple(c.aliases), claims[k], tuple(id_index[s] for s in c.supersedes),
+                          bases[k], conj(bases[k], neg(disj(*(bases[j] for j in over[k])))) if over[k] else bases[k],
+                          freeze(c.model_dump(mode="json")))
+                 for k, (c, req) in enumerate(zip(fs.cards, plan.requires))), over
 
 
 def _load_catalogs(data: dict, base: Path | None) -> dict:
@@ -644,20 +886,30 @@ def _load_catalogs(data: dict, base: Path | None) -> dict:
     if not isinstance(facts, dict):
         return data
     out = dict(facts)
+    from .files import read_yaml
     for name, fs in facts.items():
-        if isinstance(fs, dict) and fs.get("catalog") and not fs.get("cards"):
-            path = Path(fs["catalog"]) if base is None else base / fs["catalog"]
-            if not path.exists():
-                raise ConfigError(f"facts.{name}: catalog {fs['catalog']!r} not found")
-            cards = yaml.safe_load(path.read_text(encoding="utf-8")) or []
-            out[name] = {**fs, "cards": cards.get("cards", cards) if isinstance(cards, dict) else cards}
+        if not isinstance(fs, dict):
+            continue
+        if sum(fs.get(key) is not None for key in ("labels", "catalog", "cards")) > 1:
+            raise ConfigError(f"facts.{name}: select needs exactly one candidate source: labels, cards or catalog")
+        for key in ("catalog", "labels"):
+            if isinstance(fs.get(key), str):
+                path = Path(fs[key]) if base is None else base / fs[key]
+                if not path.exists():
+                    raise ConfigError(f"facts.{name}: {key} {fs[key]!r} not found")
+                loaded = read_yaml(path) or []
+                out[name] = {**fs, "cards": loaded.get("cards", loaded) if isinstance(loaded, dict) else loaded} if key == "catalog" \
+                    else {**fs, "labels": loaded}
     return {**data, "facts": out}
 
 
 def compile_spec(data: dict, source: str = "switch", base: Path | None = None) -> Plan:
     where = "spec"
     try:
-        spec = SwitchSpec.model_validate(_load_catalogs(data, base))
+        resolved = _load_catalogs(data, base)
+        guidance = resolve_catalog(resolved.get("guidance", {}), base)
+        resolved = {**resolved, "guidance": guidance.as_dict()}
+        spec = SwitchSpec.model_validate(resolved)
         names = list(spec.facts)
         fact_specs = [spec.facts[n] for n in names]
         index = {n: i for i, n in enumerate(names)}
@@ -665,6 +917,7 @@ def compile_spec(data: dict, source: str = "switch", base: Path | None = None) -
             if n not in spec.fields:
                 raise ConfigError(f"reads references unknown field {n!r}{suggest(n, spec.fields)}")
         b = Builder(spec, index, fact_specs)
+        b.guidance = guidance
         facts = []
         for n, fs in zip(names, fact_specs):
             where = f"facts.{n}"
@@ -672,13 +925,13 @@ def compile_spec(data: dict, source: str = "switch", base: Path | None = None) -
         for f, fs in enumerate(fact_specs):
             if fs.select is not None:
                 where = f"facts.{names[f]}"
-                facts[f] = _compile_cards(b, spec, facts, index, f, fs)
+                facts[f] = _compile_select(b, spec, facts, index, f, fs)
         cases = []
         for c in _cases(spec):
             where = f"cases.{c.id}"
             expr = b.parse(c.when)
             refs = tuple(sorted({b.atoms[i].fact for i in atoms_of(expr) if isinstance(b.atoms[i], (Sem, Card))}))
-            cases.append(CasePlan(c.id, expr, c.then, c.when, refs))
+            cases.append(CasePlan(c.id, expr, freeze(c.then), c.when, refs))
         if not cases:
             for n, fs in zip(names, fact_specs):
                 if fs.select is not None:
@@ -696,11 +949,40 @@ def compile_spec(data: dict, source: str = "switch", base: Path | None = None) -
         loc = ".".join(str(x) for x in first["loc"])
         raise ConfigError(f"{source}: {loc}: {first['msg']}") from None
     atom_fact = tuple(a.fact if isinstance(a, (Sem, Card)) else -1 for a in b.atoms)
-    fact_atoms = tuple(tuple((i, a) for i, a in enumerate(b.atoms) if isinstance(a, (Sem, Card)) and a.fact == f)
-                       for f in range(len(facts)))
+    indexed_atoms = [[] for _ in facts]
+    for i, a in enumerate(b.atoms):
+        if isinstance(a, (Sem, Card)):
+            indexed_atoms[a.fact].append((i, a))
+    fact_atoms = tuple(map(tuple, indexed_atoms))
+    dependencies = set()
+    pending = [f for case in cases for f in case.facts]
+    while pending:
+        f = pending.pop()
+        if f in dependencies:
+            continue
+        dependencies.add(f)
+        fact = facts[f]
+        pending.extend(k for card in fact.cards for k in card.claims)
+        pending.extend(b.atoms[i].fact for required in fact.requires if required is not None
+                       for i in atoms_of(required) if isinstance(b.atoms[i], (Sem, Card)))
+    meanings = {facts[f].name: facts[f].meaning_rev for f in sorted(dependencies)}
     switch_rev = digest({"cases": [(c.id, c.when, c.then) for c in cases], "otherwise": spec.otherwise,
-                         "resolve": spec.resolve})[:8]
-    return Plan(spec.name, dict(spec.fields), tuple(facts), index, tuple(b.atoms), tuple(b.keys), atom_fact,
-                tuple(i for i, f in enumerate(atom_fact) if f < 0), fact_atoms, tuple(cases), spec.otherwise,
-                spec.resolve == "first", spec.exact_override, tuple(spec.tests), switch_rev,
-                {k: frozenset(v) for k, v in claim_of.items()}, spec.model_dump(mode="json"))
+                         "resolve": spec.resolve, "meanings": meanings})[:8]
+    canonical = spec.model_dump(mode="json")
+    canonical["facts"] = {n: {k: v for k, v in canonical["facts"][n].items() if k in _KIND_FIELDS[_kind(fs)]}
+                          for n, fs in spec.facts.items()}
+    canonical["tests"] = [t.model_dump(mode="json", exclude_unset=True) for t in spec.tests]
+    if not isinstance(spec.cases, dict):
+        canonical["cases"] = [c.model_dump(mode="json", exclude=set() if "then" in c.model_fields_set else {"then"}) for c in spec.cases]
+    for t in spec.tests:
+        if "expect_case" in t.model_fields_set:
+            expected = (t.expect_case,) if isinstance(t.expect_case, str) else t.expect_case or ()
+            if any(name not in {case.id for case in cases} | {"otherwise"} for name in expected):
+                raise ConfigError(f"test expectation names unknown case {t.expect_case!r}")
+        for name in (t.expect_facts or {}) | (t.expect_complete or {}):
+            if name not in index:
+                raise ConfigError(f"test expectation names unknown fact {name!r}")
+    return Plan(spec.name, freeze({n: FieldPlan.of(f) for n, f in spec.fields.items()}), tuple(facts), freeze(index), tuple(b.atoms), tuple(b.keys), atom_fact,
+                tuple(i for i, f in enumerate(atom_fact) if f < 0), fact_atoms, tuple(cases), freeze(spec.otherwise),
+                spec.resolve == "first", spec.exact_override, tuple(TestPlan.of(test) for test in spec.tests), switch_rev,
+                freeze({k: frozenset(v) for k, v in claim_of.items()}), freeze(canonical))

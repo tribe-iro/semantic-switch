@@ -1,0 +1,868 @@
+{
+ "judge": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+ "provenance": {
+  "schema": 2,
+  "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+  "sources": "85713afc18824d29d54ac7da404509cbc7101790868e1a9fa1c3ee49c243a3fa",
+  "dataset": "b8c29ca0e4755e0384ea5b6442f19141dac5e4282397bc74e524f4ff016ff7df",
+  "execution": {
+   "identity": {
+    "presentation": {
+     "evidence": "named-fields@2",
+     "choices": "full-criteria@2"
+    },
+    "file": "gemma-4-E2B-it-Q4_0.gguf",
+    "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+    "template": "chat@3:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+    "lora_sha256": null
+   },
+   "requested_device": "cpu",
+   "threads": null,
+   "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+   "loaded": true,
+   "observed_models": [],
+   "accelerated": false,
+   "batch_inputs": 1,
+   "max_slots": 20,
+   "capabilities": {
+    "shared": true,
+    "fused": false,
+    "conformance": true,
+    "counters": {
+     "prefix_hits": 0,
+     "prefix_misses": 1,
+     "state_hits": 0,
+     "state_misses": 1,
+     "state_tokens": 29,
+     "suffix_tokens": 37,
+     "submissions": 3,
+     "branch_groups": 1,
+     "failures": 0,
+     "prefix_tokens": 40,
+     "prefix_evictions": 0,
+     "submitted_tokens": 106
+    }
+   },
+   "requested_capacity": {
+    "n_ctx": 8192,
+    "n_batch": 512,
+    "n_seq_max": 37
+   },
+   "configuration": {
+    "max_input_tokens": 1024,
+    "prefix_slots": 4
+   },
+   "capacity": {
+    "n_ctx": 8192,
+    "n_batch": 512,
+    "n_seq_max": 37,
+    "n_outputs_max": 37,
+    "swa_full": true,
+    "kv_unified": true,
+    "n_ubatch": 512,
+    "flash_attn": "enabled",
+    "type_k": "f16",
+    "type_v": "f16",
+    "device": "cpu",
+    "tensor_types": [
+     "bf16",
+     "f32",
+     "q4_0",
+     "q8_0"
+    ],
+    "use_extra_bufts": true,
+    "repacked": [
+     "q4_0_8x8"
+    ],
+    "buffers": {
+     "CPU model": 2205511844,
+     "CPU_REPACK model": 1047967826,
+     "CPU output": 38797312,
+     "CPU KV": 150994944,
+     "Vulkan_Host compute": 133190124
+    },
+    "shared": true,
+    "grouping": "serial",
+    "fusion": false
+   }
+  },
+  "boundary": "public SDK"
+ },
+ "model": {
+  "presentation": {
+   "evidence": "named-fields@2",
+   "choices": "full-criteria@2"
+  },
+  "file": "gemma-4-E2B-it-Q4_0.gguf",
+  "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+  "template": "chat@3:0a2c8073",
+  "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+  "lora_sha256": null
+ },
+ "execution": {
+  "identity": {
+   "presentation": {
+    "evidence": "named-fields@2",
+    "choices": "full-criteria@2"
+   },
+   "file": "gemma-4-E2B-it-Q4_0.gguf",
+   "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+   "template": "chat@3:0a2c8073",
+   "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+   "lora_sha256": null
+  },
+  "requested_device": "cpu",
+  "threads": null,
+  "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+  "loaded": true,
+  "observed_models": [],
+  "accelerated": false,
+  "batch_inputs": 1,
+  "max_slots": 20,
+  "capabilities": {
+   "shared": true,
+   "fused": false,
+   "conformance": true,
+   "counters": {
+    "prefix_hits": 0,
+    "prefix_misses": 1,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 29,
+    "suffix_tokens": 37,
+    "submissions": 3,
+    "branch_groups": 1,
+    "failures": 0,
+    "prefix_tokens": 40,
+    "prefix_evictions": 0,
+    "submitted_tokens": 106
+   }
+  },
+  "requested_capacity": {
+   "n_ctx": 8192,
+   "n_batch": 512,
+   "n_seq_max": 37
+  },
+  "configuration": {
+   "max_input_tokens": 1024,
+   "prefix_slots": 4
+  },
+  "capacity": {
+   "n_ctx": 8192,
+   "n_batch": 512,
+   "n_seq_max": 37,
+   "n_outputs_max": 37,
+   "swa_full": true,
+   "kv_unified": true,
+   "n_ubatch": 512,
+   "flash_attn": "enabled",
+   "type_k": "f16",
+   "type_v": "f16",
+   "device": "cpu",
+   "tensor_types": [
+    "bf16",
+    "f32",
+    "q4_0",
+    "q8_0"
+   ],
+   "use_extra_bufts": true,
+   "repacked": [
+    "q4_0_8x8"
+   ],
+   "buffers": {
+    "CPU model": 2205511844,
+    "CPU_REPACK model": 1047967826,
+    "CPU output": 38797312,
+    "CPU KV": 150994944,
+    "Vulkan_Host compute": 133190124
+   },
+   "shared": true,
+   "grouping": "serial",
+   "fusion": false
+  }
+ },
+ "samples": 30,
+ "same_input_ms": {
+  "all": {
+   "count": 30,
+   "p50": 130.7,
+   "p95": 135.5
+  },
+  "non_failed": {
+   "count": 30,
+   "p50": 130.7,
+   "p95": 135.5
+  },
+  "statuses": {
+   "ok": 30
+  },
+  "samples": [
+   {
+    "ms": 114.93543200776912,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 121.73651400371455,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 131.4502870081924,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 131.99024100322276,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 131.98137702420354,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 131.31297900690697,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 135.54875602130778,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 134.0603029821068,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 132.4011149990838,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 133.6073559941724,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 131.32470299024135,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 132.85431600525044,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 130.65508400904946,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 132.0620060141664,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 135.6070009933319,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 132.37900999956764,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 128.40560998301953,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 128.08554599178024,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 128.117710002698,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 129.36550000449643,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 129.15796600282192,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 127.52743001328781,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 127.28308298392221,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 128.57773300493136,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 127.89492099545896,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 128.31573901348747,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 130.84277301095426,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 130.7596339902375,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 127.11601500632241,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 129.26836902624927,
+    "statuses": [
+     "ok"
+    ]
+   }
+  ]
+ },
+ "new_input_ms": {
+  "all": {
+   "count": 30,
+   "p50": 239.5,
+   "p95": 245.1
+  },
+  "non_failed": {
+   "count": 30,
+   "p50": 239.5,
+   "p95": 245.1
+  },
+  "statuses": {
+   "ok": 30
+  },
+  "samples": [
+   {
+    "ms": 226.9846770213917,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 236.2981269834563,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 244.09903801279142,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 226.00123099982738,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 240.65006800810806,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 239.53989098663442,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 222.31124798418023,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 234.63084001559764,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 241.5277250111103,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 222.4303359980695,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 237.13676899205893,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 239.38534798799083,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 229.82292401138693,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 238.4981719951611,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 241.8456980085466,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 231.289471994387,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 239.89413102390245,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 242.3070790246129,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 233.634238014929,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 241.292999999132,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 241.7335940117482,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 233.17450398462825,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 242.75039599160664,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 243.96747598075308,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 235.33171199960634,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 248.96588700357825,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 242.41258300025947,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 234.91653200471774,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 245.1040309970267,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 244.59874001331627,
+    "statuses": [
+     "ok"
+    ]
+   }
+  ]
+ },
+ "new_input_4_questions_ms": {
+  "all": {
+   "count": 30,
+   "p50": 1061.3,
+   "p95": 1230.1
+  },
+  "non_failed": {
+   "count": 30,
+   "p50": 1061.3,
+   "p95": 1230.1
+  },
+  "statuses": {
+   "ok": 99,
+   "uncertain": 21
+  },
+  "samples": [
+   {
+    "ms": 833.854212978622,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 877.7481320139486,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 879.6823330048937,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 863.274551986251,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 893.8400050101336,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 897.7551830175798,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1140.2393350144848,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1242.1829270024318,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1230.1030970120337,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1085.5158880003728,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1109.1272110061254,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1105.356918007601,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1059.9529329920188,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1076.7840800108388,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1075.2231270016637,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1061.2752530141734,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1065.9981969802175,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1127.7691959985532,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1047.3839759943075,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1064.1601099923719,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1069.776958989678,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1047.2222579992376,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1061.2579259905033,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1071.947809017729,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1037.9198109731078,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1061.6248820151668,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1057.618452992756,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1038.564276008401,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1053.588059003232,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 1054.9391389940865,
+    "statuses": [
+     "ok",
+     "uncertain",
+     "ok",
+     "ok"
+    ]
+   }
+  ]
+ }
+}

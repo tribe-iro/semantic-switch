@@ -9,15 +9,17 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-from semantic_switch import Model, Runtime, quality
-from semantic_switch.quality import DISTRACTORS
+from semantic_switch import DEFAULT_JUDGE, Model, files
+from bench.outcomes import runtime
+from bench import quality
+from bench.quality import DISTRACTORS
 
 SLOTS = (0, 4, 9, 14, 19)
 
 
 def main():
     topics = quality.TOPICS
-    with Runtime({"judge": Model(sys.argv[1])} if len(sys.argv) > 1 else None) as rt:
+    with runtime(Model(sys.argv[1] if len(sys.argv) > 1 else DEFAULT_JUDGE)) as rt:
         rows = []
         for text, answer in quality.PICKS:
             others = [d for k, d in topics.items() if k != answer] + DISTRACTORS
@@ -39,7 +41,7 @@ def main():
     report["all_slots_correct"] = sum(s == {True} for s in stable.values())
     report["texts"] = len(stable)
     print(json.dumps(report, indent=1))
-    Path("bench/results/positions.json").write_text(json.dumps({"report": report, "rows": rows}, indent=1))
+    files.publish(Path("bench/results/positions.json"), {"report": report, "rows": rows})
 
 
 if __name__ == "__main__":

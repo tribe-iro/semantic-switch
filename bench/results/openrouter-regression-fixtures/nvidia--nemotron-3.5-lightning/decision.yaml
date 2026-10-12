@@ -1,0 +1,22 @@
+name: regression
+guidance:
+  policy:
+    text: Refund means returning money to the original payment method. Store credit
+      and replacements are not refunds.
+fields:
+  message:
+    type: text
+    required: true
+reads:
+- message
+facts:
+  refund:
+    check: The customer requests a refund under the supplied definition.
+    unstated: true
+cases:
+- id: refund
+  when: refund
+  then:
+    action: return_money
+otherwise:
+  action: support

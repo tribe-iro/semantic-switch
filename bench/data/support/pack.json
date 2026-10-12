@@ -1,0 +1,101 @@
+{
+ "schema": 2,
+ "name": "support-classification",
+ "version": "1.0",
+ "subject": {
+  "policy": "benchmark support catalogue support-catalogue-1",
+  "scope": [
+   "orders",
+   "returns",
+   "delivery",
+   "billing"
+  ],
+  "abcd": "unused by the authored primary pack; a realism slice must first pin the repository commit, conversation/guideline/ontology file hashes and annotation provenance"
+ },
+ "author": "unassigned",
+ "extraction": "authored-catalogue-1",
+ "created": "2026-10-11T00:00:00Z",
+ "sources": [
+  {
+   "id": "abcd",
+   "url": "https://github.com/asappresearch/abcd",
+   "section": "data/abcd_v1.1 conversations, guidelines and ontology (conversation lineage and action distinctions only)",
+   "edition": "unpinned: record the repository commit",
+   "licence": "ABCD repository licence; record it with the pinned commit",
+   "excerpt": null,
+   "sha256": null,
+   "use": "unused: the authored primary pack has no ABCD realism slice; every support rule is a benchmark convention frozen by the authored digests"
+  }
+ ],
+ "rules": [
+  {
+   "id": "S-CURRENT",
+   "text": "A current customer statement about this order establishes the reported issue or requested operation.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "S-ABSENT",
+   "text": "A catalogue member without a supporting statement is not a member; absence is a negative membership, not missing input.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "S-NEGATED",
+   "text": "An explicitly negated issue or request is not a member.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "S-RESOLVED",
+   "text": "An issue the customer reports as resolved is not a current issue.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "S-QUOTED",
+   "text": "A quoted suggestion or hypothetical is not the customer's request.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "S-LATEST",
+   "text": "A later request replaces an earlier conflicting request unless the customer explicitly retains the earlier one.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "S-ENTITY",
+   "text": "Statements about another order establish nothing about the current order.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "S-AMBIGUOUS",
+   "text": "Genuinely ambiguous or undefined-sarcasm statements leave the membership unresolved.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "S-CONFLICT",
+   "text": "Contradictory current statements about one membership leave it unresolved.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "S-HAZARD",
+   "text": "A reported leak, burn, injury or similar safety hazard from the item is a hazard.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "S-IMPACT",
+   "text": "Impact rubric: high for missing delivery or a disputed charge; moderate for damage; low otherwise.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "S-REFUND",
+   "text": "Refund eligibility: a current refund request with a current issue, not blocked, amount at most 500 and delivered within 30 days unless the delivery is missing.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "S-RESPONSE",
+   "text": "Operational response follows the first applicable of refund eligibility, refund status/update, return/replacement, order/delivery change, otherwise no action; unresolved memberships require clarification.",
+   "source": "benchmark convention"
+  }
+ ],
+ "authored": {
+  "rules": "6ddaaa0bb71d5739f4e8064e3f73cc26e5b2668d5caa9ea438dd3c40f11ee15b",
+  "catalogue": "1b9674303ccb0534cc20251f1eaa88f38116d9cd8fae69d27d0195d7e58b5187"
+ }
+}

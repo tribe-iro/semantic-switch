@@ -1,18 +1,16 @@
 from __future__ import annotations
 
-from .. import files, quality
+from .. import files
+from ..errors import ConfigError
 
 
 def doctor(rt, role: str = "judge", probe: bool = False) -> dict:
-    judge = rt.judge(role)
-    checks = judge.selftest()
-    ok = all(c["ok"] for c in checks.values())
-    report = {"role": role, "model": judge.identity, "ok": ok, "device": "gpu" if judge.accelerated else "cpu",
-              "shared_prefix": getattr(judge.scorer, "shared", None), "checks": checks}
-    store_path = files.cache_dir() / "doctor.json"
-    store = files.read_json(store_path) or {}
-    store[rt.cache_key(role)] = {"ok": ok, "checks": checks, "at": files.now()}
-    files.write_json_atomic(store_path, store)
     if probe:
-        report["quality"] = quality.probe(rt, role)
+        raise ConfigError("quality measurements are owned by bench.quality; doctor checks native conformance")
+    judge = rt.judge(role)
+    checks = judge.selftest() if hasattr(judge, "selftest") else {}
+    ok = bool(checks) and all(c["ok"] for c in checks.values())
+    report = {"role": role, "model": judge.identity, "ok": ok, "requested_device": "gpu" if judge.accelerated else "cpu",
+              "shared_prefix": rt.info(role)["capabilities"]["shared"], "checks": checks, "boundary": "renderer/readout/execution conformance; not domain accuracy"}
+    files.write_cached("doctor", rt.cache_key(role), {"ok": ok, "checks": checks, "at": files.now()})
     return report

@@ -5,7 +5,8 @@ Run from the repository root:
 """
 import sys
 
-from semantic_switch import Model, Runtime
+from semantic_switch import Model
+from bench.outcomes import runtime
 
 CLAIM = "There is a visible hydraulic leak."
 CASES = [
@@ -23,13 +24,19 @@ CASES = [
 THREE = {"true": "the input states it is true", "false": "the input states it is false",
          "unstated": "the input does not say"}
 
-with Runtime({"judge": Model(sys.argv[1], adapter="chat")}) as rt:
-    rt.check("warm", "x")
-    forced = three = 0
-    for text, want in CASES:
-        c = rt.check(f"[technician] report: {text}", CLAIM)
-        p = rt.pick(f"[technician] report: {text}", f"Claim: {CLAIM} What does the input say about this claim?", THREE)
-        forced += want != "unstated" and c.value == (want == "true")
-        three += p.index == want
-        print(f"{want:9} check p_true={c.p_true:.2f}  three-way={p.index:9} {p.score:.2f}  | {text[:48]}")
-    print(f"forced true/false: {forced}/7 on stated items (3 unstated items get a forced guess); three-way: {three}/10")
+
+def main():
+    with runtime(Model(sys.argv[1], adapter="chat")) as rt:
+        rt.check("warm", "x")
+        forced = three = 0
+        for text, want in CASES:
+            c = rt.check(f"[technician] report: {text}", CLAIM)
+            p = rt.pick(f"[technician] report: {text}", f"Claim: {CLAIM} What does the input say about this claim?", THREE)
+            forced += want != "unstated" and c.value == (want == "true")
+            three += p.index == want
+            print(f"{want:9} check p_true={c.p_true:.2f}  three-way={p.index:9} {p.score:.2f}  | {text[:48]}")
+        print(f"forced true/false: {forced}/7 on stated items (3 unstated items get a forced guess); three-way: {three}/10")
+
+
+if __name__ == "__main__":
+    main()

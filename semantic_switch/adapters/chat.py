@@ -6,7 +6,8 @@ from datetime import datetime
 
 from jinja2.sandbox import ImmutableSandboxedEnvironment
 
-from .qwen3 import SYSTEM, Qwen3Adapter
+from ..presentation import SYSTEM
+from .qwen3 import Qwen3Adapter
 
 SLOT = "STATE"
 
@@ -30,7 +31,7 @@ def render(chat: dict) -> tuple[str, str]:
 
 
 def name_of(chat: dict) -> str:
-    return "chat@2:" + hashlib.sha256((chat["template"] or "").encode()).hexdigest()[:8]
+    return "chat@3:" + hashlib.sha256((chat["template"] or "").encode()).hexdigest()[:8]
 
 
 class ChatAdapter(Qwen3Adapter):

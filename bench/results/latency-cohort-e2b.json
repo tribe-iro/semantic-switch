@@ -1,0 +1,2446 @@
+{
+ "judge": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+ "lora": null,
+ "provenance": {
+  "schema": 2,
+  "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+  "sources": "883bb9c08c4aba5821bf5b0a5565ed9feec277a99cb7ac11bcdf5aa98261a56e",
+  "dataset": "b8c29ca0e4755e0384ea5b6442f19141dac5e4282397bc74e524f4ff016ff7df",
+  "execution": {
+   "identity": {
+    "presentation": {
+     "evidence": "named-fields@2",
+     "choices": "full-criteria@3"
+    },
+    "file": "gemma-4-E2B-it-Q4_0.gguf",
+    "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+    "template": "chat@3:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+    "lora_sha256": null
+   },
+   "requested_device": "auto",
+   "threads": null,
+   "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+   "loaded": true,
+   "observed_models": [],
+   "accelerated": true,
+   "batch_inputs": 1,
+   "max_slots": 20,
+   "capabilities": {
+    "shared": true,
+    "fused": false,
+    "conformance": true,
+    "counters": {
+     "prefix_hits": 0,
+     "prefix_misses": 1,
+     "state_hits": 0,
+     "state_misses": 1,
+     "state_tokens": 29,
+     "suffix_tokens": 37,
+     "submissions": 3,
+     "branch_groups": 1,
+     "failures": 0,
+     "prefix_tokens": 40,
+     "prefix_evictions": 0,
+     "submitted_tokens": 106
+    }
+   },
+   "requested_capacity": {
+    "n_ctx": 8192,
+    "n_batch": 512,
+    "n_seq_max": 37
+   },
+   "configuration": {
+    "max_input_tokens": 1024,
+    "prefix_slots": 4
+   },
+   "capacity": {
+    "n_ctx": 8192,
+    "n_batch": 512,
+    "n_seq_max": 37,
+    "n_outputs_max": 37,
+    "swa_full": true,
+    "kv_unified": true,
+    "n_ubatch": 512,
+    "flash_attn": "enabled",
+    "type_k": "f16",
+    "type_v": "f16",
+    "device": "gpu",
+    "tensor_types": [
+     "bf16",
+     "f32",
+     "q4_0",
+     "q8_0"
+    ],
+    "use_extra_bufts": true,
+    "repacked": [],
+    "buffers": {
+     "Vulkan0 model": 1504454902,
+     "Vulkan_Host model": 1749024768,
+     "Vulkan_Host output": 38797312,
+     "Vulkan0 KV": 150994944,
+     "Vulkan0 compute": 126793810,
+     "Vulkan_Host compute": 41953526
+    },
+    "shared": true,
+    "grouping": "serial",
+    "serial": 1,
+    "fusion": false
+   }
+  },
+  "boundary": "public SDK"
+ },
+ "model": {
+  "presentation": {
+   "evidence": "named-fields@2",
+   "choices": "full-criteria@3"
+  },
+  "file": "gemma-4-E2B-it-Q4_0.gguf",
+  "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+  "template": "chat@3:0a2c8073",
+  "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+  "lora_sha256": null
+ },
+ "execution": {
+  "identity": {
+   "presentation": {
+    "evidence": "named-fields@2",
+    "choices": "full-criteria@3"
+   },
+   "file": "gemma-4-E2B-it-Q4_0.gguf",
+   "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+   "template": "chat@3:0a2c8073",
+   "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+   "lora_sha256": null
+  },
+  "requested_device": "auto",
+  "threads": null,
+  "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+  "loaded": true,
+  "observed_models": [],
+  "accelerated": true,
+  "batch_inputs": 1,
+  "max_slots": 20,
+  "capabilities": {
+   "shared": true,
+   "fused": false,
+   "conformance": true,
+   "counters": {
+    "prefix_hits": 0,
+    "prefix_misses": 1,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 29,
+    "suffix_tokens": 37,
+    "submissions": 3,
+    "branch_groups": 1,
+    "failures": 0,
+    "prefix_tokens": 40,
+    "prefix_evictions": 0,
+    "submitted_tokens": 106
+   }
+  },
+  "requested_capacity": {
+   "n_ctx": 8192,
+   "n_batch": 512,
+   "n_seq_max": 37
+  },
+  "configuration": {
+   "max_input_tokens": 1024,
+   "prefix_slots": 4
+  },
+  "capacity": {
+   "n_ctx": 8192,
+   "n_batch": 512,
+   "n_seq_max": 37,
+   "n_outputs_max": 37,
+   "swa_full": true,
+   "kv_unified": true,
+   "n_ubatch": 512,
+   "flash_attn": "enabled",
+   "type_k": "f16",
+   "type_v": "f16",
+   "device": "gpu",
+   "tensor_types": [
+    "bf16",
+    "f32",
+    "q4_0",
+    "q8_0"
+   ],
+   "use_extra_bufts": true,
+   "repacked": [],
+   "buffers": {
+    "Vulkan0 model": 1504454902,
+    "Vulkan_Host model": 1749024768,
+    "Vulkan_Host output": 38797312,
+    "Vulkan0 KV": 150994944,
+    "Vulkan0 compute": 126793810,
+    "Vulkan_Host compute": 41953526
+   },
+   "shared": true,
+   "grouping": "serial",
+   "serial": 1,
+   "fusion": false
+  }
+ },
+ "samples": 20,
+ "same_input_ms": {
+  "all": {
+   "count": 20,
+   "p50": 58.8,
+   "p95": 62.2
+  },
+  "non_failed": {
+   "count": 20,
+   "p50": 58.8,
+   "p95": 62.2
+  },
+  "statuses": {
+   "ok": 20
+  },
+  "samples": [
+   {
+    "ms": 62.240750005003065,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 59.86164399655536,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 59.91282395552844,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 59.58412104519084,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 59.0712139965035,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 59.189783001784235,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 57.95075901551172,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 57.72058595903218,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 58.75860602827743,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 57.93827900197357,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 58.813589974306524,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 57.40423296811059,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 57.286032009869814,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 57.91496700840071,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 58.57784295221791,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 57.99997103167698,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 58.858775009866804,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 58.74710000352934,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 59.17835101718083,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 58.31494997255504,
+    "statuses": [
+     "ok"
+    ]
+   }
+  ]
+ },
+ "new_input_ms": {
+  "all": {
+   "count": 20,
+   "p50": 111.5,
+   "p95": 114.8
+  },
+  "non_failed": {
+   "count": 20,
+   "p50": 111.5,
+   "p95": 114.8
+  },
+  "statuses": {
+   "ok": 20
+  },
+  "samples": [
+   {
+    "ms": 114.0168200363405,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 111.18131998227909,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 112.34627501107752,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 114.76565897464752,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 110.92874204041436,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 110.4468879639171,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 114.11097896052524,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 110.25517899543047,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 111.78258003201336,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 113.03142399992794,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 111.5218480117619,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 112.1335489442572,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 110.9205040265806,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 111.4824489923194,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 110.65257200971246,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 111.55024298932403,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 112.00516804819927,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 110.72062200400978,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 112.06947802565992,
+    "statuses": [
+     "ok"
+    ]
+   },
+   {
+    "ms": 109.92839996470138,
+    "statuses": [
+     "ok"
+    ]
+   }
+  ]
+ },
+ "new_input_4_questions_ms": {
+  "all": {
+   "count": 20,
+   "p50": 296.6,
+   "p95": 298.2
+  },
+  "non_failed": {
+   "count": 20,
+   "p50": 296.6,
+   "p95": 298.2
+  },
+  "statuses": {
+   "ok": 66,
+   "uncertain": 14
+  },
+  "samples": [
+   {
+    "ms": 298.2129629817791,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 295.81348900683224,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 294.59778900491074,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 297.01886500697583,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 296.5154789853841,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 295.1631789910607,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 296.56021599657834,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 296.75373795907944,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 296.3345850002952,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 297.3067249986343,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 296.2002170388587,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 297.49090800760314,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 297.1022919518873,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 296.5790819725953,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 296.65130499051884,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 293.8614750164561,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 296.9204749679193,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 297.23972600186244,
+    "statuses": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   {
+    "ms": 293.4130650246516,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   },
+   {
+    "ms": 295.82071397453547,
+    "statuses": [
+     "ok",
+     "ok",
+     "uncertain",
+     "ok"
+    ]
+   }
+  ]
+ },
+ "cohort": {
+  "cohort_ms": {
+   "all": {
+    "count": 256,
+    "p50": 187.2,
+    "p95": 216.0
+   },
+   "non_failed": {
+    "count": 256,
+    "p50": 187.2,
+    "p95": 216.0
+   },
+   "statuses": {
+    "ok": 165,
+    "uncertain": 84,
+    "needs_input": 7
+   },
+   "samples": [
+    {
+     "ms": 470.357648038771,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 183.74472798313946,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 420.39963003480807,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 187.791824049782,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 193.3799049584195,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 186.31622096290812,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 183.91408899333328,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 183.40968200936913,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 190.32266200520098,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 191.4055899833329,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 186.59259198466316,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 189.2898080404848,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 186.14423996768892,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 198.10303999111056,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 202.51881500007585,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 201.81217300705612,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 192.2373329871334,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 192.4891319940798,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 189.96429297840223,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 188.37610603077337,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 193.20543098729104,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 188.78523900639266,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 195.0740089523606,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 193.1248150067404,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 190.69628801662475,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 190.91399398166686,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 189.01620502583683,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.363299948629,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 192.63232400408015,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 190.10376202641055,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 191.24218996148556,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.9677329561673,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 188.7765770079568,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.48155899811536,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 188.18026798544452,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 186.0531940474175,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 187.66822695033625,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 195.87281200801954,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 196.86345098307356,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 200.62465500086546,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 194.5145390345715,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 203.9440399967134,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 188.06103797396645,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 196.5977399959229,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 188.86469100834802,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.24704801570624,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 189.53058501938358,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 197.35662103630602,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 189.68656699871644,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 191.43447099486366,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 191.67007703799754,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 190.18482498358935,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.48181097907946,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 189.2366879619658,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 189.418283989653,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 190.15463104005903,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 195.02573099453002,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 193.51552601438016,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 190.44791697524488,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 188.64576402120292,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.65920103760436,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 188.53621801827103,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 189.99943498056382,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 191.51654496090487,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 191.8681240058504,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 192.8096929914318,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 189.80591604486108,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 189.2388080013916,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 188.36714199278504,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 191.749183984939,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 192.01142597012222,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 188.8240419793874,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 190.75612601591274,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 190.4919110238552,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 197.28292303625494,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 229.46177300764248,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 189.16853598784655,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 206.21900004334748,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 192.88821204099804,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 194.12659399677068,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 198.16621200880036,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 223.3453569933772,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 185.50911697093397,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 195.90034103021026,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.65379703836516,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.54255201201886,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.99274502089247,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 186.2014020443894,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 292.88669204106554,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 174.85320498235524,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 406.06374898925424,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 178.8917880039662,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 171.45477299345657,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 178.19687200244516,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 177.12725896853954,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 179.40117802936584,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 170.7044499926269,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 184.34909405186772,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 180.54085702169687,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 208.88141199247912,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 208.58396199764684,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 210.934883041773,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 180.82034797407687,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 210.75827203458175,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 253.5734559642151,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 161.56248602783307,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 154.595089959912,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 160.15609196620062,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 154.44421098800376,
+     "statuses": [
+      "needs_input"
+     ]
+    },
+    {
+     "ms": 158.39891304494813,
+     "statuses": [
+      "needs_input"
+     ]
+    },
+    {
+     "ms": 161.04764601914212,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 161.05400898959488,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 165.99165403749794,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 177.79684899142012,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 177.1251320024021,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 204.6490500215441,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 202.8155600419268,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 208.63852405454963,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 166.47482296684757,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 163.81594800623134,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 160.27376503916457,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 173.8099129870534,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 160.0789520307444,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 171.0182320093736,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 161.109340027906,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 195.43043401790783,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 160.39959795307368,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 172.96736902790144,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 162.51973196631297,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 162.95297298347577,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 162.89362602401525,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 167.7970080054365,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 163.7749259825796,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 164.7011280292645,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 171.0096310125664,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 170.9406099980697,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 151.7332749790512,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 157.7557569835335,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 160.26730899466202,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 190.06143097067252,
+     "statuses": [
+      "needs_input"
+     ]
+    },
+    {
+     "ms": 161.59330401569605,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 189.18277602642775,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 155.56786599336192,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 154.2654990334995,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 164.91327597759664,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 166.46524402312934,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 165.38762801792473,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 166.24433803372085,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 167.37384599400684,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 175.73881399584934,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 166.05915303807706,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 177.2904850076884,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 174.3438569828868,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 177.7889330405742,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 178.8626239867881,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 179.4416520278901,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 176.37474095681682,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 179.24557096557692,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 204.19326500268653,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 206.03853702777997,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 161.92475700518116,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 163.1378650199622,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 158.95571000874043,
+     "statuses": [
+      "needs_input"
+     ]
+    },
+    {
+     "ms": 160.33394599799067,
+     "statuses": [
+      "needs_input"
+     ]
+    },
+    {
+     "ms": 188.2437759777531,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 190.99332799669355,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 159.854150027968,
+     "statuses": [
+      "needs_input"
+     ]
+    },
+    {
+     "ms": 161.7590649984777,
+     "statuses": [
+      "needs_input"
+     ]
+    },
+    {
+     "ms": 408.29016402130947,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 182.71444196579978,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 437.7577399718575,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 194.83228697208688,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.670634011738,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 190.0165129918605,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.47288797749206,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 214.73482699366286,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 178.7568709696643,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 179.56325900740921,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 180.23839802481234,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 189.6145580103621,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 178.67012100759894,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 179.79203799040988,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 195.82988100592047,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 191.3446739781648,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 180.4130639648065,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 181.038337002974,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 179.52462600078434,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 186.10281497240067,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 178.83799399714917,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.62257299385965,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.31167702935636,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 215.98714496940374,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 179.1224159533158,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 185.34414400346577,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 179.01883902959526,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 184.51136600924656,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 181.0454780352302,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 181.02395604364574,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 179.16965403128415,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 182.37168999621645,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 229.35958398738876,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 131.50558498455212,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 130.86323300376534,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 130.87090000044554,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 128.5502250539139,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 131.104415981099,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 127.97908601351082,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 129.65267000254244,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 131.02916296338663,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 132.7760710264556,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 130.94422401627526,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 129.5024009887129,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 131.543438998051,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 137.9056490259245,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 137.36884196987376,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 169.02293602470309,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 187.08078400231898,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 186.14493001950905,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 184.98603597981855,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 182.1348509984091,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 183.65841201739386,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 183.49214701447636,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 186.942431028001,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 187.0821010088548,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 176.45590903703123,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 184.93931699777022,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 197.3355310037732,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 193.3522269828245,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 195.14298398280516,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 200.09497296996415,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.06973502412438,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 193.1778769940138,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 184.12327498663217,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 178.16235194914043,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 181.76180898444727,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 185.1072940044105,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 183.64845996256918,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 193.00118094542995,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 186.08603702159598,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 188.1336549995467,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 192.8744959877804,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 193.37124400772154,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 185.3481309954077,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 192.6155670080334,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 196.781077014748,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 194.25188499735668,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 193.81170900305733,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 194.5747000281699,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 185.65207300707698,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 184.2684739967808,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 192.7047249628231,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 220.92066198820248,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 179.0488560218364,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 189.6601389744319,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 182.70395102445036,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 310.97947899252176,
+     "statuses": [
+      "ok"
+     ]
+    }
+   ]
+  },
+  "changed_guidance_ms": {
+   "boundary": "same input, first call after answering it under the contrasting procedure",
+   "all": {
+    "count": 16,
+    "p50": 190.6,
+    "p95": 433.4
+   },
+   "non_failed": {
+    "count": 16,
+    "p50": 190.6,
+    "p95": 433.4
+   },
+   "statuses": {
+    "uncertain": 7,
+    "ok": 9
+   },
+   "samples": [
+    {
+     "ms": 433.4347659605555,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 191.78031699266285,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 190.88644400471821,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 195.31280599767342,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 422.1730940043926,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 190.38899900624529,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 186.16641097469255,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 182.0058539742604,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 191.32303999504074,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 187.95695598237216,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 411.6223530145362,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 181.40410201158375,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 185.5268629733473,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 184.89679996855557,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 183.68693097727373,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 211.8479019845836,
+     "statuses": [
+      "uncertain"
+     ]
+    }
+   ]
+  },
+  "repeated_guidance_ms": {
+   "boundary": "the same call repeated immediately",
+   "all": {
+    "count": 16,
+    "p50": 118.1,
+    "p95": 153.4
+   },
+   "non_failed": {
+    "count": 16,
+    "p50": 118.1,
+    "p95": 153.4
+   },
+   "statuses": {
+    "uncertain": 7,
+    "ok": 9
+   },
+   "samples": [
+    {
+     "ms": 130.4084430448711,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 123.98889102041721,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 122.88144999183714,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 125.25021802866831,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 116.14893301157281,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 116.52789101935923,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 110.54660496301949,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 109.73883897531778,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 122.19927698606625,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 116.67250999016687,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 119.37252804636955,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 115.77128601493314,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 118.2726010447368,
+     "statuses": [
+      "ok"
+     ]
+    },
+    {
+     "ms": 117.89037199923769,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 153.43409695196897,
+     "statuses": [
+      "uncertain"
+     ]
+    },
+    {
+     "ms": 117.56344698369503,
+     "statuses": [
+      "uncertain"
+     ]
+    }
+   ]
+  }
+ }
+}

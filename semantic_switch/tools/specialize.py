@@ -1,88 +1,49 @@
 from __future__ import annotations
 
-import time
 from dataclasses import replace
+import time
 
+from ..artifacts import load_bundle, snapshot_digest
 from ..errors import ConfigError
 from ..judgment import OFF
 from ..switch import Switch
-from .common import auc, test_items
-from .lock import FOLDS, fit_policy, folds_of, out_of_fold, rows_for, train_head
+from .data import Labels
+from .lock import out_of_fold
+from .policy import fit_policy
+from .dataset import EvidenceContext, evaluation_plan
 
 
-def _run(sw, snap, f: int, inputs: list, sources: tuple) -> tuple[list, list, float]:
-    t0 = time.perf_counter()
-    calls = sw.score_facts(inputs, snap, sources=sources, facts=[f])
-    ms = (time.perf_counter() - t0) * 1000 / max(len(inputs), 1)
-    return [sw.exec._own(snap, c, f)[0] if c.facts else None for c in calls], \
-        [c.facts[f] if c.facts else None for c in calls], ms
-
-
-def specialize(rt, path, fact_name: str) -> dict:
+def specialize(rt, path, fact_name, *, head_bundle=None):
+    if head_bundle is None:
+        raise ConfigError('specialize analyzes a supplied head: use --head BUNDLE; fit with semantic-trainer lexical EXPORT --to BUNDLE')
     sw = Switch(rt, path, draft=True)
-    snap = sw.snapshot
-    plan = snap.plan
-    fact = plan.fact(fact_name)
-    f = plan.fact_index[fact_name]
-    items, _ = test_items(sw.paths, plan)
-    rows = rows_for(sw, fact, snap.examples[fact.name], items)
-    if fact.cards or len(rows) < FOLDS or len({r.label for r in rows}) < 2:
-        raise ConfigError(f"{fact_name} needs at least {FOLDS} labelled inputs (examples or test labels) "
-                          f"with two or more different values; it has {len(rows)}")
-    fold = folds_of(rows)
-    judge, cascade, sources, dists = [None] * len(rows), [None] * len(rows), [None] * len(rows), [None] * len(rows)
-    ms = {"judge": [], "lexical": []}
-    for k in range(FOLDS):
-        held = [i for i, x in enumerate(fold) if x == k]
-        kept = [rows[i] for i, x in enumerate(fold) if x != k]
-        if not held or len({r.label for r in kept}) < 2:
-            continue
-        head = train_head(fact, kept)
-        policy = fit_policy(fact, out_of_fold(fact, kept), OFF)
-        examples = tuple(e for e in snap.examples[fact.name] if e.key in {r.group for r in kept})
-        base = snap.with_examples(fact.name, examples)
-        installed = replace(base, heads={**snap.heads, fact.name: head},
-                            policies={**snap.policies, "classifier": {**snap.policies.get("classifier", {}),
-                                                                      fact.name: policy}})
-        inputs = [rows[i].data for i in held]
-        j, states, jm = _run(sw, base, f, inputs, ("example", "judge"))
-        c, cstates, cm = _run(sw, installed, f, inputs, ("example", "classifier", "judge"))
-        ms["judge"].append(jm)
-        ms["lexical"].append(cm)
-        for i, a, b, s, d in zip(held, j, c, cstates, states):
-            judge[i], cascade[i], sources[i], dists[i] = a, b, s.source if s else None, d.dist if d else None
-    y = [r.label for r in rows]
-    wrong = lambda g, t: g is not None and g != t
-    right = lambda g, t: g is not None and g == t
-    tally = lambda got: {"settled": sum(g is not None for g in got), "correct": sum(right(g, t) for g, t in zip(got, y)),
-                         "wrong": sum(wrong(g, t) for g, t in zip(got, y))}
-    report = {"fact": fact_name, "labelled": len(rows), "folds": FOLDS, "judge": tally(judge) | {
-        "ms": round(sum(ms["judge"]) / max(len(ms["judge"]), 1), 1)}}
-    if fact.kind == "check":
-        scored = [(d[0], t == 0) for d, t in zip(dists, y) if d is not None and t != 2]
-        report["judge"]["auc"] = auc([s for s, _ in scored], [t for _, t in scored])
-    report["lexical"] = {
-        **tally(cascade), "ms": round(sum(ms["lexical"]) / max(len(ms["lexical"]), 1), 1),
-        "judge_calls_avoided": sum(s == "classifier" for s in sources),
-        "gained": sum(right(c, t) and not right(j, t) for j, c, t in zip(judge, cascade, y)),
-        "avoided": sum(wrong(j, t) and c is None for j, c, t in zip(judge, cascade, y)),
-        "introduced": sum(wrong(c, t) and not wrong(j, t) for j, c, t in zip(judge, cascade, y))}
-    lx, jd = report["lexical"], report["judge"]
-    report["admit"] = lx["judge_calls_avoided"] > 0 and lx["wrong"] <= jd["wrong"]
-    accuracy = jd["correct"] / len(rows)
-    diagnosis = ("the judge ranks this judgment well but its boundary is off: reword the claim, add exact rules, "
-                 "or rely on `ss lock` abstention" if jd.get("auc") and jd["auc"] >= 0.9 and accuracy < 0.85 else
-                 "the judge barely separates this judgment: reword the claim or use a stronger judge (--precise)"
-                 if jd.get("auc") is not None and jd["auc"] < 0.75 else "the judge separates this judgment")
-    report["report"] = [
-        f"{fact_name}: {len(rows)} labelled inputs, {FOLDS} folds by group, run through the executor.",
-        f"  judge alone: {jd['correct']} correct, {jd['wrong']} wrong, {len(rows) - jd['settled']} abstained, "
-        f"~{jd['ms']:.0f} ms per input" + (f"; ranking AUC {jd['auc']:.2f}: {diagnosis}" if "auc" in jd else "."),
-        f"  with a lexical head: settled {lx['judge_calls_avoided']} without the judge; {lx['correct']} correct, "
-        f"{lx['wrong']} wrong (gained {lx['gained']}, avoided {lx['avoided']}, introduced {lx['introduced']}); "
-        f"~{lx['ms']:.0f} ms per input.",
-        f"  verdict: {'admit' if report['admit'] else 'do not admit'}"
-        + (f" — add `specialize: lexical` under {fact_name} in {sw.paths.yaml.name}, then `ss lock`."
-           if report["admit"] else "."),
-    ]
-    return report
+    fact, labels = sw.plan.fact(fact_name), Labels(sw)
+    bundle = load_bundle(head_bundle, fact, labels.training_id)
+    tune = labels.examples(fact_name, 'tune')
+    observations = out_of_fold(fact, tune, bundle, sw, sw.snapshot)
+    policy = fit_policy(fact, observations, OFF)
+    snap = replace(sw.snapshot, heads={fact_name: bundle.head}, policies={'classifier': {fact_name: policy}})
+    held = labels.examples(fact_name, 'check', taught=False)
+    f = sw.plan.fact_index[fact_name]
+    candidates = {'judge': (sw.snapshot, ('judge',)), 'lexical': (snap, ('classifier', 'judge'))}
+    identities = {name: snapshot_digest(candidate, rt) for name, (candidate, _) in candidates.items()}
+    audit_use = EvidenceContext.of(labels).consult(evaluation_plan(identities, scope=[list(fact.path)]), {e.group for e in held})
+    arms = {}
+    for name, (candidate, sources) in candidates.items():
+        candidate_id = identities[name]
+        started = time.perf_counter()
+        calls = sw._score([e.data for e in held], candidate, sources, [f])
+        own = [sw.exec.own(candidate, call, f)[0] if call.facts else None for call in calls]
+        arms[name] = {'settled': sum(v is not None for v in own),
+                      'correct': sum(v == e.label for v, e in zip(own, held) if v is not None),
+                      'wrong': sum(v != e.label for v, e in zip(own, held) if v is not None),
+                      'ms': (time.perf_counter() - started) * 1000 / len(held) if held else None,
+                      'judge_calls_avoided': sum(call.facts[f].source == 'classifier' for call in calls if call.facts),
+                      'candidate_id': candidate_id, 'audit_use': audit_use}
+    skipped = [{'id': o.id, 'group': o.group, 'reason': o.skip} for o in observations if o.skip]
+    return {'fact': fact_name, 'bundle': bundle.identity.sha256, 'dataset_id': labels.dataset_id,
+            'labelled': len(held), 'evaluated': len(held), 'skipped': skipped,
+            'development': {'submitted': len(observations), 'evaluated': len(observations) - len(skipped), 'skipped': skipped},
+            'population': 'identified check sample; comparison does not admit an artifact', **arms,
+            'report': [f'{fact_name}: supplied lexical bundle; {len(held)} check observations.',
+                       f'{len(skipped)} unusable development folds; no fitting in semantic-switch.']}

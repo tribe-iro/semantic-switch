@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "guidance_revision": "guidance@1",
+  "judge": {
+    "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+    "template": "chat@2:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+    "lora_sha256": null
+  },
+  "configuration": {
+    "max_input_tokens": 8192,
+    "n_ctx": 32768,
+    "n_batch": 512,
+    "prefix_slots": 4
+  },
+  "max_guidance_tokens": 2787,
+  "cohort": "f54fd50276020ec0abd2ad793fe4da6ecaa3aa470277ac6af8e1860745a2a127",
+  "evidence": "bench/results/bounded-context-e2b.json#sha256=19f9d5104404d7994c28d81d952094f24fd554bb9099b091805d12ee82722143"
+}

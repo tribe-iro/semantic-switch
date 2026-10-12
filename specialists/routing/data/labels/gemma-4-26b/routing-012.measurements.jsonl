@@ -1,0 +1,1 @@
+{"fact": "routing", "input": {"message": "Hi, about my last ticket and the $50 charge on Pro Plan."}, "prediction": {"key": "clarify", "kind": "value", "score": 0.8932660702647554, "value": "clarify"}, "status": "uncertain", "why": "uncertain"}

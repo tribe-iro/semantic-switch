@@ -1,0 +1,8764 @@
+{
+ "schema": 1,
+ "model": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+ "geometry": {
+  "lanes": 4,
+  "lane_tokens": "16-token multiples through 128, then 128-token multiples",
+  "dummy_token": 0,
+  "stages": [
+   "prefix",
+   "state",
+   "suffix"
+  ],
+  "outputs": {
+   "prefix": 0,
+   "state": 0,
+   "suffix": 4
+  }
+ },
+ "policy": "default (fact policy, min_score unset)",
+ "boundary": "Runtime.ask; serial: ordinary Model judge (prefix_slots 4, inputs 1); lanes: diagnostic LlamaScorer(grouping='lanes', inputs=8, prefix_slots=8)",
+ "decision": {
+  "repeatable": false,
+  "cases_28_p50_ms": 2611.0,
+  "cases_28_p50_target_ms": 2000,
+  "single_question_ratio": 1.787,
+  "single_question_target_ratio": 1.1,
+  "dummy_per_real": 0.15,
+  "dummy_target": 0.5,
+  "candidate_passes_latency_and_repeatability": false,
+  "verdict": "rejected: serial retained, experimental lane scheduler removed",
+  "reasons": [
+   "28-question GPU p50 2611 ms exceeds 2000 ms",
+   "single-question GPU p50 1.79x serial exceeds 1.1x",
+   "CPU lane execution changed 2 accepted outcomes across call sizes (serial CPU also changed 2 under the same conditions)"
+  ],
+  "quality_fit": "not run: acceptance fitting was conditional on meeting the latency target and repeatability"
+ },
+ "devices": {
+  "gpu": {
+   "lanes": {
+    "provenance": {
+     "schema": 2,
+     "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+     "sources": "c220047ccac9725184e35573bbf45eb804472e1f2554c61eaa7bb4b77360595a",
+     "dataset": "9bc72bec5891b571fdd8f522cd308b578d01e250d442a16c9f573cf0ea62a37e",
+     "execution": {
+      "identity": {
+       "source": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+       "template": "chat@3:0a2c8073",
+       "presentation": {
+        "evidence": "named-fields@2",
+        "choices": "full-criteria@3"
+       }
+      },
+      "requested_device": "provider",
+      "threads": null,
+      "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+      "loaded": true,
+      "observed_models": [],
+      "accelerated": true,
+      "batch_inputs": 8,
+      "max_slots": 20,
+      "capabilities": {
+       "shared": true,
+       "fused": false,
+       "conformance": true,
+       "counters": {
+        "prefix_hits": 0,
+        "prefix_misses": 1,
+        "state_hits": 0,
+        "state_misses": 1,
+        "state_tokens": 11,
+        "suffix_tokens": 32,
+        "submissions": 3,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 40,
+        "prefix_evictions": 0,
+        "dummy_tokens": 301,
+        "lane_groups": 3,
+        "submitted_tokens": 384
+       }
+      },
+      "requested_capacity": {
+       "n_ctx": 15360,
+       "n_batch": 512,
+       "n_seq_max": 48
+      },
+      "configuration": {
+       "max_input_tokens": 1024,
+       "prefix_slots": 8
+      },
+      "capacity": {
+       "n_ctx": 15360,
+       "n_batch": 512,
+       "n_seq_max": 48,
+       "n_outputs_max": 48,
+       "swa_full": true,
+       "kv_unified": true,
+       "n_ubatch": 512,
+       "flash_attn": "enabled",
+       "type_k": "f16",
+       "type_v": "f16",
+       "device": "gpu",
+       "tensor_types": [
+        "bf16",
+        "f32",
+        "q4_0",
+        "q8_0"
+       ],
+       "use_extra_bufts": true,
+       "repacked": [],
+       "buffers": {
+        "Vulkan0 model": 1504454902,
+        "Vulkan_Host model": 1749024768,
+        "Vulkan_Host output": 50331648,
+        "Vulkan0 KV": 283115520,
+        "Vulkan0 compute": 144378429,
+        "Vulkan_Host compute": 57902367
+       },
+       "shared": true,
+       "grouping": "lanes",
+       "serial": null,
+       "geometry": {
+        "lanes": 4,
+        "lane_tokens": "16-token multiples through 128, then 128-token multiples",
+        "dummy_token": 0,
+        "stages": [
+         "prefix",
+         "state",
+         "suffix"
+        ],
+        "outputs": {
+         "prefix": 0,
+         "state": 0,
+         "suffix": 4
+        }
+       },
+       "fusion": false
+      }
+     },
+     "boundary": "Runtime.ask over S1MB go-emotions 28-question cases"
+    },
+    "capacity": {
+     "n_ctx": 15360,
+     "n_batch": 512,
+     "n_seq_max": 48,
+     "n_outputs_max": 48,
+     "swa_full": true,
+     "kv_unified": true,
+     "n_ubatch": 512,
+     "flash_attn": "enabled",
+     "type_k": "f16",
+     "type_v": "f16",
+     "device": "gpu",
+     "tensor_types": [
+      "bf16",
+      "f32",
+      "q4_0",
+      "q8_0"
+     ],
+     "use_extra_bufts": true,
+     "repacked": [],
+     "buffers": {
+      "Vulkan0 model": 1504454902,
+      "Vulkan_Host model": 1749024768,
+      "Vulkan_Host output": 50331648,
+      "Vulkan0 KV": 283115520,
+      "Vulkan0 compute": 144378429,
+      "Vulkan_Host compute": 57902367
+     },
+     "shared": true,
+     "grouping": "lanes",
+     "serial": null,
+     "geometry": {
+      "lanes": 4,
+      "lane_tokens": "16-token multiples through 128, then 128-token multiples",
+      "dummy_token": 0,
+      "stages": [
+       "prefix",
+       "state",
+       "suffix"
+      ],
+      "outputs": {
+       "prefix": 0,
+       "state": 0,
+       "suffix": 4
+      }
+     },
+     "fusion": false
+    },
+    "execution": {
+     "device": "gpu",
+     "tensor_types": [
+      "bf16",
+      "f32",
+      "q4_0",
+      "q8_0"
+     ],
+     "flash_attn": "enabled",
+     "type_k": "f16",
+     "type_v": "f16",
+     "use_extra_bufts": true,
+     "repacked": [],
+     "n_ubatch": 512,
+     "shared": true,
+     "grouping": "lanes",
+     "serial": null,
+     "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}"
+    },
+    "repeatability": {
+     "warm": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     },
+     "evicted": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     },
+     "reversed": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     },
+     "shuffled": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     },
+     "one": {
+      "questions": 20,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.014064440791564325,
+      "max_mass_difference": 0.010846734046936035,
+      "changes": []
+     },
+     "four": {
+      "questions": 20,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.006598502889014757,
+      "max_mass_difference": 0.00523453950881958,
+      "changes": []
+     },
+     "seventeen": {
+      "questions": 85,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.008121727566068104,
+      "max_mass_difference": 0.01608031988143921,
+      "changes": []
+     },
+     "seventeen_tail": {
+      "questions": 85,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.011459809434377854,
+      "max_mass_difference": 0.01262730360031128,
+      "changes": []
+     },
+     "mixed_guidance": {
+      "questions": 55,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.012562458119469433,
+      "max_mass_difference": 0.012363731861114502,
+      "changes": []
+     },
+     "unguided": {
+      "questions": 25,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0014228173742596995,
+      "max_mass_difference": 0.00022619962692260742,
+      "changes": []
+     }
+    },
+    "cases_28": {
+     "all": {
+      "count": 25,
+      "p50": 2611.0,
+      "p95": 3468.1
+     },
+     "non_failed": {
+      "count": 25,
+      "p50": 2611.0,
+      "p95": 3468.1
+     },
+     "statuses": {
+      "ok": 543,
+      "uncertain": 157
+     },
+     "samples": [
+      {
+       "ms": 3676.411723950878,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 980,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 42,
+        "dummy_tokens": 694,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 3468.0668140063062,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1148,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 526,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 3059.977805998642,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 644,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 582,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 3188.3522380376235,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 616,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 610,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 3429.003413999453,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1092,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 582,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 3162.791193986777,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 868,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 358,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 3011.076544004027,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1232,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 442,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 3431.53748603072,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1036,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 638,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 3075.4793789819814,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 952,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 722,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 2588.1732960115187,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1008,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 666,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 2732.094759005122,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1176,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 498,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 2610.9972310368903,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 980,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 694,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 2498.90950700501,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 784,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 442,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 2483.424015052151,
+       "statuses": [
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 504,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 722,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 2528.4484419971704,
+       "statuses": [
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 784,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 442,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 2527.4943099939264,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 840,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 386,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 2744.1864430438727,
+       "statuses": [
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 840,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 386,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 2616.665087000001,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 868,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 358,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 2256.6647920175456,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 448,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 330,
+        "lane_groups": 21,
+        "submitted_tokens": 3584
+       }
+      },
+      {
+       "ms": 2520.3530940343626,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 868,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 358,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 2505.8730160235427,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 560,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 666,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 2470.2468779869378,
+       "statuses": [
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 476,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 750,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 2507.146308023948,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 784,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 442,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 2558.070022962056,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1008,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 666,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 2498.191259044688,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 504,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 722,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      }
+     ],
+     "work": {
+      "prefix_tokens": 52600,
+      "state_tokens": 21000,
+      "suffix_tokens": 17550,
+      "dummy_tokens": 13682,
+      "submissions": 525,
+      "submitted_tokens": 104832
+     },
+     "dummy_per_real": 0.15
+    },
+    "latency": {
+     "provenance": {
+      "schema": 2,
+      "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+      "sources": "c220047ccac9725184e35573bbf45eb804472e1f2554c61eaa7bb4b77360595a",
+      "dataset": "b8c29ca0e4755e0384ea5b6442f19141dac5e4282397bc74e524f4ff016ff7df",
+      "execution": {
+       "identity": {
+        "source": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+        "template": "chat@3:0a2c8073",
+        "presentation": {
+         "evidence": "named-fields@2",
+         "choices": "full-criteria@3"
+        }
+       },
+       "requested_device": "provider",
+       "threads": null,
+       "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+       "loaded": true,
+       "observed_models": [],
+       "accelerated": true,
+       "batch_inputs": 8,
+       "max_slots": 20,
+       "capabilities": {
+        "shared": true,
+        "fused": false,
+        "conformance": true,
+        "counters": {
+         "prefix_hits": 0,
+         "prefix_misses": 2097,
+         "state_hits": 0,
+         "state_misses": 2097,
+         "state_tokens": 67920,
+         "suffix_tokens": 57139,
+         "submissions": 1761,
+         "branch_groups": 0,
+         "failures": 0,
+         "prefix_tokens": 156260,
+         "prefix_evictions": 3568,
+         "dummy_tokens": 85145,
+         "lane_groups": 1746,
+         "submitted_tokens": 366464
+        }
+       },
+       "requested_capacity": {
+        "n_ctx": 15360,
+        "n_batch": 512,
+        "n_seq_max": 48
+       },
+       "configuration": {
+        "max_input_tokens": 1024,
+        "prefix_slots": 8
+       },
+       "capacity": {
+        "n_ctx": 15360,
+        "n_batch": 512,
+        "n_seq_max": 48,
+        "n_outputs_max": 48,
+        "swa_full": true,
+        "kv_unified": true,
+        "n_ubatch": 512,
+        "flash_attn": "enabled",
+        "type_k": "f16",
+        "type_v": "f16",
+        "device": "gpu",
+        "tensor_types": [
+         "bf16",
+         "f32",
+         "q4_0",
+         "q8_0"
+        ],
+        "use_extra_bufts": true,
+        "repacked": [],
+        "buffers": {
+         "Vulkan0 model": 1504454902,
+         "Vulkan_Host model": 1749024768,
+         "Vulkan_Host output": 50331648,
+         "Vulkan0 KV": 283115520,
+         "Vulkan0 compute": 144378429,
+         "Vulkan_Host compute": 57902367
+        },
+        "shared": true,
+        "grouping": "lanes",
+        "serial": null,
+        "geometry": {
+         "lanes": 4,
+         "lane_tokens": "16-token multiples through 128, then 128-token multiples",
+         "dummy_token": 0,
+         "stages": [
+          "prefix",
+          "state",
+          "suffix"
+         ],
+         "outputs": {
+          "prefix": 0,
+          "state": 0,
+          "suffix": 4
+         }
+        },
+        "fusion": false
+       }
+      },
+      "boundary": "public SDK"
+     },
+     "model": {
+      "source": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+      "template": "chat@3:0a2c8073",
+      "presentation": {
+       "evidence": "named-fields@2",
+       "choices": "full-criteria@3"
+      }
+     },
+     "execution": {
+      "identity": {
+       "source": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+       "template": "chat@3:0a2c8073",
+       "presentation": {
+        "evidence": "named-fields@2",
+        "choices": "full-criteria@3"
+       }
+      },
+      "requested_device": "provider",
+      "threads": null,
+      "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+      "loaded": true,
+      "observed_models": [],
+      "accelerated": true,
+      "batch_inputs": 8,
+      "max_slots": 20,
+      "capabilities": {
+       "shared": true,
+       "fused": false,
+       "conformance": true,
+       "counters": {
+        "prefix_hits": 0,
+        "prefix_misses": 2097,
+        "state_hits": 0,
+        "state_misses": 2097,
+        "state_tokens": 67920,
+        "suffix_tokens": 57139,
+        "submissions": 1761,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 156260,
+        "prefix_evictions": 3568,
+        "dummy_tokens": 85145,
+        "lane_groups": 1746,
+        "submitted_tokens": 366464
+       }
+      },
+      "requested_capacity": {
+       "n_ctx": 15360,
+       "n_batch": 512,
+       "n_seq_max": 48
+      },
+      "configuration": {
+       "max_input_tokens": 1024,
+       "prefix_slots": 8
+      },
+      "capacity": {
+       "n_ctx": 15360,
+       "n_batch": 512,
+       "n_seq_max": 48,
+       "n_outputs_max": 48,
+       "swa_full": true,
+       "kv_unified": true,
+       "n_ubatch": 512,
+       "flash_attn": "enabled",
+       "type_k": "f16",
+       "type_v": "f16",
+       "device": "gpu",
+       "tensor_types": [
+        "bf16",
+        "f32",
+        "q4_0",
+        "q8_0"
+       ],
+       "use_extra_bufts": true,
+       "repacked": [],
+       "buffers": {
+        "Vulkan0 model": 1504454902,
+        "Vulkan_Host model": 1749024768,
+        "Vulkan_Host output": 50331648,
+        "Vulkan0 KV": 283115520,
+        "Vulkan0 compute": 144378429,
+        "Vulkan_Host compute": 57902367
+       },
+       "shared": true,
+       "grouping": "lanes",
+       "serial": null,
+       "geometry": {
+        "lanes": 4,
+        "lane_tokens": "16-token multiples through 128, then 128-token multiples",
+        "dummy_token": 0,
+        "stages": [
+         "prefix",
+         "state",
+         "suffix"
+        ],
+        "outputs": {
+         "prefix": 0,
+         "state": 0,
+         "suffix": 4
+        }
+       },
+       "fusion": false
+      }
+     },
+     "samples": 20,
+     "same_input_ms": {
+      "all": {
+       "count": 20,
+       "p50": 108.2,
+       "p95": 111.9
+      },
+      "non_failed": {
+       "count": 20,
+       "p50": 108.2,
+       "p95": 111.9
+      },
+      "statuses": {
+       "ok": 20
+      },
+      "samples": [
+       {
+        "ms": 104.9633520306088,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 103.68171200389042,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 108.25506097171456,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 107.73841798072681,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 108.58029901282862,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 111.85744998510927,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 109.21805299585685,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 108.1886769970879,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 108.27517503639683,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 107.30923298979178,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 109.16391899809241,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 108.72161702718586,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 110.76697596581653,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 109.80615596054122,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 110.64693401567638,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 107.5388600002043,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 106.87658697133884,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 105.70089501561597,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 104.78529997635633,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 105.38841999368742,
+        "statuses": [
+         "ok"
+        ]
+       }
+      ]
+     },
+     "new_input_ms": {
+      "all": {
+       "count": 20,
+       "p50": 200.1,
+       "p95": 206.4
+      },
+      "non_failed": {
+       "count": 20,
+       "p50": 200.1,
+       "p95": 206.4
+      },
+      "statuses": {
+       "ok": 20
+      },
+      "samples": [
+       {
+        "ms": 195.21617400459945,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 204.20200296211988,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 199.26723005482927,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 193.79394495626912,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 198.3335700351745,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 202.84646202344447,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 192.6546489703469,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 199.16303700301796,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 202.32582598691806,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 192.1998160541989,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 198.78552801674232,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 203.35065404651687,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 198.6354070249945,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 203.99050699779764,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 202.21336197573692,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 199.7050409554504,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 203.96099699428305,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 202.11457600817084,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 200.55708999279886,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 206.42709702951834,
+        "statuses": [
+         "ok"
+        ]
+       }
+      ]
+     },
+     "new_input_4_questions_ms": {
+      "all": {
+       "count": 20,
+       "p50": 338.3,
+       "p95": 351.1
+      },
+      "non_failed": {
+       "count": 20,
+       "p50": 338.3,
+       "p95": 351.1
+      },
+      "statuses": {
+       "ok": 66,
+       "uncertain": 14
+      },
+      "samples": [
+       {
+        "ms": 318.1719889980741,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 339.87966302083805,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 338.042535004206,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 321.2667840416543,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 342.4541959539056,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 337.03232096740976,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 320.51097200019285,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 351.131978968624,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 338.5536449495703,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 340.67303698975593,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 346.63272398756817,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 331.84021298075095,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 340.45083000091836,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 343.789711012505,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 337.29614003095776,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 339.42746999673545,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 330.8726969989948,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 343.5540799982846,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 336.4957350422628,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 328.50319502176717,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       }
+      ]
+     }
+    }
+   },
+   "serial": {
+    "provenance": {
+     "schema": 2,
+     "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+     "sources": "c220047ccac9725184e35573bbf45eb804472e1f2554c61eaa7bb4b77360595a",
+     "dataset": "9bc72bec5891b571fdd8f522cd308b578d01e250d442a16c9f573cf0ea62a37e",
+     "execution": {
+      "identity": {
+       "presentation": {
+        "evidence": "named-fields@2",
+        "choices": "full-criteria@3"
+       },
+       "file": "gemma-4-E2B-it-Q4_0.gguf",
+       "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+       "template": "chat@3:0a2c8073",
+       "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+       "lora_sha256": null
+      },
+      "requested_device": "gpu",
+      "threads": null,
+      "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+      "loaded": true,
+      "observed_models": [],
+      "accelerated": true,
+      "batch_inputs": 1,
+      "max_slots": 20,
+      "capabilities": {
+       "shared": true,
+       "fused": false,
+       "conformance": true,
+       "counters": {
+        "prefix_hits": 0,
+        "prefix_misses": 1,
+        "state_hits": 0,
+        "state_misses": 1,
+        "state_tokens": 11,
+        "suffix_tokens": 32,
+        "submissions": 3,
+        "branch_groups": 1,
+        "failures": 0,
+        "prefix_tokens": 40,
+        "prefix_evictions": 0,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 83
+       }
+      },
+      "requested_capacity": {
+       "n_ctx": 8192,
+       "n_batch": 512,
+       "n_seq_max": 37
+      },
+      "configuration": {
+       "max_input_tokens": 1024,
+       "prefix_slots": 4
+      },
+      "capacity": {
+       "n_ctx": 8192,
+       "n_batch": 512,
+       "n_seq_max": 37,
+       "n_outputs_max": 37,
+       "swa_full": true,
+       "kv_unified": true,
+       "n_ubatch": 512,
+       "flash_attn": "enabled",
+       "type_k": "f16",
+       "type_v": "f16",
+       "device": "gpu",
+       "tensor_types": [
+        "bf16",
+        "f32",
+        "q4_0",
+        "q8_0"
+       ],
+       "use_extra_bufts": true,
+       "repacked": [],
+       "buffers": {
+        "Vulkan0 model": 1504454902,
+        "Vulkan_Host model": 1749024768,
+        "Vulkan_Host output": 38797312,
+        "Vulkan0 KV": 150994944,
+        "Vulkan0 compute": 126793810,
+        "Vulkan_Host compute": 41953526
+       },
+       "shared": true,
+       "grouping": "serial",
+       "serial": 1,
+       "geometry": null,
+       "fusion": false
+      }
+     },
+     "boundary": "Runtime.ask over S1MB go-emotions 28-question cases"
+    },
+    "capacity": {
+     "n_ctx": 8192,
+     "n_batch": 512,
+     "n_seq_max": 37,
+     "n_outputs_max": 37,
+     "swa_full": true,
+     "kv_unified": true,
+     "n_ubatch": 512,
+     "flash_attn": "enabled",
+     "type_k": "f16",
+     "type_v": "f16",
+     "device": "gpu",
+     "tensor_types": [
+      "bf16",
+      "f32",
+      "q4_0",
+      "q8_0"
+     ],
+     "use_extra_bufts": true,
+     "repacked": [],
+     "buffers": {
+      "Vulkan0 model": 1504454902,
+      "Vulkan_Host model": 1749024768,
+      "Vulkan_Host output": 38797312,
+      "Vulkan0 KV": 150994944,
+      "Vulkan0 compute": 126793810,
+      "Vulkan_Host compute": 41953526
+     },
+     "shared": true,
+     "grouping": "serial",
+     "serial": 1,
+     "geometry": null,
+     "fusion": false
+    },
+    "execution": {
+     "device": "gpu",
+     "tensor_types": [
+      "bf16",
+      "f32",
+      "q4_0",
+      "q8_0"
+     ],
+     "flash_attn": "enabled",
+     "type_k": "f16",
+     "type_v": "f16",
+     "use_extra_bufts": true,
+     "repacked": [],
+     "n_ubatch": 512,
+     "shared": true,
+     "grouping": "serial",
+     "serial": 1,
+     "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}"
+    },
+    "repeatability": {
+     "warm": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0023207861451601808,
+      "max_mass_difference": 0.009675741195678711,
+      "changes": []
+     },
+     "evicted": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0023207861451601808,
+      "max_mass_difference": 0.009675741195678711,
+      "changes": []
+     },
+     "reversed": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     },
+     "shuffled": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     },
+     "one": {
+      "questions": 20,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.010804116174066736,
+      "max_mass_difference": 0.009349226951599121,
+      "changes": []
+     },
+     "four": {
+      "questions": 20,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.004579033149360617,
+      "max_mass_difference": 0.008026361465454102,
+      "changes": []
+     },
+     "seventeen": {
+      "questions": 85,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.01087805238435624,
+      "max_mass_difference": 0.013225376605987549,
+      "changes": []
+     },
+     "seventeen_tail": {
+      "questions": 85,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.008422717089271836,
+      "max_mass_difference": 0.013186812400817871,
+      "changes": []
+     },
+     "mixed_guidance": {
+      "questions": 55,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.009600978130845483,
+      "max_mass_difference": 0.01468813419342041,
+      "changes": []
+     },
+     "unguided": {
+      "questions": 25,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     }
+    },
+    "cases_28": {
+     "all": {
+      "count": 25,
+      "p50": 5479.5,
+      "p95": 5546.1
+     },
+     "non_failed": {
+      "count": 25,
+      "p50": 5479.5,
+      "p95": 5546.1
+     },
+     "statuses": {
+      "ok": 546,
+      "uncertain": 154
+     },
+     "samples": [
+      {
+       "ms": 5496.567667985801,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 980,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 25,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3786
+       }
+      },
+      {
+       "ms": 5442.595784959849,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1148,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3954
+       }
+      },
+      {
+       "ms": 5546.069374016952,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 644,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3450
+       }
+      },
+      {
+       "ms": 5485.402269987389,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 616,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3422
+       }
+      },
+      {
+       "ms": 5484.8044060054235,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1092,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3898
+       }
+      },
+      {
+       "ms": 5553.193164989352,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 868,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3674
+       }
+      },
+      {
+       "ms": 5480.202373000793,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1232,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 4038
+       }
+      },
+      {
+       "ms": 5437.659121002071,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1036,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3842
+       }
+      },
+      {
+       "ms": 5417.216410045512,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 952,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3758
+       }
+      },
+      {
+       "ms": 5347.483678953722,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1008,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3814
+       }
+      },
+      {
+       "ms": 5395.891852036584,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1176,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3982
+       }
+      },
+      {
+       "ms": 5409.505360992625,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 980,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3786
+       }
+      },
+      {
+       "ms": 5506.453156995121,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 784,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3590
+       }
+      },
+      {
+       "ms": 5438.988397014327,
+       "statuses": [
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 504,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3310
+       }
+      },
+      {
+       "ms": 5504.226610006299,
+       "statuses": [
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 784,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3590
+       }
+      },
+      {
+       "ms": 5509.667204983998,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 840,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3646
+       }
+      },
+      {
+       "ms": 5486.048502963968,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 840,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3646
+       }
+      },
+      {
+       "ms": 5479.488291952293,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 868,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3674
+       }
+      },
+      {
+       "ms": 5442.188199027441,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 448,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3254
+       }
+      },
+      {
+       "ms": 5509.251004026737,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 868,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3674
+       }
+      },
+      {
+       "ms": 5389.300022972748,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 560,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3366
+       }
+      },
+      {
+       "ms": 5412.912683968898,
+       "statuses": [
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 476,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3282
+       }
+      },
+      {
+       "ms": 5511.2620589789,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 784,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3590
+       }
+      },
+      {
+       "ms": 5401.571624039207,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1008,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3814
+       }
+      },
+      {
+       "ms": 5425.749631016515,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 504,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3310
+       }
+      }
+     ],
+     "work": {
+      "prefix_tokens": 52600,
+      "state_tokens": 21000,
+      "suffix_tokens": 17550,
+      "dummy_tokens": 0,
+      "submissions": 2100,
+      "submitted_tokens": 91150
+     },
+     "dummy_per_real": 0.0
+    },
+    "latency": {
+     "provenance": {
+      "schema": 2,
+      "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+      "sources": "c220047ccac9725184e35573bbf45eb804472e1f2554c61eaa7bb4b77360595a",
+      "dataset": "b8c29ca0e4755e0384ea5b6442f19141dac5e4282397bc74e524f4ff016ff7df",
+      "execution": {
+       "identity": {
+        "presentation": {
+         "evidence": "named-fields@2",
+         "choices": "full-criteria@3"
+        },
+        "file": "gemma-4-E2B-it-Q4_0.gguf",
+        "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+        "template": "chat@3:0a2c8073",
+        "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+        "lora_sha256": null
+       },
+       "requested_device": "gpu",
+       "threads": null,
+       "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+       "loaded": true,
+       "observed_models": [],
+       "accelerated": true,
+       "batch_inputs": 1,
+       "max_slots": 20,
+       "capabilities": {
+        "shared": true,
+        "fused": false,
+        "conformance": true,
+        "counters": {
+         "prefix_hits": 0,
+         "prefix_misses": 2097,
+         "state_hits": 0,
+         "state_misses": 2097,
+         "state_tokens": 67920,
+         "suffix_tokens": 57139,
+         "submissions": 6331,
+         "branch_groups": 2137,
+         "failures": 0,
+         "prefix_tokens": 156260,
+         "prefix_evictions": 1903,
+         "dummy_tokens": 0,
+         "lane_groups": 0,
+         "submitted_tokens": 281319
+        }
+       },
+       "requested_capacity": {
+        "n_ctx": 8192,
+        "n_batch": 512,
+        "n_seq_max": 37
+       },
+       "configuration": {
+        "max_input_tokens": 1024,
+        "prefix_slots": 4
+       },
+       "capacity": {
+        "n_ctx": 8192,
+        "n_batch": 512,
+        "n_seq_max": 37,
+        "n_outputs_max": 37,
+        "swa_full": true,
+        "kv_unified": true,
+        "n_ubatch": 512,
+        "flash_attn": "enabled",
+        "type_k": "f16",
+        "type_v": "f16",
+        "device": "gpu",
+        "tensor_types": [
+         "bf16",
+         "f32",
+         "q4_0",
+         "q8_0"
+        ],
+        "use_extra_bufts": true,
+        "repacked": [],
+        "buffers": {
+         "Vulkan0 model": 1504454902,
+         "Vulkan_Host model": 1749024768,
+         "Vulkan_Host output": 38797312,
+         "Vulkan0 KV": 150994944,
+         "Vulkan0 compute": 126793810,
+         "Vulkan_Host compute": 41953526
+        },
+        "shared": true,
+        "grouping": "serial",
+        "serial": 1,
+        "geometry": null,
+        "fusion": false
+       }
+      },
+      "boundary": "public SDK"
+     },
+     "model": {
+      "presentation": {
+       "evidence": "named-fields@2",
+       "choices": "full-criteria@3"
+      },
+      "file": "gemma-4-E2B-it-Q4_0.gguf",
+      "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+      "template": "chat@3:0a2c8073",
+      "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+      "lora_sha256": null
+     },
+     "execution": {
+      "identity": {
+       "presentation": {
+        "evidence": "named-fields@2",
+        "choices": "full-criteria@3"
+       },
+       "file": "gemma-4-E2B-it-Q4_0.gguf",
+       "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+       "template": "chat@3:0a2c8073",
+       "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+       "lora_sha256": null
+      },
+      "requested_device": "gpu",
+      "threads": null,
+      "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+      "loaded": true,
+      "observed_models": [],
+      "accelerated": true,
+      "batch_inputs": 1,
+      "max_slots": 20,
+      "capabilities": {
+       "shared": true,
+       "fused": false,
+       "conformance": true,
+       "counters": {
+        "prefix_hits": 0,
+        "prefix_misses": 2097,
+        "state_hits": 0,
+        "state_misses": 2097,
+        "state_tokens": 67920,
+        "suffix_tokens": 57139,
+        "submissions": 6331,
+        "branch_groups": 2137,
+        "failures": 0,
+        "prefix_tokens": 156260,
+        "prefix_evictions": 1903,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 281319
+       }
+      },
+      "requested_capacity": {
+       "n_ctx": 8192,
+       "n_batch": 512,
+       "n_seq_max": 37
+      },
+      "configuration": {
+       "max_input_tokens": 1024,
+       "prefix_slots": 4
+      },
+      "capacity": {
+       "n_ctx": 8192,
+       "n_batch": 512,
+       "n_seq_max": 37,
+       "n_outputs_max": 37,
+       "swa_full": true,
+       "kv_unified": true,
+       "n_ubatch": 512,
+       "flash_attn": "enabled",
+       "type_k": "f16",
+       "type_v": "f16",
+       "device": "gpu",
+       "tensor_types": [
+        "bf16",
+        "f32",
+        "q4_0",
+        "q8_0"
+       ],
+       "use_extra_bufts": true,
+       "repacked": [],
+       "buffers": {
+        "Vulkan0 model": 1504454902,
+        "Vulkan_Host model": 1749024768,
+        "Vulkan_Host output": 38797312,
+        "Vulkan0 KV": 150994944,
+        "Vulkan0 compute": 126793810,
+        "Vulkan_Host compute": 41953526
+       },
+       "shared": true,
+       "grouping": "serial",
+       "serial": 1,
+       "geometry": null,
+       "fusion": false
+      }
+     },
+     "samples": 20,
+     "same_input_ms": {
+      "all": {
+       "count": 20,
+       "p50": 59.4,
+       "p95": 62.3
+      },
+      "non_failed": {
+       "count": 20,
+       "p50": 59.4,
+       "p95": 62.3
+      },
+      "statuses": {
+       "ok": 20
+      },
+      "samples": [
+       {
+        "ms": 62.31746799312532,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 60.3696969919838,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 60.58362795738503,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 58.337897004093975,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 58.825799031183124,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 59.59927599178627,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 59.749942971393466,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 57.67028999980539,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 59.97386696981266,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 59.30195702239871,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 58.34841798059642,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 58.99976601358503,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 59.24422200769186,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 59.476915979757905,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 59.46275999303907,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 59.56414301181212,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 57.77332797879353,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 59.99041104223579,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 59.033995028585196,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 59.42118895472959,
+        "statuses": [
+         "ok"
+        ]
+       }
+      ]
+     },
+     "new_input_ms": {
+      "all": {
+       "count": 20,
+       "p50": 112.0,
+       "p95": 115.1
+      },
+      "non_failed": {
+       "count": 20,
+       "p50": 112.0,
+       "p95": 115.1
+      },
+      "statuses": {
+       "ok": 20
+      },
+      "samples": [
+       {
+        "ms": 113.43473597662523,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 112.61333199217916,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 112.14111698791385,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 114.61488803615794,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 111.96529597509652,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 112.84645705018193,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 114.82486804015934,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 110.30529701383784,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 112.5278600375168,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 115.06262299371883,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 112.00855299830437,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 114.11362799117342,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 111.18953098775819,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 111.32025101687759,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 112.01543197967112,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 111.54496896779165,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 110.39614997571334,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 111.38174403458834,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 111.76525300834328,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 111.77024099742994,
+        "statuses": [
+         "ok"
+        ]
+       }
+      ]
+     },
+     "new_input_4_questions_ms": {
+      "all": {
+       "count": 20,
+       "p50": 300.6,
+       "p95": 303.4
+      },
+      "non_failed": {
+       "count": 20,
+       "p50": 300.6,
+       "p95": 303.4
+      },
+      "statuses": {
+       "ok": 66,
+       "uncertain": 14
+      },
+      "samples": [
+       {
+        "ms": 303.4231719793752,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 299.54799701226875,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 301.4225580263883,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 301.2539789779112,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 301.51256400858983,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 299.1305440082215,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 300.6951760035008,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 300.53194100037217,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 300.5418950342573,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 302.5058170314878,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 300.46768800821155,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 301.0483770049177,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 300.8736709598452,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 300.07671302882954,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 302.93449404416606,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 299.591792980209,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 300.1876290072687,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 301.8011499661952,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 295.3270020079799,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 293.18675596732646,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       }
+      ]
+     }
+    }
+   }
+  },
+  "cpu": {
+   "lanes": {
+    "provenance": {
+     "schema": 2,
+     "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+     "sources": "c220047ccac9725184e35573bbf45eb804472e1f2554c61eaa7bb4b77360595a",
+     "dataset": "9bc72bec5891b571fdd8f522cd308b578d01e250d442a16c9f573cf0ea62a37e",
+     "execution": {
+      "identity": {
+       "source": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+       "template": "chat@3:0a2c8073",
+       "presentation": {
+        "evidence": "named-fields@2",
+        "choices": "full-criteria@3"
+       }
+      },
+      "requested_device": "provider",
+      "threads": null,
+      "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+      "loaded": true,
+      "observed_models": [],
+      "accelerated": false,
+      "batch_inputs": 8,
+      "max_slots": 20,
+      "capabilities": {
+       "shared": true,
+       "fused": false,
+       "conformance": true,
+       "counters": {
+        "prefix_hits": 0,
+        "prefix_misses": 1,
+        "state_hits": 0,
+        "state_misses": 1,
+        "state_tokens": 11,
+        "suffix_tokens": 32,
+        "submissions": 3,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 40,
+        "prefix_evictions": 0,
+        "dummy_tokens": 301,
+        "lane_groups": 3,
+        "submitted_tokens": 384
+       }
+      },
+      "requested_capacity": {
+       "n_ctx": 15360,
+       "n_batch": 512,
+       "n_seq_max": 48
+      },
+      "configuration": {
+       "max_input_tokens": 1024,
+       "prefix_slots": 8
+      },
+      "capacity": {
+       "n_ctx": 15360,
+       "n_batch": 512,
+       "n_seq_max": 48,
+       "n_outputs_max": 48,
+       "swa_full": true,
+       "kv_unified": true,
+       "n_ubatch": 512,
+       "flash_attn": "enabled",
+       "type_k": "f16",
+       "type_v": "f16",
+       "device": "cpu",
+       "tensor_types": [
+        "bf16",
+        "f32",
+        "q4_0",
+        "q8_0"
+       ],
+       "use_extra_bufts": true,
+       "repacked": [
+        "q4_0_8x8"
+       ],
+       "buffers": {
+        "CPU model": 2205511844,
+        "CPU_REPACK model": 1047967826,
+        "CPU output": 50331648,
+        "CPU KV": 283115520,
+        "Vulkan_Host compute": 150900572
+       },
+       "shared": true,
+       "grouping": "lanes",
+       "serial": null,
+       "geometry": {
+        "lanes": 4,
+        "lane_tokens": "16-token multiples through 128, then 128-token multiples",
+        "dummy_token": 0,
+        "stages": [
+         "prefix",
+         "state",
+         "suffix"
+        ],
+        "outputs": {
+         "prefix": 0,
+         "state": 0,
+         "suffix": 4
+        }
+       },
+       "fusion": false
+      }
+     },
+     "boundary": "Runtime.ask over S1MB go-emotions 28-question cases"
+    },
+    "capacity": {
+     "n_ctx": 15360,
+     "n_batch": 512,
+     "n_seq_max": 48,
+     "n_outputs_max": 48,
+     "swa_full": true,
+     "kv_unified": true,
+     "n_ubatch": 512,
+     "flash_attn": "enabled",
+     "type_k": "f16",
+     "type_v": "f16",
+     "device": "cpu",
+     "tensor_types": [
+      "bf16",
+      "f32",
+      "q4_0",
+      "q8_0"
+     ],
+     "use_extra_bufts": true,
+     "repacked": [
+      "q4_0_8x8"
+     ],
+     "buffers": {
+      "CPU model": 2205511844,
+      "CPU_REPACK model": 1047967826,
+      "CPU output": 50331648,
+      "CPU KV": 283115520,
+      "Vulkan_Host compute": 150900572
+     },
+     "shared": true,
+     "grouping": "lanes",
+     "serial": null,
+     "geometry": {
+      "lanes": 4,
+      "lane_tokens": "16-token multiples through 128, then 128-token multiples",
+      "dummy_token": 0,
+      "stages": [
+       "prefix",
+       "state",
+       "suffix"
+      ],
+      "outputs": {
+       "prefix": 0,
+       "state": 0,
+       "suffix": 4
+      }
+     },
+     "fusion": false
+    },
+    "execution": {
+     "device": "cpu",
+     "tensor_types": [
+      "bf16",
+      "f32",
+      "q4_0",
+      "q8_0"
+     ],
+     "flash_attn": "enabled",
+     "type_k": "f16",
+     "type_v": "f16",
+     "use_extra_bufts": true,
+     "repacked": [
+      "q4_0_8x8"
+     ],
+     "n_ubatch": 512,
+     "shared": true,
+     "grouping": "lanes",
+     "serial": null,
+     "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}"
+    },
+    "repeatability": {
+     "warm": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     },
+     "evicted": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     },
+     "reversed": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     },
+     "shuffled": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     },
+     "one": {
+      "questions": 20,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.02736545419009695,
+      "max_mass_difference": 0.023077070713043213,
+      "changes": []
+     },
+     "four": {
+      "questions": 20,
+      "accepted_changes": 1,
+      "max_probability_difference": 0.021007399151342865,
+      "max_mass_difference": 0.016771912574768066,
+      "changes": [
+       {
+        "case": 0,
+        "question": "annoyance",
+        "reference": {
+         "value": true,
+         "status": "ok",
+         "p": [
+          0.9046851328601243
+         ],
+         "mass": 0.9383389353752136
+        },
+        "observed": {
+         "value": null,
+         "status": "uncertain",
+         "p": [
+          0.896731875274248
+         ],
+         "mass": 0.9395154714584351
+        }
+       }
+      ]
+     },
+     "seventeen": {
+      "questions": 85,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.03362816944610009,
+      "max_mass_difference": 0.024652481079101562,
+      "changes": []
+     },
+     "seventeen_tail": {
+      "questions": 85,
+      "accepted_changes": 1,
+      "max_probability_difference": 0.05180760342903118,
+      "max_mass_difference": 0.030177772045135498,
+      "changes": [
+       {
+        "case": 4,
+        "question": "surprise",
+        "reference": {
+         "value": false,
+         "status": "ok",
+         "p": [
+          0.09497353875247343
+         ],
+         "mass": 0.9723267555236816
+        },
+        "observed": {
+         "value": null,
+         "status": "uncertain",
+         "p": [
+          0.10690914158566997
+         ],
+         "mass": 0.9697455763816833
+        }
+       }
+      ]
+     },
+     "mixed_guidance": {
+      "questions": 55,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.06639373649999175,
+      "max_mass_difference": 0.0419124960899353,
+      "changes": []
+     },
+     "unguided": {
+      "questions": 25,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.016040333504188098,
+      "max_mass_difference": 0.0008652210235595703,
+      "changes": []
+     }
+    },
+    "cases_28": {
+     "all": {
+      "count": 25,
+      "p50": 17577.9,
+      "p95": 24542.9
+     },
+     "non_failed": {
+      "count": 25,
+      "p50": 17577.9,
+      "p95": 24542.9
+     },
+     "statuses": {
+      "ok": 545,
+      "uncertain": 155
+     },
+     "samples": [
+      {
+       "ms": 18013.431067985948,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 980,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 42,
+        "dummy_tokens": 694,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 18657.59190300014,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1148,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 526,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 15417.352046002634,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 644,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 582,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 16645.060329989064,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 616,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 610,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 18546.943099005148,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1092,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 582,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 15489.676750032231,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 868,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 358,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 17785.26208398398,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1232,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 442,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 19369.409268023446,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1036,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 638,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 16950.549398025032,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 952,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 722,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 18069.05062502483,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1008,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 666,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 19376.907210971694,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1176,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 498,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 16869.81874599587,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 980,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 694,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 16872.062684968114,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 784,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 442,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 17282.49939897796,
+       "statuses": [
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 504,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 722,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 15368.679695005994,
+       "statuses": [
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 784,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 442,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 16184.180159005336,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 840,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 386,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 17577.879331016447,
+       "statuses": [
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 840,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 386,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 16116.39938101871,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 868,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 358,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 14575.092763989232,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 448,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 330,
+        "lane_groups": 21,
+        "submitted_tokens": 3584
+       }
+      },
+      {
+       "ms": 18266.337701003067,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 868,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 358,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 17017.245110007934,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 560,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 666,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 20664.394988969434,
+       "statuses": [
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 476,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 750,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 29621.91335199168,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 784,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 442,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      },
+      {
+       "ms": 18997.901526046917,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1008,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 666,
+        "lane_groups": 21,
+        "submitted_tokens": 4480
+       }
+      },
+      {
+       "ms": 24542.889303993434,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 504,
+        "suffix_tokens": 702,
+        "submissions": 21,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 56,
+        "dummy_tokens": 722,
+        "lane_groups": 21,
+        "submitted_tokens": 4032
+       }
+      }
+     ],
+     "work": {
+      "prefix_tokens": 52600,
+      "state_tokens": 21000,
+      "suffix_tokens": 17550,
+      "dummy_tokens": 13682,
+      "submissions": 525,
+      "submitted_tokens": 104832
+     },
+     "dummy_per_real": 0.15
+    },
+    "latency": {
+     "provenance": {
+      "schema": 2,
+      "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+      "sources": "c220047ccac9725184e35573bbf45eb804472e1f2554c61eaa7bb4b77360595a",
+      "dataset": "b8c29ca0e4755e0384ea5b6442f19141dac5e4282397bc74e524f4ff016ff7df",
+      "execution": {
+       "identity": {
+        "source": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+        "template": "chat@3:0a2c8073",
+        "presentation": {
+         "evidence": "named-fields@2",
+         "choices": "full-criteria@3"
+        }
+       },
+       "requested_device": "provider",
+       "threads": null,
+       "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+       "loaded": true,
+       "observed_models": [],
+       "accelerated": false,
+       "batch_inputs": 8,
+       "max_slots": 20,
+       "capabilities": {
+        "shared": true,
+        "fused": false,
+        "conformance": true,
+        "counters": {
+         "prefix_hits": 0,
+         "prefix_misses": 2097,
+         "state_hits": 0,
+         "state_misses": 2097,
+         "state_tokens": 67920,
+         "suffix_tokens": 57139,
+         "submissions": 1761,
+         "branch_groups": 0,
+         "failures": 0,
+         "prefix_tokens": 156260,
+         "prefix_evictions": 3568,
+         "dummy_tokens": 85145,
+         "lane_groups": 1746,
+         "submitted_tokens": 366464
+        }
+       },
+       "requested_capacity": {
+        "n_ctx": 15360,
+        "n_batch": 512,
+        "n_seq_max": 48
+       },
+       "configuration": {
+        "max_input_tokens": 1024,
+        "prefix_slots": 8
+       },
+       "capacity": {
+        "n_ctx": 15360,
+        "n_batch": 512,
+        "n_seq_max": 48,
+        "n_outputs_max": 48,
+        "swa_full": true,
+        "kv_unified": true,
+        "n_ubatch": 512,
+        "flash_attn": "enabled",
+        "type_k": "f16",
+        "type_v": "f16",
+        "device": "cpu",
+        "tensor_types": [
+         "bf16",
+         "f32",
+         "q4_0",
+         "q8_0"
+        ],
+        "use_extra_bufts": true,
+        "repacked": [
+         "q4_0_8x8"
+        ],
+        "buffers": {
+         "CPU model": 2205511844,
+         "CPU_REPACK model": 1047967826,
+         "CPU output": 50331648,
+         "CPU KV": 283115520,
+         "Vulkan_Host compute": 150900572
+        },
+        "shared": true,
+        "grouping": "lanes",
+        "serial": null,
+        "geometry": {
+         "lanes": 4,
+         "lane_tokens": "16-token multiples through 128, then 128-token multiples",
+         "dummy_token": 0,
+         "stages": [
+          "prefix",
+          "state",
+          "suffix"
+         ],
+         "outputs": {
+          "prefix": 0,
+          "state": 0,
+          "suffix": 4
+         }
+        },
+        "fusion": false
+       }
+      },
+      "boundary": "public SDK"
+     },
+     "model": {
+      "source": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+      "template": "chat@3:0a2c8073",
+      "presentation": {
+       "evidence": "named-fields@2",
+       "choices": "full-criteria@3"
+      }
+     },
+     "execution": {
+      "identity": {
+       "source": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+       "template": "chat@3:0a2c8073",
+       "presentation": {
+        "evidence": "named-fields@2",
+        "choices": "full-criteria@3"
+       }
+      },
+      "requested_device": "provider",
+      "threads": null,
+      "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+      "loaded": true,
+      "observed_models": [],
+      "accelerated": false,
+      "batch_inputs": 8,
+      "max_slots": 20,
+      "capabilities": {
+       "shared": true,
+       "fused": false,
+       "conformance": true,
+       "counters": {
+        "prefix_hits": 0,
+        "prefix_misses": 2097,
+        "state_hits": 0,
+        "state_misses": 2097,
+        "state_tokens": 67920,
+        "suffix_tokens": 57139,
+        "submissions": 1761,
+        "branch_groups": 0,
+        "failures": 0,
+        "prefix_tokens": 156260,
+        "prefix_evictions": 3568,
+        "dummy_tokens": 85145,
+        "lane_groups": 1746,
+        "submitted_tokens": 366464
+       }
+      },
+      "requested_capacity": {
+       "n_ctx": 15360,
+       "n_batch": 512,
+       "n_seq_max": 48
+      },
+      "configuration": {
+       "max_input_tokens": 1024,
+       "prefix_slots": 8
+      },
+      "capacity": {
+       "n_ctx": 15360,
+       "n_batch": 512,
+       "n_seq_max": 48,
+       "n_outputs_max": 48,
+       "swa_full": true,
+       "kv_unified": true,
+       "n_ubatch": 512,
+       "flash_attn": "enabled",
+       "type_k": "f16",
+       "type_v": "f16",
+       "device": "cpu",
+       "tensor_types": [
+        "bf16",
+        "f32",
+        "q4_0",
+        "q8_0"
+       ],
+       "use_extra_bufts": true,
+       "repacked": [
+        "q4_0_8x8"
+       ],
+       "buffers": {
+        "CPU model": 2205511844,
+        "CPU_REPACK model": 1047967826,
+        "CPU output": 50331648,
+        "CPU KV": 283115520,
+        "Vulkan_Host compute": 150900572
+       },
+       "shared": true,
+       "grouping": "lanes",
+       "serial": null,
+       "geometry": {
+        "lanes": 4,
+        "lane_tokens": "16-token multiples through 128, then 128-token multiples",
+        "dummy_token": 0,
+        "stages": [
+         "prefix",
+         "state",
+         "suffix"
+        ],
+        "outputs": {
+         "prefix": 0,
+         "state": 0,
+         "suffix": 4
+        }
+       },
+       "fusion": false
+      }
+     },
+     "samples": 20,
+     "same_input_ms": {
+      "all": {
+       "count": 20,
+       "p50": 1323.1,
+       "p95": 1669.8
+      },
+      "non_failed": {
+       "count": 20,
+       "p50": 1323.1,
+       "p95": 1669.8
+      },
+      "statuses": {
+       "ok": 20
+      },
+      "samples": [
+       {
+        "ms": 1335.0348210078664,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1371.5300869662315,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1287.6471470226534,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1305.7159680174664,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1363.4619459626265,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1338.2556210272014,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1304.75833901437,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1300.8824689895846,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1271.2607569992542,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1271.5516420430504,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1276.6528860083781,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1299.5338499895297,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1293.5238219797611,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1341.136953968089,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1378.9701230125502,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1311.2332799937576,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1443.0755199864507,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1491.776131966617,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1638.29557801364,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1669.7740150266327,
+        "statuses": [
+         "ok"
+        ]
+       }
+      ]
+     },
+     "new_input_ms": {
+      "all": {
+       "count": 20,
+       "p50": 2284.4,
+       "p95": 2847.9
+      },
+      "non_failed": {
+       "count": 20,
+       "p50": 2284.4,
+       "p95": 2847.9
+      },
+      "statuses": {
+       "ok": 20
+      },
+      "samples": [
+       {
+        "ms": 2575.016329996288,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 2823.1049229507335,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 2847.8954960010014,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 2318.9874769886956,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 2637.536753027234,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 2586.5304279723205,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 2249.7460159938782,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 2582.6094270450994,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 2540.6337329768576,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 2204.793985991273,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 2456.230460025836,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 2562.922860030085,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 2246.0182309732772,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1396.1923850001767,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1397.0750739681534,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1384.0876669855788,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1388.1436419906095,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1418.1063330033794,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1414.0300040016882,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 1447.0207260455936,
+        "statuses": [
+         "ok"
+        ]
+       }
+      ]
+     },
+     "new_input_4_questions_ms": {
+      "all": {
+       "count": 20,
+       "p50": 3086.1,
+       "p95": 4439.5
+      },
+      "non_failed": {
+       "count": 20,
+       "p50": 3086.1,
+       "p95": 4439.5
+      },
+      "statuses": {
+       "ok": 66,
+       "uncertain": 14
+      },
+      "samples": [
+       {
+        "ms": 2279.814068984706,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 2593.0736680165865,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 2661.174602981191,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 2563.063769019209,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 2923.423931002617,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 3248.7464449950494,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 2668.063640012406,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 2692.9026800207794,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 2642.78373302659,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 2412.520580983255,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 2874.478418030776,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 3706.4274870208465,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 3510.436401993502,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 3941.4397700456902,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 3903.980490984395,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 4041.1572890006937,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 3975.201566994656,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 4136.826137022581,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 4397.339223010931,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 4439.4852629629895,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       }
+      ]
+     }
+    }
+   },
+   "serial": {
+    "provenance": {
+     "schema": 2,
+     "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+     "sources": "c220047ccac9725184e35573bbf45eb804472e1f2554c61eaa7bb4b77360595a",
+     "dataset": "9bc72bec5891b571fdd8f522cd308b578d01e250d442a16c9f573cf0ea62a37e",
+     "execution": {
+      "identity": {
+       "presentation": {
+        "evidence": "named-fields@2",
+        "choices": "full-criteria@3"
+       },
+       "file": "gemma-4-E2B-it-Q4_0.gguf",
+       "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+       "template": "chat@3:0a2c8073",
+       "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+       "lora_sha256": null
+      },
+      "requested_device": "cpu",
+      "threads": null,
+      "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+      "loaded": true,
+      "observed_models": [],
+      "accelerated": false,
+      "batch_inputs": 1,
+      "max_slots": 20,
+      "capabilities": {
+       "shared": true,
+       "fused": false,
+       "conformance": true,
+       "counters": {
+        "prefix_hits": 0,
+        "prefix_misses": 1,
+        "state_hits": 0,
+        "state_misses": 1,
+        "state_tokens": 11,
+        "suffix_tokens": 32,
+        "submissions": 3,
+        "branch_groups": 1,
+        "failures": 0,
+        "prefix_tokens": 40,
+        "prefix_evictions": 0,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 83
+       }
+      },
+      "requested_capacity": {
+       "n_ctx": 8192,
+       "n_batch": 512,
+       "n_seq_max": 37
+      },
+      "configuration": {
+       "max_input_tokens": 1024,
+       "prefix_slots": 4
+      },
+      "capacity": {
+       "n_ctx": 8192,
+       "n_batch": 512,
+       "n_seq_max": 37,
+       "n_outputs_max": 37,
+       "swa_full": true,
+       "kv_unified": true,
+       "n_ubatch": 512,
+       "flash_attn": "enabled",
+       "type_k": "f16",
+       "type_v": "f16",
+       "device": "cpu",
+       "tensor_types": [
+        "bf16",
+        "f32",
+        "q4_0",
+        "q8_0"
+       ],
+       "use_extra_bufts": true,
+       "repacked": [
+        "q4_0_8x8"
+       ],
+       "buffers": {
+        "CPU model": 2205511844,
+        "CPU_REPACK model": 1047967826,
+        "CPU output": 38797312,
+        "CPU KV": 150994944,
+        "Vulkan_Host compute": 133190124
+       },
+       "shared": true,
+       "grouping": "serial",
+       "serial": 1,
+       "geometry": null,
+       "fusion": false
+      }
+     },
+     "boundary": "Runtime.ask over S1MB go-emotions 28-question cases"
+    },
+    "capacity": {
+     "n_ctx": 8192,
+     "n_batch": 512,
+     "n_seq_max": 37,
+     "n_outputs_max": 37,
+     "swa_full": true,
+     "kv_unified": true,
+     "n_ubatch": 512,
+     "flash_attn": "enabled",
+     "type_k": "f16",
+     "type_v": "f16",
+     "device": "cpu",
+     "tensor_types": [
+      "bf16",
+      "f32",
+      "q4_0",
+      "q8_0"
+     ],
+     "use_extra_bufts": true,
+     "repacked": [
+      "q4_0_8x8"
+     ],
+     "buffers": {
+      "CPU model": 2205511844,
+      "CPU_REPACK model": 1047967826,
+      "CPU output": 38797312,
+      "CPU KV": 150994944,
+      "Vulkan_Host compute": 133190124
+     },
+     "shared": true,
+     "grouping": "serial",
+     "serial": 1,
+     "geometry": null,
+     "fusion": false
+    },
+    "execution": {
+     "device": "cpu",
+     "tensor_types": [
+      "bf16",
+      "f32",
+      "q4_0",
+      "q8_0"
+     ],
+     "flash_attn": "enabled",
+     "type_k": "f16",
+     "type_v": "f16",
+     "use_extra_bufts": true,
+     "repacked": [
+      "q4_0_8x8"
+     ],
+     "n_ubatch": 512,
+     "shared": true,
+     "grouping": "serial",
+     "serial": 1,
+     "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}"
+    },
+    "repeatability": {
+     "warm": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0003339312853227923,
+      "max_mass_difference": 0.02242565155029297,
+      "changes": []
+     },
+     "evicted": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0003339312853227923,
+      "max_mass_difference": 0.02242565155029297,
+      "changes": []
+     },
+     "reversed": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     },
+     "shuffled": {
+      "questions": 140,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     },
+     "one": {
+      "questions": 20,
+      "accepted_changes": 1,
+      "max_probability_difference": 0.007512779461202768,
+      "max_mass_difference": 0.025485336780548096,
+      "changes": [
+       {
+        "case": 0,
+        "question": "annoyance",
+        "reference": {
+         "value": null,
+         "status": "uncertain",
+         "p": [
+          0.893990740953565
+         ],
+         "mass": 0.9477676749229431
+        },
+        "observed": {
+         "value": true,
+         "status": "ok",
+         "p": [
+          0.9015035204147678
+         ],
+         "mass": 0.9379411339759827
+        }
+       }
+      ]
+     },
+     "four": {
+      "questions": 20,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.012204831139167288,
+      "max_mass_difference": 0.011415541172027588,
+      "changes": []
+     },
+     "seventeen": {
+      "questions": 85,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.03310817907509889,
+      "max_mass_difference": 0.021744966506958008,
+      "changes": []
+     },
+     "seventeen_tail": {
+      "questions": 85,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0665716214322965,
+      "max_mass_difference": 0.027921617031097412,
+      "changes": []
+     },
+     "mixed_guidance": {
+      "questions": 55,
+      "accepted_changes": 1,
+      "max_probability_difference": 0.019482856215995215,
+      "max_mass_difference": 0.029738247394561768,
+      "changes": [
+       {
+        "case": 0,
+        "question": "annoyance",
+        "reference": {
+         "value": null,
+         "status": "uncertain",
+         "p": [
+          0.893990740953565
+         ],
+         "mass": 0.9477676749229431
+        },
+        "observed": {
+         "value": true,
+         "status": "ok",
+         "p": [
+          0.9134735971695602
+         ],
+         "mass": 0.950181245803833
+        }
+       }
+      ]
+     },
+     "unguided": {
+      "questions": 25,
+      "accepted_changes": 0,
+      "max_probability_difference": 0.0,
+      "max_mass_difference": 0.0,
+      "changes": []
+     }
+    },
+    "cases_28": {
+     "all": {
+      "count": 25,
+      "p50": 16252.5,
+      "p95": 17874.9
+     },
+     "non_failed": {
+      "count": 25,
+      "p50": 16252.5,
+      "p95": 17874.9
+     },
+     "statuses": {
+      "ok": 543,
+      "uncertain": 157
+     },
+     "samples": [
+      {
+       "ms": 17475.045325991232,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 980,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 25,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3786
+       }
+      },
+      {
+       "ms": 15999.397377017885,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1148,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3954
+       }
+      },
+      {
+       "ms": 15826.69223297853,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 644,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3450
+       }
+      },
+      {
+       "ms": 15579.089947976172,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 616,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3422
+       }
+      },
+      {
+       "ms": 16610.34054803895,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1092,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3898
+       }
+      },
+      {
+       "ms": 16252.480002003722,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 868,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3674
+       }
+      },
+      {
+       "ms": 18024.845786974765,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1232,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 4038
+       }
+      },
+      {
+       "ms": 15579.5054960181,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1036,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3842
+       }
+      },
+      {
+       "ms": 16766.859855037183,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 952,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3758
+       }
+      },
+      {
+       "ms": 17161.756165034603,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1008,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3814
+       }
+      },
+      {
+       "ms": 16447.097637981642,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1176,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3982
+       }
+      },
+      {
+       "ms": 16282.442614960019,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 980,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3786
+       }
+      },
+      {
+       "ms": 16708.57650099788,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 784,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3590
+       }
+      },
+      {
+       "ms": 14584.220695018303,
+       "statuses": [
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 504,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3310
+       }
+      },
+      {
+       "ms": 14807.079672988039,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 784,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3590
+       }
+      },
+      {
+       "ms": 17874.931522994302,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 840,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3646
+       }
+      },
+      {
+       "ms": 15910.738142963964,
+       "statuses": [
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 840,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3646
+       }
+      },
+      {
+       "ms": 15214.832756028045,
+       "statuses": [
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 868,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3674
+       }
+      },
+      {
+       "ms": 14824.358039011713,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 448,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3254
+       }
+      },
+      {
+       "ms": 17324.29747498827,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 868,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3674
+       }
+      },
+      {
+       "ms": 13784.195685992017,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 560,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3366
+       }
+      },
+      {
+       "ms": 13885.540104005486,
+       "statuses": [
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 476,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3282
+       }
+      },
+      {
+       "ms": 16735.656591015868,
+       "statuses": [
+        "uncertain",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 784,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3590
+       }
+      },
+      {
+       "ms": 16557.25693301065,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 1008,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3814
+       }
+      },
+      {
+       "ms": 13567.491683003027,
+       "statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "uncertain",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "uncertain",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "ok",
+        "uncertain"
+       ],
+       "work": {
+        "prefix_hits": 0,
+        "prefix_misses": 28,
+        "state_hits": 0,
+        "state_misses": 28,
+        "state_tokens": 504,
+        "suffix_tokens": 702,
+        "submissions": 84,
+        "branch_groups": 28,
+        "failures": 0,
+        "prefix_tokens": 2104,
+        "prefix_evictions": 28,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 3310
+       }
+      }
+     ],
+     "work": {
+      "prefix_tokens": 52600,
+      "state_tokens": 21000,
+      "suffix_tokens": 17550,
+      "dummy_tokens": 0,
+      "submissions": 2100,
+      "submitted_tokens": 91150
+     },
+     "dummy_per_real": 0.0
+    },
+    "latency": {
+     "provenance": {
+      "schema": 2,
+      "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+      "sources": "1acd15a6a6b63457634e470723dba480a7ca097e92428b9c41aa5f0e6f3e2676",
+      "dataset": "b8c29ca0e4755e0384ea5b6442f19141dac5e4282397bc74e524f4ff016ff7df",
+      "execution": {
+       "identity": {
+        "presentation": {
+         "evidence": "named-fields@2",
+         "choices": "full-criteria@3"
+        },
+        "file": "gemma-4-E2B-it-Q4_0.gguf",
+        "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+        "template": "chat@3:0a2c8073",
+        "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+        "lora_sha256": null
+       },
+       "requested_device": "cpu",
+       "threads": null,
+       "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+       "loaded": true,
+       "observed_models": [],
+       "accelerated": false,
+       "batch_inputs": 1,
+       "max_slots": 20,
+       "capabilities": {
+        "shared": true,
+        "fused": false,
+        "conformance": true,
+        "counters": {
+         "prefix_hits": 0,
+         "prefix_misses": 2097,
+         "state_hits": 0,
+         "state_misses": 2097,
+         "state_tokens": 67920,
+         "suffix_tokens": 57139,
+         "submissions": 6331,
+         "branch_groups": 2137,
+         "failures": 0,
+         "prefix_tokens": 156260,
+         "prefix_evictions": 1903,
+         "dummy_tokens": 0,
+         "lane_groups": 0,
+         "submitted_tokens": 281319
+        }
+       },
+       "requested_capacity": {
+        "n_ctx": 8192,
+        "n_batch": 512,
+        "n_seq_max": 37
+       },
+       "configuration": {
+        "max_input_tokens": 1024,
+        "prefix_slots": 4
+       },
+       "capacity": {
+        "n_ctx": 8192,
+        "n_batch": 512,
+        "n_seq_max": 37,
+        "n_outputs_max": 37,
+        "swa_full": true,
+        "kv_unified": true,
+        "n_ubatch": 512,
+        "flash_attn": "enabled",
+        "type_k": "f16",
+        "type_v": "f16",
+        "device": "cpu",
+        "tensor_types": [
+         "bf16",
+         "f32",
+         "q4_0",
+         "q8_0"
+        ],
+        "use_extra_bufts": true,
+        "repacked": [
+         "q4_0_8x8"
+        ],
+        "buffers": {
+         "CPU model": 2205511844,
+         "CPU_REPACK model": 1047967826,
+         "CPU output": 38797312,
+         "CPU KV": 150994944,
+         "Vulkan_Host compute": 133190124
+        },
+        "shared": true,
+        "grouping": "serial",
+        "serial": 1,
+        "geometry": null,
+        "fusion": false
+       }
+      },
+      "boundary": "public SDK"
+     },
+     "model": {
+      "presentation": {
+       "evidence": "named-fields@2",
+       "choices": "full-criteria@3"
+      },
+      "file": "gemma-4-E2B-it-Q4_0.gguf",
+      "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+      "template": "chat@3:0a2c8073",
+      "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+      "lora_sha256": null
+     },
+     "execution": {
+      "identity": {
+       "presentation": {
+        "evidence": "named-fields@2",
+        "choices": "full-criteria@3"
+       },
+       "file": "gemma-4-E2B-it-Q4_0.gguf",
+       "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+       "template": "chat@3:0a2c8073",
+       "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+       "lora_sha256": null
+      },
+      "requested_device": "cpu",
+      "threads": null,
+      "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+      "loaded": true,
+      "observed_models": [],
+      "accelerated": false,
+      "batch_inputs": 1,
+      "max_slots": 20,
+      "capabilities": {
+       "shared": true,
+       "fused": false,
+       "conformance": true,
+       "counters": {
+        "prefix_hits": 0,
+        "prefix_misses": 2097,
+        "state_hits": 0,
+        "state_misses": 2097,
+        "state_tokens": 67920,
+        "suffix_tokens": 57139,
+        "submissions": 6331,
+        "branch_groups": 2137,
+        "failures": 0,
+        "prefix_tokens": 156260,
+        "prefix_evictions": 1903,
+        "dummy_tokens": 0,
+        "lane_groups": 0,
+        "submitted_tokens": 281319
+       }
+      },
+      "requested_capacity": {
+       "n_ctx": 8192,
+       "n_batch": 512,
+       "n_seq_max": 37
+      },
+      "configuration": {
+       "max_input_tokens": 1024,
+       "prefix_slots": 4
+      },
+      "capacity": {
+       "n_ctx": 8192,
+       "n_batch": 512,
+       "n_seq_max": 37,
+       "n_outputs_max": 37,
+       "swa_full": true,
+       "kv_unified": true,
+       "n_ubatch": 512,
+       "flash_attn": "enabled",
+       "type_k": "f16",
+       "type_v": "f16",
+       "device": "cpu",
+       "tensor_types": [
+        "bf16",
+        "f32",
+        "q4_0",
+        "q8_0"
+       ],
+       "use_extra_bufts": true,
+       "repacked": [
+        "q4_0_8x8"
+       ],
+       "buffers": {
+        "CPU model": 2205511844,
+        "CPU_REPACK model": 1047967826,
+        "CPU output": 38797312,
+        "CPU KV": 150994944,
+        "Vulkan_Host compute": 133190124
+       },
+       "shared": true,
+       "grouping": "serial",
+       "serial": 1,
+       "geometry": null,
+       "fusion": false
+      }
+     },
+     "samples": 20,
+     "same_input_ms": {
+      "all": {
+       "count": 20,
+       "p50": 156.5,
+       "p95": 160.7
+      },
+      "non_failed": {
+       "count": 20,
+       "p50": 156.5,
+       "p95": 160.7
+      },
+      "statuses": {
+       "ok": 20
+      },
+      "samples": [
+       {
+        "ms": 150.42839001398534,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 154.92448100121692,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 152.1949710440822,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 156.3890500110574,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 151.91199001856148,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 153.50494295125827,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 153.29781803302467,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 153.93019100883976,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 152.2283160011284,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 156.12586599308997,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 160.1404080283828,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 158.99503300897777,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 156.84008301468566,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 160.67703400040045,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 160.69315798813477,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 157.52758301096037,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 156.84361895546317,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 157.6021810178645,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 156.57967200968415,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 158.42772502219304,
+        "statuses": [
+         "ok"
+        ]
+       }
+      ]
+     },
+     "new_input_ms": {
+      "all": {
+       "count": 20,
+       "p50": 310.9,
+       "p95": 323.8
+      },
+      "non_failed": {
+       "count": 20,
+       "p50": 310.9,
+       "p95": 323.8
+      },
+      "statuses": {
+       "ok": 20
+      },
+      "samples": [
+       {
+        "ms": 279.8182410188019,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 296.5393679914996,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 305.4161070031114,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 282.9498560167849,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 302.06053802976385,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 316.4214610005729,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 297.7561239968054,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 319.64362296275795,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 318.7696330132894,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 300.48576794797555,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 318.2251849793829,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 323.506418033503,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 303.73633198905736,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 321.93977996939793,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 323.8180829794146,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 304.216242977418,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 316.80953595787287,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 320.61030803015456,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 302.4361139978282,
+        "statuses": [
+         "ok"
+        ]
+       },
+       {
+        "ms": 318.29596497118473,
+        "statuses": [
+         "ok"
+        ]
+       }
+      ]
+     },
+     "new_input_4_questions_ms": {
+      "all": {
+       "count": 20,
+       "p50": 996.1,
+       "p95": 1047.4
+      },
+      "non_failed": {
+       "count": 20,
+       "p50": 996.1,
+       "p95": 1047.4
+      },
+      "statuses": {
+       "ok": 66,
+       "uncertain": 14
+      },
+      "samples": [
+       {
+        "ms": 1036.94452799391,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 1047.3965010023676,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 1038.4809499955736,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 1020.9237160161138,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 1017.1408689930104,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 1017.9356660228223,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 992.5789419794455,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 1003.9700730121695,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 1007.5448540155776,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 985.346358967945,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 1010.240045026876,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 999.5728889480233,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 986.6384530323558,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 986.6138889919966,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 984.5421959762461,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 957.2844689828344,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 965.9132870147005,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 962.9309989977628,
+        "statuses": [
+         "ok",
+         "ok",
+         "ok",
+         "ok"
+        ]
+       },
+       {
+        "ms": 932.0438429713249,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       },
+       {
+        "ms": 940.3268130263314,
+        "statuses": [
+         "ok",
+         "ok",
+         "uncertain",
+         "ok"
+        ]
+       }
+      ]
+     }
+    }
+   }
+  }
+ }
+}

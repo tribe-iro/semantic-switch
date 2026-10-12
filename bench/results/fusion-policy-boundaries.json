@@ -1,0 +1,8228 @@
+{
+  "samples": 6,
+  "max_probability_difference": 0.007119315701691387,
+  "policy_outcomes": [
+    {
+      "iteration": 0,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965709447860718,
+      "separate_mass": 0.9965709447860718
+    },
+    {
+      "iteration": 0,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965709447860718,
+      "separate_mass": 0.9965709447860718
+    },
+    {
+      "iteration": 0,
+      "kind": "check",
+      "threshold": 0.9961411015959604,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965709447860718,
+      "separate_mass": 0.9965709447860718
+    },
+    {
+      "iteration": 0,
+      "kind": "check",
+      "threshold": 0.9961411015959605,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965709447860718,
+      "separate_mass": 0.9965709447860718
+    },
+    {
+      "iteration": 0,
+      "kind": "check",
+      "threshold": 0.9961411015959606,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965709447860718,
+      "separate_mass": 0.9965709447860718
+    },
+    {
+      "iteration": 0,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998008608818054,
+      "separate_mass": 0.9998008608818054
+    },
+    {
+      "iteration": 0,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998008608818054,
+      "separate_mass": 0.9998008608818054
+    },
+    {
+      "iteration": 0,
+      "kind": "pick",
+      "threshold": 0.9981328542891782,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998008608818054,
+      "separate_mass": 0.9998008608818054
+    },
+    {
+      "iteration": 0,
+      "kind": "pick",
+      "threshold": 0.9981328542891783,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998008608818054,
+      "separate_mass": 0.9998008608818054
+    },
+    {
+      "iteration": 0,
+      "kind": "pick",
+      "threshold": 0.9981328542891784,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998008608818054,
+      "separate_mass": 0.9998008608818054
+    },
+    {
+      "iteration": 0,
+      "kind": "rate",
+      "threshold": 0.5137377443669193,
+      "fused": [
+        2,
+        null
+      ],
+      "separate": [
+        2,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9956614375114441,
+      "separate_mass": 0.9956614375114441
+    },
+    {
+      "iteration": 0,
+      "kind": "rate",
+      "threshold": 0.5137377443669194,
+      "fused": [
+        2,
+        null
+      ],
+      "separate": [
+        2,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9956614375114441,
+      "separate_mass": 0.9956614375114441
+    },
+    {
+      "iteration": 0,
+      "kind": "rate",
+      "threshold": 0.5137377443669195,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9956614375114441,
+      "separate_mass": 0.9956614375114441
+    },
+    {
+      "iteration": 0,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9956614375114441,
+      "separate_mass": 0.9956614375114441
+    },
+    {
+      "iteration": 0,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9956614375114441,
+      "separate_mass": 0.9956614375114441
+    },
+    {
+      "iteration": 0,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998138427734375,
+      "separate_mass": 0.998138427734375
+    },
+    {
+      "iteration": 0,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998138427734375,
+      "separate_mass": 0.998138427734375
+    },
+    {
+      "iteration": 0,
+      "kind": "check",
+      "threshold": 0.9977169346571118,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998138427734375,
+      "separate_mass": 0.998138427734375
+    },
+    {
+      "iteration": 0,
+      "kind": "check",
+      "threshold": 0.9977169346571119,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998138427734375,
+      "separate_mass": 0.998138427734375
+    },
+    {
+      "iteration": 0,
+      "kind": "check",
+      "threshold": 0.997716934657112,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998138427734375,
+      "separate_mass": 0.998138427734375
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975438714027405,
+      "separate_mass": 0.9974471926689148
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975438714027405,
+      "separate_mass": 0.9974471926689148
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9977856371831334,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9975438714027405,
+      "separate_mass": 0.9974471926689148
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9977856371831335,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9975438714027405,
+      "separate_mass": 0.9974471926689148
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9977856371831336,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975438714027405,
+      "separate_mass": 0.9974471926689148
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9997999668121338,
+      "separate_mass": 0.999797523021698
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9997999668121338,
+      "separate_mass": 0.999797523021698
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981056273736622,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9997999668121338,
+      "separate_mass": 0.999797523021698
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981056273736623,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9997999668121338,
+      "separate_mass": 0.999797523021698
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981056273736624,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9997999668121338,
+      "separate_mass": 0.999797523021698
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.5216181058425778,
+      "fused": [
+        2,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9959280490875244,
+      "separate_mass": 0.9958945512771606
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.521618105842578,
+      "fused": [
+        2,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9959280490875244,
+      "separate_mass": 0.9958945512771606
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.5216181058425781,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9959280490875244,
+      "separate_mass": 0.9958945512771606
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9959280490875244,
+      "separate_mass": 0.9958945512771606
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9959280490875244,
+      "separate_mass": 0.9958945512771606
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980970025062561,
+      "separate_mass": 0.9980608820915222
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980970025062561,
+      "separate_mass": 0.9980608820915222
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9977115558416335,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980970025062561,
+      "separate_mass": 0.9980608820915222
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9977115558416336,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980970025062561,
+      "separate_mass": 0.9980608820915222
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9977115558416337,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9980970025062561,
+      "separate_mass": 0.9980608820915222
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9978508949279785,
+      "separate_mass": 0.9976988434791565
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9978508949279785,
+      "separate_mass": 0.9976988434791565
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9979674592861022,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9978508949279785,
+      "separate_mass": 0.9976988434791565
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9979674592861023,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9978508949279785,
+      "separate_mass": 0.9976988434791565
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9979674592861024,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9978508949279785,
+      "separate_mass": 0.9976988434791565
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998029470443726,
+      "separate_mass": 0.9998038411140442
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998029470443726,
+      "separate_mass": 0.9998038411140442
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981485238900113,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998029470443726,
+      "separate_mass": 0.9998038411140442
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981485238900114,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998029470443726,
+      "separate_mass": 0.9998038411140442
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981485238900115,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9998029470443726,
+      "separate_mass": 0.9998038411140442
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9963774085044861,
+      "separate_mass": 0.9963575601577759
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9963774085044861,
+      "separate_mass": 0.9963575601577759
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981548190116882,
+      "separate_mass": 0.9981548190116882
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981548190116882,
+      "separate_mass": 0.9981548190116882
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.998064154272036,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981548190116882,
+      "separate_mass": 0.9981548190116882
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9980641542720361,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981548190116882,
+      "separate_mass": 0.9981548190116882
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9980641542720362,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981548190116882,
+      "separate_mass": 0.9981548190116882
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997886598110199,
+      "separate_mass": 0.997886598110199
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997886598110199,
+      "separate_mass": 0.997886598110199
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9978714193469779,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997886598110199,
+      "separate_mass": 0.997886598110199
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.997871419346978,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997886598110199,
+      "separate_mass": 0.997886598110199
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9978714193469781,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997886598110199,
+      "separate_mass": 0.997886598110199
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998160004615784,
+      "separate_mass": 0.9998160004615784
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998160004615784,
+      "separate_mass": 0.9998160004615784
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981696733047424,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998160004615784,
+      "separate_mass": 0.9998160004615784
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981696733047425,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998160004615784,
+      "separate_mass": 0.9998160004615784
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981696733047426,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998160004615784,
+      "separate_mass": 0.9998160004615784
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.6033945486251091,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9968326091766357,
+      "separate_mass": 0.9968326091766357
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.6033945486251092,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9968326091766357,
+      "separate_mass": 0.9968326091766357
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.6033945486251093,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9968326091766357,
+      "separate_mass": 0.9968326091766357
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9968326091766357,
+      "separate_mass": 0.9968326091766357
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9968326091766357,
+      "separate_mass": 0.9968326091766357
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983037114143372,
+      "separate_mass": 0.9983037114143372
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983037114143372,
+      "separate_mass": 0.9983037114143372
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9982382419246544,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983037114143372,
+      "separate_mass": 0.9983037114143372
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9982382419246545,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983037114143372,
+      "separate_mass": 0.9983037114143372
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9982382419246546,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983037114143372,
+      "separate_mass": 0.9983037114143372
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9978145360946655,
+      "separate_mass": 0.9978145360946655
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9978145360946655,
+      "separate_mass": 0.9978145360946655
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9977582857423895,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9978145360946655,
+      "separate_mass": 0.9978145360946655
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9977582857423896,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9978145360946655,
+      "separate_mass": 0.9978145360946655
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9977582857423897,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9978145360946655,
+      "separate_mass": 0.9978145360946655
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998040795326233,
+      "separate_mass": 0.9998040795326233
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998040795326233,
+      "separate_mass": 0.9998040795326233
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9980773068074537,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998040795326233,
+      "separate_mass": 0.9998040795326233
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9980773068074538,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998040795326233,
+      "separate_mass": 0.9998040795326233
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9980773068074539,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998040795326233,
+      "separate_mass": 0.9998040795326233
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.5272645472788567,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965514540672302,
+      "separate_mass": 0.9965514540672302
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.5272645472788569,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965514540672302,
+      "separate_mass": 0.9965514540672302
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.527264547278857,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965514540672302,
+      "separate_mass": 0.9965514540672302
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965514540672302,
+      "separate_mass": 0.9965514540672302
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965514540672302,
+      "separate_mass": 0.9965514540672302
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981441497802734,
+      "separate_mass": 0.9981441497802734
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981441497802734,
+      "separate_mass": 0.9981441497802734
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9980374113635172,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981441497802734,
+      "separate_mass": 0.9981441497802734
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9980374113635173,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981441497802734,
+      "separate_mass": 0.9981441497802734
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9980374113635174,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981441497802734,
+      "separate_mass": 0.9981441497802734
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997705340385437,
+      "separate_mass": 0.997705340385437
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997705340385437,
+      "separate_mass": 0.997705340385437
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.997678946054413,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997705340385437,
+      "separate_mass": 0.997705340385437
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9976789460544131,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997705340385437,
+      "separate_mass": 0.997705340385437
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9976789460544132,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997705340385437,
+      "separate_mass": 0.997705340385437
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998055696487427,
+      "separate_mass": 0.9998055696487427
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998055696487427,
+      "separate_mass": 0.9998055696487427
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981317929032979,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998055696487427,
+      "separate_mass": 0.9998055696487427
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.998131792903298,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998055696487427,
+      "separate_mass": 0.9998055696487427
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981317929032981,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998055696487427,
+      "separate_mass": 0.9998055696487427
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9962380528450012,
+      "separate_mass": 0.9962380528450012
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9962380528450012,
+      "separate_mass": 0.9962380528450012
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980160593986511,
+      "separate_mass": 0.9980160593986511
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980160593986511,
+      "separate_mass": 0.9980160593986511
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9974963019503217,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980160593986511,
+      "separate_mass": 0.9980160593986511
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9974963019503218,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980160593986511,
+      "separate_mass": 0.9980160593986511
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9974963019503219,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980160593986511,
+      "separate_mass": 0.9980160593986511
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974610805511475,
+      "separate_mass": 0.9974610805511475
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974610805511475,
+      "separate_mass": 0.9974610805511475
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9973261931453151,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974610805511475,
+      "separate_mass": 0.9974610805511475
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9973261931453152,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974610805511475,
+      "separate_mass": 0.9974610805511475
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9973261931453153,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974610805511475,
+      "separate_mass": 0.9974610805511475
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998084306716919,
+      "separate_mass": 0.9998084306716919
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998084306716919,
+      "separate_mass": 0.9998084306716919
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981868562768318,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998084306716919,
+      "separate_mass": 0.9998084306716919
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9981868562768319,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998084306716919,
+      "separate_mass": 0.9998084306716919
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.998186856276832,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998084306716919,
+      "separate_mass": 0.9998084306716919
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.5314601182511649,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9966512322425842,
+      "separate_mass": 0.9966512322425842
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.531460118251165,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9966512322425842,
+      "separate_mass": 0.9966512322425842
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.5314601182511651,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9966512322425842,
+      "separate_mass": 0.9966512322425842
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9966512322425842,
+      "separate_mass": 0.9966512322425842
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9966512322425842,
+      "separate_mass": 0.9966512322425842
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980785250663757,
+      "separate_mass": 0.9980785250663757
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980785250663757,
+      "separate_mass": 0.9980785250663757
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9976907769957589,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980785250663757,
+      "separate_mass": 0.9980785250663757
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.997690776995759,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980785250663757,
+      "separate_mass": 0.9980785250663757
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9976907769957591,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980785250663757,
+      "separate_mass": 0.9980785250663757
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9973728060722351,
+      "separate_mass": 0.9973728060722351
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9973728060722351,
+      "separate_mass": 0.9973728060722351
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9972843626448511,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9973728060722351,
+      "separate_mass": 0.9973728060722351
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9972843626448512,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9973728060722351,
+      "separate_mass": 0.9973728060722351
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9972843626448513,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9973728060722351,
+      "separate_mass": 0.9973728060722351
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998080134391785,
+      "separate_mass": 0.9998080134391785
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998080134391785,
+      "separate_mass": 0.9998080134391785
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9983123653884577,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998080134391785,
+      "separate_mass": 0.9998080134391785
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9983123653884578,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998080134391785,
+      "separate_mass": 0.9998080134391785
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9983123653884579,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998080134391785,
+      "separate_mass": 0.9998080134391785
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9961760640144348,
+      "separate_mass": 0.9961760640144348
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9961760640144348,
+      "separate_mass": 0.9961760640144348
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981729984283447,
+      "separate_mass": 0.9981729984283447
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981729984283447,
+      "separate_mass": 0.9981729984283447
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9979339958923213,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981729984283447,
+      "separate_mass": 0.9981729984283447
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9979339958923215,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981729984283447,
+      "separate_mass": 0.9981729984283447
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9979339958923216,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981729984283447,
+      "separate_mass": 0.9981729984283447
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974207282066345,
+      "separate_mass": 0.9974207282066345
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974207282066345,
+      "separate_mass": 0.9974207282066345
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9974729758423417,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974207282066345,
+      "separate_mass": 0.9974207282066345
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9974729758423418,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974207282066345,
+      "separate_mass": 0.9974207282066345
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.997472975842342,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974207282066345,
+      "separate_mass": 0.9974207282066345
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999805748462677,
+      "separate_mass": 0.9998012781143188
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999805748462677,
+      "separate_mass": 0.9998012781143188
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9983029724607019,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.999805748462677,
+      "separate_mass": 0.9998012781143188
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.998302972460702,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.999805748462677,
+      "separate_mass": 0.9998012781143188
+    },
+    {
+      "iteration": 1,
+      "kind": "pick",
+      "threshold": 0.9983029724607021,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999805748462677,
+      "separate_mass": 0.9998012781143188
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.996087908744812,
+      "separate_mass": 0.9962064027786255
+    },
+    {
+      "iteration": 1,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.996087908744812,
+      "separate_mass": 0.9962064027786255
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981144070625305,
+      "separate_mass": 0.9981285929679871
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981144070625305,
+      "separate_mass": 0.9981285929679871
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9975911686544711,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981144070625305,
+      "separate_mass": 0.9981285929679871
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9975911686544712,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981144070625305,
+      "separate_mass": 0.9981285929679871
+    },
+    {
+      "iteration": 1,
+      "kind": "check",
+      "threshold": 0.9975911686544713,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9981144070625305,
+      "separate_mass": 0.9981285929679871
+    },
+    {
+      "iteration": 2,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975959062576294,
+      "separate_mass": 0.9975959062576294
+    },
+    {
+      "iteration": 2,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975959062576294,
+      "separate_mass": 0.9975959062576294
+    },
+    {
+      "iteration": 2,
+      "kind": "check",
+      "threshold": 0.9977190652394369,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975959062576294,
+      "separate_mass": 0.9975959062576294
+    },
+    {
+      "iteration": 2,
+      "kind": "check",
+      "threshold": 0.997719065239437,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975959062576294,
+      "separate_mass": 0.9975959062576294
+    },
+    {
+      "iteration": 2,
+      "kind": "check",
+      "threshold": 0.9977190652394371,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975959062576294,
+      "separate_mass": 0.9975959062576294
+    },
+    {
+      "iteration": 2,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998096823692322,
+      "separate_mass": 0.9998096823692322
+    },
+    {
+      "iteration": 2,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998096823692322,
+      "separate_mass": 0.9998096823692322
+    },
+    {
+      "iteration": 2,
+      "kind": "pick",
+      "threshold": 0.9981733927474173,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998096823692322,
+      "separate_mass": 0.9998096823692322
+    },
+    {
+      "iteration": 2,
+      "kind": "pick",
+      "threshold": 0.9981733927474175,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998096823692322,
+      "separate_mass": 0.9998096823692322
+    },
+    {
+      "iteration": 2,
+      "kind": "pick",
+      "threshold": 0.9981733927474176,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998096823692322,
+      "separate_mass": 0.9998096823692322
+    },
+    {
+      "iteration": 2,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9960100650787354,
+      "separate_mass": 0.9960100650787354
+    },
+    {
+      "iteration": 2,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9960100650787354,
+      "separate_mass": 0.9960100650787354
+    },
+    {
+      "iteration": 2,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981982111930847,
+      "separate_mass": 0.9981982111930847
+    },
+    {
+      "iteration": 2,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981982111930847,
+      "separate_mass": 0.9981982111930847
+    },
+    {
+      "iteration": 2,
+      "kind": "check",
+      "threshold": 0.9978667625782571,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981982111930847,
+      "separate_mass": 0.9981982111930847
+    },
+    {
+      "iteration": 2,
+      "kind": "check",
+      "threshold": 0.9978667625782572,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981982111930847,
+      "separate_mass": 0.9981982111930847
+    },
+    {
+      "iteration": 2,
+      "kind": "check",
+      "threshold": 0.9978667625782573,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981982111930847,
+      "separate_mass": 0.9981982111930847
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9973475337028503,
+      "separate_mass": 0.9971824884414673
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9973475337028503,
+      "separate_mass": 0.9971824884414673
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.997525364718505,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9973475337028503,
+      "separate_mass": 0.9971824884414673
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9975253647185051,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9973475337028503,
+      "separate_mass": 0.9971824884414673
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9975253647185052,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9973475337028503,
+      "separate_mass": 0.9971824884414673
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998060464859009,
+      "separate_mass": 0.999802827835083
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998060464859009,
+      "separate_mass": 0.999802827835083
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9981325400935119,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9998060464859009,
+      "separate_mass": 0.999802827835083
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.998132540093512,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9998060464859009,
+      "separate_mass": 0.999802827835083
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9981325400935122,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998060464859009,
+      "separate_mass": 0.999802827835083
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.534828190535054,
+      "fused": [
+        2,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.995900571346283,
+      "separate_mass": 0.9959385395050049
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.5348281905350541,
+      "fused": [
+        2,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.995900571346283,
+      "separate_mass": 0.9959385395050049
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.5348281905350543,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.995900571346283,
+      "separate_mass": 0.9959385395050049
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.995900571346283,
+      "separate_mass": 0.9959385395050049
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.995900571346283,
+      "separate_mass": 0.9959385395050049
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980967044830322,
+      "separate_mass": 0.9981289505958557
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980967044830322,
+      "separate_mass": 0.9981289505958557
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9978940541331797,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980967044830322,
+      "separate_mass": 0.9981289505958557
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9978940541331798,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980967044830322,
+      "separate_mass": 0.9981289505958557
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9978940541331799,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9980967044830322,
+      "separate_mass": 0.9981289505958557
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9976527094841003,
+      "separate_mass": 0.9975261688232422
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9976527094841003,
+      "separate_mass": 0.9975261688232422
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9977365360907894,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9976527094841003,
+      "separate_mass": 0.9975261688232422
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9977365360907895,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9976527094841003,
+      "separate_mass": 0.9975261688232422
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9977365360907896,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9976527094841003,
+      "separate_mass": 0.9975261688232422
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999803364276886,
+      "separate_mass": 0.9997982382774353
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999803364276886,
+      "separate_mass": 0.9997982382774353
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9983063935491177,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999803364276886,
+      "separate_mass": 0.9997982382774353
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9983063935491178,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999803364276886,
+      "separate_mass": 0.9997982382774353
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9983063935491179,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.999803364276886,
+      "separate_mass": 0.9997982382774353
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.5188709508173683,
+      "fused": [
+        2,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9958420991897583,
+      "separate_mass": 0.9957553148269653
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.5188709508173684,
+      "fused": [
+        2,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9958420991897583,
+      "separate_mass": 0.9957553148269653
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.5188709508173686,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9958420991897583,
+      "separate_mass": 0.9957553148269653
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9958420991897583,
+      "separate_mass": 0.9957553148269653
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9958420991897583,
+      "separate_mass": 0.9957553148269653
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981502294540405,
+      "separate_mass": 0.9981502294540405
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981502294540405,
+      "separate_mass": 0.9981502294540405
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9981759403645044,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981502294540405,
+      "separate_mass": 0.9981502294540405
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9981759403645045,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981502294540405,
+      "separate_mass": 0.9981502294540405
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9981759403645046,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981502294540405,
+      "separate_mass": 0.9981502294540405
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9976463317871094,
+      "separate_mass": 0.9976463317871094
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9976463317871094,
+      "separate_mass": 0.9976463317871094
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9977002491992577,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9976463317871094,
+      "separate_mass": 0.9976463317871094
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9977002491992578,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9976463317871094,
+      "separate_mass": 0.9976463317871094
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9977002491992579,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9976463317871094,
+      "separate_mass": 0.9976463317871094
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998123049736023,
+      "separate_mass": 0.9998123049736023
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998123049736023,
+      "separate_mass": 0.9998123049736023
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9983241004703115,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998123049736023,
+      "separate_mass": 0.9998123049736023
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9983241004703116,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998123049736023,
+      "separate_mass": 0.9998123049736023
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9983241004703117,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998123049736023,
+      "separate_mass": 0.9998123049736023
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9960423707962036,
+      "separate_mass": 0.9960423707962036
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9960423707962036,
+      "separate_mass": 0.9960423707962036
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983294606208801,
+      "separate_mass": 0.9983294606208801
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983294606208801,
+      "separate_mass": 0.9983294606208801
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.998115155670905,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983294606208801,
+      "separate_mass": 0.9983294606208801
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9981151556709051,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983294606208801,
+      "separate_mass": 0.9983294606208801
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9981151556709053,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983294606208801,
+      "separate_mass": 0.9983294606208801
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997398853302002,
+      "separate_mass": 0.997398853302002
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997398853302002,
+      "separate_mass": 0.997398853302002
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9971604481517666,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997398853302002,
+      "separate_mass": 0.997398853302002
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9971604481517667,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997398853302002,
+      "separate_mass": 0.997398853302002
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9971604481517669,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997398853302002,
+      "separate_mass": 0.997398853302002
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999809980392456,
+      "separate_mass": 0.999809980392456
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999809980392456,
+      "separate_mass": 0.999809980392456
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.99827852983749,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999809980392456,
+      "separate_mass": 0.999809980392456
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9982785298374901,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999809980392456,
+      "separate_mass": 0.999809980392456
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9982785298374902,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999809980392456,
+      "separate_mass": 0.999809980392456
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9963437914848328,
+      "separate_mass": 0.9963437914848328
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9963437914848328,
+      "separate_mass": 0.9963437914848328
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982454180717468,
+      "separate_mass": 0.9982454180717468
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982454180717468,
+      "separate_mass": 0.9982454180717468
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9981832674174974,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982454180717468,
+      "separate_mass": 0.9982454180717468
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9981832674174975,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982454180717468,
+      "separate_mass": 0.9982454180717468
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9981832674174976,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982454180717468,
+      "separate_mass": 0.9982454180717468
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975213408470154,
+      "separate_mass": 0.9975213408470154
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975213408470154,
+      "separate_mass": 0.9975213408470154
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9972491240119593,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975213408470154,
+      "separate_mass": 0.9975213408470154
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9972491240119594,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975213408470154,
+      "separate_mass": 0.9975213408470154
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9972491240119595,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975213408470154,
+      "separate_mass": 0.9975213408470154
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998034834861755,
+      "separate_mass": 0.9998034834861755
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998034834861755,
+      "separate_mass": 0.9998034834861755
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.998238812259809,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998034834861755,
+      "separate_mass": 0.9998034834861755
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9982388122598091,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998034834861755,
+      "separate_mass": 0.9998034834861755
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9982388122598093,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998034834861755,
+      "separate_mass": 0.9998034834861755
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.604241136504285,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9966608881950378,
+      "separate_mass": 0.9966608881950378
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.6042411365042851,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9966608881950378,
+      "separate_mass": 0.9966608881950378
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.6042411365042852,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9966608881950378,
+      "separate_mass": 0.9966608881950378
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9966608881950378,
+      "separate_mass": 0.9966608881950378
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9966608881950378,
+      "separate_mass": 0.9966608881950378
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982324838638306,
+      "separate_mass": 0.9982324838638306
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982324838638306,
+      "separate_mass": 0.9982324838638306
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9981494971024101,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982324838638306,
+      "separate_mass": 0.9982324838638306
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9981494971024102,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982324838638306,
+      "separate_mass": 0.9982324838638306
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9981494971024103,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982324838638306,
+      "separate_mass": 0.9982324838638306
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975022673606873,
+      "separate_mass": 0.9975022673606873
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975022673606873,
+      "separate_mass": 0.9975022673606873
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9972078471344743,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975022673606873,
+      "separate_mass": 0.9975022673606873
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9972078471344744,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975022673606873,
+      "separate_mass": 0.9975022673606873
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9972078471344745,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9975022673606873,
+      "separate_mass": 0.9975022673606873
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998034238815308,
+      "separate_mass": 0.9998034238815308
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998034238815308,
+      "separate_mass": 0.9998034238815308
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9980996881708001,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998034238815308,
+      "separate_mass": 0.9998034238815308
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9980996881708002,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998034238815308,
+      "separate_mass": 0.9998034238815308
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9980996881708003,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998034238815308,
+      "separate_mass": 0.9998034238815308
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.5922199649619162,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965922832489014,
+      "separate_mass": 0.9965922832489014
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.5922199649619163,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965922832489014,
+      "separate_mass": 0.9965922832489014
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.5922199649619164,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965922832489014,
+      "separate_mass": 0.9965922832489014
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965922832489014,
+      "separate_mass": 0.9965922832489014
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9965922832489014,
+      "separate_mass": 0.9965922832489014
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981874227523804,
+      "separate_mass": 0.9981874227523804
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981874227523804,
+      "separate_mass": 0.9981874227523804
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.998263625703187,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981874227523804,
+      "separate_mass": 0.9981874227523804
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9982636257031872,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981874227523804,
+      "separate_mass": 0.9981874227523804
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9982636257031873,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981874227523804,
+      "separate_mass": 0.9981874227523804
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9972989559173584,
+      "separate_mass": 0.9972989559173584
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9972989559173584,
+      "separate_mass": 0.9972989559173584
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.99723506724244,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9972989559173584,
+      "separate_mass": 0.9972989559173584
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9972350672424402,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9972989559173584,
+      "separate_mass": 0.9972989559173584
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9972350672424403,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9972989559173584,
+      "separate_mass": 0.9972989559173584
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998113512992859,
+      "separate_mass": 0.9998113512992859
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998113512992859,
+      "separate_mass": 0.9998113512992859
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9982417541333978,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998113512992859,
+      "separate_mass": 0.9998113512992859
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9982417541333979,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998113512992859,
+      "separate_mass": 0.9998113512992859
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.998241754133398,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998113512992859,
+      "separate_mass": 0.9998113512992859
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.531165828601419,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9963691234588623,
+      "separate_mass": 0.9963691234588623
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.5311658286014191,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9963691234588623,
+      "separate_mass": 0.9963691234588623
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.5311658286014193,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9963691234588623,
+      "separate_mass": 0.9963691234588623
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9963691234588623,
+      "separate_mass": 0.9963691234588623
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9963691234588623,
+      "separate_mass": 0.9963691234588623
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982302188873291,
+      "separate_mass": 0.9982302188873291
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982302188873291,
+      "separate_mass": 0.9982302188873291
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9982351511133176,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982302188873291,
+      "separate_mass": 0.9982302188873291
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9982351511133177,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982302188873291,
+      "separate_mass": 0.9982302188873291
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9982351511133178,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982302188873291,
+      "separate_mass": 0.9982302188873291
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974855184555054,
+      "separate_mass": 0.9974855184555054
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974855184555054,
+      "separate_mass": 0.9974855184555054
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9974682756741949,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974855184555054,
+      "separate_mass": 0.9974855184555054
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.997468275674195,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974855184555054,
+      "separate_mass": 0.9974855184555054
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9974682756741952,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974855184555054,
+      "separate_mass": 0.9974855184555054
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999805748462677,
+      "separate_mass": 0.9998036026954651
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999805748462677,
+      "separate_mass": 0.9998036026954651
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9983415692406312,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.999805748462677,
+      "separate_mass": 0.9998036026954651
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9983415692406313,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.999805748462677,
+      "separate_mass": 0.9998036026954651
+    },
+    {
+      "iteration": 3,
+      "kind": "pick",
+      "threshold": 0.9983415692406314,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999805748462677,
+      "separate_mass": 0.9998036026954651
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.996139407157898,
+      "separate_mass": 0.9962174296379089
+    },
+    {
+      "iteration": 3,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.996139407157898,
+      "separate_mass": 0.9962174296379089
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981171488761902,
+      "separate_mass": 0.9981136322021484
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981171488761902,
+      "separate_mass": 0.9981136322021484
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9980623959236815,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981171488761902,
+      "separate_mass": 0.9981136322021484
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9980623959236816,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981171488761902,
+      "separate_mass": 0.9981136322021484
+    },
+    {
+      "iteration": 3,
+      "kind": "check",
+      "threshold": 0.9980623959236817,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9981171488761902,
+      "separate_mass": 0.9981136322021484
+    },
+    {
+      "iteration": 4,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974365830421448,
+      "separate_mass": 0.9974365830421448
+    },
+    {
+      "iteration": 4,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974365830421448,
+      "separate_mass": 0.9974365830421448
+    },
+    {
+      "iteration": 4,
+      "kind": "check",
+      "threshold": 0.9972195190401318,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974365830421448,
+      "separate_mass": 0.9974365830421448
+    },
+    {
+      "iteration": 4,
+      "kind": "check",
+      "threshold": 0.997219519040132,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974365830421448,
+      "separate_mass": 0.9974365830421448
+    },
+    {
+      "iteration": 4,
+      "kind": "check",
+      "threshold": 0.9972195190401321,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974365830421448,
+      "separate_mass": 0.9974365830421448
+    },
+    {
+      "iteration": 4,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998072981834412,
+      "separate_mass": 0.9998072981834412
+    },
+    {
+      "iteration": 4,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998072981834412,
+      "separate_mass": 0.9998072981834412
+    },
+    {
+      "iteration": 4,
+      "kind": "pick",
+      "threshold": 0.9981671635708715,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998072981834412,
+      "separate_mass": 0.9998072981834412
+    },
+    {
+      "iteration": 4,
+      "kind": "pick",
+      "threshold": 0.9981671635708717,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998072981834412,
+      "separate_mass": 0.9998072981834412
+    },
+    {
+      "iteration": 4,
+      "kind": "pick",
+      "threshold": 0.9981671635708718,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998072981834412,
+      "separate_mass": 0.9998072981834412
+    },
+    {
+      "iteration": 4,
+      "kind": "rate",
+      "threshold": 0.5149348672755862,
+      "fused": [
+        2,
+        null
+      ],
+      "separate": [
+        2,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.995799720287323,
+      "separate_mass": 0.995799720287323
+    },
+    {
+      "iteration": 4,
+      "kind": "rate",
+      "threshold": 0.5149348672755863,
+      "fused": [
+        2,
+        null
+      ],
+      "separate": [
+        2,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.995799720287323,
+      "separate_mass": 0.995799720287323
+    },
+    {
+      "iteration": 4,
+      "kind": "rate",
+      "threshold": 0.5149348672755865,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.995799720287323,
+      "separate_mass": 0.995799720287323
+    },
+    {
+      "iteration": 4,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.995799720287323,
+      "separate_mass": 0.995799720287323
+    },
+    {
+      "iteration": 4,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.995799720287323,
+      "separate_mass": 0.995799720287323
+    },
+    {
+      "iteration": 4,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980975389480591,
+      "separate_mass": 0.9980975389480591
+    },
+    {
+      "iteration": 4,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980975389480591,
+      "separate_mass": 0.9980975389480591
+    },
+    {
+      "iteration": 4,
+      "kind": "check",
+      "threshold": 0.997645513471894,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980975389480591,
+      "separate_mass": 0.9980975389480591
+    },
+    {
+      "iteration": 4,
+      "kind": "check",
+      "threshold": 0.9976455134718941,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980975389480591,
+      "separate_mass": 0.9980975389480591
+    },
+    {
+      "iteration": 4,
+      "kind": "check",
+      "threshold": 0.9976455134718942,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9980975389480591,
+      "separate_mass": 0.9980975389480591
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9971398115158081,
+      "separate_mass": 0.9970517158508301
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9971398115158081,
+      "separate_mass": 0.9970517158508301
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9971239403397523,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9971398115158081,
+      "separate_mass": 0.9970517158508301
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9971239403397524,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9971398115158081,
+      "separate_mass": 0.9970517158508301
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9971239403397525,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9971398115158081,
+      "separate_mass": 0.9970517158508301
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999793529510498,
+      "separate_mass": 0.9997913837432861
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999793529510498,
+      "separate_mass": 0.9997913837432861
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9981442008853159,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999793529510498,
+      "separate_mass": 0.9997913837432861
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.998144200885316,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999793529510498,
+      "separate_mass": 0.9997913837432861
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9981442008853161,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.999793529510498,
+      "separate_mass": 0.9997913837432861
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.5124550350968926,
+      "fused": [
+        2,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9958411455154419,
+      "separate_mass": 0.9958594441413879
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.5124550350968927,
+      "fused": [
+        2,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9958411455154419,
+      "separate_mass": 0.9958594441413879
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.5124550350968928,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9958411455154419,
+      "separate_mass": 0.9958594441413879
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9958411455154419,
+      "separate_mass": 0.9958594441413879
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9958411455154419,
+      "separate_mass": 0.9958594441413879
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981338381767273,
+      "separate_mass": 0.9981601238250732
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981338381767273,
+      "separate_mass": 0.9981601238250732
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9977252335603405,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981338381767273,
+      "separate_mass": 0.9981601238250732
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9977252335603406,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981338381767273,
+      "separate_mass": 0.9981601238250732
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9977252335603407,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9981338381767273,
+      "separate_mass": 0.9981601238250732
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9972482919692993,
+      "separate_mass": 0.9972727298736572
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9972482919692993,
+      "separate_mass": 0.9972727298736572
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.997422994675885,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9972482919692993,
+      "separate_mass": 0.9972727298736572
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9974229946758851,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9972482919692993,
+      "separate_mass": 0.9972727298736572
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9974229946758852,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9972482919692993,
+      "separate_mass": 0.9972727298736572
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998087286949158,
+      "separate_mass": 0.9998029470443726
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998087286949158,
+      "separate_mass": 0.9998029470443726
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9982937730157688,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9998087286949158,
+      "separate_mass": 0.9998029470443726
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9982937730157689,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9998087286949158,
+      "separate_mass": 0.9998029470443726
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.998293773015769,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998087286949158,
+      "separate_mass": 0.9998029470443726
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9957903027534485,
+      "separate_mass": 0.99583899974823
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9957903027534485,
+      "separate_mass": 0.99583899974823
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981788992881775,
+      "separate_mass": 0.9981788992881775
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981788992881775,
+      "separate_mass": 0.9981788992881775
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.998085288360406,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981788992881775,
+      "separate_mass": 0.9981788992881775
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9980852883604061,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981788992881775,
+      "separate_mass": 0.9981788992881775
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9980852883604062,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981788992881775,
+      "separate_mass": 0.9981788992881775
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974341988563538,
+      "separate_mass": 0.9974341988563538
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974341988563538,
+      "separate_mass": 0.9974341988563538
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9974547016460152,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974341988563538,
+      "separate_mass": 0.9974341988563538
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9974547016460154,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974341988563538,
+      "separate_mass": 0.9974341988563538
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9974547016460155,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974341988563538,
+      "separate_mass": 0.9974341988563538
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998053312301636,
+      "separate_mass": 0.9998053312301636
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998053312301636,
+      "separate_mass": 0.9998053312301636
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9983091471677067,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998053312301636,
+      "separate_mass": 0.9998053312301636
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9983091471677068,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998053312301636,
+      "separate_mass": 0.9998053312301636
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9983091471677069,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998053312301636,
+      "separate_mass": 0.9998053312301636
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.995929479598999,
+      "separate_mass": 0.995929479598999
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.995929479598999,
+      "separate_mass": 0.995929479598999
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981709718704224,
+      "separate_mass": 0.9981709718704224
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981709718704224,
+      "separate_mass": 0.9981709718704224
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9980093841936931,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981709718704224,
+      "separate_mass": 0.9981709718704224
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9980093841936932,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981709718704224,
+      "separate_mass": 0.9981709718704224
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9980093841936933,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981709718704224,
+      "separate_mass": 0.9981709718704224
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974116086959839,
+      "separate_mass": 0.9974116086959839
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974116086959839,
+      "separate_mass": 0.9974116086959839
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9975312859325582,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974116086959839,
+      "separate_mass": 0.9974116086959839
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9975312859325584,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974116086959839,
+      "separate_mass": 0.9974116086959839
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9975312859325585,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9974116086959839,
+      "separate_mass": 0.9974116086959839
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998023509979248,
+      "separate_mass": 0.9998023509979248
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998023509979248,
+      "separate_mass": 0.9998023509979248
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9982966261064155,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998023509979248,
+      "separate_mass": 0.9998023509979248
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9982966261064156,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998023509979248,
+      "separate_mass": 0.9998023509979248
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9982966261064157,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998023509979248,
+      "separate_mass": 0.9998023509979248
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9960858225822449,
+      "separate_mass": 0.9960858225822449
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9960858225822449,
+      "separate_mass": 0.9960858225822449
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998205304145813,
+      "separate_mass": 0.998205304145813
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998205304145813,
+      "separate_mass": 0.998205304145813
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9979644399540261,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998205304145813,
+      "separate_mass": 0.998205304145813
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9979644399540262,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998205304145813,
+      "separate_mass": 0.998205304145813
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9979644399540263,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998205304145813,
+      "separate_mass": 0.998205304145813
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997440755367279,
+      "separate_mass": 0.997440755367279
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997440755367279,
+      "separate_mass": 0.997440755367279
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.997605155984088,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997440755367279,
+      "separate_mass": 0.997440755367279
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9976051559840882,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997440755367279,
+      "separate_mass": 0.997440755367279
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9976051559840883,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997440755367279,
+      "separate_mass": 0.997440755367279
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999801754951477,
+      "separate_mass": 0.999801754951477
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999801754951477,
+      "separate_mass": 0.999801754951477
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9982332379118,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999801754951477,
+      "separate_mass": 0.999801754951477
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9982332379118001,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999801754951477,
+      "separate_mass": 0.999801754951477
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9982332379118002,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999801754951477,
+      "separate_mass": 0.999801754951477
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9964812994003296,
+      "separate_mass": 0.9964812994003296
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9964812994003296,
+      "separate_mass": 0.9964812994003296
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983822703361511,
+      "separate_mass": 0.9983822703361511
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983822703361511,
+      "separate_mass": 0.9983822703361511
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9979416225837698,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983822703361511,
+      "separate_mass": 0.9983822703361511
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.99794162258377,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983822703361511,
+      "separate_mass": 0.9983822703361511
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9979416225837701,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9983822703361511,
+      "separate_mass": 0.9983822703361511
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997146487236023,
+      "separate_mass": 0.997146487236023
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997146487236023,
+      "separate_mass": 0.997146487236023
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9969150121537247,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997146487236023,
+      "separate_mass": 0.997146487236023
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9969150121537248,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997146487236023,
+      "separate_mass": 0.997146487236023
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9969150121537249,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997146487236023,
+      "separate_mass": 0.997146487236023
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999811053276062,
+      "separate_mass": 0.999811053276062
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999811053276062,
+      "separate_mass": 0.999811053276062
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9983012478482909,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999811053276062,
+      "separate_mass": 0.999811053276062
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.998301247848291,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999811053276062,
+      "separate_mass": 0.999811053276062
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9983012478482911,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.999811053276062,
+      "separate_mass": 0.999811053276062
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.5378262093941816,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.996696412563324,
+      "separate_mass": 0.996696412563324
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.5378262093941817,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.996696412563324,
+      "separate_mass": 0.996696412563324
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.5378262093941818,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.996696412563324,
+      "separate_mass": 0.996696412563324
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.996696412563324,
+      "separate_mass": 0.996696412563324
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.996696412563324,
+      "separate_mass": 0.996696412563324
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981219172477722,
+      "separate_mass": 0.9981219172477722
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981219172477722,
+      "separate_mass": 0.9981219172477722
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9980562587770913,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981219172477722,
+      "separate_mass": 0.9981219172477722
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9980562587770914,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981219172477722,
+      "separate_mass": 0.9981219172477722
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9980562587770915,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9981219172477722,
+      "separate_mass": 0.9981219172477722
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9970688819885254,
+      "separate_mass": 0.9970688819885254
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9970688819885254,
+      "separate_mass": 0.9970688819885254
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.996765441630825,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9970688819885254,
+      "separate_mass": 0.9970688819885254
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9967654416308251,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9970688819885254,
+      "separate_mass": 0.9970688819885254
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9967654416308253,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9970688819885254,
+      "separate_mass": 0.9970688819885254
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998082518577576,
+      "separate_mass": 0.9998082518577576
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998082518577576,
+      "separate_mass": 0.9998082518577576
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9982711908553225,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998082518577576,
+      "separate_mass": 0.9998082518577576
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9982711908553226,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998082518577576,
+      "separate_mass": 0.9998082518577576
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9982711908553227,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998082518577576,
+      "separate_mass": 0.9998082518577576
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.6177159579920203,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9968644380569458,
+      "separate_mass": 0.9968644380569458
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.6177159579920204,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9968644380569458,
+      "separate_mass": 0.9968644380569458
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.6177159579920205,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9968644380569458,
+      "separate_mass": 0.9968644380569458
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9968644380569458,
+      "separate_mass": 0.9968644380569458
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9968644380569458,
+      "separate_mass": 0.9968644380569458
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982330799102783,
+      "separate_mass": 0.9982330799102783
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982330799102783,
+      "separate_mass": 0.9982330799102783
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9982549560080055,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982330799102783,
+      "separate_mass": 0.9982330799102783
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9982549560080056,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982330799102783,
+      "separate_mass": 0.9982330799102783
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9982549560080057,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9982330799102783,
+      "separate_mass": 0.9982330799102783
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997321605682373,
+      "separate_mass": 0.997321605682373
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997321605682373,
+      "separate_mass": 0.997321605682373
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9971544476459074,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997321605682373,
+      "separate_mass": 0.997321605682373
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9971544476459075,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997321605682373,
+      "separate_mass": 0.997321605682373
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9971544476459077,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.997321605682373,
+      "separate_mass": 0.997321605682373
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998100996017456,
+      "separate_mass": 0.9998001456260681
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.95,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998100996017456,
+      "separate_mass": 0.9998001456260681
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9981641076767771,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998100996017456,
+      "separate_mass": 0.9998001456260681
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9981641076767772,
+      "fused": [
+        0,
+        null
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9998100996017456,
+      "separate_mass": 0.9998001456260681
+    },
+    {
+      "iteration": 5,
+      "kind": "pick",
+      "threshold": 0.9981641076767773,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        0,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9998100996017456,
+      "separate_mass": 0.9998001456260681
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.5776875626469528,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9967044591903687,
+      "separate_mass": 0.9967050552368164
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.5776875626469529,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9967044591903687,
+      "separate_mass": 0.9967050552368164
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.577687562646953,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.9967044591903687,
+      "separate_mass": 0.9967050552368164
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.9,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9967044591903687,
+      "separate_mass": 0.9967050552368164
+    },
+    {
+      "iteration": 5,
+      "kind": "rate",
+      "threshold": 0.95,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        null,
+        "uncertain"
+      ],
+      "same_decision": true,
+      "fused_mass": 0.9967044591903687,
+      "separate_mass": 0.9967050552368164
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998116672039032,
+      "separate_mass": 0.9981696605682373
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.95,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998116672039032,
+      "separate_mass": 0.9981696605682373
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9983863082136964,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998116672039032,
+      "separate_mass": 0.9981696605682373
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9983863082136966,
+      "fused": [
+        1,
+        null
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": true,
+      "fused_mass": 0.998116672039032,
+      "separate_mass": 0.9981696605682373
+    },
+    {
+      "iteration": 5,
+      "kind": "check",
+      "threshold": 0.9983863082136967,
+      "fused": [
+        null,
+        "uncertain"
+      ],
+      "separate": [
+        1,
+        null
+      ],
+      "same_decision": false,
+      "fused_mass": 0.998116672039032,
+      "separate_mass": 0.9981696605682373
+    }
+  ],
+  "native_work": {
+    "fused": [
+      {
+        "submissions": 1,
+        "submitted_tokens": 210,
+        "prefix_tokens": 0,
+        "state_tokens": 20,
+        "suffix_tokens": 190
+      },
+      {
+        "submissions": 4,
+        "submitted_tokens": 1680,
+        "prefix_tokens": 0,
+        "state_tokens": 160,
+        "suffix_tokens": 1520
+      },
+      {
+        "submissions": 1,
+        "submitted_tokens": 210,
+        "prefix_tokens": 0,
+        "state_tokens": 20,
+        "suffix_tokens": 190
+      },
+      {
+        "submissions": 4,
+        "submitted_tokens": 1680,
+        "prefix_tokens": 0,
+        "state_tokens": 160,
+        "suffix_tokens": 1520
+      },
+      {
+        "submissions": 1,
+        "submitted_tokens": 210,
+        "prefix_tokens": 0,
+        "state_tokens": 20,
+        "suffix_tokens": 190
+      },
+      {
+        "submissions": 4,
+        "submitted_tokens": 1680,
+        "prefix_tokens": 0,
+        "state_tokens": 160,
+        "suffix_tokens": 1520
+      }
+    ],
+    "separate": [
+      {
+        "submissions": 2,
+        "submitted_tokens": 210,
+        "prefix_tokens": 0,
+        "state_tokens": 20,
+        "suffix_tokens": 190
+      },
+      {
+        "submissions": 4,
+        "submitted_tokens": 1680,
+        "prefix_tokens": 0,
+        "state_tokens": 160,
+        "suffix_tokens": 1520
+      },
+      {
+        "submissions": 2,
+        "submitted_tokens": 210,
+        "prefix_tokens": 0,
+        "state_tokens": 20,
+        "suffix_tokens": 190
+      },
+      {
+        "submissions": 4,
+        "submitted_tokens": 1680,
+        "prefix_tokens": 0,
+        "state_tokens": 160,
+        "suffix_tokens": 1520
+      },
+      {
+        "submissions": 2,
+        "submitted_tokens": 210,
+        "prefix_tokens": 0,
+        "state_tokens": 20,
+        "suffix_tokens": 190
+      },
+      {
+        "submissions": 4,
+        "submitted_tokens": 1680,
+        "prefix_tokens": 0,
+        "state_tokens": 160,
+        "suffix_tokens": 1520
+      }
+    ]
+  },
+  "boundary": "shared warmed prefix; complete scoring and materialization; threshold-neighbor probes are descriptive",
+  "arms": {
+    "fused": {
+      "p50_ms": 443.8257910005632,
+      "p95_ms": 749.2704005053383
+    },
+    "separate": {
+      "p50_ms": 463.4737669985043,
+      "p95_ms": 744.3224537473725
+    }
+  },
+  "provenance": {
+    "schema": 1,
+    "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+    "dirty": true,
+    "working_tree": "6088a643b58602af5c3f02fb369af64cfe6005ccce7cdab118e3815b0937bd16",
+    "dataset": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "execution": {
+      "identity": {
+        "file": "gemma-4-E2B-it-Q4_0.gguf",
+        "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+        "template": "chat@2:0a2c8073",
+        "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+        "lora_sha256": null
+      },
+      "requested_device": "auto",
+      "threads": null,
+      "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+      "loaded": true,
+      "observed_models": [],
+      "accelerated": true,
+      "batch_inputs": 8,
+      "max_slots": 20,
+      "capabilities": {
+        "shared": true,
+        "conformance": true,
+        "counters": {
+          "prefix_hits": 12,
+          "prefix_misses": 12,
+          "state_hits": 0,
+          "state_misses": 54,
+          "state_tokens": 1080,
+          "suffix_tokens": 10260,
+          "submissions": 45,
+          "branch_groups": 12,
+          "failures": 0,
+          "prefix_tokens": 480,
+          "prefix_evictions": 0,
+          "submitted_tokens": 11820
+        }
+      },
+      "requested_capacity": {
+        "n_ctx": 15360,
+        "n_batch": 512,
+        "n_seq_max": 44
+      },
+      "configuration": {
+        "max_input_tokens": 1024,
+        "prefix_slots": 4
+      },
+      "capacity": {
+        "n_ctx": 15360,
+        "n_batch": 512,
+        "n_seq_max": 44
+      }
+    },
+    "boundary": "explicit backend diagnostic"
+  }
+}

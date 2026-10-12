@@ -1,0 +1,87 @@
+{
+ "lexical_complete": {
+  "samples": 500,
+  "p50_us": 269.89050093106925,
+  "p95_us": 281.3362461893121,
+  "python_peak_bytes": 82297,
+  "timing_includes_tracemalloc": false,
+  "allocation_samples": 100
+ },
+ "lexical_reduction": {
+  "samples": 500,
+  "p50_us": 17.02199733699672,
+  "p95_us": 17.784154260880314,
+  "python_peak_bytes": 8464,
+  "timing_includes_tracemalloc": false,
+  "allocation_samples": 100
+ },
+ "lexical_original_loop": {
+  "samples": 500,
+  "p50_us": 100.04149953601882,
+  "p95_us": 104.81520403118337,
+  "python_peak_bytes": 484,
+  "timing_includes_tracemalloc": false,
+  "allocation_samples": 100
+ },
+ "probability_difference": 5.419621418312204e-10,
+ "exact_decision": {
+  "samples": 500,
+  "p50_us": 7.947495760163292,
+  "p95_us": 8.874500781530505,
+  "python_peak_bytes": 3132,
+  "timing_includes_tracemalloc": false,
+  "allocation_samples": 100
+ },
+ "zero_adapter_control": {
+  "max_diff": 9.480294327346428e-11,
+  "after_diff": 0.0,
+  "errors": [
+   null
+  ],
+  "nonzero_adapter_validated": false
+ },
+ "provenance": {
+  "schema": 1,
+  "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+  "dirty": true,
+  "working_tree": "1a7468245e9939ae8afe65cc965caf26b52269414e2c192e64d9115b681781c7",
+  "dataset": "b41f6cfcdf658b808aff789fe1616c6e4db8e4d5d348b0e5a741e0b01bc4a949",
+  "execution": {
+   "identity": {
+    "file": "gemma-4-E2B-it-Q4_0.gguf",
+    "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+    "template": "chat@2:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+    "lora_sha256": null
+   },
+   "requested_device": "gpu",
+   "threads": null,
+   "build": "0.3.36",
+   "loaded": true,
+   "accelerated": true,
+   "batch_inputs": 8,
+   "max_slots": 20,
+   "capabilities": {
+    "shared": true,
+    "conformance": true,
+    "counters": {
+     "prefix_hits": 2,
+     "prefix_misses": 1,
+     "state_hits": 1,
+     "state_misses": 1,
+     "state_tokens": 29,
+     "suffix_tokens": 74,
+     "submissions": 4,
+     "branch_groups": 2,
+     "failures": 0
+    }
+   },
+   "capacity": {
+    "n_ctx": 15360,
+    "n_batch": 512,
+    "n_seq_max": 41
+   }
+  },
+  "boundary": "explicit backend diagnostic"
+ }
+}

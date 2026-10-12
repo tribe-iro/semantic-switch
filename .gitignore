@@ -39,3 +39,21 @@ Thumbs.db
 
 # Keep benchmark JSON reports and switch examples, tests and lock files:
 # these describe measured results and reproducible decision behaviour.
+
+# Training exports and their manifests
+*.export.jsonl
+*.export.jsonl.manifest.json
+
+# Stable advisory lock sidecars
+*.write-lock
+
+/.artifacts/
+
+# Resumable benchmark checkpoints
+*.checkpoint.jsonl
+*.checkpoint.jsonl.*
+packs/
+work/
+
+# Fetched proprietary source documents and their extracted excerpts
+bench/data/*/sources/

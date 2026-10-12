@@ -1,0 +1,2069 @@
+{
+ "100": {
+  "prepare_support": "ok",
+  "support": {
+   "fit": {
+    "routing_reference": {
+     "billing": {
+      "informal": 6,
+      "latest_request": 1,
+      "pt": 4,
+      "plain": 1,
+      "short": 5,
+      "relayed": 2,
+      "planted_reference": 2,
+      "translation": 1,
+      "quoted": 1,
+      "resolved": 1,
+      "conflicting_accounts": 1,
+      "long": 2,
+      "multi_topic": 1,
+      "account_access": 1,
+      "not_a_request": 1
+     },
+     "technical": {
+      "informal": 8,
+      "latest_request": 1,
+      "pt": 5,
+      "plain": 1,
+      "short": 6,
+      "relayed": 2,
+      "planted_reference": 2,
+      "translation": 2,
+      "not_a_request": 2,
+      "conflicting_accounts": 1,
+      "long": 3,
+      "priority": 1,
+      "multi_topic": 2,
+      "resolved": 2
+     },
+     "security": {
+      "informal": 6,
+      "latest_request": 1,
+      "pt": 5,
+      "relayed": 1,
+      "short": 4,
+      "not_a_request": 1,
+      "conversation": 1,
+      "insufficient": 1,
+      "long": 7,
+      "conflicting_accounts": 1,
+      "priority": 1,
+      "account_access": 1,
+      "resolved": 4,
+      "translation": 2,
+      "planted_reference": 1
+     },
+     "retention": {
+      "plain": 1,
+      "short": 7,
+      "pt": 4,
+      "relayed": 1,
+      "informal": 4,
+      "planted_reference": 3,
+      "translation": 1,
+      "quoted": 1,
+      "conversation": 1,
+      "insufficient": 1,
+      "long": 1,
+      "resolved": 1,
+      "priority": 1,
+      "multi_topic": 1,
+      "not_a_request": 1
+     },
+     "clarify": {
+      "informal": 3,
+      "latest_request": 1,
+      "pt": 3,
+      "plain": 1,
+      "short": 6,
+      "planted_reference": 3,
+      "translation": 1,
+      "not_a_request": 1,
+      "quoted": 1,
+      "conversation": 1,
+      "insufficient": 1,
+      "long": 1,
+      "resolved": 1,
+      "relayed": 1
+     }
+    },
+    "routing": {
+     "billing": {
+      "conversation": 7,
+      "resolved": 3,
+      "short": 4,
+      "pt": 7,
+      "translation": 4,
+      "account_access": 1,
+      "latest_request": 2,
+      "long": 6,
+      "informal": 3,
+      "quoted": 2,
+      "not_a_request": 1,
+      "priority": 1,
+      "relayed": 3,
+      "conflicting_accounts": 1,
+      "multi_topic": 1
+     },
+     "technical": {
+      "conversation": 7,
+      "informal": 2,
+      "insufficient": 1,
+      "long": 4,
+      "pt": 7,
+      "translation": 4,
+      "resolved": 2,
+      "short": 5,
+      "account_access": 1,
+      "latest_request": 2,
+      "plain": 1,
+      "not_a_request": 1,
+      "priority": 1,
+      "relayed": 2,
+      "conflicting_accounts": 1,
+      "multi_topic": 1
+     },
+     "security": {
+      "conversation": 10,
+      "informal": 5,
+      "insufficient": 2,
+      "long": 5,
+      "pt": 8,
+      "translation": 5,
+      "resolved": 2,
+      "short": 6,
+      "account_access": 1,
+      "plain": 2,
+      "quoted": 2,
+      "not_a_request": 1,
+      "priority": 1,
+      "relayed": 2,
+      "conflicting_accounts": 1,
+      "multi_topic": 1,
+      "latest_request": 1
+     },
+     "retention": {
+      "conversation": 10,
+      "informal": 5,
+      "insufficient": 2,
+      "long": 8,
+      "pt": 7,
+      "translation": 5,
+      "account_access": 1,
+      "short": 3,
+      "latest_request": 3,
+      "plain": 2,
+      "quoted": 2,
+      "priority": 1,
+      "relayed": 2,
+      "conflicting_accounts": 1,
+      "multi_topic": 1,
+      "resolved": 1
+     },
+     "clarify": {
+      "conversation": 9,
+      "informal": 3,
+      "insufficient": 1,
+      "long": 6,
+      "resolved": 3,
+      "short": 4,
+      "pt": 5,
+      "translation": 4,
+      "latest_request": 3,
+      "plain": 1,
+      "quoted": 2,
+      "not_a_request": 1,
+      "relayed": 1
+     }
+    }
+   },
+   "model_select": {
+    "routing_reference": {
+     "billing": {
+      "informal": 2,
+      "relayed": 1,
+      "latest_request": 1,
+      "insufficient": 1,
+      "pt": 3,
+      "conversation": 1,
+      "planted_reference": 4,
+      "long": 2,
+      "multi_topic": 2,
+      "translation": 1,
+      "not_a_request": 1
+     },
+     "technical": {
+      "informal": 2,
+      "relayed": 3,
+      "not_a_request": 2,
+      "insufficient": 2,
+      "pt": 7,
+      "conversation": 9,
+      "planted_reference": 5,
+      "resolved": 1,
+      "short": 3,
+      "long": 8,
+      "multi_topic": 5,
+      "translation": 3,
+      "latest_request": 2,
+      "account_access": 1,
+      "quoted": 1
+     },
+     "security": {
+      "informal": 7,
+      "relayed": 3,
+      "not_a_request": 2,
+      "latest_request": 4,
+      "account_access": 5,
+      "pt": 10,
+      "short": 8,
+      "conversation": 7,
+      "planted_reference": 3,
+      "conflicting_accounts": 6,
+      "long": 7,
+      "multi_topic": 4,
+      "translation": 2,
+      "quoted": 1
+     },
+     "retention": {
+      "not_a_request": 3,
+      "informal": 2,
+      "latest_request": 3,
+      "insufficient": 2,
+      "pt": 4,
+      "plain": 1,
+      "planted_reference": 3,
+      "long": 2,
+      "multi_topic": 1,
+      "short": 2,
+      "conversation": 1
+     },
+     "clarify": {
+      "informal": 2,
+      "relayed": 1,
+      "resolved": 1,
+      "short": 3,
+      "plain": 1,
+      "planted_reference": 1,
+      "not_a_request": 2,
+      "pt": 3,
+      "insufficient": 1,
+      "conversation": 1,
+      "quoted": 1
+     }
+    },
+    "routing": {
+     "billing": {
+      "quoted": 2,
+      "conversation": 9,
+      "latest_request": 5,
+      "long": 9,
+      "pt": 12,
+      "translation": 3,
+      "resolved": 5,
+      "informal": 14,
+      "plain": 5,
+      "insufficient": 3,
+      "short": 8,
+      "relayed": 6,
+      "account_access": 2,
+      "not_a_request": 3,
+      "multi_topic": 3,
+      "priority": 4
+     },
+     "technical": {
+      "account_access": 8,
+      "conversation": 12,
+      "informal": 13,
+      "latest_request": 2,
+      "long": 9,
+      "pt": 18,
+      "translation": 10,
+      "resolved": 5,
+      "insufficient": 5,
+      "short": 21,
+      "plain": 6,
+      "quoted": 2,
+      "not_a_request": 5,
+      "relayed": 6,
+      "conflicting_accounts": 1,
+      "priority": 3,
+      "multi_topic": 10
+     },
+     "security": {
+      "quoted": 11,
+      "conversation": 21,
+      "latest_request": 9,
+      "account_access": 17,
+      "informal": 29,
+      "pt": 30,
+      "translation": 14,
+      "long": 18,
+      "resolved": 4,
+      "insufficient": 7,
+      "short": 25,
+      "not_a_request": 3,
+      "conflicting_accounts": 9,
+      "priority": 7,
+      "plain": 5,
+      "multi_topic": 7,
+      "relayed": 5
+     },
+     "retention": {
+      "quoted": 4,
+      "resolved": 5,
+      "pt": 14,
+      "translation": 9,
+      "conversation": 11,
+      "long": 14,
+      "relayed": 4,
+      "insufficient": 4,
+      "account_access": 7,
+      "short": 12,
+      "informal": 9,
+      "not_a_request": 5,
+      "latest_request": 2,
+      "plain": 4,
+      "multi_topic": 5,
+      "priority": 2
+     },
+     "clarify": {
+      "conversation": 14,
+      "latest_request": 3,
+      "long": 6,
+      "pt": 9,
+      "translation": 6,
+      "insufficient": 3,
+      "not_a_request": 3,
+      "short": 7,
+      "account_access": 1,
+      "informal": 9,
+      "plain": 4,
+      "relayed": 4,
+      "multi_topic": 4,
+      "resolved": 3
+     }
+    }
+   },
+   "acceptance_fit": {
+    "routing_reference": {
+     "billing": {
+      "multi_topic": 1,
+      "pt": 5,
+      "account_access": 1,
+      "latest_request": 2,
+      "long": 2,
+      "planted_reference": 5,
+      "short": 4,
+      "insufficient": 2,
+      "informal": 1,
+      "plain": 1
+     },
+     "technical": {
+      "multi_topic": 1,
+      "pt": 2,
+      "long": 4,
+      "quoted": 1,
+      "planted_reference": 4,
+      "resolved": 1,
+      "short": 3,
+      "latest_request": 2,
+      "translation": 1,
+      "insufficient": 1,
+      "informal": 1,
+      "plain": 1
+     },
+     "security": {
+      "priority": 3,
+      "multi_topic": 1,
+      "pt": 3,
+      "conversation": 2,
+      "long": 6,
+      "planted_reference": 5,
+      "account_access": 1,
+      "latest_request": 1,
+      "quoted": 3,
+      "relayed": 1,
+      "short": 5,
+      "conflicting_accounts": 4,
+      "informal": 4,
+      "translation": 1
+     },
+     "retention": {
+      "priority": 1,
+      "multi_topic": 1,
+      "pt": 4,
+      "conversation": 1,
+      "long": 4,
+      "planted_reference": 6,
+      "account_access": 1,
+      "latest_request": 2,
+      "relayed": 1,
+      "short": 3,
+      "resolved": 1,
+      "translation": 1
+     },
+     "clarify": {
+      "resolved": 1,
+      "short": 3,
+      "planted_reference": 3,
+      "pt": 1,
+      "translation": 1,
+      "informal": 1,
+      "plain": 1
+     }
+    },
+    "routing": {
+     "billing": {
+      "account_access": 6,
+      "conversation": 17,
+      "pt": 10,
+      "short": 17,
+      "insufficient": 6,
+      "long": 9,
+      "quoted": 8,
+      "latest_request": 4,
+      "informal": 11,
+      "priority": 3,
+      "translation": 6,
+      "multi_topic": 3,
+      "plain": 3,
+      "resolved": 5,
+      "not_a_request": 2,
+      "relayed": 2
+     },
+     "technical": {
+      "long": 10,
+      "quoted": 8,
+      "pt": 12,
+      "translation": 9,
+      "latest_request": 4,
+      "short": 10,
+      "conversation": 15,
+      "informal": 11,
+      "priority": 5,
+      "account_access": 3,
+      "multi_topic": 4,
+      "insufficient": 1,
+      "plain": 2,
+      "resolved": 5,
+      "conflicting_accounts": 3,
+      "not_a_request": 1
+     },
+     "security": {
+      "account_access": 9,
+      "conversation": 25,
+      "pt": 26,
+      "short": 20,
+      "long": 19,
+      "quoted": 11,
+      "translation": 17,
+      "insufficient": 7,
+      "informal": 21,
+      "priority": 5,
+      "multi_topic": 3,
+      "relayed": 10,
+      "resolved": 9,
+      "conflicting_accounts": 4,
+      "not_a_request": 11,
+      "plain": 6,
+      "latest_request": 1
+     },
+     "retention": {
+      "account_access": 3,
+      "conversation": 16,
+      "pt": 10,
+      "short": 12,
+      "insufficient": 4,
+      "latest_request": 3,
+      "informal": 15,
+      "priority": 4,
+      "long": 6,
+      "plain": 4,
+      "relayed": 3,
+      "quoted": 5,
+      "translation": 4,
+      "multi_topic": 2,
+      "conflicting_accounts": 2,
+      "resolved": 3,
+      "not_a_request": 2
+     },
+     "clarify": {
+      "conversation": 8,
+      "insufficient": 3,
+      "pt": 2,
+      "short": 1,
+      "long": 2,
+      "quoted": 1,
+      "multi_topic": 1,
+      "latest_request": 1,
+      "informal": 2,
+      "not_a_request": 2,
+      "resolved": 1
+     }
+    }
+   }
+  },
+  "grid": {
+   "routing:account_access": {
+    "security": 1,
+    "billing": 1,
+    "retention": 1,
+    "technical": 1
+   },
+   "routing:conflicting_accounts": {
+    "security": 1,
+    "technical": 1,
+    "retention": 1,
+    "billing": 1
+   },
+   "routing:insufficient": {
+    "clarify": 1,
+    "retention": 2,
+    "security": 2,
+    "technical": 1
+   },
+   "routing:latest_request": {
+    "clarify": 3,
+    "retention": 3,
+    "billing": 2,
+    "technical": 2,
+    "security": 1
+   },
+   "routing:multi_topic": {
+    "billing": 1,
+    "security": 1,
+    "technical": 1,
+    "retention": 1
+   },
+   "routing:not_a_request": {
+    "security": 1,
+    "technical": 1,
+    "clarify": 1,
+    "billing": 1
+   },
+   "routing:plain": {
+    "technical": 1,
+    "retention": 2,
+    "security": 2,
+    "clarify": 1
+   },
+   "routing:priority": {
+    "technical": 1,
+    "retention": 1,
+    "billing": 1,
+    "security": 1
+   },
+   "routing:quoted": {
+    "retention": 2,
+    "billing": 2,
+    "security": 2,
+    "clarify": 2
+   },
+   "routing:relayed": {
+    "technical": 2,
+    "billing": 3,
+    "security": 2,
+    "retention": 2,
+    "clarify": 1
+   },
+   "routing:resolved": {
+    "billing": 3,
+    "technical": 2,
+    "clarify": 3,
+    "security": 2,
+    "retention": 1
+   },
+   "routing_reference:account_access": {
+    "security": 1,
+    "billing": 1
+   },
+   "routing_reference:conflicting_accounts": {
+    "security": 1,
+    "technical": 1,
+    "billing": 1
+   },
+   "routing_reference:insufficient": {
+    "clarify": 1,
+    "security": 1,
+    "retention": 1
+   },
+   "routing_reference:latest_request": {
+    "clarify": 1,
+    "technical": 1,
+    "security": 1,
+    "billing": 1
+   },
+   "routing_reference:multi_topic": {
+    "technical": 2,
+    "billing": 1,
+    "retention": 1
+   },
+   "routing_reference:not_a_request": {
+    "security": 1,
+    "clarify": 1,
+    "technical": 2,
+    "billing": 1,
+    "retention": 1
+   },
+   "routing_reference:plain": {
+    "retention": 1,
+    "clarify": 1,
+    "billing": 1,
+    "technical": 1
+   },
+   "routing_reference:planted_reference": {
+    "clarify": 3,
+    "retention": 3,
+    "technical": 2,
+    "billing": 2,
+    "security": 1
+   },
+   "routing_reference:priority": {
+    "technical": 1,
+    "security": 1,
+    "retention": 1
+   },
+   "routing_reference:quoted": {
+    "billing": 1,
+    "clarify": 1,
+    "retention": 1
+   },
+   "routing_reference:relayed": {
+    "billing": 2,
+    "technical": 2,
+    "retention": 1,
+    "security": 1,
+    "clarify": 1
+   },
+   "routing_reference:resolved": {
+    "billing": 1,
+    "clarify": 1,
+    "retention": 1,
+    "security": 4,
+    "technical": 2
+   }
+  },
+  "roles": {
+   "fit": {
+    "families": 30,
+    "rows": 131,
+    "situations": 102
+   },
+   "model_select": {
+    "families": 92,
+    "rows": 323,
+    "situations": 275
+   },
+   "acceptance_fit": {
+    "families": 68,
+    "rows": 258,
+    "situations": 218
+   }
+  },
+  "estimated_fit_tokens_3_epochs": 409842,
+  "skipped_rule": 0
+ },
+ "300": {
+  "prepare_support": "ok",
+  "support": {
+   "fit": {
+    "routing_reference": {
+     "billing": {
+      "informal": 12,
+      "latest_request": 1,
+      "pt": 9,
+      "plain": 3,
+      "short": 10,
+      "relayed": 4,
+      "planted_reference": 5,
+      "translation": 3,
+      "quoted": 2,
+      "resolved": 1,
+      "conflicting_accounts": 1,
+      "long": 3,
+      "multi_topic": 1,
+      "account_access": 1,
+      "not_a_request": 1,
+      "insufficient": 3,
+      "priority": 1,
+      "conversation": 2
+     },
+     "technical": {
+      "informal": 13,
+      "latest_request": 2,
+      "pt": 8,
+      "plain": 1,
+      "short": 9,
+      "relayed": 2,
+      "planted_reference": 6,
+      "translation": 3,
+      "not_a_request": 2,
+      "conflicting_accounts": 2,
+      "long": 6,
+      "priority": 2,
+      "multi_topic": 2,
+      "resolved": 2,
+      "conversation": 1,
+      "quoted": 1,
+      "account_access": 1,
+      "insufficient": 2
+     },
+     "security": {
+      "informal": 17,
+      "latest_request": 2,
+      "pt": 11,
+      "relayed": 1,
+      "short": 14,
+      "not_a_request": 1,
+      "conversation": 6,
+      "insufficient": 2,
+      "long": 11,
+      "conflicting_accounts": 2,
+      "priority": 7,
+      "account_access": 3,
+      "resolved": 4,
+      "translation": 7,
+      "planted_reference": 4,
+      "multi_topic": 4,
+      "plain": 2,
+      "quoted": 2
+     },
+     "retention": {
+      "plain": 3,
+      "short": 10,
+      "pt": 8,
+      "relayed": 3,
+      "informal": 8,
+      "planted_reference": 7,
+      "translation": 3,
+      "quoted": 3,
+      "conversation": 4,
+      "insufficient": 2,
+      "long": 1,
+      "resolved": 1,
+      "priority": 2,
+      "multi_topic": 1,
+      "not_a_request": 1,
+      "latest_request": 1,
+      "conflicting_accounts": 1
+     },
+     "clarify": {
+      "informal": 6,
+      "latest_request": 2,
+      "pt": 5,
+      "plain": 1,
+      "short": 8,
+      "planted_reference": 6,
+      "translation": 3,
+      "not_a_request": 1,
+      "quoted": 1,
+      "conversation": 4,
+      "insufficient": 2,
+      "long": 2,
+      "resolved": 1,
+      "relayed": 3
+     }
+    },
+    "routing": {
+     "billing": {
+      "conversation": 15,
+      "resolved": 6,
+      "short": 19,
+      "pt": 20,
+      "translation": 11,
+      "account_access": 1,
+      "latest_request": 8,
+      "long": 12,
+      "informal": 11,
+      "quoted": 6,
+      "not_a_request": 6,
+      "priority": 1,
+      "relayed": 11,
+      "conflicting_accounts": 1,
+      "multi_topic": 3,
+      "plain": 3,
+      "insufficient": 6
+     },
+     "technical": {
+      "conversation": 15,
+      "informal": 8,
+      "insufficient": 7,
+      "long": 11,
+      "pt": 17,
+      "translation": 12,
+      "resolved": 5,
+      "short": 23,
+      "account_access": 1,
+      "latest_request": 5,
+      "plain": 5,
+      "not_a_request": 1,
+      "priority": 1,
+      "relayed": 10,
+      "conflicting_accounts": 1,
+      "multi_topic": 6,
+      "quoted": 8
+     },
+     "security": {
+      "conversation": 15,
+      "informal": 7,
+      "insufficient": 4,
+      "long": 13,
+      "pt": 15,
+      "translation": 10,
+      "resolved": 2,
+      "short": 20,
+      "account_access": 1,
+      "plain": 3,
+      "quoted": 3,
+      "not_a_request": 1,
+      "priority": 13,
+      "relayed": 6,
+      "conflicting_accounts": 3,
+      "multi_topic": 2,
+      "latest_request": 3
+     },
+     "retention": {
+      "conversation": 16,
+      "informal": 14,
+      "insufficient": 5,
+      "long": 16,
+      "pt": 19,
+      "translation": 13,
+      "account_access": 1,
+      "short": 21,
+      "latest_request": 5,
+      "plain": 4,
+      "quoted": 10,
+      "priority": 1,
+      "relayed": 8,
+      "conflicting_accounts": 1,
+      "multi_topic": 4,
+      "resolved": 6,
+      "not_a_request": 7
+     },
+     "clarify": {
+      "conversation": 20,
+      "informal": 12,
+      "insufficient": 6,
+      "long": 19,
+      "resolved": 9,
+      "short": 22,
+      "pt": 19,
+      "translation": 11,
+      "latest_request": 8,
+      "plain": 6,
+      "quoted": 6,
+      "not_a_request": 6,
+      "relayed": 12,
+      "multi_topic": 4
+     }
+    }
+   },
+   "model_select": {
+    "routing_reference": {
+     "billing": {
+      "informal": 2,
+      "relayed": 1,
+      "latest_request": 1,
+      "insufficient": 1,
+      "pt": 3,
+      "conversation": 1,
+      "planted_reference": 4,
+      "long": 2,
+      "multi_topic": 2,
+      "translation": 1,
+      "not_a_request": 1
+     },
+     "technical": {
+      "informal": 2,
+      "relayed": 3,
+      "not_a_request": 2,
+      "insufficient": 2,
+      "pt": 7,
+      "conversation": 9,
+      "planted_reference": 5,
+      "resolved": 1,
+      "short": 3,
+      "long": 8,
+      "multi_topic": 5,
+      "translation": 3,
+      "latest_request": 2,
+      "account_access": 1,
+      "quoted": 1
+     },
+     "security": {
+      "informal": 7,
+      "relayed": 3,
+      "not_a_request": 2,
+      "latest_request": 4,
+      "account_access": 5,
+      "pt": 10,
+      "short": 8,
+      "conversation": 7,
+      "planted_reference": 3,
+      "conflicting_accounts": 6,
+      "long": 7,
+      "multi_topic": 4,
+      "translation": 2,
+      "quoted": 1
+     },
+     "retention": {
+      "not_a_request": 3,
+      "informal": 2,
+      "latest_request": 3,
+      "insufficient": 2,
+      "pt": 4,
+      "plain": 1,
+      "planted_reference": 3,
+      "long": 2,
+      "multi_topic": 1,
+      "short": 2,
+      "conversation": 1
+     },
+     "clarify": {
+      "informal": 2,
+      "relayed": 1,
+      "resolved": 1,
+      "short": 3,
+      "plain": 1,
+      "planted_reference": 1,
+      "not_a_request": 2,
+      "pt": 3,
+      "insufficient": 1,
+      "conversation": 1,
+      "quoted": 1
+     }
+    },
+    "routing": {
+     "billing": {
+      "quoted": 2,
+      "conversation": 9,
+      "latest_request": 5,
+      "long": 9,
+      "pt": 12,
+      "translation": 3,
+      "resolved": 5,
+      "informal": 14,
+      "plain": 5,
+      "insufficient": 3,
+      "short": 8,
+      "relayed": 6,
+      "account_access": 2,
+      "not_a_request": 3,
+      "multi_topic": 3,
+      "priority": 4
+     },
+     "technical": {
+      "account_access": 8,
+      "conversation": 12,
+      "informal": 13,
+      "latest_request": 2,
+      "long": 9,
+      "pt": 18,
+      "translation": 10,
+      "resolved": 5,
+      "insufficient": 5,
+      "short": 21,
+      "plain": 6,
+      "quoted": 2,
+      "not_a_request": 5,
+      "relayed": 6,
+      "conflicting_accounts": 1,
+      "priority": 3,
+      "multi_topic": 10
+     },
+     "security": {
+      "quoted": 11,
+      "conversation": 21,
+      "latest_request": 9,
+      "account_access": 17,
+      "informal": 29,
+      "pt": 30,
+      "translation": 14,
+      "long": 18,
+      "resolved": 4,
+      "insufficient": 7,
+      "short": 25,
+      "not_a_request": 3,
+      "conflicting_accounts": 9,
+      "priority": 7,
+      "plain": 5,
+      "multi_topic": 7,
+      "relayed": 5
+     },
+     "retention": {
+      "quoted": 4,
+      "resolved": 5,
+      "pt": 14,
+      "translation": 9,
+      "conversation": 11,
+      "long": 14,
+      "relayed": 4,
+      "insufficient": 4,
+      "account_access": 7,
+      "short": 12,
+      "informal": 9,
+      "not_a_request": 5,
+      "latest_request": 2,
+      "plain": 4,
+      "multi_topic": 5,
+      "priority": 2
+     },
+     "clarify": {
+      "conversation": 14,
+      "latest_request": 3,
+      "long": 6,
+      "pt": 9,
+      "translation": 6,
+      "insufficient": 3,
+      "not_a_request": 3,
+      "short": 7,
+      "account_access": 1,
+      "informal": 9,
+      "plain": 4,
+      "relayed": 4,
+      "multi_topic": 4,
+      "resolved": 3
+     }
+    }
+   },
+   "acceptance_fit": {
+    "routing_reference": {
+     "billing": {
+      "multi_topic": 1,
+      "pt": 5,
+      "account_access": 1,
+      "latest_request": 2,
+      "long": 2,
+      "planted_reference": 5,
+      "short": 4,
+      "insufficient": 2,
+      "informal": 1,
+      "plain": 1
+     },
+     "technical": {
+      "multi_topic": 1,
+      "pt": 2,
+      "long": 4,
+      "quoted": 1,
+      "planted_reference": 4,
+      "resolved": 1,
+      "short": 3,
+      "latest_request": 2,
+      "translation": 1,
+      "insufficient": 1,
+      "informal": 1,
+      "plain": 1
+     },
+     "security": {
+      "priority": 3,
+      "multi_topic": 1,
+      "pt": 3,
+      "conversation": 2,
+      "long": 6,
+      "planted_reference": 5,
+      "account_access": 1,
+      "latest_request": 1,
+      "quoted": 3,
+      "relayed": 1,
+      "short": 5,
+      "conflicting_accounts": 4,
+      "informal": 4,
+      "translation": 1
+     },
+     "retention": {
+      "priority": 1,
+      "multi_topic": 1,
+      "pt": 4,
+      "conversation": 1,
+      "long": 4,
+      "planted_reference": 6,
+      "account_access": 1,
+      "latest_request": 2,
+      "relayed": 1,
+      "short": 3,
+      "resolved": 1,
+      "translation": 1
+     },
+     "clarify": {
+      "resolved": 1,
+      "short": 3,
+      "planted_reference": 3,
+      "pt": 1,
+      "translation": 1,
+      "informal": 1,
+      "plain": 1
+     }
+    },
+    "routing": {
+     "billing": {
+      "account_access": 6,
+      "conversation": 17,
+      "pt": 10,
+      "short": 17,
+      "insufficient": 6,
+      "long": 9,
+      "quoted": 8,
+      "latest_request": 4,
+      "informal": 11,
+      "priority": 3,
+      "translation": 6,
+      "multi_topic": 3,
+      "plain": 3,
+      "resolved": 5,
+      "not_a_request": 2,
+      "relayed": 2
+     },
+     "technical": {
+      "long": 10,
+      "quoted": 8,
+      "pt": 12,
+      "translation": 9,
+      "latest_request": 4,
+      "short": 10,
+      "conversation": 15,
+      "informal": 11,
+      "priority": 5,
+      "account_access": 3,
+      "multi_topic": 4,
+      "insufficient": 1,
+      "plain": 2,
+      "resolved": 5,
+      "conflicting_accounts": 3,
+      "not_a_request": 1
+     },
+     "security": {
+      "account_access": 9,
+      "conversation": 25,
+      "pt": 26,
+      "short": 20,
+      "long": 19,
+      "quoted": 11,
+      "translation": 17,
+      "insufficient": 7,
+      "informal": 21,
+      "priority": 5,
+      "multi_topic": 3,
+      "relayed": 10,
+      "resolved": 9,
+      "conflicting_accounts": 4,
+      "not_a_request": 11,
+      "plain": 6,
+      "latest_request": 1
+     },
+     "retention": {
+      "account_access": 3,
+      "conversation": 16,
+      "pt": 10,
+      "short": 12,
+      "insufficient": 4,
+      "latest_request": 3,
+      "informal": 15,
+      "priority": 4,
+      "long": 6,
+      "plain": 4,
+      "relayed": 3,
+      "quoted": 5,
+      "translation": 4,
+      "multi_topic": 2,
+      "conflicting_accounts": 2,
+      "resolved": 3,
+      "not_a_request": 2
+     },
+     "clarify": {
+      "conversation": 8,
+      "insufficient": 3,
+      "pt": 2,
+      "short": 1,
+      "long": 2,
+      "quoted": 1,
+      "multi_topic": 1,
+      "latest_request": 1,
+      "informal": 2,
+      "not_a_request": 2,
+      "resolved": 1
+     }
+    }
+   }
+  },
+  "grid": {
+   "routing:account_access": {
+    "security": 1,
+    "billing": 1,
+    "retention": 1,
+    "technical": 1
+   },
+   "routing:conflicting_accounts": {
+    "security": 3,
+    "technical": 1,
+    "retention": 1,
+    "billing": 1
+   },
+   "routing:insufficient": {
+    "clarify": 6,
+    "retention": 5,
+    "security": 4,
+    "technical": 7,
+    "billing": 6
+   },
+   "routing:latest_request": {
+    "clarify": 8,
+    "retention": 5,
+    "billing": 8,
+    "technical": 5,
+    "security": 3
+   },
+   "routing:multi_topic": {
+    "billing": 3,
+    "security": 2,
+    "technical": 6,
+    "retention": 4,
+    "clarify": 4
+   },
+   "routing:not_a_request": {
+    "security": 1,
+    "technical": 1,
+    "clarify": 6,
+    "billing": 6,
+    "retention": 7
+   },
+   "routing:plain": {
+    "technical": 5,
+    "retention": 4,
+    "security": 3,
+    "clarify": 6,
+    "billing": 3
+   },
+   "routing:priority": {
+    "technical": 1,
+    "retention": 1,
+    "billing": 1,
+    "security": 13
+   },
+   "routing:quoted": {
+    "retention": 10,
+    "billing": 6,
+    "security": 3,
+    "clarify": 6,
+    "technical": 8
+   },
+   "routing:relayed": {
+    "technical": 10,
+    "billing": 11,
+    "security": 6,
+    "retention": 8,
+    "clarify": 12
+   },
+   "routing:resolved": {
+    "billing": 6,
+    "technical": 5,
+    "clarify": 9,
+    "security": 2,
+    "retention": 6
+   },
+   "routing_reference:account_access": {
+    "security": 3,
+    "billing": 1,
+    "technical": 1
+   },
+   "routing_reference:conflicting_accounts": {
+    "security": 2,
+    "technical": 2,
+    "billing": 1,
+    "retention": 1
+   },
+   "routing_reference:insufficient": {
+    "clarify": 2,
+    "security": 2,
+    "retention": 2,
+    "billing": 3,
+    "technical": 2
+   },
+   "routing_reference:latest_request": {
+    "clarify": 2,
+    "technical": 2,
+    "security": 2,
+    "billing": 1,
+    "retention": 1
+   },
+   "routing_reference:multi_topic": {
+    "technical": 2,
+    "billing": 1,
+    "retention": 1,
+    "security": 4
+   },
+   "routing_reference:not_a_request": {
+    "security": 1,
+    "clarify": 1,
+    "technical": 2,
+    "billing": 1,
+    "retention": 1
+   },
+   "routing_reference:plain": {
+    "retention": 3,
+    "clarify": 1,
+    "billing": 3,
+    "technical": 1,
+    "security": 2
+   },
+   "routing_reference:planted_reference": {
+    "clarify": 6,
+    "retention": 7,
+    "technical": 6,
+    "billing": 5,
+    "security": 4
+   },
+   "routing_reference:priority": {
+    "technical": 2,
+    "security": 7,
+    "retention": 2,
+    "billing": 1
+   },
+   "routing_reference:quoted": {
+    "billing": 2,
+    "clarify": 1,
+    "retention": 3,
+    "technical": 1,
+    "security": 2
+   },
+   "routing_reference:relayed": {
+    "billing": 4,
+    "technical": 2,
+    "retention": 3,
+    "security": 1,
+    "clarify": 3
+   },
+   "routing_reference:resolved": {
+    "billing": 1,
+    "clarify": 1,
+    "retention": 1,
+    "security": 4,
+    "technical": 2
+   }
+  },
+  "roles": {
+   "fit": {
+    "families": 100,
+    "rows": 377,
+    "situations": 301
+   },
+   "model_select": {
+    "families": 92,
+    "rows": 323,
+    "situations": 275
+   },
+   "acceptance_fit": {
+    "families": 68,
+    "rows": 258,
+    "situations": 218
+   }
+  },
+  "estimated_fit_tokens_3_epochs": 1152234,
+  "skipped_rule": 0
+ },
+ "1000": {
+  "prepare_support": "ok",
+  "support": {
+   "fit": {
+    "routing_reference": {
+     "billing": {
+      "informal": 20,
+      "latest_request": 2,
+      "pt": 22,
+      "plain": 6,
+      "short": 25,
+      "relayed": 4,
+      "planted_reference": 29,
+      "translation": 7,
+      "quoted": 2,
+      "resolved": 5,
+      "conflicting_accounts": 1,
+      "long": 10,
+      "multi_topic": 4,
+      "account_access": 1,
+      "not_a_request": 2,
+      "insufficient": 3,
+      "priority": 1,
+      "conversation": 5
+     },
+     "technical": {
+      "informal": 21,
+      "latest_request": 2,
+      "pt": 18,
+      "plain": 4,
+      "short": 15,
+      "relayed": 2,
+      "planted_reference": 23,
+      "translation": 8,
+      "not_a_request": 3,
+      "conflicting_accounts": 4,
+      "long": 13,
+      "priority": 2,
+      "multi_topic": 4,
+      "resolved": 7,
+      "conversation": 6,
+      "quoted": 1,
+      "account_access": 1,
+      "insufficient": 2
+     },
+     "security": {
+      "informal": 23,
+      "latest_request": 5,
+      "pt": 19,
+      "relayed": 2,
+      "short": 22,
+      "not_a_request": 1,
+      "conversation": 11,
+      "insufficient": 2,
+      "long": 21,
+      "conflicting_accounts": 9,
+      "priority": 7,
+      "account_access": 3,
+      "resolved": 6,
+      "translation": 13,
+      "planted_reference": 21,
+      "multi_topic": 5,
+      "plain": 7,
+      "quoted": 2
+     },
+     "retention": {
+      "plain": 3,
+      "short": 16,
+      "pt": 17,
+      "relayed": 4,
+      "informal": 15,
+      "planted_reference": 24,
+      "translation": 6,
+      "quoted": 3,
+      "conversation": 14,
+      "insufficient": 2,
+      "long": 8,
+      "resolved": 6,
+      "priority": 2,
+      "multi_topic": 6,
+      "not_a_request": 1,
+      "latest_request": 2,
+      "conflicting_accounts": 1
+     },
+     "clarify": {
+      "informal": 7,
+      "latest_request": 3,
+      "pt": 6,
+      "plain": 1,
+      "short": 10,
+      "planted_reference": 12,
+      "translation": 4,
+      "not_a_request": 1,
+      "quoted": 1,
+      "conversation": 5,
+      "insufficient": 2,
+      "long": 4,
+      "resolved": 1,
+      "relayed": 3
+     }
+    },
+    "routing": {
+     "billing": {
+      "conversation": 52,
+      "resolved": 25,
+      "short": 84,
+      "pt": 70,
+      "translation": 36,
+      "account_access": 7,
+      "latest_request": 25,
+      "long": 39,
+      "informal": 50,
+      "quoted": 16,
+      "not_a_request": 21,
+      "priority": 19,
+      "relayed": 21,
+      "conflicting_accounts": 5,
+      "multi_topic": 15,
+      "plain": 33,
+      "insufficient": 24
+     },
+     "technical": {
+      "conversation": 61,
+      "informal": 54,
+      "insufficient": 31,
+      "long": 39,
+      "pt": 64,
+      "translation": 38,
+      "resolved": 26,
+      "short": 83,
+      "account_access": 6,
+      "latest_request": 20,
+      "plain": 28,
+      "not_a_request": 20,
+      "priority": 17,
+      "relayed": 20,
+      "conflicting_accounts": 2,
+      "multi_topic": 21,
+      "quoted": 26
+     },
+     "security": {
+      "conversation": 49,
+      "informal": 45,
+      "insufficient": 16,
+      "long": 43,
+      "pt": 64,
+      "translation": 40,
+      "resolved": 19,
+      "short": 89,
+      "account_access": 12,
+      "plain": 21,
+      "quoted": 26,
+      "not_a_request": 16,
+      "priority": 24,
+      "relayed": 14,
+      "conflicting_accounts": 19,
+      "multi_topic": 17,
+      "latest_request": 21
+     },
+     "retention": {
+      "conversation": 47,
+      "informal": 55,
+      "insufficient": 22,
+      "long": 61,
+      "pt": 68,
+      "translation": 35,
+      "account_access": 10,
+      "short": 75,
+      "latest_request": 20,
+      "plain": 23,
+      "quoted": 23,
+      "priority": 22,
+      "relayed": 24,
+      "conflicting_accounts": 9,
+      "multi_topic": 18,
+      "resolved": 18,
+      "not_a_request": 28
+     },
+     "clarify": {
+      "conversation": 29,
+      "informal": 20,
+      "insufficient": 10,
+      "long": 25,
+      "resolved": 15,
+      "short": 37,
+      "pt": 27,
+      "translation": 15,
+      "latest_request": 10,
+      "plain": 14,
+      "quoted": 7,
+      "not_a_request": 15,
+      "relayed": 15,
+      "multi_topic": 5
+     }
+    }
+   },
+   "model_select": {
+    "routing_reference": {
+     "billing": {
+      "informal": 2,
+      "relayed": 1,
+      "latest_request": 1,
+      "insufficient": 1,
+      "pt": 3,
+      "conversation": 1,
+      "planted_reference": 4,
+      "long": 2,
+      "multi_topic": 2,
+      "translation": 1,
+      "not_a_request": 1
+     },
+     "technical": {
+      "informal": 2,
+      "relayed": 3,
+      "not_a_request": 2,
+      "insufficient": 2,
+      "pt": 7,
+      "conversation": 9,
+      "planted_reference": 5,
+      "resolved": 1,
+      "short": 3,
+      "long": 8,
+      "multi_topic": 5,
+      "translation": 3,
+      "latest_request": 2,
+      "account_access": 1,
+      "quoted": 1
+     },
+     "security": {
+      "informal": 7,
+      "relayed": 3,
+      "not_a_request": 2,
+      "latest_request": 4,
+      "account_access": 5,
+      "pt": 10,
+      "short": 8,
+      "conversation": 7,
+      "planted_reference": 3,
+      "conflicting_accounts": 6,
+      "long": 7,
+      "multi_topic": 4,
+      "translation": 2,
+      "quoted": 1
+     },
+     "retention": {
+      "not_a_request": 3,
+      "informal": 2,
+      "latest_request": 3,
+      "insufficient": 2,
+      "pt": 4,
+      "plain": 1,
+      "planted_reference": 3,
+      "long": 2,
+      "multi_topic": 1,
+      "short": 2,
+      "conversation": 1
+     },
+     "clarify": {
+      "informal": 2,
+      "relayed": 1,
+      "resolved": 1,
+      "short": 3,
+      "plain": 1,
+      "planted_reference": 1,
+      "not_a_request": 2,
+      "pt": 3,
+      "insufficient": 1,
+      "conversation": 1,
+      "quoted": 1
+     }
+    },
+    "routing": {
+     "billing": {
+      "quoted": 2,
+      "conversation": 9,
+      "latest_request": 5,
+      "long": 9,
+      "pt": 12,
+      "translation": 3,
+      "resolved": 5,
+      "informal": 14,
+      "plain": 5,
+      "insufficient": 3,
+      "short": 8,
+      "relayed": 6,
+      "account_access": 2,
+      "not_a_request": 3,
+      "multi_topic": 3,
+      "priority": 4
+     },
+     "technical": {
+      "account_access": 8,
+      "conversation": 12,
+      "informal": 13,
+      "latest_request": 2,
+      "long": 9,
+      "pt": 18,
+      "translation": 10,
+      "resolved": 5,
+      "insufficient": 5,
+      "short": 21,
+      "plain": 6,
+      "quoted": 2,
+      "not_a_request": 5,
+      "relayed": 6,
+      "conflicting_accounts": 1,
+      "priority": 3,
+      "multi_topic": 10
+     },
+     "security": {
+      "quoted": 11,
+      "conversation": 21,
+      "latest_request": 9,
+      "account_access": 17,
+      "informal": 29,
+      "pt": 30,
+      "translation": 14,
+      "long": 18,
+      "resolved": 4,
+      "insufficient": 7,
+      "short": 25,
+      "not_a_request": 3,
+      "conflicting_accounts": 9,
+      "priority": 7,
+      "plain": 5,
+      "multi_topic": 7,
+      "relayed": 5
+     },
+     "retention": {
+      "quoted": 4,
+      "resolved": 5,
+      "pt": 14,
+      "translation": 9,
+      "conversation": 11,
+      "long": 14,
+      "relayed": 4,
+      "insufficient": 4,
+      "account_access": 7,
+      "short": 12,
+      "informal": 9,
+      "not_a_request": 5,
+      "latest_request": 2,
+      "plain": 4,
+      "multi_topic": 5,
+      "priority": 2
+     },
+     "clarify": {
+      "conversation": 14,
+      "latest_request": 3,
+      "long": 6,
+      "pt": 9,
+      "translation": 6,
+      "insufficient": 3,
+      "not_a_request": 3,
+      "short": 7,
+      "account_access": 1,
+      "informal": 9,
+      "plain": 4,
+      "relayed": 4,
+      "multi_topic": 4,
+      "resolved": 3
+     }
+    }
+   },
+   "acceptance_fit": {
+    "routing_reference": {
+     "billing": {
+      "multi_topic": 1,
+      "pt": 5,
+      "account_access": 1,
+      "latest_request": 2,
+      "long": 2,
+      "planted_reference": 5,
+      "short": 4,
+      "insufficient": 2,
+      "informal": 1,
+      "plain": 1
+     },
+     "technical": {
+      "multi_topic": 1,
+      "pt": 2,
+      "long": 4,
+      "quoted": 1,
+      "planted_reference": 4,
+      "resolved": 1,
+      "short": 3,
+      "latest_request": 2,
+      "translation": 1,
+      "insufficient": 1,
+      "informal": 1,
+      "plain": 1
+     },
+     "security": {
+      "priority": 3,
+      "multi_topic": 1,
+      "pt": 3,
+      "conversation": 2,
+      "long": 6,
+      "planted_reference": 5,
+      "account_access": 1,
+      "latest_request": 1,
+      "quoted": 3,
+      "relayed": 1,
+      "short": 5,
+      "conflicting_accounts": 4,
+      "informal": 4,
+      "translation": 1
+     },
+     "retention": {
+      "priority": 1,
+      "multi_topic": 1,
+      "pt": 4,
+      "conversation": 1,
+      "long": 4,
+      "planted_reference": 6,
+      "account_access": 1,
+      "latest_request": 2,
+      "relayed": 1,
+      "short": 3,
+      "resolved": 1,
+      "translation": 1
+     },
+     "clarify": {
+      "resolved": 1,
+      "short": 3,
+      "planted_reference": 3,
+      "pt": 1,
+      "translation": 1,
+      "informal": 1,
+      "plain": 1
+     }
+    },
+    "routing": {
+     "billing": {
+      "account_access": 6,
+      "conversation": 17,
+      "pt": 10,
+      "short": 17,
+      "insufficient": 6,
+      "long": 9,
+      "quoted": 8,
+      "latest_request": 4,
+      "informal": 11,
+      "priority": 3,
+      "translation": 6,
+      "multi_topic": 3,
+      "plain": 3,
+      "resolved": 5,
+      "not_a_request": 2,
+      "relayed": 2
+     },
+     "technical": {
+      "long": 10,
+      "quoted": 8,
+      "pt": 12,
+      "translation": 9,
+      "latest_request": 4,
+      "short": 10,
+      "conversation": 15,
+      "informal": 11,
+      "priority": 5,
+      "account_access": 3,
+      "multi_topic": 4,
+      "insufficient": 1,
+      "plain": 2,
+      "resolved": 5,
+      "conflicting_accounts": 3,
+      "not_a_request": 1
+     },
+     "security": {
+      "account_access": 9,
+      "conversation": 25,
+      "pt": 26,
+      "short": 20,
+      "long": 19,
+      "quoted": 11,
+      "translation": 17,
+      "insufficient": 7,
+      "informal": 21,
+      "priority": 5,
+      "multi_topic": 3,
+      "relayed": 10,
+      "resolved": 9,
+      "conflicting_accounts": 4,
+      "not_a_request": 11,
+      "plain": 6,
+      "latest_request": 1
+     },
+     "retention": {
+      "account_access": 3,
+      "conversation": 16,
+      "pt": 10,
+      "short": 12,
+      "insufficient": 4,
+      "latest_request": 3,
+      "informal": 15,
+      "priority": 4,
+      "long": 6,
+      "plain": 4,
+      "relayed": 3,
+      "quoted": 5,
+      "translation": 4,
+      "multi_topic": 2,
+      "conflicting_accounts": 2,
+      "resolved": 3,
+      "not_a_request": 2
+     },
+     "clarify": {
+      "conversation": 8,
+      "insufficient": 3,
+      "pt": 2,
+      "short": 1,
+      "long": 2,
+      "quoted": 1,
+      "multi_topic": 1,
+      "latest_request": 1,
+      "informal": 2,
+      "not_a_request": 2,
+      "resolved": 1
+     }
+    }
+   }
+  },
+  "grid": {
+   "routing:account_access": {
+    "security": 12,
+    "billing": 7,
+    "retention": 10,
+    "technical": 6
+   },
+   "routing:conflicting_accounts": {
+    "security": 19,
+    "technical": 2,
+    "retention": 9,
+    "billing": 5
+   },
+   "routing:insufficient": {
+    "clarify": 10,
+    "retention": 22,
+    "security": 16,
+    "technical": 31,
+    "billing": 24
+   },
+   "routing:latest_request": {
+    "clarify": 10,
+    "retention": 20,
+    "billing": 25,
+    "technical": 20,
+    "security": 21
+   },
+   "routing:multi_topic": {
+    "billing": 15,
+    "security": 17,
+    "technical": 21,
+    "retention": 18,
+    "clarify": 5
+   },
+   "routing:not_a_request": {
+    "security": 16,
+    "technical": 20,
+    "clarify": 15,
+    "billing": 21,
+    "retention": 28
+   },
+   "routing:plain": {
+    "technical": 28,
+    "retention": 23,
+    "security": 21,
+    "clarify": 14,
+    "billing": 33
+   },
+   "routing:priority": {
+    "technical": 17,
+    "retention": 22,
+    "billing": 19,
+    "security": 24
+   },
+   "routing:quoted": {
+    "retention": 23,
+    "billing": 16,
+    "security": 26,
+    "clarify": 7,
+    "technical": 26
+   },
+   "routing:relayed": {
+    "technical": 20,
+    "billing": 21,
+    "security": 14,
+    "retention": 24,
+    "clarify": 15
+   },
+   "routing:resolved": {
+    "billing": 25,
+    "technical": 26,
+    "clarify": 15,
+    "security": 19,
+    "retention": 18
+   },
+   "routing_reference:account_access": {
+    "security": 3,
+    "billing": 1,
+    "technical": 1
+   },
+   "routing_reference:conflicting_accounts": {
+    "security": 9,
+    "technical": 4,
+    "billing": 1,
+    "retention": 1
+   },
+   "routing_reference:insufficient": {
+    "clarify": 2,
+    "security": 2,
+    "retention": 2,
+    "billing": 3,
+    "technical": 2
+   },
+   "routing_reference:latest_request": {
+    "clarify": 3,
+    "technical": 2,
+    "security": 5,
+    "billing": 2,
+    "retention": 2
+   },
+   "routing_reference:multi_topic": {
+    "technical": 4,
+    "billing": 4,
+    "retention": 6,
+    "security": 5
+   },
+   "routing_reference:not_a_request": {
+    "security": 1,
+    "clarify": 1,
+    "technical": 3,
+    "billing": 2,
+    "retention": 1
+   },
+   "routing_reference:plain": {
+    "retention": 3,
+    "clarify": 1,
+    "billing": 6,
+    "technical": 4,
+    "security": 7
+   },
+   "routing_reference:planted_reference": {
+    "clarify": 12,
+    "retention": 24,
+    "technical": 23,
+    "billing": 29,
+    "security": 21
+   },
+   "routing_reference:priority": {
+    "technical": 2,
+    "security": 7,
+    "retention": 2,
+    "billing": 1
+   },
+   "routing_reference:quoted": {
+    "billing": 2,
+    "clarify": 1,
+    "retention": 3,
+    "technical": 1,
+    "security": 2
+   },
+   "routing_reference:relayed": {
+    "billing": 4,
+    "technical": 2,
+    "retention": 4,
+    "security": 2,
+    "clarify": 3
+   },
+   "routing_reference:resolved": {
+    "billing": 5,
+    "clarify": 1,
+    "retention": 6,
+    "security": 6,
+    "technical": 7
+   }
+  },
+  "roles": {
+   "fit": {
+    "families": 338,
+    "rows": 1204,
+    "situations": 1002
+   },
+   "model_select": {
+    "families": 92,
+    "rows": 323,
+    "situations": 275
+   },
+   "acceptance_fit": {
+    "families": 68,
+    "rows": 258,
+    "situations": 218
+   }
+  },
+  "estimated_fit_tokens_3_epochs": 3616218,
+  "skipped_rule": 0
+ },
+ "check": {
+  "rows": 200,
+  "check_split": true,
+  "overlap_with_fit_families": 0
+ }
+}

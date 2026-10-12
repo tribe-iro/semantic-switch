@@ -1,3 +1,4 @@
+import json
 import shutil
 
 import pytest
@@ -48,16 +49,16 @@ def test_fact_and_candidate_limits(rt, path):
 def test_answer_labels_go_stale_when_cases_change(rt, path):
     sw = rt.load(path)
     sw.correct(t("my lawyer will file a lawsuit"), case="legal")
-    assert tools.run_test(rt, path)["unseen"]["items"] + tools.run_test(rt, path)["taught"]["items"] == 1
+    assert tools.run_test(rt, path)["fresh"]["items"] + tools.run_test(rt, path)["taught"]["items"] == 1
     edit(path, lambda s: s.update(otherwise="other"))
     report = tools.run_test(rt, path)
-    assert report["unseen"]["items"] + report["taught"]["items"] == 0
+    assert report["fresh"]["items"] + report["taught"]["items"] == 0
     assert "stale answer labels" in report["warnings"][0]
 
 
 def test_fact_labels_go_stale_when_meaning_changes(rt, path, tmp_path):
     inputs = tmp_path / "in.jsonl"
-    files.append_jsonl(inputs, [t("refund please")])
+    files.append(inputs, [{"schema": 2, "input": t("refund please")}])
     answers = iter(["y", "", "", "", "", ""])
     tools.label(rt, path, str(inputs), to="test", ask=lambda _: next(answers), show=lambda _: None)
     assert tools.run_test(rt, path)["facts"]["legal_threat"]["labelled"] == 1
@@ -69,9 +70,13 @@ def test_fact_labels_go_stale_when_meaning_changes(rt, path, tmp_path):
 
 def test_test_report_reads_as_sentences_with_intervals(rt, path):
     write_test_file(path, 30)
+    records = files.read_jsonl(path.with_suffix(".test.jsonl"))
+    for row in records:
+        row["selections"] = [{"selected_by": "random", "frame_id": "test-frame", "independent": True, "inclusion_probability": .1}]
+    files.publish(path.with_suffix(".test.jsonl"), ''.join([json.dumps(r) + "\n" for r in records]))
     report = tools.run_test(rt, path, intervals=True)
     lo, hi = report["facts"]["legal_threat"]["precision_95"]
     assert 0 < lo < hi == 1.0
     text = tools.explain_test(report)
-    assert "Unseen (30): ok" in text and "legal_threat (unseen): 10 actually true" in text
-    assert "95% interval" in text and "can't be told apart" in text
+    assert "Fresh (30): ok" in text and "legal_threat (fresh): 10 actually true" in text
+    assert "95% interval" in text and "can't be told apart" not in text

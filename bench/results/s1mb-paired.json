@@ -1,0 +1,5046 @@
+{
+ "schema": 3,
+ "boundary": "cases recorded by both arms within the first 25 cases of every english-v1 benchmark; several questions per case and first-N selection make pooled counts neither leaderboard scores nor independent samples",
+ "inputs": {
+  "provenance": {
+   "evaluator": {
+    "repository": "https://github.com/hotchpotch/S1MB",
+    "commit": "39f122bd51d42d21e4ee1ae95974e462fd09a58d",
+    "archive_sha256": "34ab8631bbfda943b961c2f77a10c282126d388a4f3f6b121eaf787fa89b6f87",
+    "packages": [
+     "aiohappyeyeballs==2.7.1",
+     "aiohttp==3.14.4",
+     "aiosignal==1.4.0",
+     "annotated-types==0.8.0",
+     "anyio==4.15.1",
+     "attrs==26.1.0",
+     "certifi==2026.7.22",
+     "charset-normalizer==3.5.2",
+     "click==8.5.0",
+     "datasets==4.8.5",
+     "dill==0.4.1",
+     "filelock==4.1.0",
+     "frozenlist==1.8.0",
+     "fsspec==2026.2.0",
+     "h11==0.16.0",
+     "hf-xet==1.7.0",
+     "httpcore==1.0.9",
+     "httpx==0.28.1",
+     "huggingface_hub==1.33.0",
+     "idna==3.20",
+     "multidict==6.9.1",
+     "multiprocess==0.70.19",
+     "numpy==2.5.3",
+     "packaging==26.3",
+     "pandas==3.0.6",
+     "propcache==0.5.4",
+     "pyarrow==26.0.0",
+     "pydantic==2.14.0",
+     "pydantic_core==2.50.0",
+     "python-dateutil==2.9.0.post0",
+     "PyYAML==6.0.3",
+     "requests==2.34.2",
+     "s1mb",
+     "@",
+     "file:///home/tribeiro/Projects/semantic-select/.cache/s1mb/src/S1MB-39f122bd51d42d21e4ee1ae95974e462fd09a58d/evaluator",
+     "six==1.17.0",
+     "tqdm==4.70.1",
+     "typing-inspection==0.4.4",
+     "typing_extensions==4.16.0",
+     "urllib3==2.8.0",
+     "xxhash==4.0.1",
+     "yarl==1.25.1"
+    ]
+   },
+   "dataset": {
+    "repo_id": "hotchpotch/s1mb-dataset",
+    "revision": "b8dc678ecefb471c6d37311d8c93f65249622842",
+    "checksums_sha256": "1db098a52dc4174d4224587fa446b2bb2476d646fb5942d6f65b4460b0cd7983",
+    "category": "english-v1",
+    "subsets": 110
+   }
+  },
+  "cases": "af958aceffcc3f55c4a89fa0cd4a2cb47da4dbd17e6f8cd1cce1e84bc21c72aa"
+ },
+ "arms": {
+  "base": {
+   "artifact": "bench/results/s1mb-e2b.json",
+   "config_digest": "48b68380441de6c654601db2faf24501e2a82f6cc2c91858ad8db883d853c9d2",
+   "model": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+   "tasks": {
+    "noul": {
+     "benchmarks": 41,
+     "benchmarks_with_failures": 2,
+     "evaluator_task_score": null,
+     "primary_metric_benchmark_mean": 0.24770405847237925,
+     "questions": 1934,
+     "statuses": {
+      "uncertain": 594,
+      "ok": 1325,
+      "needs_input": 4,
+      "failed": 11
+     },
+     "accepted": {
+      "items": 1934,
+      "accepted": 1325,
+      "expected_agreement": 0.8128483646806606
+     }
+    },
+    "choice": {
+     "benchmarks": 42,
+     "benchmarks_with_failures": 7,
+     "evaluator_task_score": null,
+     "primary_metric_benchmark_mean": null,
+     "questions": 1613,
+     "statuses": {
+      "ok": 691,
+      "uncertain": 688,
+      "unsupported": 226,
+      "needs_input": 8
+     },
+     "accepted": {
+      "items": 1613,
+      "accepted": 691,
+      "expected_agreement": 0.7597684515195369
+     }
+    },
+    "score": {
+     "benchmarks": 8,
+     "benchmarks_with_failures": 0,
+     "evaluator_task_score": null,
+     "primary_metric_benchmark_mean": 0.2860265650576551,
+     "questions": 200,
+     "statuses": {
+      "uncertain": 177,
+      "ok": 23
+     },
+     "accepted": {
+      "items": 200,
+      "accepted": 23,
+      "expected_agreement": 0.782608695652174
+     }
+    }
+   },
+   "evaluator": {
+    "benchmarks": {
+     "aegis2-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 148,
+       "succeeded": 43,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.30227482282157936,
+       "accuracy": 0.6046511627906976,
+       "positive_recall": 0.2857142857142857,
+       "specificity": 0.9090909090909091,
+       "precision": 0.75,
+       "balanced_accuracy": 0.5974025974025974,
+       "f1": 0.41379310344827586,
+       "true_positive": 6.0,
+       "false_positive": 2.0,
+       "false_negative": 15.0,
+       "true_negative": 20.0,
+       "positive_prevalence": 0.4797297297297297,
+       "majority_accuracy_baseline": 0.5202702702702703,
+       "constant_brier_baseline": 0.24958911614317017,
+       "brier_skill": -0.21108976021289094,
+       "baseline_adjusted_skill": 0.19480519480519476,
+       "baseline_adjusted_score": 0.19480519480519476
+      },
+      "failures": {}
+     },
+     "laya--ag-news-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.72,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.33,
+       "baseline_adjusted_skill": 0.582089552238806,
+       "baseline_adjusted_score": 0.582089552238806
+      },
+      "failures": {}
+     },
+     "aqua-rat-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.12,
+       "uniform_accuracy_baseline": 0.2005,
+       "fixed_answer_accuracy_baseline": 0.29,
+       "baseline_adjusted_skill": -0.23943661971830985,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "arc-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.76,
+       "uniform_accuracy_baseline": 0.2533333333333333,
+       "fixed_answer_accuracy_baseline": 0.32,
+       "baseline_adjusted_skill": 0.6470588235294118,
+       "baseline_adjusted_score": 0.6470588235294118
+      },
+      "failures": {}
+     },
+     "arct-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.68,
+       "uniform_accuracy_baseline": 0.5,
+       "fixed_answer_accuracy_baseline": 0.53,
+       "baseline_adjusted_skill": 0.31914893617021284,
+       "baseline_adjusted_score": 0.31914893617021284
+      },
+      "failures": {}
+     },
+     "argument-quality-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.76,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.51,
+       "baseline_adjusted_skill": 0.5102040816326531,
+       "baseline_adjusted_score": 0.5102040816326531
+      },
+      "failures": {}
+     },
+     "argument-quality-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.11608022768578442,
+       "accuracy": 0.6412860570000001,
+       "positive_recall": 0.8868469272987983,
+       "specificity": 0.23710729025507232,
+       "precision": 0.6567551885238095,
+       "balanced_accuracy": 0.5619771087769353,
+       "f1": 0.754652141195715,
+       "true_positive": 13.791858959,
+       "false_positive": 7.208141041,
+       "false_negative": 1.759707534,
+       "true_negative": 2.240292466,
+       "positive_prevalence": 0.61603393106,
+       "majority_accuracy_baseline": 0.61603393106,
+       "constant_brier_baseline": 0.07908707655202402,
+       "brier_skill": -0.4677521631416741,
+       "baseline_adjusted_skill": 0.1239542175538706,
+       "baseline_adjusted_score": 0.1239542175538706
+      },
+      "failures": {}
+     },
+     "babi-nli-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.2741129134085251,
+       "accuracy": 0.6,
+       "positive_recall": 0.375,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.6875,
+       "f1": 0.5454545454545454,
+       "true_positive": 6.0,
+       "false_positive": 0.0,
+       "false_negative": 10.0,
+       "true_negative": 9.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.09645165363410046,
+       "baseline_adjusted_skill": 0.375,
+       "baseline_adjusted_score": 0.375
+      },
+      "failures": {}
+     },
+     "banking77-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 0,
+       "failed": 25
+      },
+      "metrics": {
+       "target_mass_at_prediction": null,
+       "uniform_accuracy_baseline": 0.012987012987012986,
+       "fixed_answer_accuracy_baseline": 0.05,
+       "baseline_adjusted_skill": null,
+       "baseline_adjusted_score": null
+      },
+      "failures": {
+       "UnsupportedMapping": 25
+      }
+     },
+     "bbq-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.88,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.4,
+       "baseline_adjusted_skill": 0.8,
+       "baseline_adjusted_score": 0.8
+      },
+      "failures": {}
+     },
+     "boardgameqa-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.32,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.36,
+       "baseline_adjusted_skill": -0.062499999999999965,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "canttalk-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.14763732085680104,
+       "accuracy": 0.76,
+       "positive_recall": 1.0,
+       "specificity": 0.45454545454545453,
+       "precision": 0.7,
+       "balanced_accuracy": 0.7272727272727273,
+       "f1": 0.8235294117647058,
+       "true_positive": 14.0,
+       "false_positive": 6.0,
+       "false_negative": 0.0,
+       "true_negative": 5.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.40945071657279586,
+       "baseline_adjusted_skill": 0.4545454545454546,
+       "baseline_adjusted_score": 0.4545454545454546
+      },
+      "failures": {}
+     },
+     "civil-comments-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 700,
+       "succeeded": 175,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.1363389421431416,
+       "accuracy": 0.6451014226196068,
+       "positive_recall": 0.4524175876992739,
+       "specificity": 0.7303287008407376,
+       "precision": 0.4259664340500246,
+       "balanced_accuracy": 0.5913731442700058,
+       "f1": 0.4387937434243928,
+       "true_positive": 24.280086740851402,
+       "false_positive": 32.7199132591486,
+       "false_negative": 29.387337782420218,
+       "true_negative": 88.61266221757978,
+       "positive_prevalence": 0.3177026804356969,
+       "majority_accuracy_baseline": 0.6822973195643032,
+       "constant_brier_baseline": 0.08872692397768642,
+       "brier_skill": -0.5366129696711783,
+       "baseline_adjusted_skill": 0.18274628854001151,
+       "baseline_adjusted_score": 0.18274628854001151
+      },
+      "failures": {}
+     },
+     "cladder-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.33296050797214605,
+       "accuracy": 0.6,
+       "positive_recall": 0.0,
+       "specificity": 0.9375,
+       "precision": 0.0,
+       "balanced_accuracy": 0.46875,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 1.0,
+       "false_negative": 9.0,
+       "true_negative": 15.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.3318420318885842,
+       "baseline_adjusted_skill": -0.0625,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "clinc-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 151,
+       "succeeded": 0,
+       "failed": 25
+      },
+      "metrics": {
+       "target_mass_at_prediction": null,
+       "uniform_accuracy_baseline": 0.006622516556291391,
+       "fixed_answer_accuracy_baseline": 0.039735099337748346,
+       "baseline_adjusted_skill": null,
+       "baseline_adjusted_score": null
+      },
+      "failures": {
+       "UnsupportedMapping": 25
+      }
+     },
+     "contract-nli-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 1700,
+       "succeeded": 425,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.5976470588235294,
+       "uniform_accuracy_baseline": 0.3333333333333333,
+       "fixed_answer_accuracy_baseline": 0.4576470588235294,
+       "baseline_adjusted_skill": 0.25813449023861174,
+       "baseline_adjusted_score": 0.25813449023861174
+      },
+      "failures": {}
+     },
+     "corr2cause-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.72,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.4,
+       "baseline_adjusted_skill": 0.5333333333333333,
+       "baseline_adjusted_score": 0.5333333333333333
+      },
+      "failures": {}
+     },
+     "creak-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.18437176301233799,
+       "accuracy": 0.76,
+       "positive_recall": 0.6923076923076923,
+       "specificity": 0.8333333333333334,
+       "precision": 0.8181818181818182,
+       "balanced_accuracy": 0.7628205128205128,
+       "f1": 0.75,
+       "true_positive": 9.0,
+       "false_positive": 2.0,
+       "false_negative": 4.0,
+       "true_negative": 10.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.26251294795064806,
+       "baseline_adjusted_skill": 0.5256410256410255,
+       "baseline_adjusted_score": 0.5256410256410255
+      },
+      "failures": {}
+     },
+     "crows-pairs-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.64,
+       "uniform_accuracy_baseline": 0.5,
+       "fixed_answer_accuracy_baseline": 0.52,
+       "baseline_adjusted_skill": 0.25,
+       "baseline_adjusted_score": 0.25
+      },
+      "failures": {}
+     },
+     "dbpedia-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.92,
+       "uniform_accuracy_baseline": 0.07142857142857142,
+       "fixed_answer_accuracy_baseline": 0.11,
+       "baseline_adjusted_skill": 0.9101123595505618,
+       "baseline_adjusted_score": 0.9101123595505618
+      },
+      "failures": {}
+     },
+     "defeasible-nli-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.72,
+       "uniform_accuracy_baseline": 0.5,
+       "fixed_answer_accuracy_baseline": 0.54,
+       "baseline_adjusted_skill": 0.39130434782608686,
+       "baseline_adjusted_score": 0.39130434782608686
+      },
+      "failures": {}
+     },
+     "laya--enron-spam-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.09407852641288368,
+       "accuracy": 0.84,
+       "positive_recall": 0.9333333333333333,
+       "specificity": 0.7,
+       "precision": 0.8235294117647058,
+       "balanced_accuracy": 0.8166666666666667,
+       "f1": 0.875,
+       "true_positive": 14.0,
+       "false_positive": 3.0,
+       "false_negative": 1.0,
+       "true_negative": 7.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.6236858943484653,
+       "baseline_adjusted_skill": 0.6333333333333333,
+       "baseline_adjusted_score": 0.6333333333333333
+      },
+      "failures": {}
+     },
+     "esci-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.44,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.27,
+       "baseline_adjusted_skill": 0.2328767123287671,
+       "baseline_adjusted_score": 0.2328767123287671
+      },
+      "failures": {}
+     },
+     "ethics-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "complete",
+      "counts": {
+       "cases": 18,
+       "expected": 18,
+       "succeeded": 18,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.7222222222222222,
+       "uniform_accuracy_baseline": 0.5,
+       "fixed_answer_accuracy_baseline": 0.6666666666666666,
+       "baseline_adjusted_skill": 0.1666666666666667,
+       "baseline_adjusted_score": 0.1666666666666667
+      },
+      "failures": {}
+     },
+     "ethics-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 82,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.4179687336916541,
+       "accuracy": 0.56,
+       "positive_recall": 0.09090909090909091,
+       "specificity": 0.9285714285714286,
+       "precision": 0.5,
+       "balanced_accuracy": 0.5097402597402597,
+       "f1": 0.15384615384615385,
+       "true_positive": 1.0,
+       "false_positive": 1.0,
+       "false_negative": 10.0,
+       "true_negative": 13.0,
+       "positive_prevalence": 0.4878048780487805,
+       "majority_accuracy_baseline": 0.5121951219512195,
+       "constant_brier_baseline": 0.2498512790005949,
+       "brier_skill": -0.6728700984182632,
+       "baseline_adjusted_skill": 0.01948051948051943,
+       "baseline_adjusted_score": 0.01948051948051943
+      },
+      "failures": {}
+     },
+     "ethos-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.1616394976180311,
+       "accuracy": 0.76,
+       "positive_recall": 0.6,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.8,
+       "f1": 0.75,
+       "true_positive": 9.0,
+       "false_positive": 0.0,
+       "false_negative": 6.0,
+       "true_negative": 10.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.35344200952787563,
+       "baseline_adjusted_skill": 0.6000000000000001,
+       "baseline_adjusted_score": 0.6000000000000001
+      },
+      "failures": {}
+     },
+     "few-nerd-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 358,
+       "succeeded": 95,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.6105263157894737,
+       "uniform_accuracy_baseline": 0.125,
+       "fixed_answer_accuracy_baseline": 0.2206703910614525,
+       "baseline_adjusted_skill": 0.5002452367477834,
+       "baseline_adjusted_score": 0.5002452367477834
+      },
+      "failures": {}
+     },
+     "fol-nli-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.28,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.39,
+       "baseline_adjusted_skill": -0.180327868852459,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "followir-core17-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 200,
+       "succeeded": 50,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.21609477914432207,
+       "accuracy": 0.78,
+       "positive_recall": 0.23076923076923078,
+       "specificity": 0.972972972972973,
+       "precision": 0.75,
+       "balanced_accuracy": 0.6018711018711019,
+       "f1": 0.35294117647058826,
+       "true_positive": 3.0,
+       "false_positive": 1.0,
+       "false_negative": 10.0,
+       "true_negative": 36.0,
+       "positive_prevalence": 0.22,
+       "majority_accuracy_baseline": 0.78,
+       "constant_brier_baseline": 0.1716,
+       "brier_skill": -0.2592935847571216,
+       "baseline_adjusted_skill": 0.20374220374220386,
+       "baseline_adjusted_score": 0.20374220374220386
+      },
+      "failures": {}
+     },
+     "followir-news21-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 200,
+       "succeeded": 50,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.28750310436238397,
+       "accuracy": 0.66,
+       "positive_recall": 0.0,
+       "specificity": 0.9428571428571428,
+       "precision": 0.0,
+       "balanced_accuracy": 0.4714285714285714,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 2.0,
+       "false_negative": 15.0,
+       "true_negative": 33.0,
+       "positive_prevalence": 0.25,
+       "majority_accuracy_baseline": 0.75,
+       "constant_brier_baseline": 0.1875,
+       "brier_skill": -0.5333498899327145,
+       "baseline_adjusted_skill": -0.05714285714285716,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "followir-robust04-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 200,
+       "succeeded": 50,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.05853480526505086,
+       "accuracy": 0.94,
+       "positive_recall": 0.4,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.7,
+       "f1": 0.5714285714285714,
+       "true_positive": 2.0,
+       "false_positive": 0.0,
+       "false_negative": 3.0,
+       "true_negative": 45.0,
+       "positive_prevalence": 0.095,
+       "majority_accuracy_baseline": 0.905,
+       "constant_brier_baseline": 0.085975,
+       "brier_skill": 0.3191648122704175,
+       "baseline_adjusted_skill": 0.3999999999999999,
+       "baseline_adjusted_score": 0.3999999999999999
+      },
+      "failures": {}
+     },
+     "go-emotions-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 2800,
+       "succeeded": 700,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.08612264545443096,
+       "accuracy": 0.8659285714285714,
+       "positive_recall": 0.5761452744531572,
+       "specificity": 0.8836698082219471,
+       "precision": 0.23266666666666666,
+       "balanced_accuracy": 0.7299075413375522,
+       "f1": 0.33147334678855517,
+       "true_positive": 23.266666666666666,
+       "false_positive": 76.73333333333333,
+       "false_negative": 17.116666666666667,
+       "true_negative": 582.8833333333333,
+       "positive_prevalence": 0.060005952380952375,
+       "majority_accuracy_baseline": 0.9399940476190476,
+       "constant_brier_baseline": 0.03220097218679138,
+       "brier_skill": -1.6745355685179555,
+       "baseline_adjusted_skill": 0.4598150826751044,
+       "baseline_adjusted_score": 0.4598150826751044
+      },
+      "failures": {}
+     },
+     "gretel-pii-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 353,
+       "succeeded": 0,
+       "failed": 101
+      },
+      "metrics": {
+       "target_mass_at_prediction": null,
+       "uniform_accuracy_baseline": 0.027777777777777776,
+       "fixed_answer_accuracy_baseline": 0.1274787535410765,
+       "baseline_adjusted_skill": null,
+       "baseline_adjusted_score": null
+      },
+      "failures": {
+       "UnsupportedMapping": 101
+      }
+     },
+     "gsm8k-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.2,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.3,
+       "baseline_adjusted_skill": -0.14285714285714282,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "hans-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.2635849099798568,
+       "accuracy": 0.68,
+       "positive_recall": 0.38461538461538464,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.6923076923076923,
+       "f1": 0.5555555555555556,
+       "true_positive": 5.0,
+       "false_positive": 0.0,
+       "false_negative": 8.0,
+       "true_negative": 12.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.05433963991942714,
+       "baseline_adjusted_skill": 0.3846153846153846,
+       "baseline_adjusted_score": 0.3846153846153846
+      },
+      "failures": {}
+     },
+     "hatecheck-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.0466741478656753,
+       "accuracy": 0.96,
+       "positive_recall": 1.0,
+       "specificity": 0.8,
+       "precision": 0.9523809523809523,
+       "balanced_accuracy": 0.9,
+       "f1": 0.975609756097561,
+       "true_positive": 20.0,
+       "false_positive": 1.0,
+       "false_negative": 0.0,
+       "true_negative": 4.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.8133034085372988,
+       "baseline_adjusted_skill": 0.8,
+       "baseline_adjusted_score": 0.8
+      },
+      "failures": {}
+     },
+     "hh-rlhf-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.68,
+       "uniform_accuracy_baseline": 0.5,
+       "fixed_answer_accuracy_baseline": 0.61,
+       "baseline_adjusted_skill": 0.17948717948717963,
+       "baseline_adjusted_score": 0.17948717948717963
+      },
+      "failures": {}
+     },
+     "hwu64-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 0,
+       "failed": 25
+      },
+      "metrics": {
+       "target_mass_at_prediction": null,
+       "uniform_accuracy_baseline": 0.015625,
+       "fixed_answer_accuracy_baseline": 0.06,
+       "baseline_adjusted_skill": null,
+       "baseline_adjusted_score": null
+      },
+      "failures": {
+       "UnsupportedMapping": 25
+      }
+     },
+     "impli-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.07162873631389645,
+       "accuracy": 0.92,
+       "positive_recall": 1.0,
+       "specificity": 0.9166666666666666,
+       "precision": 0.3333333333333333,
+       "balanced_accuracy": 0.9583333333333333,
+       "f1": 0.5,
+       "true_positive": 1.0,
+       "false_positive": 2.0,
+       "false_negative": 0.0,
+       "true_negative": 22.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.7134850547444143,
+       "baseline_adjusted_skill": 0.9166666666666665,
+       "baseline_adjusted_score": 0.9166666666666665
+      },
+      "failures": {}
+     },
+     "lexcomp-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.21902157618378978,
+       "accuracy": 0.76,
+       "positive_recall": 0.8461538461538461,
+       "specificity": 0.6666666666666666,
+       "precision": 0.7333333333333333,
+       "balanced_accuracy": 0.7564102564102564,
+       "f1": 0.7857142857142857,
+       "true_positive": 11.0,
+       "false_positive": 4.0,
+       "false_negative": 2.0,
+       "true_negative": 8.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.12391369526484086,
+       "baseline_adjusted_skill": 0.5128205128205128,
+       "baseline_adjusted_score": 0.5128205128205128
+      },
+      "failures": {}
+     },
+     "logical-entailment-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.5329349574476644,
+       "accuracy": 0.4,
+       "positive_recall": 0.0,
+       "specificity": 1.0,
+       "precision": null,
+       "balanced_accuracy": 0.5,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 0.0,
+       "false_negative": 15.0,
+       "true_negative": 10.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -1.1317398297906576,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "lonli-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.4,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.39,
+       "baseline_adjusted_skill": 0.016393442622950834,
+       "baseline_adjusted_score": 0.016393442622950834
+      },
+      "failures": {}
+     },
+     "massive-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 200,
+       "succeeded": 0,
+       "failed": 50
+      },
+      "metrics": {
+       "target_mass_at_prediction": null,
+       "uniform_accuracy_baseline": 0.036111111111111115,
+       "fixed_answer_accuracy_baseline": 0.08833333333333333,
+       "baseline_adjusted_skill": null,
+       "baseline_adjusted_score": null
+      },
+      "failures": {
+       "UnsupportedMapping": 50
+      }
+     },
+     "miqa-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.88,
+       "uniform_accuracy_baseline": 0.5,
+       "fixed_answer_accuracy_baseline": 0.56,
+       "baseline_adjusted_skill": 0.7272727272727273,
+       "baseline_adjusted_score": 0.7272727272727273
+      },
+      "failures": {}
+     },
+     "mtop-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 200,
+       "succeeded": 0,
+       "failed": 50
+      },
+      "metrics": {
+       "target_mass_at_prediction": null,
+       "uniform_accuracy_baseline": 0.049879324215607396,
+       "fixed_answer_accuracy_baseline": 0.12442477876106194,
+       "baseline_adjusted_skill": null,
+       "baseline_adjusted_score": null
+      },
+      "failures": {
+       "UnsupportedMapping": 50
+      }
+     },
+     "nlsat-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.4319312103599357,
+       "accuracy": 0.48,
+       "positive_recall": 0.0,
+       "specificity": 1.0,
+       "precision": null,
+       "balanced_accuracy": 0.5,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 0.0,
+       "false_negative": 13.0,
+       "true_negative": 12.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.7277248414397428,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--amount-extraction-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 36,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.64,
+       "uniform_accuracy_baseline": 0.23888888888888887,
+       "fixed_answer_accuracy_baseline": 0.2916666666666667,
+       "baseline_adjusted_skill": 0.491764705882353,
+       "baseline_adjusted_score": 0.491764705882353
+      },
+      "failures": {}
+     },
+     "open-jev--amount-extraction-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 64,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.45941552730625035,
+       "accuracy": 0.48,
+       "positive_recall": 0.0,
+       "specificity": 0.8571428571428571,
+       "precision": 0.0,
+       "balanced_accuracy": 0.42857142857142855,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 2.0,
+       "false_negative": 11.0,
+       "true_negative": 12.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.8376621092250014,
+       "baseline_adjusted_skill": -0.1428571428571429,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--browser-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.88,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.54,
+       "baseline_adjusted_skill": 0.7391304347826086,
+       "baseline_adjusted_score": 0.7391304347826086
+      },
+      "failures": {}
+     },
+     "open-jev--citation-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 17,
+       "failed": 8
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.35294117647058826,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.34,
+       "baseline_adjusted_skill": 0.0196078431372549,
+       "baseline_adjusted_score": 0.0196078431372549
+      },
+      "failures": {
+       "NeedsInput": 8
+      }
+     },
+     "open-jev--context-retention-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.3672303381048916,
+       "accuracy": 0.6,
+       "positive_recall": 0.09090909090909091,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.5454545454545454,
+       "f1": 0.16666666666666666,
+       "true_positive": 1.0,
+       "false_positive": 0.0,
+       "false_negative": 10.0,
+       "true_negative": 14.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.46892135241956634,
+       "baseline_adjusted_skill": 0.09090909090909083,
+       "baseline_adjusted_score": 0.09090909090909083
+      },
+      "failures": {}
+     },
+     "open-jev--customer-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "complete",
+      "counts": {
+       "cases": 17,
+       "expected": 17,
+       "succeeded": 17,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.8823529411764706,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.3235294117647059,
+       "baseline_adjusted_skill": 0.8260869565217391,
+       "baseline_adjusted_score": 0.8260869565217391
+      },
+      "failures": {}
+     },
+     "open-jev--customer-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 33,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.15129537031179294,
+       "accuracy": 0.76,
+       "positive_recall": 0.45454545454545453,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.7272727272727273,
+       "f1": 0.625,
+       "true_positive": 5.0,
+       "false_positive": 0.0,
+       "false_negative": 6.0,
+       "true_negative": 14.0,
+       "positive_prevalence": 0.48484848484848486,
+       "majority_accuracy_baseline": 0.5151515151515151,
+       "constant_brier_baseline": 0.2497704315886134,
+       "brier_skill": 0.3942622857737408,
+       "baseline_adjusted_skill": 0.4545454545454546,
+       "baseline_adjusted_score": 0.4545454545454546
+      },
+      "failures": {}
+     },
+     "open-jev--customer-control-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 50,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.1496808768340311,
+       "normalized_score_rmse": 0.2481999371550949,
+       "constant_score_baseline": 0.25,
+       "constant_mae_baseline": 0.33,
+       "baseline_adjusted_skill": 0.5464215853514209,
+       "baseline_adjusted_score": 0.5464215853514209
+      },
+      "failures": {}
+     },
+     "open-jev--drone-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 32,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.16,
+       "uniform_accuracy_baseline": 0.178125,
+       "fixed_answer_accuracy_baseline": 0.2875,
+       "baseline_adjusted_skill": -0.17894736842105258,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--drone-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 34,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.3941045892715185,
+       "accuracy": 0.44,
+       "positive_recall": 0.0,
+       "specificity": 1.0,
+       "precision": null,
+       "balanced_accuracy": 0.5,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 0.0,
+       "false_negative": 14.0,
+       "true_negative": 11.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.5764183570860739,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--drone-control-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 34,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.1640733610277574,
+       "normalized_score_rmse": 0.2705798722857847,
+       "constant_score_baseline": 0.5,
+       "constant_mae_baseline": 0.14705882352941177,
+       "baseline_adjusted_skill": -0.11569885498875032,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--email-selection-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 48,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.36,
+       "uniform_accuracy_baseline": 0.13194444444444445,
+       "fixed_answer_accuracy_baseline": 0.6006944444444444,
+       "baseline_adjusted_skill": -0.6027826086956521,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--email-selection-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 52,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.20893675306072382,
+       "accuracy": 0.8,
+       "positive_recall": 1.0,
+       "specificity": 0.5833333333333334,
+       "precision": 0.7222222222222222,
+       "balanced_accuracy": 0.7916666666666667,
+       "f1": 0.8387096774193549,
+       "true_positive": 13.0,
+       "false_positive": 5.0,
+       "false_negative": 0.0,
+       "true_negative": 7.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.16425298775710473,
+       "baseline_adjusted_skill": 0.5833333333333335,
+       "baseline_adjusted_score": 0.5833333333333335
+      },
+      "failures": {}
+     },
+     "open-jev--entity-alignment-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 75,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.25934297330368505,
+       "accuracy": 0.56,
+       "positive_recall": 0.21428571428571427,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.6071428571428571,
+       "f1": 0.35294117647058826,
+       "true_positive": 3.0,
+       "false_positive": 0.0,
+       "false_negative": 11.0,
+       "true_negative": 11.0,
+       "positive_prevalence": 0.52,
+       "majority_accuracy_baseline": 0.52,
+       "constant_brier_baseline": 0.24960000000000004,
+       "brier_skill": -0.03903434817181495,
+       "baseline_adjusted_skill": 0.2142857142857142,
+       "baseline_adjusted_score": 0.2142857142857142
+      },
+      "failures": {}
+     },
+     "open-jev--entity-alignment-control-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "complete",
+      "counts": {
+       "cases": 25,
+       "expected": 25,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.35653418827527916,
+       "normalized_score_rmse": 0.4109284200266088,
+       "constant_score_baseline": 0.5,
+       "constant_mae_baseline": 0.28,
+       "baseline_adjusted_skill": -0.27333638669742544,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--ir-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "complete",
+      "counts": {
+       "cases": 17,
+       "expected": 17,
+       "succeeded": 17,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.6470588235294118,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.2647058823529412,
+       "baseline_adjusted_skill": 0.52,
+       "baseline_adjusted_score": 0.52
+      },
+      "failures": {}
+     },
+     "open-jev--ir-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 28,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.2528703586515948,
+       "accuracy": 0.6,
+       "positive_recall": 0.23076923076923078,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.6153846153846154,
+       "f1": 0.375,
+       "true_positive": 3.0,
+       "false_positive": 0.0,
+       "false_negative": 10.0,
+       "true_negative": 12.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.011481434606379182,
+       "baseline_adjusted_skill": 0.23076923076923084,
+       "baseline_adjusted_score": 0.23076923076923084
+      },
+      "failures": {}
+     },
+     "open-jev--ir-control-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 55,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.3806331935884441,
+       "normalized_score_rmse": 0.47800956019663343,
+       "constant_score_baseline": 0.3333333333333333,
+       "constant_mae_baseline": 0.1696969696969697,
+       "baseline_adjusted_skill": -1.2430170336461885,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--mailroom-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "complete",
+      "counts": {
+       "cases": 15,
+       "expected": 15,
+       "succeeded": 15,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.9333333333333333,
+       "uniform_accuracy_baseline": 0.15555555555555553,
+       "fixed_answer_accuracy_baseline": 0.2,
+       "baseline_adjusted_skill": 0.9166666666666667,
+       "baseline_adjusted_score": 0.9166666666666667
+      },
+      "failures": {}
+     },
+     "open-jev--mailroom-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 85,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.21858768280514432,
+       "accuracy": 0.76,
+       "positive_recall": 0.5714285714285714,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.7857142857142857,
+       "f1": 0.7272727272727273,
+       "true_positive": 8.0,
+       "false_positive": 0.0,
+       "false_negative": 6.0,
+       "true_negative": 11.0,
+       "positive_prevalence": 0.5294117647058824,
+       "majority_accuracy_baseline": 0.5294117647058824,
+       "constant_brier_baseline": 0.2491349480968858,
+       "brier_skill": 0.12261332874046238,
+       "baseline_adjusted_skill": 0.5714285714285714,
+       "baseline_adjusted_score": 0.5714285714285714
+      },
+      "failures": {}
+     },
+     "open-jev--painting-geometry-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "complete",
+      "counts": {
+       "cases": 25,
+       "expected": 25,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.4,
+       "uniform_accuracy_baseline": 0.07805555555555556,
+       "fixed_answer_accuracy_baseline": 0.24,
+       "baseline_adjusted_skill": 0.21052631578947373,
+       "baseline_adjusted_score": 0.21052631578947373
+      },
+      "failures": {}
+     },
+     "open-jev--painting-geometry-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 50,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.36206814660073783,
+       "accuracy": 0.6,
+       "positive_recall": 0.5,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.75,
+       "f1": 0.6666666666666666,
+       "true_positive": 10.0,
+       "false_positive": 0.0,
+       "false_negative": 10.0,
+       "true_negative": 5.0,
+       "positive_prevalence": 0.7,
+       "majority_accuracy_baseline": 0.7,
+       "constant_brier_baseline": 0.21,
+       "brier_skill": -0.724134031432085,
+       "baseline_adjusted_skill": 0.5,
+       "baseline_adjusted_score": 0.5
+      },
+      "failures": {}
+     },
+     "open-jev--painting-geometry-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "complete",
+      "counts": {
+       "cases": 25,
+       "expected": 25,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.4145193772324473,
+       "normalized_score_rmse": 0.5415147365731764,
+       "constant_score_baseline": 0.5,
+       "constant_mae_baseline": 0.28,
+       "baseline_adjusted_skill": -0.4804263472587402,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--phone-extraction-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 79,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.52,
+       "uniform_accuracy_baseline": 0.24240506329113923,
+       "fixed_answer_accuracy_baseline": 0.4177215189873418,
+       "baseline_adjusted_skill": 0.1756521739130435,
+       "baseline_adjusted_score": 0.1756521739130435
+      },
+      "failures": {}
+     },
+     "open-jev--phone-extraction-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "complete",
+      "counts": {
+       "cases": 21,
+       "expected": 21,
+       "succeeded": 21,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.12057403157458675,
+       "accuracy": 0.8571428571428571,
+       "positive_recall": 1.0,
+       "specificity": 0.7,
+       "precision": 0.7857142857142857,
+       "balanced_accuracy": 0.85,
+       "f1": 0.88,
+       "true_positive": 11.0,
+       "false_positive": 3.0,
+       "false_negative": 0.0,
+       "true_negative": 7.0,
+       "positive_prevalence": 0.5238095238095238,
+       "majority_accuracy_baseline": 0.5238095238095238,
+       "constant_brier_baseline": 0.2494331065759637,
+       "brier_skill": 0.516607746141884,
+       "baseline_adjusted_skill": 0.7,
+       "baseline_adjusted_score": 0.7
+      },
+      "failures": {}
+     },
+     "open-jev--reasoning-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 33,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.56,
+       "uniform_accuracy_baseline": 0.32373737373737377,
+       "fixed_answer_accuracy_baseline": 0.3939393939393939,
+       "baseline_adjusted_skill": 0.27400000000000013,
+       "baseline_adjusted_score": 0.27400000000000013
+      },
+      "failures": {}
+     },
+     "open-jev--reasoning-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 33,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.4164990620002055,
+       "accuracy": 0.56,
+       "positive_recall": 0.0,
+       "specificity": 1.0,
+       "precision": null,
+       "balanced_accuracy": 0.5,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 0.0,
+       "false_negative": 11.0,
+       "true_negative": 14.0,
+       "positive_prevalence": 0.5151515151515151,
+       "majority_accuracy_baseline": 0.5151515151515151,
+       "constant_brier_baseline": 0.2497704315886134,
+       "brier_skill": -0.6675274945522933,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--reasoning-control-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 34,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.4164214998769525,
+       "normalized_score_rmse": 0.4920063249649057,
+       "constant_score_baseline": 0.7083333333333333,
+       "constant_mae_baseline": 0.3431372549019608,
+       "baseline_adjusted_skill": -0.21357122821283303,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--silent-failure-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.22886005879113255,
+       "accuracy": 0.68,
+       "positive_recall": 0.46153846153846156,
+       "specificity": 0.9166666666666666,
+       "precision": 0.8571428571428571,
+       "balanced_accuracy": 0.6891025641025641,
+       "f1": 0.6,
+       "true_positive": 6.0,
+       "false_positive": 1.0,
+       "false_negative": 7.0,
+       "true_negative": 11.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.08455976483546979,
+       "baseline_adjusted_skill": 0.3782051282051282,
+       "baseline_adjusted_score": 0.3782051282051282
+      },
+      "failures": {}
+     },
+     "open-jev--snake-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "complete",
+      "counts": {
+       "cases": 25,
+       "expected": 25,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.33333333333333337,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.35333333333333333,
+       "baseline_adjusted_skill": -0.03092783505154633,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--snake-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 75,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.32641423712161777,
+       "accuracy": 0.6,
+       "positive_recall": 0.0,
+       "specificity": 1.0,
+       "precision": null,
+       "balanced_accuracy": 0.5,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 0.0,
+       "false_negative": 10.0,
+       "true_negative": 15.0,
+       "positive_prevalence": 0.49333333333333335,
+       "majority_accuracy_baseline": 0.5066666666666666,
+       "constant_brier_baseline": 0.24995555555555554,
+       "brier_skill": -0.3058891065498577,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--sponsor-segment-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.84,
+       "uniform_accuracy_baseline": 0.14285714285714285,
+       "fixed_answer_accuracy_baseline": 0.22,
+       "baseline_adjusted_skill": 0.7948717948717948,
+       "baseline_adjusted_score": 0.7948717948717948
+      },
+      "failures": {}
+     },
+     "open-jev--tic-tac-toe-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.22666666666666668,
+       "uniform_accuracy_baseline": 0.32416666666666666,
+       "fixed_answer_accuracy_baseline": 0.34,
+       "baseline_adjusted_skill": -0.17171717171717174,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--vizdoom-basic-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 33,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.5467530385259631,
+       "accuracy": 0.44,
+       "positive_recall": 0.0,
+       "specificity": 1.0,
+       "precision": null,
+       "balanced_accuracy": 0.5,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 0.0,
+       "false_negative": 14.0,
+       "true_negative": 11.0,
+       "positive_prevalence": 0.48484848484848486,
+       "majority_accuracy_baseline": 0.5151515151515151,
+       "constant_brier_baseline": 0.2497704315886134,
+       "brier_skill": -1.1890222755690214,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--vizdoom-basic-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 33,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.24972101555214213,
+       "normalized_score_rmse": 0.2769660559070163,
+       "constant_score_baseline": 0.5,
+       "constant_mae_baseline": 0.2196969696969697,
+       "baseline_adjusted_skill": -0.13666117423733648,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--workflow-controls-v1--agent-trace-observability-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.2292300866757765,
+       "accuracy": 0.72,
+       "positive_recall": 0.0,
+       "specificity": 1.0,
+       "precision": null,
+       "balanced_accuracy": 0.5,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 0.0,
+       "false_negative": 7.0,
+       "true_negative": 18.0,
+       "positive_prevalence": 0.22,
+       "majority_accuracy_baseline": 0.78,
+       "constant_brier_baseline": 0.1716,
+       "brier_skill": -0.3358396659427534,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--workflow-controls-v1--customer-service-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.18291098687768606,
+       "accuracy": 0.76,
+       "positive_recall": 0.14285714285714285,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.5714285714285714,
+       "f1": 0.25,
+       "true_positive": 1.0,
+       "false_positive": 0.0,
+       "false_negative": 6.0,
+       "true_negative": 18.0,
+       "positive_prevalence": 0.37,
+       "majority_accuracy_baseline": 0.63,
+       "constant_brier_baseline": 0.23310000000000003,
+       "brier_skill": 0.21531108160580847,
+       "baseline_adjusted_skill": 0.1428571428571428,
+       "baseline_adjusted_score": 0.1428571428571428
+      },
+      "failures": {}
+     },
+     "open-jev--workflow-controls-v1--invoice-processing-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 21,
+       "failed": 4
+      },
+      "metrics": {
+       "binary_brier": 0.37373631732538276,
+       "accuracy": 0.5714285714285714,
+       "positive_recall": 0.0,
+       "specificity": 1.0,
+       "precision": null,
+       "balanced_accuracy": 0.5,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 0.0,
+       "false_negative": 9.0,
+       "true_negative": 12.0,
+       "positive_prevalence": 0.39,
+       "majority_accuracy_baseline": 0.61,
+       "constant_brier_baseline": 0.2379,
+       "brier_skill": -0.5709807369709237,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {
+       "NeedsInput": 4
+      }
+     },
+     "open-jev--workflow-controls-v1--security-incidents-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.14353598218060226,
+       "accuracy": 0.72,
+       "positive_recall": 0.0,
+       "specificity": 1.0,
+       "precision": null,
+       "balanced_accuracy": 0.5,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 0.0,
+       "false_negative": 7.0,
+       "true_negative": 18.0,
+       "positive_prevalence": 0.31,
+       "majority_accuracy_baseline": 0.69,
+       "constant_brier_baseline": 0.21389999999999998,
+       "brier_skill": 0.32895754006263545,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "openbookqa-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.56,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.28,
+       "baseline_adjusted_skill": 0.38888888888888895,
+       "baseline_adjusted_score": 0.38888888888888895
+      },
+      "failures": {}
+     },
+     "patent-similarity-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.1566290080741873,
+       "normalized_score_rmse": 0.1988010518604468,
+       "constant_score_baseline": 0.25,
+       "constant_mae_baseline": 0.2325,
+       "baseline_adjusted_skill": 0.32632684699274284,
+       "baseline_adjusted_score": 0.32632684699274284
+      },
+      "failures": {}
+     },
+     "paws-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.15242181012644998,
+       "accuracy": 0.8,
+       "positive_recall": 1.0,
+       "specificity": 0.6666666666666666,
+       "precision": 0.6666666666666666,
+       "balanced_accuracy": 0.8333333333333333,
+       "f1": 0.8,
+       "true_positive": 10.0,
+       "false_positive": 5.0,
+       "false_negative": 0.0,
+       "true_negative": 10.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.3903127594942001,
+       "baseline_adjusted_skill": 0.6666666666666665,
+       "baseline_adjusted_score": 0.6666666666666665
+      },
+      "failures": {}
+     },
+     "plane-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.2757881657583488,
+       "accuracy": 0.56,
+       "positive_recall": 0.2,
+       "specificity": 0.8,
+       "precision": 0.4,
+       "balanced_accuracy": 0.5,
+       "f1": 0.26666666666666666,
+       "true_positive": 2.0,
+       "false_positive": 3.0,
+       "false_negative": 8.0,
+       "true_negative": 12.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.10315266303339521,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "poem-sentiment-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.4,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.65,
+       "baseline_adjusted_skill": -0.7142857142857143,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "qasper-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 20,
+       "expected": 100,
+       "succeeded": 9,
+       "failed": 11
+      },
+      "metrics": {
+       "binary_brier": 0.10379675299356683,
+       "accuracy": 0.8888888888888888,
+       "positive_recall": 0.75,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.875,
+       "f1": 0.8571428571428571,
+       "true_positive": 3.0,
+       "false_positive": 0.0,
+       "false_negative": 1.0,
+       "true_negative": 5.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.5848129880257327,
+       "baseline_adjusted_skill": 0.75,
+       "baseline_adjusted_score": 0.75
+      },
+      "failures": {
+       "InferenceFailure": 11
+      }
+     }
+    },
+    "task_scores": {
+     "noul": null,
+     "choice": null,
+     "score": null
+    }
+   }
+  },
+  "other": {
+   "artifact": "bench/results/s1mb-e4b.json",
+   "config_digest": "1a64a1c73ab4e56590edb38a12bec223d8ac94c8ab44a6816dc6bfba1bd26354",
+   "model": "google/gemma-4-E4B-it-qat-q4_0-gguf:gemma-4-E4B_q4_0-it.gguf",
+   "tasks": {
+    "noul": {
+     "benchmarks": 41,
+     "benchmarks_with_failures": 2,
+     "evaluator_task_score": null,
+     "primary_metric_benchmark_mean": 0.22276348035005428,
+     "questions": 1934,
+     "statuses": {
+      "uncertain": 409,
+      "ok": 1510,
+      "needs_input": 4,
+      "failed": 11
+     },
+     "accepted": {
+      "items": 1934,
+      "accepted": 1510,
+      "expected_agreement": 0.8253841169118598
+     }
+    },
+    "choice": {
+     "benchmarks": 42,
+     "benchmarks_with_failures": 7,
+     "evaluator_task_score": null,
+     "primary_metric_benchmark_mean": null,
+     "questions": 1613,
+     "statuses": {
+      "ok": 930,
+      "uncertain": 449,
+      "unsupported": 226,
+      "needs_input": 8
+     },
+     "accepted": {
+      "items": 1613,
+      "accepted": 930,
+      "expected_agreement": 0.7811827956989247
+     }
+    },
+    "score": {
+     "benchmarks": 8,
+     "benchmarks_with_failures": 0,
+     "evaluator_task_score": null,
+     "primary_metric_benchmark_mean": 0.21204873428074159,
+     "questions": 200,
+     "statuses": {
+      "ok": 61,
+      "uncertain": 139
+     },
+     "accepted": {
+      "items": 200,
+      "accepted": 61,
+      "expected_agreement": 0.7103825136612022
+     }
+    }
+   },
+   "evaluator": {
+    "benchmarks": {
+     "aegis2-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 148,
+       "succeeded": 43,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.26277124400466756,
+       "accuracy": 0.6511627906976745,
+       "positive_recall": 0.38095238095238093,
+       "specificity": 0.9090909090909091,
+       "precision": 0.8,
+       "balanced_accuracy": 0.645021645021645,
+       "f1": 0.5161290322580645,
+       "true_positive": 8.0,
+       "false_positive": 2.0,
+       "false_negative": 13.0,
+       "true_negative": 20.0,
+       "positive_prevalence": 0.4797297297297297,
+       "majority_accuracy_baseline": 0.5202702702702703,
+       "constant_brier_baseline": 0.24958911614317017,
+       "brier_skill": -0.05281531528776995,
+       "baseline_adjusted_skill": 0.2900432900432901,
+       "baseline_adjusted_score": 0.2900432900432901
+      },
+      "failures": {}
+     },
+     "laya--ag-news-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.68,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.33,
+       "baseline_adjusted_skill": 0.5223880597014926,
+       "baseline_adjusted_score": 0.5223880597014926
+      },
+      "failures": {}
+     },
+     "aqua-rat-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.4,
+       "uniform_accuracy_baseline": 0.2005,
+       "fixed_answer_accuracy_baseline": 0.29,
+       "baseline_adjusted_skill": 0.1549295774647888,
+       "baseline_adjusted_score": 0.1549295774647888
+      },
+      "failures": {}
+     },
+     "arc-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.92,
+       "uniform_accuracy_baseline": 0.2533333333333333,
+       "fixed_answer_accuracy_baseline": 0.32,
+       "baseline_adjusted_skill": 0.8823529411764708,
+       "baseline_adjusted_score": 0.8823529411764708
+      },
+      "failures": {}
+     },
+     "arct-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.8,
+       "uniform_accuracy_baseline": 0.5,
+       "fixed_answer_accuracy_baseline": 0.53,
+       "baseline_adjusted_skill": 0.574468085106383,
+       "baseline_adjusted_score": 0.574468085106383
+      },
+      "failures": {}
+     },
+     "argument-quality-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.88,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.51,
+       "baseline_adjusted_skill": 0.7551020408163265,
+       "baseline_adjusted_score": 0.7551020408163265
+      },
+      "failures": {}
+     },
+     "argument-quality-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.10532656303828236,
+       "accuracy": 0.67249256988,
+       "positive_recall": 0.7190234099589365,
+       "specificity": 0.5959055406198986,
+       "precision": 0.7454626913333333,
+       "balanced_accuracy": 0.6574644752894176,
+       "f1": 0.7320043882242185,
+       "true_positive": 11.18194037,
+       "false_positive": 3.81805963,
+       "false_negative": 4.369626123,
+       "true_negative": 5.630373877,
+       "positive_prevalence": 0.61603393106,
+       "majority_accuracy_baseline": 0.61603393106,
+       "constant_brier_baseline": 0.07908707655202402,
+       "brier_skill": -0.3317796994177402,
+       "baseline_adjusted_skill": 0.3149289505788353,
+       "baseline_adjusted_score": 0.3149289505788353
+      },
+      "failures": {}
+     },
+     "babi-nli-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.34490023160958905,
+       "accuracy": 0.56,
+       "positive_recall": 0.4375,
+       "specificity": 0.7777777777777778,
+       "precision": 0.7777777777777778,
+       "balanced_accuracy": 0.6076388888888888,
+       "f1": 0.56,
+       "true_positive": 7.0,
+       "false_positive": 2.0,
+       "false_negative": 9.0,
+       "true_negative": 7.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.3796009264383562,
+       "baseline_adjusted_skill": 0.21527777777777768,
+       "baseline_adjusted_score": 0.21527777777777768
+      },
+      "failures": {}
+     },
+     "banking77-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 0,
+       "failed": 25
+      },
+      "metrics": {
+       "target_mass_at_prediction": null,
+       "uniform_accuracy_baseline": 0.012987012987012986,
+       "fixed_answer_accuracy_baseline": 0.05,
+       "baseline_adjusted_skill": null,
+       "baseline_adjusted_score": null
+      },
+      "failures": {
+       "UnsupportedMapping": 25
+      }
+     },
+     "bbq-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.96,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.4,
+       "baseline_adjusted_skill": 0.9333333333333332,
+       "baseline_adjusted_score": 0.9333333333333332
+      },
+      "failures": {}
+     },
+     "boardgameqa-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.48,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.36,
+       "baseline_adjusted_skill": 0.1875,
+       "baseline_adjusted_score": 0.1875
+      },
+      "failures": {}
+     },
+     "canttalk-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.10929883393901033,
+       "accuracy": 0.8,
+       "positive_recall": 0.9285714285714286,
+       "specificity": 0.6363636363636364,
+       "precision": 0.7647058823529411,
+       "balanced_accuracy": 0.7824675324675325,
+       "f1": 0.8387096774193549,
+       "true_positive": 13.0,
+       "false_positive": 4.0,
+       "false_negative": 1.0,
+       "true_negative": 7.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.5628046642439587,
+       "baseline_adjusted_skill": 0.5649350649350651,
+       "baseline_adjusted_score": 0.5649350649350651
+      },
+      "failures": {}
+     },
+     "civil-comments-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 700,
+       "succeeded": 175,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.10421898932794436,
+       "accuracy": 0.7276147182871189,
+       "positive_recall": 0.5310484034761227,
+       "specificity": 0.814559282205653,
+       "precision": 0.5588235316031119,
+       "balanced_accuracy": 0.6728038428408878,
+       "f1": 0.5445820462587585,
+       "true_positive": 28.50000011175871,
+       "false_positive": 22.49999988824129,
+       "false_negative": 25.16742441151291,
+       "true_negative": 98.83257558848709,
+       "positive_prevalence": 0.3177026804356969,
+       "majority_accuracy_baseline": 0.6822973195643032,
+       "constant_brier_baseline": 0.08872692397768642,
+       "brier_skill": -0.17460388184035303,
+       "baseline_adjusted_skill": 0.3456076856817756,
+       "baseline_adjusted_score": 0.3456076856817756
+      },
+      "failures": {}
+     },
+     "cladder-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.3682127698991263,
+       "accuracy": 0.56,
+       "positive_recall": 0.0,
+       "specificity": 0.875,
+       "precision": 0.0,
+       "balanced_accuracy": 0.4375,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 2.0,
+       "false_negative": 9.0,
+       "true_negative": 14.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.4728510795965053,
+       "baseline_adjusted_skill": -0.125,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "clinc-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 151,
+       "succeeded": 0,
+       "failed": 25
+      },
+      "metrics": {
+       "target_mass_at_prediction": null,
+       "uniform_accuracy_baseline": 0.006622516556291391,
+       "fixed_answer_accuracy_baseline": 0.039735099337748346,
+       "baseline_adjusted_skill": null,
+       "baseline_adjusted_score": null
+      },
+      "failures": {
+       "UnsupportedMapping": 25
+      }
+     },
+     "contract-nli-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 1700,
+       "succeeded": 425,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.6541176470588236,
+       "uniform_accuracy_baseline": 0.3333333333333333,
+       "fixed_answer_accuracy_baseline": 0.4576470588235294,
+       "baseline_adjusted_skill": 0.36225596529284176,
+       "baseline_adjusted_score": 0.36225596529284176
+      },
+      "failures": {}
+     },
+     "corr2cause-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.72,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.4,
+       "baseline_adjusted_skill": 0.5333333333333333,
+       "baseline_adjusted_score": 0.5333333333333333
+      },
+      "failures": {}
+     },
+     "creak-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.10905392013095536,
+       "accuracy": 0.88,
+       "positive_recall": 0.7692307692307693,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.8846153846153846,
+       "f1": 0.8695652173913043,
+       "true_positive": 10.0,
+       "false_positive": 0.0,
+       "false_negative": 3.0,
+       "true_negative": 12.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.5637843194761786,
+       "baseline_adjusted_skill": 0.7692307692307692,
+       "baseline_adjusted_score": 0.7692307692307692
+      },
+      "failures": {}
+     },
+     "crows-pairs-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.72,
+       "uniform_accuracy_baseline": 0.5,
+       "fixed_answer_accuracy_baseline": 0.52,
+       "baseline_adjusted_skill": 0.4166666666666666,
+       "baseline_adjusted_score": 0.4166666666666666
+      },
+      "failures": {}
+     },
+     "dbpedia-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 1.0,
+       "uniform_accuracy_baseline": 0.07142857142857142,
+       "fixed_answer_accuracy_baseline": 0.11,
+       "baseline_adjusted_skill": 1.0,
+       "baseline_adjusted_score": 1.0
+      },
+      "failures": {}
+     },
+     "defeasible-nli-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.76,
+       "uniform_accuracy_baseline": 0.5,
+       "fixed_answer_accuracy_baseline": 0.54,
+       "baseline_adjusted_skill": 0.47826086956521735,
+       "baseline_adjusted_score": 0.47826086956521735
+      },
+      "failures": {}
+     },
+     "laya--enron-spam-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.03979810555632638,
+       "accuracy": 0.96,
+       "positive_recall": 1.0,
+       "specificity": 0.9,
+       "precision": 0.9375,
+       "balanced_accuracy": 0.95,
+       "f1": 0.967741935483871,
+       "true_positive": 15.0,
+       "false_positive": 1.0,
+       "false_negative": 0.0,
+       "true_negative": 9.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.8408075777746945,
+       "baseline_adjusted_skill": 0.8999999999999999,
+       "baseline_adjusted_score": 0.8999999999999999
+      },
+      "failures": {}
+     },
+     "esci-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.4,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.27,
+       "baseline_adjusted_skill": 0.17808219178082194,
+       "baseline_adjusted_score": 0.17808219178082194
+      },
+      "failures": {}
+     },
+     "ethics-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "complete",
+      "counts": {
+       "cases": 18,
+       "expected": 18,
+       "succeeded": 18,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.6666666666666666,
+       "uniform_accuracy_baseline": 0.5,
+       "fixed_answer_accuracy_baseline": 0.6666666666666666,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "ethics-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 82,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.26246338797793756,
+       "accuracy": 0.68,
+       "positive_recall": 0.45454545454545453,
+       "specificity": 0.8571428571428571,
+       "precision": 0.7142857142857143,
+       "balanced_accuracy": 0.6558441558441558,
+       "f1": 0.5555555555555556,
+       "true_positive": 5.0,
+       "false_positive": 2.0,
+       "false_negative": 6.0,
+       "true_negative": 12.0,
+       "positive_prevalence": 0.4878048780487805,
+       "majority_accuracy_baseline": 0.5121951219512195,
+       "constant_brier_baseline": 0.2498512790005949,
+       "brier_skill": -0.05047846474026918,
+       "baseline_adjusted_skill": 0.31168831168831157,
+       "baseline_adjusted_score": 0.31168831168831157
+      },
+      "failures": {}
+     },
+     "ethos-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.16553872247937032,
+       "accuracy": 0.84,
+       "positive_recall": 0.7333333333333333,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.8666666666666667,
+       "f1": 0.8461538461538461,
+       "true_positive": 11.0,
+       "false_positive": 0.0,
+       "false_negative": 4.0,
+       "true_negative": 10.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.3378451100825187,
+       "baseline_adjusted_skill": 0.7333333333333334,
+       "baseline_adjusted_score": 0.7333333333333334
+      },
+      "failures": {}
+     },
+     "few-nerd-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 358,
+       "succeeded": 95,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.7263157894736842,
+       "uniform_accuracy_baseline": 0.125,
+       "fixed_answer_accuracy_baseline": 0.2206703910614525,
+       "baseline_adjusted_skill": 0.6488209771741181,
+       "baseline_adjusted_score": 0.6488209771741181
+      },
+      "failures": {}
+     },
+     "fol-nli-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.28,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.39,
+       "baseline_adjusted_skill": -0.180327868852459,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "followir-core17-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 200,
+       "succeeded": 50,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.21307396608755058,
+       "accuracy": 0.76,
+       "positive_recall": 0.3076923076923077,
+       "specificity": 0.918918918918919,
+       "precision": 0.5714285714285714,
+       "balanced_accuracy": 0.6133056133056134,
+       "f1": 0.4,
+       "true_positive": 4.0,
+       "false_positive": 3.0,
+       "false_negative": 9.0,
+       "true_negative": 34.0,
+       "positive_prevalence": 0.22,
+       "majority_accuracy_baseline": 0.78,
+       "constant_brier_baseline": 0.1716,
+       "brier_skill": -0.24168977906498013,
+       "baseline_adjusted_skill": 0.2266112266112268,
+       "baseline_adjusted_score": 0.2266112266112268
+      },
+      "failures": {}
+     },
+     "followir-news21-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 200,
+       "succeeded": 50,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.257683225153813,
+       "accuracy": 0.7,
+       "positive_recall": 0.2,
+       "specificity": 0.9142857142857143,
+       "precision": 0.5,
+       "balanced_accuracy": 0.5571428571428572,
+       "f1": 0.2857142857142857,
+       "true_positive": 3.0,
+       "false_positive": 3.0,
+       "false_negative": 12.0,
+       "true_negative": 32.0,
+       "positive_prevalence": 0.25,
+       "majority_accuracy_baseline": 0.75,
+       "constant_brier_baseline": 0.1875,
+       "brier_skill": -0.3743105341536692,
+       "baseline_adjusted_skill": 0.11428571428571432,
+       "baseline_adjusted_score": 0.11428571428571432
+      },
+      "failures": {}
+     },
+     "followir-robust04-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 200,
+       "succeeded": 50,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.025618375957675032,
+       "accuracy": 0.98,
+       "positive_recall": 0.8,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.9,
+       "f1": 0.8888888888888888,
+       "true_positive": 4.0,
+       "false_positive": 0.0,
+       "false_negative": 1.0,
+       "true_negative": 45.0,
+       "positive_prevalence": 0.095,
+       "majority_accuracy_baseline": 0.905,
+       "constant_brier_baseline": 0.085975,
+       "brier_skill": 0.702025286912765,
+       "baseline_adjusted_skill": 0.8,
+       "baseline_adjusted_score": 0.8
+      },
+      "failures": {}
+     },
+     "go-emotions-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 2800,
+       "succeeded": 700,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.0985619406206317,
+       "accuracy": 0.8568333333333334,
+       "positive_recall": 0.5963681386710689,
+       "specificity": 0.8727796447431589,
+       "precision": 0.22299382716049382,
+       "balanced_accuracy": 0.7345738917071138,
+       "f1": 0.32460968212961916,
+       "true_positive": 24.083333333333332,
+       "false_positive": 83.91666666666667,
+       "false_negative": 16.3,
+       "true_negative": 575.7,
+       "positive_prevalence": 0.060005952380952375,
+       "majority_accuracy_baseline": 0.9399940476190476,
+       "constant_brier_baseline": 0.03220097218679138,
+       "brier_skill": -2.0608374197180646,
+       "baseline_adjusted_skill": 0.4691477834142277,
+       "baseline_adjusted_score": 0.4691477834142277
+      },
+      "failures": {}
+     },
+     "gretel-pii-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 353,
+       "succeeded": 0,
+       "failed": 101
+      },
+      "metrics": {
+       "target_mass_at_prediction": null,
+       "uniform_accuracy_baseline": 0.027777777777777776,
+       "fixed_answer_accuracy_baseline": 0.1274787535410765,
+       "baseline_adjusted_skill": null,
+       "baseline_adjusted_score": null
+      },
+      "failures": {
+       "UnsupportedMapping": 101
+      }
+     },
+     "gsm8k-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.4,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.3,
+       "baseline_adjusted_skill": 0.1428571428571429,
+       "baseline_adjusted_score": 0.1428571428571429
+      },
+      "failures": {}
+     },
+     "hans-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.26408569375822244,
+       "accuracy": 0.64,
+       "positive_recall": 0.38461538461538464,
+       "specificity": 0.9166666666666666,
+       "precision": 0.8333333333333334,
+       "balanced_accuracy": 0.6506410256410257,
+       "f1": 0.5263157894736842,
+       "true_positive": 5.0,
+       "false_positive": 1.0,
+       "false_negative": 8.0,
+       "true_negative": 11.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.05634277503288976,
+       "baseline_adjusted_skill": 0.3012820512820513,
+       "baseline_adjusted_score": 0.3012820512820513
+      },
+      "failures": {}
+     },
+     "hatecheck-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.037190962186393374,
+       "accuracy": 0.92,
+       "positive_recall": 0.95,
+       "specificity": 0.8,
+       "precision": 0.95,
+       "balanced_accuracy": 0.875,
+       "f1": 0.95,
+       "true_positive": 19.0,
+       "false_positive": 1.0,
+       "false_negative": 1.0,
+       "true_negative": 4.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.8512361512544265,
+       "baseline_adjusted_skill": 0.75,
+       "baseline_adjusted_score": 0.75
+      },
+      "failures": {}
+     },
+     "hh-rlhf-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.52,
+       "uniform_accuracy_baseline": 0.5,
+       "fixed_answer_accuracy_baseline": 0.61,
+       "baseline_adjusted_skill": -0.23076923076923067,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "hwu64-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 0,
+       "failed": 25
+      },
+      "metrics": {
+       "target_mass_at_prediction": null,
+       "uniform_accuracy_baseline": 0.015625,
+       "fixed_answer_accuracy_baseline": 0.06,
+       "baseline_adjusted_skill": null,
+       "baseline_adjusted_score": null
+      },
+      "failures": {
+       "UnsupportedMapping": 25
+      }
+     },
+     "impli-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.09897452897632122,
+       "accuracy": 0.88,
+       "positive_recall": 1.0,
+       "specificity": 0.875,
+       "precision": 0.25,
+       "balanced_accuracy": 0.9375,
+       "f1": 0.4,
+       "true_positive": 1.0,
+       "false_positive": 3.0,
+       "false_negative": 0.0,
+       "true_negative": 21.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.6041018840947151,
+       "baseline_adjusted_skill": 0.875,
+       "baseline_adjusted_score": 0.875
+      },
+      "failures": {}
+     },
+     "lexcomp-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.2344153558592211,
+       "accuracy": 0.72,
+       "positive_recall": 0.7692307692307693,
+       "specificity": 0.6666666666666666,
+       "precision": 0.7142857142857143,
+       "balanced_accuracy": 0.717948717948718,
+       "f1": 0.7407407407407407,
+       "true_positive": 10.0,
+       "false_positive": 4.0,
+       "false_negative": 3.0,
+       "true_negative": 8.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.06233857656311559,
+       "baseline_adjusted_skill": 0.4358974358974359,
+       "baseline_adjusted_score": 0.4358974358974359
+      },
+      "failures": {}
+     },
+     "logical-entailment-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.5450699087415032,
+       "accuracy": 0.36,
+       "positive_recall": 0.0,
+       "specificity": 0.9,
+       "precision": 0.0,
+       "balanced_accuracy": 0.45,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 1.0,
+       "false_negative": 15.0,
+       "true_negative": 9.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -1.1802796349660127,
+       "baseline_adjusted_skill": -0.09999999999999998,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "lonli-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.6,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.39,
+       "baseline_adjusted_skill": 0.34426229508196715,
+       "baseline_adjusted_score": 0.34426229508196715
+      },
+      "failures": {}
+     },
+     "massive-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 200,
+       "succeeded": 0,
+       "failed": 50
+      },
+      "metrics": {
+       "target_mass_at_prediction": null,
+       "uniform_accuracy_baseline": 0.036111111111111115,
+       "fixed_answer_accuracy_baseline": 0.08833333333333333,
+       "baseline_adjusted_skill": null,
+       "baseline_adjusted_score": null
+      },
+      "failures": {
+       "UnsupportedMapping": 50
+      }
+     },
+     "miqa-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.88,
+       "uniform_accuracy_baseline": 0.5,
+       "fixed_answer_accuracy_baseline": 0.56,
+       "baseline_adjusted_skill": 0.7272727272727273,
+       "baseline_adjusted_score": 0.7272727272727273
+      },
+      "failures": {}
+     },
+     "mtop-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 200,
+       "succeeded": 0,
+       "failed": 50
+      },
+      "metrics": {
+       "target_mass_at_prediction": null,
+       "uniform_accuracy_baseline": 0.049879324215607396,
+       "fixed_answer_accuracy_baseline": 0.12442477876106194,
+       "baseline_adjusted_skill": null,
+       "baseline_adjusted_score": null
+      },
+      "failures": {
+       "UnsupportedMapping": 50
+      }
+     },
+     "nlsat-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.4924682679484566,
+       "accuracy": 0.48,
+       "positive_recall": 0.0,
+       "specificity": 1.0,
+       "precision": null,
+       "balanced_accuracy": 0.5,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 0.0,
+       "false_negative": 13.0,
+       "true_negative": 12.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.9698730717938264,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--amount-extraction-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 36,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.64,
+       "uniform_accuracy_baseline": 0.23888888888888887,
+       "fixed_answer_accuracy_baseline": 0.2916666666666667,
+       "baseline_adjusted_skill": 0.491764705882353,
+       "baseline_adjusted_score": 0.491764705882353
+      },
+      "failures": {}
+     },
+     "open-jev--amount-extraction-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 64,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.434615157367133,
+       "accuracy": 0.4,
+       "positive_recall": 0.8181818181818182,
+       "specificity": 0.07142857142857142,
+       "precision": 0.4090909090909091,
+       "balanced_accuracy": 0.4448051948051948,
+       "f1": 0.5454545454545454,
+       "true_positive": 9.0,
+       "false_positive": 13.0,
+       "false_negative": 2.0,
+       "true_negative": 1.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.7384606294685321,
+       "baseline_adjusted_skill": -0.11038961038961037,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--browser-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 1.0,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.54,
+       "baseline_adjusted_skill": 1.0,
+       "baseline_adjusted_score": 1.0
+      },
+      "failures": {}
+     },
+     "open-jev--citation-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 17,
+       "failed": 8
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.6470588235294118,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.34,
+       "baseline_adjusted_skill": 0.46524064171123003,
+       "baseline_adjusted_score": 0.46524064171123003
+      },
+      "failures": {
+       "NeedsInput": 8
+      }
+     },
+     "open-jev--context-retention-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.3117483133829241,
+       "accuracy": 0.56,
+       "positive_recall": 0.0,
+       "specificity": 1.0,
+       "precision": null,
+       "balanced_accuracy": 0.5,
+       "f1": 0.0,
+       "true_positive": 0.0,
+       "false_positive": 0.0,
+       "false_negative": 11.0,
+       "true_negative": 14.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.24699325353169632,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--customer-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "complete",
+      "counts": {
+       "cases": 17,
+       "expected": 17,
+       "succeeded": 17,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.7941176470588235,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.3235294117647059,
+       "baseline_adjusted_skill": 0.6956521739130433,
+       "baseline_adjusted_score": 0.6956521739130433
+      },
+      "failures": {}
+     },
+     "open-jev--customer-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 33,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.19605809541727492,
+       "accuracy": 0.76,
+       "positive_recall": 0.5454545454545454,
+       "specificity": 0.9285714285714286,
+       "precision": 0.8571428571428571,
+       "balanced_accuracy": 0.737012987012987,
+       "f1": 0.6666666666666666,
+       "true_positive": 6.0,
+       "false_positive": 1.0,
+       "false_negative": 5.0,
+       "true_negative": 13.0,
+       "positive_prevalence": 0.48484848484848486,
+       "majority_accuracy_baseline": 0.5151515151515151,
+       "constant_brier_baseline": 0.2497704315886134,
+       "brier_skill": 0.21504681650951318,
+       "baseline_adjusted_skill": 0.474025974025974,
+       "baseline_adjusted_score": 0.474025974025974
+      },
+      "failures": {}
+     },
+     "open-jev--customer-control-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 50,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.1669666117799485,
+       "normalized_score_rmse": 0.2909267257034278,
+       "constant_score_baseline": 0.25,
+       "constant_mae_baseline": 0.33,
+       "baseline_adjusted_skill": 0.49404057036379245,
+       "baseline_adjusted_score": 0.49404057036379245
+      },
+      "failures": {}
+     },
+     "open-jev--drone-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 32,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.12,
+       "uniform_accuracy_baseline": 0.178125,
+       "fixed_answer_accuracy_baseline": 0.2875,
+       "baseline_adjusted_skill": -0.2350877192982456,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--drone-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 34,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.1559793135936787,
+       "accuracy": 0.72,
+       "positive_recall": 0.5,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 0.75,
+       "f1": 0.6666666666666666,
+       "true_positive": 7.0,
+       "false_positive": 0.0,
+       "false_negative": 7.0,
+       "true_negative": 11.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.3760827456252852,
+       "baseline_adjusted_skill": 0.5,
+       "baseline_adjusted_score": 0.5
+      },
+      "failures": {}
+     },
+     "open-jev--drone-control-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 34,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.2738605891798672,
+       "normalized_score_rmse": 0.35024259671142866,
+       "constant_score_baseline": 0.5,
+       "constant_mae_baseline": 0.14705882352941177,
+       "baseline_adjusted_skill": -0.862252006423097,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--email-selection-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 48,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.52,
+       "uniform_accuracy_baseline": 0.13194444444444445,
+       "fixed_answer_accuracy_baseline": 0.6006944444444444,
+       "baseline_adjusted_skill": -0.20208695652173903,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--email-selection-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 52,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.3535094124991199,
+       "accuracy": 0.64,
+       "positive_recall": 1.0,
+       "specificity": 0.25,
+       "precision": 0.5909090909090909,
+       "balanced_accuracy": 0.625,
+       "f1": 0.7428571428571429,
+       "true_positive": 13.0,
+       "false_positive": 9.0,
+       "false_negative": 0.0,
+       "true_negative": 3.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.4140376499964795,
+       "baseline_adjusted_skill": 0.25,
+       "baseline_adjusted_score": 0.25
+      },
+      "failures": {}
+     },
+     "open-jev--entity-alignment-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 75,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.13155997648783885,
+       "accuracy": 0.8,
+       "positive_recall": 0.9285714285714286,
+       "specificity": 0.6363636363636364,
+       "precision": 0.7647058823529411,
+       "balanced_accuracy": 0.7824675324675325,
+       "f1": 0.8387096774193549,
+       "true_positive": 13.0,
+       "false_positive": 4.0,
+       "false_negative": 1.0,
+       "true_negative": 7.0,
+       "positive_prevalence": 0.52,
+       "majority_accuracy_baseline": 0.52,
+       "constant_brier_baseline": 0.24960000000000004,
+       "brier_skill": 0.4729167608660304,
+       "baseline_adjusted_skill": 0.5649350649350651,
+       "baseline_adjusted_score": 0.5649350649350651
+      },
+      "failures": {}
+     },
+     "open-jev--entity-alignment-control-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "complete",
+      "counts": {
+       "cases": 25,
+       "expected": 25,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.23247663276424685,
+       "normalized_score_rmse": 0.3001009549717788,
+       "constant_score_baseline": 0.5,
+       "constant_mae_baseline": 0.28,
+       "baseline_adjusted_skill": 0.16972631155626128,
+       "baseline_adjusted_score": 0.16972631155626128
+      },
+      "failures": {}
+     },
+     "open-jev--ir-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "complete",
+      "counts": {
+       "cases": 17,
+       "expected": 17,
+       "succeeded": 17,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.7058823529411765,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.2647058823529412,
+       "baseline_adjusted_skill": 0.6,
+       "baseline_adjusted_score": 0.6
+      },
+      "failures": {}
+     },
+     "open-jev--ir-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 28,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.23866630736755287,
+       "accuracy": 0.76,
+       "positive_recall": 0.6153846153846154,
+       "specificity": 0.9166666666666666,
+       "precision": 0.8888888888888888,
+       "balanced_accuracy": 0.766025641025641,
+       "f1": 0.7272727272727273,
+       "true_positive": 8.0,
+       "false_positive": 1.0,
+       "false_negative": 5.0,
+       "true_negative": 11.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.045334770529788515,
+       "baseline_adjusted_skill": 0.5320512820512819,
+       "baseline_adjusted_score": 0.5320512820512819
+      },
+      "failures": {}
+     },
+     "open-jev--ir-control-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 55,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.15359190232172065,
+       "normalized_score_rmse": 0.2460466179458026,
+       "constant_score_baseline": 0.3333333333333333,
+       "constant_mae_baseline": 0.1696969696969697,
+       "baseline_adjusted_skill": 0.0949048613184319,
+       "baseline_adjusted_score": 0.0949048613184319
+      },
+      "failures": {}
+     },
+     "open-jev--mailroom-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "complete",
+      "counts": {
+       "cases": 15,
+       "expected": 15,
+       "succeeded": 15,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.9333333333333333,
+       "uniform_accuracy_baseline": 0.15555555555555553,
+       "fixed_answer_accuracy_baseline": 0.2,
+       "baseline_adjusted_skill": 0.9166666666666667,
+       "baseline_adjusted_score": 0.9166666666666667
+      },
+      "failures": {}
+     },
+     "open-jev--mailroom-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 85,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.08457519205002292,
+       "accuracy": 0.88,
+       "positive_recall": 0.8571428571428571,
+       "specificity": 0.9090909090909091,
+       "precision": 0.9230769230769231,
+       "balanced_accuracy": 0.8831168831168831,
+       "f1": 0.8888888888888888,
+       "true_positive": 12.0,
+       "false_positive": 1.0,
+       "false_negative": 2.0,
+       "true_negative": 10.0,
+       "positive_prevalence": 0.5294117647058824,
+       "majority_accuracy_baseline": 0.5294117647058824,
+       "constant_brier_baseline": 0.2491349480968858,
+       "brier_skill": 0.6605245763547691,
+       "baseline_adjusted_skill": 0.7662337662337662,
+       "baseline_adjusted_score": 0.7662337662337662
+      },
+      "failures": {}
+     },
+     "open-jev--painting-geometry-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "complete",
+      "counts": {
+       "cases": 25,
+       "expected": 25,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.88,
+       "uniform_accuracy_baseline": 0.07805555555555556,
+       "fixed_answer_accuracy_baseline": 0.24,
+       "baseline_adjusted_skill": 0.8421052631578947,
+       "baseline_adjusted_score": 0.8421052631578947
+      },
+      "failures": {}
+     },
+     "open-jev--painting-geometry-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 50,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.42246428103219125,
+       "accuracy": 0.48,
+       "positive_recall": 0.55,
+       "specificity": 0.2,
+       "precision": 0.7333333333333333,
+       "balanced_accuracy": 0.375,
+       "f1": 0.6285714285714286,
+       "true_positive": 11.0,
+       "false_positive": 4.0,
+       "false_negative": 9.0,
+       "true_negative": 1.0,
+       "positive_prevalence": 0.7,
+       "majority_accuracy_baseline": 0.7,
+       "constant_brier_baseline": 0.21,
+       "brier_skill": -1.0117346715818631,
+       "baseline_adjusted_skill": -0.25,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--painting-geometry-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "complete",
+      "counts": {
+       "cases": 25,
+       "expected": 25,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.3703476950128255,
+       "normalized_score_rmse": 0.5332241582525552,
+       "constant_score_baseline": 0.5,
+       "constant_mae_baseline": 0.28,
+       "baseline_adjusted_skill": -0.32267033933151956,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--phone-extraction-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 79,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.68,
+       "uniform_accuracy_baseline": 0.24240506329113923,
+       "fixed_answer_accuracy_baseline": 0.4177215189873418,
+       "baseline_adjusted_skill": 0.45043478260869574,
+       "baseline_adjusted_score": 0.45043478260869574
+      },
+      "failures": {}
+     },
+     "open-jev--phone-extraction-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "complete",
+      "counts": {
+       "cases": 21,
+       "expected": 21,
+       "succeeded": 21,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.22533273048434263,
+       "accuracy": 0.7619047619047619,
+       "positive_recall": 1.0,
+       "specificity": 0.5,
+       "precision": 0.6875,
+       "balanced_accuracy": 0.75,
+       "f1": 0.8148148148148148,
+       "true_positive": 11.0,
+       "false_positive": 5.0,
+       "false_negative": 0.0,
+       "true_negative": 5.0,
+       "positive_prevalence": 0.5238095238095238,
+       "majority_accuracy_baseline": 0.5238095238095238,
+       "constant_brier_baseline": 0.2494331065759637,
+       "brier_skill": 0.09662059869458994,
+       "baseline_adjusted_skill": 0.5,
+       "baseline_adjusted_score": 0.5
+      },
+      "failures": {}
+     },
+     "open-jev--reasoning-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 33,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.48,
+       "uniform_accuracy_baseline": 0.32373737373737377,
+       "fixed_answer_accuracy_baseline": 0.3939393939393939,
+       "baseline_adjusted_skill": 0.142,
+       "baseline_adjusted_score": 0.142
+      },
+      "failures": {}
+     },
+     "open-jev--reasoning-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 33,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.31938679339719867,
+       "accuracy": 0.6,
+       "positive_recall": 0.18181818181818182,
+       "specificity": 0.9285714285714286,
+       "precision": 0.6666666666666666,
+       "balanced_accuracy": 0.5551948051948052,
+       "f1": 0.2857142857142857,
+       "true_positive": 2.0,
+       "false_positive": 1.0,
+       "false_negative": 9.0,
+       "true_negative": 13.0,
+       "positive_prevalence": 0.5151515151515151,
+       "majority_accuracy_baseline": 0.5151515151515151,
+       "constant_brier_baseline": 0.2497704315886134,
+       "brier_skill": -0.27872138974099037,
+       "baseline_adjusted_skill": 0.11038961038961048,
+       "baseline_adjusted_score": 0.11038961038961048
+      },
+      "failures": {}
+     },
+     "open-jev--reasoning-control-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 34,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.2403558702951237,
+       "normalized_score_rmse": 0.2982418064178151,
+       "constant_score_baseline": 0.7083333333333333,
+       "constant_mae_baseline": 0.3431372549019608,
+       "baseline_adjusted_skill": 0.29953432085421094,
+       "baseline_adjusted_score": 0.29953432085421094
+      },
+      "failures": {}
+     },
+     "open-jev--silent-failure-control-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.17975167226531633,
+       "accuracy": 0.8,
+       "positive_recall": 0.8461538461538461,
+       "specificity": 0.75,
+       "precision": 0.7857142857142857,
+       "balanced_accuracy": 0.7980769230769231,
+       "f1": 0.8148148148148148,
+       "true_positive": 11.0,
+       "false_positive": 3.0,
+       "false_negative": 2.0,
+       "true_negative": 9.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.2809933109387347,
+       "baseline_adjusted_skill": 0.5961538461538463,
+       "baseline_adjusted_score": 0.5961538461538463
+      },
+      "failures": {}
+     },
+     "open-jev--snake-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "complete",
+      "counts": {
+       "cases": 25,
+       "expected": 25,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.29333333333333333,
+       "uniform_accuracy_baseline": 0.33333333333333326,
+       "fixed_answer_accuracy_baseline": 0.35333333333333333,
+       "baseline_adjusted_skill": -0.09278350515463916,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--snake-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 75,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.4363977103295866,
+       "accuracy": 0.4,
+       "positive_recall": 1.0,
+       "specificity": 0.0,
+       "precision": 0.4,
+       "balanced_accuracy": 0.5,
+       "f1": 0.5714285714285714,
+       "true_positive": 10.0,
+       "false_positive": 15.0,
+       "false_negative": 0.0,
+       "true_negative": 0.0,
+       "positive_prevalence": 0.49333333333333335,
+       "majority_accuracy_baseline": 0.5066666666666666,
+       "constant_brier_baseline": 0.24995555555555554,
+       "brier_skill": -0.7459012237581255,
+       "baseline_adjusted_skill": 0.0,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--sponsor-segment-control-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.96,
+       "uniform_accuracy_baseline": 0.14285714285714285,
+       "fixed_answer_accuracy_baseline": 0.22,
+       "baseline_adjusted_skill": 0.9487179487179487,
+       "baseline_adjusted_score": 0.9487179487179487
+      },
+      "failures": {}
+     },
+     "open-jev--tic-tac-toe-v1-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.3066666666666667,
+       "uniform_accuracy_baseline": 0.32416666666666666,
+       "fixed_answer_accuracy_baseline": 0.34,
+       "baseline_adjusted_skill": -0.0505050505050505,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "open-jev--vizdoom-basic-v1-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 33,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.09864660784924353,
+       "accuracy": 0.88,
+       "positive_recall": 0.9285714285714286,
+       "specificity": 0.8181818181818182,
+       "precision": 0.8666666666666667,
+       "balanced_accuracy": 0.8733766233766234,
+       "f1": 0.896551724137931,
+       "true_positive": 13.0,
+       "false_positive": 2.0,
+       "false_negative": 1.0,
+       "true_negative": 9.0,
+       "positive_prevalence": 0.48484848484848486,
+       "majority_accuracy_baseline": 0.5151515151515151,
+       "constant_brier_baseline": 0.2497704315886134,
+       "brier_skill": 0.605050897250639,
+       "baseline_adjusted_skill": 0.7467532467532467,
+       "baseline_adjusted_score": 0.7467532467532467
+      },
+      "failures": {}
+     },
+     "open-jev--vizdoom-basic-v1-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 33,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.14389758314317172,
+       "normalized_score_rmse": 0.1795667415421832,
+       "constant_score_baseline": 0.5,
+       "constant_mae_baseline": 0.2196969696969697,
+       "baseline_adjusted_skill": 0.3450178974172874,
+       "baseline_adjusted_score": 0.3450178974172874
+      },
+      "failures": {}
+     },
+     "open-jev--workflow-controls-v1--agent-trace-observability-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.20117462528263924,
+       "accuracy": 0.76,
+       "positive_recall": 0.5714285714285714,
+       "specificity": 0.8333333333333334,
+       "precision": 0.5714285714285714,
+       "balanced_accuracy": 0.7023809523809523,
+       "f1": 0.5714285714285714,
+       "true_positive": 4.0,
+       "false_positive": 3.0,
+       "false_negative": 3.0,
+       "true_negative": 15.0,
+       "positive_prevalence": 0.22,
+       "majority_accuracy_baseline": 0.78,
+       "constant_brier_baseline": 0.1716,
+       "brier_skill": -0.17234630118088123,
+       "baseline_adjusted_skill": 0.40476190476190466,
+       "baseline_adjusted_score": 0.40476190476190466
+      },
+      "failures": {}
+     },
+     "open-jev--workflow-controls-v1--customer-service-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.005698849010341599,
+       "accuracy": 1.0,
+       "positive_recall": 1.0,
+       "specificity": 1.0,
+       "precision": 1.0,
+       "balanced_accuracy": 1.0,
+       "f1": 1.0,
+       "true_positive": 7.0,
+       "false_positive": 0.0,
+       "false_negative": 0.0,
+       "true_negative": 18.0,
+       "positive_prevalence": 0.37,
+       "majority_accuracy_baseline": 0.63,
+       "constant_brier_baseline": 0.23310000000000003,
+       "brier_skill": 0.9755519132975479,
+       "baseline_adjusted_skill": 1.0,
+       "baseline_adjusted_score": 1.0
+      },
+      "failures": {}
+     },
+     "open-jev--workflow-controls-v1--invoice-processing-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 21,
+       "failed": 4
+      },
+      "metrics": {
+       "binary_brier": 0.181396786237242,
+       "accuracy": 0.6666666666666666,
+       "positive_recall": 0.4444444444444444,
+       "specificity": 0.8333333333333334,
+       "precision": 0.6666666666666666,
+       "balanced_accuracy": 0.6388888888888888,
+       "f1": 0.5333333333333333,
+       "true_positive": 4.0,
+       "false_positive": 2.0,
+       "false_negative": 5.0,
+       "true_negative": 10.0,
+       "positive_prevalence": 0.39,
+       "majority_accuracy_baseline": 0.61,
+       "constant_brier_baseline": 0.2379,
+       "brier_skill": 0.23750825457233293,
+       "baseline_adjusted_skill": 0.2777777777777777,
+       "baseline_adjusted_score": 0.2777777777777777
+      },
+      "failures": {
+       "NeedsInput": 4
+      }
+     },
+     "open-jev--workflow-controls-v1--security-incidents-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.30951815862367443,
+       "accuracy": 0.68,
+       "positive_recall": 1.0,
+       "specificity": 0.5555555555555556,
+       "precision": 0.4666666666666667,
+       "balanced_accuracy": 0.7777777777777778,
+       "f1": 0.6363636363636364,
+       "true_positive": 7.0,
+       "false_positive": 8.0,
+       "false_negative": 0.0,
+       "true_negative": 10.0,
+       "positive_prevalence": 0.31,
+       "majority_accuracy_baseline": 0.69,
+       "constant_brier_baseline": 0.21389999999999998,
+       "brier_skill": -0.4470227144631813,
+       "baseline_adjusted_skill": 0.5555555555555556,
+       "baseline_adjusted_score": 0.5555555555555556
+      },
+      "failures": {}
+     },
+     "openbookqa-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.92,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.28,
+       "baseline_adjusted_skill": 0.888888888888889,
+       "baseline_adjusted_score": 0.888888888888889
+      },
+      "failures": {}
+     },
+     "patent-similarity-score-test-v1": {
+      "task": "score",
+      "primary_metric": "normalized_expected_score_mae",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "normalized_expected_score_mae": 0.11489298974902847,
+       "normalized_score_rmse": 0.15047780428500335,
+       "constant_score_baseline": 0.25,
+       "constant_mae_baseline": 0.2325,
+       "baseline_adjusted_skill": 0.5058366032299851,
+       "baseline_adjusted_score": 0.5058366032299851
+      },
+      "failures": {}
+     },
+     "paws-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.2590938152954211,
+       "accuracy": 0.68,
+       "positive_recall": 0.4,
+       "specificity": 0.8666666666666667,
+       "precision": 0.6666666666666666,
+       "balanced_accuracy": 0.6333333333333333,
+       "f1": 0.5,
+       "true_positive": 4.0,
+       "false_positive": 2.0,
+       "false_negative": 6.0,
+       "true_negative": 13.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.036375261181684326,
+       "baseline_adjusted_skill": 0.2666666666666666,
+       "baseline_adjusted_score": 0.2666666666666666
+      },
+      "failures": {}
+     },
+     "plane-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "binary_brier": 0.28075419775453225,
+       "accuracy": 0.6,
+       "positive_recall": 0.1,
+       "specificity": 0.9333333333333333,
+       "precision": 0.5,
+       "balanced_accuracy": 0.5166666666666667,
+       "f1": 0.16666666666666666,
+       "true_positive": 1.0,
+       "false_positive": 1.0,
+       "false_negative": 9.0,
+       "true_negative": 14.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": -0.12301679101812901,
+       "baseline_adjusted_skill": 0.03333333333333344,
+       "baseline_adjusted_score": 0.03333333333333344
+      },
+      "failures": {}
+     },
+     "poem-sentiment-choice-test-v1": {
+      "task": "choice",
+      "primary_metric": "target_mass_at_prediction",
+      "status": "partial",
+      "counts": {
+       "cases": 25,
+       "expected": 100,
+       "succeeded": 25,
+       "failed": 0
+      },
+      "metrics": {
+       "target_mass_at_prediction": 0.44,
+       "uniform_accuracy_baseline": 0.25,
+       "fixed_answer_accuracy_baseline": 0.65,
+       "baseline_adjusted_skill": -0.6000000000000001,
+       "baseline_adjusted_score": 0.0
+      },
+      "failures": {}
+     },
+     "qasper-noul-test-v1": {
+      "task": "noul",
+      "primary_metric": "binary_brier",
+      "status": "partial",
+      "counts": {
+       "cases": 20,
+       "expected": 100,
+       "succeeded": 9,
+       "failed": 11
+      },
+      "metrics": {
+       "binary_brier": 0.16824970537195244,
+       "accuracy": 0.7777777777777778,
+       "positive_recall": 1.0,
+       "specificity": 0.6,
+       "precision": 0.6666666666666666,
+       "balanced_accuracy": 0.8,
+       "f1": 0.8,
+       "true_positive": 4.0,
+       "false_positive": 2.0,
+       "false_negative": 0.0,
+       "true_negative": 3.0,
+       "positive_prevalence": 0.5,
+       "majority_accuracy_baseline": 0.5,
+       "constant_brier_baseline": 0.25,
+       "brier_skill": 0.32700117851219024,
+       "baseline_adjusted_skill": 0.6000000000000001,
+       "baseline_adjusted_score": 0.6000000000000001
+      },
+      "failures": {
+       "InferenceFailure": 11
+      }
+     }
+    },
+    "task_scores": {
+     "noul": null,
+     "choice": null,
+     "score": null
+    }
+   }
+  }
+ },
+ "paired": {
+  "matched_cases": 2233,
+  "judgments": 3747,
+  "jointly_scored": 3498,
+  "unscored": {
+   "base_only": 0,
+   "other_only": 0,
+   "both": 249
+  },
+  "availability": {
+   "base": {
+    "failed": 11,
+    "needs_input": 12,
+    "ok": 2039,
+    "uncertain": 1459,
+    "unsupported": 226
+   },
+   "other": {
+    "failed": 11,
+    "needs_input": 12,
+    "ok": 2501,
+    "uncertain": 997,
+    "unsupported": 226
+   }
+  },
+  "pooled_soft_and_hard": {
+   "base": {
+    "items": 3498,
+    "accepted": 2039,
+    "expected_agreement": 0.7945189226100419
+   },
+   "other": {
+    "items": 3498,
+    "accepted": 2501,
+    "expected_agreement": 0.8061428827949786
+   }
+  },
+  "table": {
+   "all": {
+    "hard_label": {
+     "items": 3257,
+     "fixes": 56,
+     "regressions": 27,
+     "accepted_transitions": {
+      "abstain->abstain": 643,
+      "abstain->correct": 487,
+      "abstain->wrong": 213,
+      "correct->abstain": 143,
+      "correct->correct": 1380,
+      "correct->wrong": 27,
+      "wrong->abstain": 130,
+      "wrong->correct": 56,
+      "wrong->wrong": 178
+     },
+     "raw_transitions": {
+      "correct->correct": 1947,
+      "correct->wrong": 251,
+      "wrong->correct": 412,
+      "wrong->wrong": 647
+     },
+     "base": {
+      "accepted": 1914,
+      "correct": 1550,
+      "wrong": 364,
+      "abstain": 1343,
+      "selective_precision": 0.8098223615464994,
+      "raw_correct": 2198
+     },
+     "other": {
+      "accepted": 2341,
+      "correct": 1923,
+      "wrong": 418,
+      "abstain": 916,
+      "selective_precision": 0.8214438274241777,
+      "raw_correct": 2359
+     }
+    },
+    "soft_target": {
+     "base": {
+      "items": 241,
+      "accepted": 125,
+      "expected_agreement": 0.5601926656150034
+     },
+     "other": {
+      "items": 241,
+      "accepted": 160,
+      "expected_agreement": 0.5822709366890102
+     }
+    }
+   },
+   "noul": {
+    "hard_label": {
+     "items": 1695,
+     "fixes": 31,
+     "regressions": 18,
+     "accepted_transitions": {
+      "abstain->abstain": 181,
+      "abstain->correct": 221,
+      "abstain->wrong": 89,
+      "correct->abstain": 88,
+      "correct->correct": 903,
+      "correct->wrong": 18,
+      "wrong->abstain": 70,
+      "wrong->correct": 31,
+      "wrong->wrong": 94
+     },
+     "raw_transitions": {
+      "correct->correct": 1195,
+      "correct->wrong": 116,
+      "wrong->correct": 147,
+      "wrong->wrong": 237
+     },
+     "base": {
+      "accepted": 1204,
+      "correct": 1009,
+      "wrong": 195,
+      "abstain": 491,
+      "selective_precision": 0.8380398671096345,
+      "raw_correct": 1311
+     },
+     "other": {
+      "accepted": 1356,
+      "correct": 1155,
+      "wrong": 201,
+      "abstain": 339,
+      "selective_precision": 0.8517699115044248,
+      "raw_correct": 1342
+     }
+    },
+    "soft_target": {
+     "base": {
+      "items": 224,
+      "accepted": 121,
+      "expected_agreement": 0.5621825058006232
+     },
+     "other": {
+      "items": 224,
+      "accepted": 154,
+      "expected_agreement": 0.5930520554344695
+     }
+    }
+   },
+   "choice": {
+    "hard_label": {
+     "items": 1364,
+     "fixes": 25,
+     "regressions": 9,
+     "accepted_transitions": {
+      "abstain->abstain": 325,
+      "abstain->correct": 240,
+      "abstain->wrong": 112,
+      "correct->abstain": 54,
+      "correct->correct": 460,
+      "correct->wrong": 9,
+      "wrong->abstain": 60,
+      "wrong->correct": 25,
+      "wrong->wrong": 79
+     },
+     "raw_transitions": {
+      "correct->correct": 698,
+      "correct->wrong": 108,
+      "wrong->correct": 218,
+      "wrong->wrong": 340
+     },
+     "base": {
+      "accepted": 687,
+      "correct": 523,
+      "wrong": 164,
+      "abstain": 677,
+      "selective_precision": 0.7612809315866085,
+      "raw_correct": 806
+     },
+     "other": {
+      "accepted": 925,
+      "correct": 725,
+      "wrong": 200,
+      "abstain": 439,
+      "selective_precision": 0.7837837837837838,
+      "raw_correct": 916
+     }
+    },
+    "soft_target": {
+     "base": {
+      "items": 15,
+      "accepted": 4,
+      "expected_agreement": 0.5
+     },
+     "other": {
+      "items": 15,
+      "accepted": 5,
+      "expected_agreement": 0.3
+     }
+    }
+   },
+   "score": {
+    "hard_label": {
+     "items": 198,
+     "fixes": 0,
+     "regressions": 0,
+     "accepted_transitions": {
+      "abstain->abstain": 137,
+      "abstain->correct": 26,
+      "abstain->wrong": 12,
+      "correct->abstain": 1,
+      "correct->correct": 17,
+      "wrong->wrong": 5
+     },
+     "raw_transitions": {
+      "correct->correct": 54,
+      "correct->wrong": 27,
+      "wrong->correct": 47,
+      "wrong->wrong": 70
+     },
+     "base": {
+      "accepted": 23,
+      "correct": 18,
+      "wrong": 5,
+      "abstain": 175,
+      "selective_precision": 0.782608695652174,
+      "raw_correct": 81
+     },
+     "other": {
+      "accepted": 60,
+      "correct": 43,
+      "wrong": 17,
+      "abstain": 138,
+      "selective_precision": 0.7166666666666667,
+      "raw_correct": 101
+     }
+    },
+    "soft_target": {
+     "base": {
+      "items": 2,
+      "accepted": 0,
+      "expected_agreement": null
+     },
+     "other": {
+      "items": 2,
+      "accepted": 1,
+      "expected_agreement": 0.3333333333333333
+     }
+    }
+   },
+   "in_scope": {
+    "hard_label": {
+     "items": 2640,
+     "fixes": 33,
+     "regressions": 16,
+     "accepted_transitions": {
+      "abstain->abstain": 387,
+      "abstain->correct": 419,
+      "abstain->wrong": 166,
+      "correct->abstain": 123,
+      "correct->correct": 1279,
+      "correct->wrong": 16,
+      "wrong->abstain": 93,
+      "wrong->correct": 33,
+      "wrong->wrong": 124
+     },
+     "raw_transitions": {
+      "correct->correct": 1762,
+      "correct->wrong": 180,
+      "wrong->correct": 292,
+      "wrong->wrong": 406
+     },
+     "base": {
+      "accepted": 1668,
+      "correct": 1418,
+      "wrong": 250,
+      "abstain": 972,
+      "selective_precision": 0.8501199040767387,
+      "raw_correct": 1942
+     },
+     "other": {
+      "accepted": 2037,
+      "correct": 1731,
+      "wrong": 306,
+      "abstain": 603,
+      "selective_precision": 0.8497790868924889,
+      "raw_correct": 2054
+     }
+    },
+    "soft_target": {
+     "base": {
+      "items": 233,
+      "accepted": 124,
+      "expected_agreement": 0.560678090337705
+     },
+     "other": {
+      "items": 233,
+      "accepted": 160,
+      "expected_agreement": 0.5822709366890102
+     }
+    }
+   },
+   "out_of_scope": {
+    "hard_label": {
+     "items": 617,
+     "fixes": 23,
+     "regressions": 11,
+     "accepted_transitions": {
+      "abstain->abstain": 256,
+      "abstain->correct": 68,
+      "abstain->wrong": 47,
+      "correct->abstain": 20,
+      "correct->correct": 101,
+      "correct->wrong": 11,
+      "wrong->abstain": 37,
+      "wrong->correct": 23,
+      "wrong->wrong": 54
+     },
+     "raw_transitions": {
+      "correct->correct": 185,
+      "correct->wrong": 71,
+      "wrong->correct": 120,
+      "wrong->wrong": 241
+     },
+     "base": {
+      "accepted": 246,
+      "correct": 132,
+      "wrong": 114,
+      "abstain": 371,
+      "selective_precision": 0.5365853658536586,
+      "raw_correct": 256
+     },
+     "other": {
+      "accepted": 304,
+      "correct": 192,
+      "wrong": 112,
+      "abstain": 313,
+      "selective_precision": 0.631578947368421,
+      "raw_correct": 305
+     }
+    },
+    "soft_target": {
+     "base": {
+      "items": 8,
+      "accepted": 1,
+      "expected_agreement": 0.5
+     },
+     "other": {
+      "items": 8,
+      "accepted": 0,
+      "expected_agreement": null
+     }
+    }
+   }
+  }
+ }
+}

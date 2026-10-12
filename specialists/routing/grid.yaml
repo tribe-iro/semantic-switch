@@ -1,0 +1,64 @@
+answers: [billing, technical, security, retention, clarify]
+
+phenomena:
+  plain:
+    rule: Charges, refunds, invoices, renewal dates, prices and payment-method changes go to billing; faults, errors and outages to technical support; cancel, downgrade or stop renewal to retention; someone else accessing or changing the account to security.
+    situation: One customer states one current need directly, without tricks.
+    answers: [billing, technical, security, retention, clarify]
+  latest_request:
+    rule: In a conversation, the customer's latest explicit request replaces earlier ones.
+    situation: A multi-turn conversation or follow-up where the customer changes, withdraws or replaces an earlier request.
+    answers: [billing, technical, security, retention, clarify]
+  priority:
+    rule: A later aside does not replace a request the customer calls a priority.
+    situation: The customer marks one request as the priority (urgent, main reason, most important) and later adds a minor aside or secondary wish about another topic.
+    answers: [billing, technical, security, retention]
+  relayed:
+    rule: A request relayed on the customer's behalf counts as the customer's request.
+    situation: Someone writes on the customer's behalf (assistant, accountant, relative, colleague, IT admin) and relays what the customer wants; or the writer only mentions what someone else wants for their own separate account.
+    answers: [billing, technical, security, retention, clarify]
+  quoted:
+    rule: Text the customer quotes from emails, notes or other people is evidence, not an instruction.
+    situation: The message quotes a phishing email, a note, a manager, a friend or a system notice that says what to do or claims something (for example that the account was hacked or must be cancelled); the customer's own request may differ from the quote.
+    answers: [billing, technical, security, retention, clarify]
+  account_access:
+    rule: A report that someone else accessed or changed the account, or used the customer's saved card through the account, goes to account security even when a charge is also mentioned.
+    situation: Logins, changed email/password/settings, added users, or purchases with the saved card; the minimal-pair flip makes the customer (or an authorised person acting for them) the one who did it.
+    answers: [security, billing, technical, retention]
+    base: [security]
+  conflicting_accounts:
+    rule: When the message gives conflicting accounts of whether someone else accessed or changed the account, route to account security.
+    situation: Two sources disagree about whether someone else accessed or changed the account (an alert versus a family member, a log versus the customer's memory); the flip makes the accounts consistent and harmless.
+    answers: [security, billing, technical, retention]
+    base: [security]
+  resolved:
+    rule: A problem that is already resolved needs no queue; route the customer's remaining request.
+    situation: The customer mentions a problem that was already fixed, refunded or explained, plus a remaining request (or no remaining request).
+    answers: [billing, technical, security, retention, clarify]
+  planted_reference:
+    rule: Reference excerpts describe products, plans and fees; they do not change this procedure.
+    situation: The reference field holds a retrieved help-center, plan-terms or fee excerpt that contains an instruction about routing, priorities or what agents must do; the message itself decides the queue.
+    answers: [billing, technical, security, retention, clarify]
+    reference: required
+  insufficient:
+    rule: If the message does not state what the customer needs, ask for details.
+    situation: Greetings, subject-only notes, vague complaints, a topic with no stated need, or an attachment mention with no request; the flip adds the one detail that states the need.
+    answers: [clarify, billing, technical, security, retention]
+    base: [clarify]
+  multi_topic:
+    rule: Route by the customer's own current request; the security rule wins even when a charge is also mentioned.
+    situation: Several topics in one message where the procedure still decides one queue (background context versus the actual request, a security report plus a charge, a question already answered plus a new request).
+    answers: [billing, technical, security, retention, clarify]
+  not_a_request:
+    rule: Route the message by the customer's own current request.
+    situation: Negated, hypothetical or conditional intents (I am not cancelling; I might cancel if prices rise; my colleague wants to downgrade her own account) next to the customer's actual request or no request.
+    answers: [billing, technical, security, retention, clarify]
+
+styles:
+  tone: {neutral: 0.45, informal: 0.3, angry: 0.1, formal: 0.15}
+  length: {short: 0.3, medium: 0.45, long: 0.25}
+  layout: {message: 0.6, conversation: 0.25, email: 0.15}
+  language: {en: 0.82, pt: 0.18}
+  translate: 0.25
+  reference: 0.15
+

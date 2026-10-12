@@ -1,0 +1,51 @@
+{
+ "schema": 1,
+ "boundary": "public exact-only catalog execution; zero model work",
+ "buckets": [
+  {
+   "cards": 1,
+   "load_compile_ms": 0.9764409987838008,
+   "p50_ms": 0.019563998648663983,
+   "p95_ms": 0.030817998776910813,
+   "python_peak_bytes": 3251,
+   "model_work": 0,
+   "status": "ok"
+  },
+  {
+   "cards": 8,
+   "load_compile_ms": 1.6710199997760355,
+   "p50_ms": 0.03203099549864419,
+   "p95_ms": 0.03728990377567243,
+   "python_peak_bytes": 3363,
+   "model_work": 0,
+   "status": "ok"
+  },
+  {
+   "cards": 32,
+   "load_compile_ms": 4.959261998010334,
+   "p50_ms": 0.065791500674095,
+   "p95_ms": 0.07087415106070694,
+   "python_peak_bytes": 5576,
+   "model_work": 0,
+   "status": "ok"
+  },
+  {
+   "cards": 256,
+   "load_compile_ms": 34.76990899798693,
+   "p50_ms": 0.35623149960883893,
+   "p95_ms": 0.3820738525973866,
+   "python_peak_bytes": 30441,
+   "model_work": 0,
+   "status": "ok"
+  },
+  {
+   "cards": 1000,
+   "load_compile_ms": 135.68917699740268,
+   "p50_ms": 1.3555039986385964,
+   "p95_ms": 1.4123776451015146,
+   "python_peak_bytes": 115177,
+   "model_work": 0,
+   "status": "ok"
+  }
+ ]
+}

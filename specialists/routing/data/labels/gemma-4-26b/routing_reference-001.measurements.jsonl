@@ -1,0 +1,1 @@
+{"fact": "routing_reference", "input": {"message": "The video freeze is fixed, and the app seems fine now.", "reference": "Error code E-402 indicates a temporary server overload that usually resolves within 15 minutes."}, "prediction": {"key": "clarify", "kind": "value", "score": 0.977382062412903, "value": "clarify"}, "status": "uncertain", "why": "low answer mass"}

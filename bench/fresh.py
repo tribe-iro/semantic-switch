@@ -1,4 +1,4 @@
-"""Fresh held-out suite, written after the default judge was chosen and never used for selection.
+"""Authored regression suite; previously consulted, not an untouched audit.
 
 New claims, new domains, new sentence families: 8 claims x 10 minimal pairs (EN/PT) plus 20 picks.
 Run from the repository root:
@@ -6,11 +6,12 @@ Run from the repository root:
 """
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
-from semantic_switch import Model, Runtime, quality
+from semantic_switch import Model, files
+from bench import quality
+from bench.outcomes import runtime
 
 FRESH = {
     "meeting": ("The writer accepts the proposed meeting time.", (), [
@@ -137,13 +138,13 @@ FRESH = {
          "My family wanted me to turn it down, but I'm taking it.", "role"),
         ("I was going to accept, but I've changed my mind and must say no.",
          "I was going to say no, but I've changed my mind and accept.", "temporal"),
-        ("Could we discuss the start date? I'm very keen.", "I'm afraid I'll have to pass on this one.", "implicit"),
+        ("I'm afraid I'll have to pass on this one.", "Could we discuss the start date? I'm very keen.", "implicit"),
         ("Obrigado, mas decidi não aceitar a vaga.", "Obrigado, decidi aceitar a vaga.", "negation"),
         ("Não recuso pelo salário; recuso pela distância.", "Não aceito pelo salário; aceito pela equipe.", "contrast"),
         ("Minha família queria que eu aceitasse, mas vou recusar.",
          "Minha família queria que eu recusasse, mas vou aceitar.", "role"),
         ("Ia aceitar, mas mudei de ideia e preciso dizer não.", "Ia recusar, mas mudei de ideia e aceito.", "temporal"),
-        ("Podemos conversar sobre a data de início? Estou animado.", "Infelizmente vou ter que passar essa.", "implicit"),
+        ("Infelizmente vou ter que passar essa.", "Podemos conversar sobre a data de início? Estou animado.", "implicit"),
     ]),
     "address": ("The customer wants to change the delivery address.", (), [
         ("Please send order 412 to my office instead of my home.", "Please confirm order 412 is going to my home address.",
@@ -202,17 +203,16 @@ FRESH_PICKS = [
 
 def main():
     out = Path("bench/results/fresh.json")
-    report = json.loads(out.read_text()) if out.exists() else {}
+    report = files.read_json(out) or {}
     for source in sys.argv[1:]:
-        with Runtime({"judge": Model(source)}) as rt:
+        with runtime(Model(source)) as rt:
             res = quality.run(rt, checks_spec=FRESH, picks_spec=FRESH_PICKS, topics=FRESH_TOPICS,
                               question=FRESH_QUESTION)
         summary = quality.summarize(res)
         report[Path(source.split(":")[-1]).stem] = summary
-        keys = ("accuracy", "auc", "ece", "coverage_0.9", "precision_0.9", "pick_accuracy", "ms_p50")
+        keys = ("accuracy_given_prediction", "correct_per_submission", "auc", "ece", "coverage_0.9", "precision_0.9", "pick_accuracy", "ms_p50")
         print(Path(source.split(":")[-1]).stem, {k: summary[k] for k in keys}, flush=True)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    files.publish(out, report)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,1 @@
+{"fact": "routing", "input": {"message": "Customer: What's the price of the family plan?\nAgent: It's $22.99 per month for up to six profiles.\nCustomer: Ok thanks, that's all I wanted to know."}, "prediction": {"key": "clarify", "kind": "value", "score": 0.9857373048097978, "value": "clarify"}, "status": "uncertain", "why": "low answer mass"}

@@ -1,0 +1,1643 @@
+{
+  "schema": 1,
+  "population": "development diagnostic; not an untouched generalization claim",
+  "families": 24,
+  "check_families": [
+    "legal:1",
+    "legal:11",
+    "legal:3",
+    "legal:5",
+    "legal:7",
+    "legal:9",
+    "refund:1",
+    "refund:11",
+    "refund:3",
+    "refund:5",
+    "refund:7",
+    "refund:9"
+  ],
+  "provenance": {
+    "schema": 1,
+    "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+    "dirty": true,
+    "working_tree": "2a525a7ac85093ad33d13c88119d02042a881d883552edd6af0dd29ed940d2cd",
+    "dataset": "206139f076538a082db743f58167db5a7010606eb43fc1e8b82cd51dc4c67e4b",
+    "execution": {
+      "identity": {
+        "presentation": {
+          "evidence": "named-fields@2",
+          "choices": "full-criteria@2"
+        },
+        "file": "gemma-4-E2B-it-Q4_0.gguf",
+        "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+        "template": "chat@2:0a2c8073",
+        "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+        "lora_sha256": null
+      },
+      "requested_device": "gpu",
+      "threads": null,
+      "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+      "loaded": true,
+      "observed_models": [],
+      "accelerated": true,
+      "batch_inputs": 8,
+      "max_slots": 20,
+      "capabilities": {
+        "shared": true,
+        "fused": true,
+        "conformance": true,
+        "counters": {
+          "prefix_hits": 96,
+          "prefix_misses": 96,
+          "state_hits": 96,
+          "state_misses": 96,
+          "state_tokens": 2380,
+          "suffix_tokens": 11832,
+          "submissions": 384,
+          "branch_groups": 192,
+          "failures": 0,
+          "prefix_tokens": 3840,
+          "prefix_evictions": 0,
+          "submitted_tokens": 29120
+        }
+      },
+      "requested_capacity": {
+        "n_ctx": 15360,
+        "n_batch": 512,
+        "n_seq_max": 44
+      },
+      "configuration": {
+        "max_input_tokens": 1024,
+        "prefix_slots": 4
+      },
+      "capacity": {
+        "n_ctx": 15360,
+        "n_batch": 512,
+        "n_seq_max": 44
+      }
+    },
+    "boundary": "explicit backend diagnostic"
+  },
+  "numeric": {
+    "metrics": {
+      "labelled": 24,
+      "valid": 24,
+      "accuracy_given_prediction": 0.875,
+      "brier": 0.12881868655669645,
+      "confidence_above_0_9": 17,
+      "confidence_above_0_9_correct": 17,
+      "operating_point": "unfitted confidence cutoff; no deployed mass/abstention policy"
+    },
+    "rows": [
+      {
+        "probs": [
+          0.9993682042424401,
+          0.0006317957575600136
+        ],
+        "joint_logp": [
+          -0.005657198065736885,
+          -7.371969587106417
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9949874025662456,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.9971982892329807,
+          0.002801710767019354
+        ],
+        "joint_logp": [
+          -0.009937726551920234,
+          -5.884657143804188
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.992893289304971,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.9981314812217768,
+          0.0018685187782232421
+        ],
+        "joint_logp": [
+          -0.0065602251439861314,
+          -6.287299217704153
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9953210221754366,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.0016235719920042815,
+          0.9983764280079956
+        ],
+        "joint_logp": [
+          -6.426516902229517,
+          -0.005015169942827774
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9966154619756112,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.9987644665000862,
+          0.0012355334999138872
+        ],
+        "joint_logp": [
+          -0.007119871794817822,
+          -6.702135992838476
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9941336999348473,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.05455048891421483,
+          0.9454495110857851
+        ],
+        "joint_logp": [
+          -2.912752680273322,
+          -0.060218867688814376
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9958844161134714,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.9989055985943237,
+          0.0010944014056763172
+        ],
+        "joint_logp": [
+          -0.00789459703604601,
+          -6.8243473230062195
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9932234686122455,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.003348219332493514,
+          0.9966517806675065
+        ],
+        "joint_logp": [
+          -5.703640987253679,
+          -0.007668207412616466
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9956949232748376,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.9992139255924315,
+          0.0007860744075685314
+        ],
+        "joint_logp": [
+          -0.006652253390256964,
+          -7.154324973762095
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9941513007604795,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.41154706429310794,
+          0.5884529357068919
+        ],
+        "joint_logp": [
+          -0.8963506988244303,
+          -0.5387771347322559
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9915173762692443,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.995092845679834,
+          0.004907154320166063
+        ],
+        "joint_logp": [
+          -0.00941154291831949,
+          -5.321553382367057
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9955177663446918,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.003901526025132328,
+          0.9960984739748676
+        ],
+        "joint_logp": [
+          -5.550467909354882,
+          -0.007989552302558177
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9959279180318591,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.9985410207799807,
+          0.0014589792200192277
+        ],
+        "joint_logp": [
+          -0.008870989511579002,
+          -6.537429197106715
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9926164483954996,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.995827953770898,
+          0.00417204622910205
+        ],
+        "joint_logp": [
+          -0.01173620221461705,
+          -5.486904089822416
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9924730417856691,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.997627834296188,
+          0.002372165703812108
+        ],
+        "joint_logp": [
+          -0.008075843676014396,
+          -6.049652801948141
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9943153591367758,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.005605596654413817,
+          0.9943944033455862
+        ],
+        "joint_logp": [
+          -5.18834450405084,
+          -0.009976093287088907
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9956547417585887,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.9913746566484055,
+          0.0086253433515944
+        ],
+        "joint_logp": [
+          -0.019487794259797235,
+          -4.763875545318873
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9892333425297571,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.006470194050353499,
+          0.9935298059496463
+        ],
+        "joint_logp": [
+          -5.055003285951791,
+          -0.020945323843789363
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9856498517688832,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.9908580739189274,
+          0.009141926081072666
+        ],
+        "joint_logp": [
+          -0.016022291934207164,
+          -4.701722506755569
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9931850061090127,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.6358760909102943,
+          0.3641239090897057
+        ],
+        "joint_logp": [
+          -0.4608872307726201,
+          -1.0183967302213761
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9918973344640696,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.99873854598862,
+          0.0012614540113800833
+        ],
+        "joint_logp": [
+          -0.008960161084932933,
+          -6.683188156823669
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9923316422635843,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.026867419501885727,
+          0.9731325804981144
+        ],
+        "joint_logp": [
+          -3.622312839374431,
+          -0.03270688858005387
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9945430017988423,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.9958680316623697,
+          0.004131968337630379
+        ],
+        "joint_logp": [
+          -0.01164468918861791,
+          -5.49650555115811
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9925239252346675,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.007508012827766506,
+          0.9924919871722334
+        ],
+        "joint_logp": [
+          -4.895134789628666,
+          -0.010886677747233606
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9966552682037791,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.8044033689901005,
+          0.19559663100989969
+        ],
+        "joint_logp": [
+          -0.227511075701827,
+          -1.6415573882174495
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9901917746832689,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.03302082538334357,
+          0.9669791746166565
+        ],
+        "joint_logp": [
+          -3.427270905505983,
+          -0.050232381005044895
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.983483851045376,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.9777819738110125,
+          0.02221802618898751
+        ],
+        "joint_logp": [
+          -0.03293892287922259,
+          -3.817321687510487
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9895842649786962,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.421646551073844,
+          0.5783534489261558
+        ],
+        "joint_logp": [
+          -0.8785957920769784,
+          -0.5625780133565053
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9851041380525403,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.8753124119274013,
+          0.12468758807259883
+        ],
+        "joint_logp": [
+          -0.1462967347254139,
+          -2.0950662861307827
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9869634017013725,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.2092943094799966,
+          0.7907056905200034
+        ],
+        "joint_logp": [
+          -1.5765670402845573,
+          -0.24738265516085342
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9875252607352374,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.8998954631168523,
+          0.1001045368831477
+        ],
+        "joint_logp": [
+          -0.1172570394772156,
+          -2.3133206351608986
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9882887518453382,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.21241227901249313,
+          0.787587720987507
+        ],
+        "joint_logp": [
+          -1.5685738937199232,
+          -0.2581282359836519
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9808382525072591,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.6719654621008544,
+          0.3280345378991456
+        ],
+        "joint_logp": [
+          -0.4076212356047418,
+          -1.124709277810182
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9899776616067109,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.028459972942360925,
+          0.971540027057639
+        ],
+        "joint_logp": [
+          -3.5680410006415855,
+          -0.03765717331436608
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9912541061997484,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.4084180910039752,
+          0.5915819089960247
+        ],
+        "joint_logp": [
+          -0.9063491943367029,
+          -0.5358404263347263
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9891737325419743,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.07446014611406764,
+          0.9255398538859323
+        ],
+        "joint_logp": [
+          -2.6102872476711325,
+          -0.09017408533828342
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9872855212695689,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.924043811114985,
+          0.07595618888501512
+        ],
+        "joint_logp": [
+          -0.09073654478317217,
+          -2.5893393178984927
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9883279027265324,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.018675448269072976,
+          0.9813245517309269
+        ],
+        "joint_logp": [
+          -3.9971106048400613,
+          -0.03541709677268382
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9835713858719255,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.9785427907961435,
+          0.021457209203856423
+        ],
+        "joint_logp": [
+          -0.03175660770889872,
+          -3.851760442274614
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9899846454505948,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.42387532777422654,
+          0.5761246722257733
+        ],
+        "joint_logp": [
+          -0.8824984344212864,
+          -0.5756137260356837
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9761075254048762,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.42731054277702857,
+          0.5726894572229714
+        ],
+        "joint_logp": [
+          -0.8678803667631105,
+          -0.5750477717880099
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9825185027149083,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.1049296217674531,
+          0.8950703782325468
+        ],
+        "joint_logp": [
+          -2.267789416962657,
+          -0.12417692342817449
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.986764376966535,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.39965922199667964,
+          0.6003407780033204
+        ],
+        "joint_logp": [
+          -0.9271889271684914,
+          -0.5203037088318931
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.990004404201871,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.09568827122558625,
+          0.9043117287744137
+        ],
+        "joint_logp": [
+          -2.365810561643356,
+          -0.1197321611989818
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9810311997628156,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.5604325699750197,
+          0.43956743002498033
+        ],
+        "joint_logp": [
+          -0.5897044735221785,
+          -0.8326222756925754
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9893984701102599,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.031465848365243146,
+          0.9685341516347569
+        ],
+        "joint_logp": [
+          -3.468396349140613,
+          -0.04151538331824919
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9905015490260392,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.9701921669375525,
+          0.029807833062447435
+        ],
+        "joint_logp": [
+          -0.04099405349135161,
+          -3.52371700219671
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9893244558206913,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      },
+      {
+        "probs": [
+          0.04143193140809538,
+          0.9585680685919046
+        ],
+        "joint_logp": [
+          -3.1936829783014633,
+          -0.05229427618249283
+        ],
+        "continuations": [
+          [
+            236840,
+            236770,
+            236842
+          ],
+          [
+            236840,
+            236778,
+            236842
+          ]
+        ],
+        "valid_answer_support": 0.9900700577928916,
+        "teacher_forced_submissions": [
+          1,
+          1
+        ],
+        "authored_indices": [
+          0,
+          1
+        ]
+      }
+    ]
+  },
+  "binary": {
+    "labelled": 24,
+    "valid": 24,
+    "accuracy_given_prediction": 0.9583333333333334,
+    "brier": 0.04738407552523349,
+    "confidence_above_0_9": 22,
+    "confidence_above_0_9_correct": 22,
+    "operating_point": "unfitted confidence cutoff; no deployed mass/abstention policy"
+  },
+  "lettered": {
+    "labelled": 24,
+    "valid": 24,
+    "accuracy_given_prediction": 0.8333333333333334,
+    "brier": 0.22472536467943405,
+    "confidence_above_0_9": 16,
+    "confidence_above_0_9_correct": 16,
+    "operating_point": "unfitted confidence cutoff; no deployed mass/abstention policy"
+  },
+  "counterbalanced": {
+    "labelled": 24,
+    "valid": 24,
+    "accuracy_given_prediction": 0.8333333333333334,
+    "brier": 0.18607779989375808,
+    "confidence_above_0_9": 16,
+    "confidence_above_0_9_correct": 16,
+    "operating_point": "unfitted confidence cutoff; no deployed mass/abstention policy"
+  },
+  "probe": {
+    "tune": 24,
+    "check": 24,
+    "correct": 22
+  },
+  "latency_ms": {
+    "binary": {
+      "p50": 141.74400699994294,
+      "p95": 158.90390340136946
+    },
+    "lettered": {
+      "p50": 144.9687120039016,
+      "p95": 164.37168385455152
+    },
+    "counterbalanced": {
+      "p50": 95.11969199957093,
+      "p95": 106.78071244838065
+    },
+    "vectors": {
+      "p50": 74.84649249818176,
+      "p95": 95.97724259801906
+    },
+    "numeric": {
+      "p50": 207.27835800789762,
+      "p95": 277.91415950196097
+    }
+  },
+  "production_promoted": false,
+  "missing_evidence": [
+    "untouched task families",
+    "fixed held-out acceptance calibration",
+    "resident E2B/E4B paired residual comparison",
+    "compatible externally trained activated-LoRA weights"
+  ]
+}

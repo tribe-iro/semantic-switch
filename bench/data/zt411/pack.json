@@ -1,0 +1,217 @@
+{
+ "schema": 2,
+ "name": "zt411-snapshot",
+ "version": "1.0",
+ "subject": {
+  "equipment": "Zebra ZT411/ZT421 industrial printer",
+  "models": [
+   "ZT411",
+   "ZT421"
+  ],
+  "options": "see applicability",
+  "scope": [
+   "print-method/ribbon configuration",
+   "media/ribbon detection",
+   "manual sensor calibration",
+   "return to printing"
+  ]
+ },
+ "author": "unassigned",
+ "extraction": "pdftotext-layout excerpts of pinned user-guide pages",
+ "created": "2026-10-11T00:00:00Z",
+ "sources": [
+  {
+   "id": "zt-user-guide",
+   "url": "https://www.zebra.com/content/dam/support-dam/en/documentation/unrestricted/guide/product/zt411-zt421-ug-en.pdf",
+   "section": "Ribbon; firmware version; Print Type; ribbon loaded in direct thermal mode; indicator lights",
+   "edition": "P1106464-07EN Rev A (cover and PDF metadata; copyright page dated 2026/07/08)",
+   "licence": "Zebra Technologies proprietary documentation; fetched for local research review, kept out of version control",
+   "use": "cited",
+   "document": {
+    "path": "sources/raw/zt411-zt421-ug-en.pdf",
+    "media_type": "application/pdf",
+    "retrieved": "2026-10-11",
+    "sha256": "f8b10eaa88b65417d1c054d70c5fbaa316e57f2d485d3d63b9eef1aae9017b41",
+    "bytes": 46480950
+   },
+   "locator": [
+    {
+     "section": "Printer Setup > Ribbon",
+     "pages": [
+      11,
+      11
+     ]
+    },
+    {
+     "section": "Printer Setup > Checking the Current Firmware Version",
+     "pages": [
+      31,
+      31
+     ]
+    },
+    {
+     "section": "Print > Print Quality > Print Type",
+     "pages": [
+      111,
+      111
+     ]
+    },
+    {
+     "section": "Diagnostics: ribbon loaded while set for direct thermal",
+     "pages": [
+      171,
+      171
+     ]
+    },
+    {
+     "section": "Indicator Lights: ribbon supply out",
+     "pages": [
+      174,
+      174
+     ]
+    }
+   ],
+   "extraction": {
+    "method": "pdftotext-layout",
+    "tool": "pdftotext version 26.08.0"
+   },
+   "excerpt": "sources/zt-user-guide.txt",
+   "sha256": "400774a451cc7fe920db21528cab97250c9e48c2dd7da236ae56398197ecf7b4",
+   "access": []
+  },
+  {
+   "id": "zt-calibration",
+   "url": "https://www.zebra.com/content/dam/support-dam/en/documentation/unrestricted/guide/product/zt411-zt421-ug-en.pdf",
+   "section": "Calibrating the Ribbon and Media Sensors; Performing Manual Sensor Calibration",
+   "edition": "P1106464-07EN Rev A (cover and PDF metadata; copyright page dated 2026/07/08)",
+   "licence": "Zebra Technologies proprietary documentation; fetched for local research review, kept out of version control",
+   "use": "cited",
+   "document": {
+    "path": "sources/raw/zt411-zt421-ug-en.pdf",
+    "media_type": "application/pdf",
+    "retrieved": "2026-10-11",
+    "sha256": "f8b10eaa88b65417d1c054d70c5fbaa316e57f2d485d3d63b9eef1aae9017b41",
+    "bytes": 46480950
+   },
+   "locator": [
+    {
+     "section": "Calibrating the Ribbon and Media Sensors; Performing Manual Sensor Calibration",
+     "pages": [
+      132,
+      134
+     ]
+    }
+   ],
+   "extraction": {
+    "method": "pdftotext-layout",
+    "tool": "pdftotext version 26.08.0"
+   },
+   "excerpt": "sources/zt-calibration.txt",
+   "sha256": "31899519e394128e5933508ee5cd17aa725d7e15546222280fd7fd5f72208a43",
+   "access": [
+    {
+     "url": "https://docs.zebra.com/us/en/printers/industrial/zt411-zt421-industrial-printer-user-guide/c-zt4x1-configuration/r-zt4x1-calibrating-the-ribbon-and-media-sensors/t-zt4x1-performing-manual-sensor-calibration.html",
+     "retrieved": "2026-10-11",
+     "outcome": "HTTP 404; the same section is pinned from the user-guide PDF"
+    }
+   ]
+  },
+  {
+   "id": "zt-ribbon-mode",
+   "url": "https://support.zebra.com/article/000017984",
+   "section": "ribbon-mode troubleshooting article 000017984",
+   "edition": "unpinned: the article body was not retrievable",
+   "licence": "Zebra Technologies support content",
+   "use": "unused: the support portal returns a JavaScript application shell without the article text to a direct fetch (2026-10-11); ZT-RIBBON cites the user guide's ribbon sections instead",
+   "access": [
+    {
+     "url": "https://support.zebra.com/article/000017984",
+     "retrieved": "2026-10-11",
+     "outcome": "HTTP 200 portal shell without article content"
+    }
+   ]
+  }
+ ],
+ "rules": [
+  {
+   "id": "ZT-ASSET",
+   "text": "Evidence about another printer asset establishes nothing about the current printer.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "ZT-CURRENT",
+   "text": "A stale note (older than a later state change) does not establish current state.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "ZT-CONFLICT",
+   "text": "Contradictory current indications of one property leave it unresolved; no indication is preferred by recency or source alone.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "ZT-COMMAND",
+   "text": "A commanded or attempted action is not completion; only a verification establishes a completed step.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "ZT-METHOD-TT",
+   "text": "With thermal-transfer media established and print method direct thermal, setting the print method to thermal transfer is justified.",
+   "source": "zt-user-guide"
+  },
+  {
+   "id": "ZT-METHOD-DT",
+   "text": "With direct-thermal media established and print method thermal transfer, setting the print method to direct thermal is justified.",
+   "source": "zt-user-guide"
+  },
+  {
+   "id": "ZT-RIBBON",
+   "text": "Thermal-transfer printing needs a loaded ribbon: with no ribbon established, loading one is justified and returning to printing is prohibited.",
+   "source": "zt-user-guide"
+  },
+  {
+   "id": "ZT-CAL-START",
+   "text": "A current media/ribbon detection symptom with consistent configuration justifies starting manual sensor calibration or verifying the loading.",
+   "source": "zt-calibration"
+  },
+  {
+   "id": "ZT-CAL-NEXT",
+   "text": "Continuing a calibration prompt requires verified completion of that prompt's step; continuing without it is prohibited.",
+   "source": "zt-calibration"
+  },
+  {
+   "id": "ZT-CAL-CANCEL",
+   "text": "Cancelling calibration leaves calibration incomplete; it is justified when calibration runs under a configuration inconsistent with the media.",
+   "source": "zt-calibration"
+  },
+  {
+   "id": "ZT-RESUME",
+   "text": "Returning to printing is prohibited during calibration, after an unverified or cancelled calibration with a current symptom, or with configuration inconsistent with the media; it is justified when paused with consistent configuration and no unaddressed symptom.",
+   "source": "zt-calibration"
+  },
+  {
+   "id": "ZT-VERIFY",
+   "text": "An attempted but unverified loading or calibration step justifies verifying it.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "ZT-DIAGNOSE",
+   "text": "When a decision depends on an unresolved property, requesting that observation is justified.",
+   "source": "benchmark convention"
+  },
+  {
+   "id": "ZT-DEFAULT",
+   "text": "An action no rule justifies is not justified.",
+   "source": "benchmark convention"
+  }
+ ],
+ "applicability": {
+  "models": "ZT411 and ZT421, as titled by user guide P1106464-07EN Rev A",
+  "options": "ribbon and thermal-transfer rules (ZT-RIBBON, ZT-METHOD-TT) apply only to printers with the Thermal Transfer option installed (guide p. 11)",
+  "firmware": "the guide's firmware section (p. 31) asks to verify Link-OS 7.0 or later and recommends Printer OS v92; it states no firmware dependence for the cited procedures; no installed printer's firmware is established",
+  "claim": "decisions are claims about the documented procedure of this edition, not about any particular installed printer"
+ },
+ "authored": {
+  "rules": "5d6b9baa2a476d788437b2e861f3ff2c54b01631581d16fec2ca7bf514446111",
+  "catalogue": "11233826861133858422c6158d9e08f60d50135d7aab4a7c9ef6601c7c19a5c0"
+ }
+}

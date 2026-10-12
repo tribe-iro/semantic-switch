@@ -1,0 +1,38 @@
+{
+ "schema": 1,
+ "verified_at": "2026-10-07T23:26:54+00:00",
+ "source_sha256": "fbdc0faabddf64d10627c1055e0f4e0b639e736568d6dd721f0022d6ab82dc04",
+ "tests": [
+  {
+   "command": ".venv/bin/python -m pytest -q tests packages/semantic-trainer/tests",
+   "passed": 258,
+   "deselected": 0,
+   "elapsed_s": 32.63
+  },
+  {
+   "command": ".venv/bin/python -m pytest -q -m \"not slow\" tests",
+   "passed": 236,
+   "deselected": 19,
+   "elapsed_s": 6.39
+  },
+  {
+   "command": ".venv/bin/python -m pytest -q packages/semantic-trainer/tests",
+   "passed": 3,
+   "deselected": 0,
+   "elapsed_s": 2.0
+  }
+ ],
+ "training_boundary": "runtime inference/export/evaluation tested with sklearn/scipy/semantic_trainer imports forbidden; separate trainer consumed schema-3 exports",
+ "native_tests_in_full_suite": 19,
+ "production_experiments_promoted": false,
+ "measurement_artifacts": [
+  "bench/results/cost-curves-v026.json",
+  "bench/results/catalog-scaling.json",
+  "bench/results/equipment-parity-v026.json",
+  "bench/results/probe-pipeline-smoke-v026.json"
+ ],
+ "pending_evidence": [
+  "independent whole-family readout/probe/cascade cohorts",
+  "compatible nonzero externally trained activated-adapter weights"
+ ]
+}

@@ -1,0 +1,15 @@
+{"template": "method_mismatch", "variant": "base", "justified": ["set_method_tt"], "prohibited": ["resume_printing"], "unresolved": []}
+{"template": "method_mismatch", "variant": "missing_media", "justified": ["request_observation"], "prohibited": [], "unresolved": ["set_method_tt", "resume_printing"]}
+{"template": "method_mismatch", "variant": "stale_media", "condition": "prose", "justified": ["request_observation"], "prohibited": [], "unresolved": ["set_method_tt", "resume_printing"]}
+{"template": "method_mismatch", "variant": "other_asset", "justified": ["request_observation"], "prohibited": [], "unresolved": ["set_method_tt", "resume_printing"]}
+{"template": "ribbon_out", "variant": "base", "justified": ["load_ribbon"], "prohibited": ["resume_printing"], "unresolved": []}
+{"template": "ribbon_out", "variant": "commanded_load", "justified": ["verify_loading", "request_observation"], "prohibited": [], "unresolved": ["load_ribbon", "resume_printing"]}
+{"template": "ribbon_out", "variant": "verified_load", "condition": "prose", "justified": ["resume_printing"], "prohibited": [], "unresolved": []}
+{"template": "ribbon_out", "variant": "contradiction", "justified": ["request_observation"], "prohibited": [], "unresolved": ["load_ribbon", "resume_printing"]}
+{"template": "detection", "variant": "base", "justified": ["start_calibration", "verify_loading"], "prohibited": ["resume_printing"], "unresolved": []}
+{"template": "detection", "variant": "other_asset_symptom", "justified": ["resume_printing"], "prohibited": [], "unresolved": []}
+{"template": "calibration_step", "variant": "reported_step", "justified": ["verify_loading"], "prohibited": ["calibration_next", "resume_printing"], "unresolved": []}
+{"template": "calibration_step", "variant": "verified_step", "justified": ["calibration_next"], "prohibited": ["resume_printing"], "unresolved": []}
+{"template": "calibration_step", "variant": "wrong_method", "justified": ["verify_loading", "cancel_calibration"], "prohibited": ["calibration_next", "resume_printing"], "unresolved": []}
+{"template": "cancelled", "variant": "cancelled", "justified": ["start_calibration", "verify_loading"], "prohibited": ["resume_printing"], "unresolved": []}
+{"template": "cancelled", "variant": "completed", "condition": "prose", "justified": ["resume_printing"], "prohibited": [], "unresolved": []}

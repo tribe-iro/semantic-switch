@@ -8,15 +8,14 @@ import json
 import sys
 from pathlib import Path
 
-from semantic_switch import Model, Runtime
-from semantic_switch.quality import SCENARIOS
-
-
+from semantic_switch import DEFAULT_JUDGE, Model, files
+from bench.outcomes import runtime
+from bench.quality import SCENARIOS
 
 
 def main():
     rows = []
-    with Runtime({"judge": Model(sys.argv[1])} if len(sys.argv) > 1 else None) as rt:
+    with runtime(Model(sys.argv[1] if len(sys.argv) > 1 else DEFAULT_JUDGE)) as rt:
         for state, options, *goals in SCENARIOS:
             for question, want in goals:
                 for order in (list(options), list(reversed(options))):
@@ -36,7 +35,7 @@ def main():
     for r in rows:
         if r["top"] != r["want"]:
             print("miss", r)
-    Path(f"bench/results/comparative{'-' + sys.argv[1].split(':')[-1] if len(sys.argv) > 1 else ''}.json").write_text(json.dumps({"report": report, "rows": rows}, indent=1))
+    files.publish(Path(f"bench/results/comparative{'-' + sys.argv[1].split(':')[-1] if len(sys.argv) > 1 else ''}.json"), {"report": report, "rows": rows})
 
 
 if __name__ == "__main__":

@@ -4,12 +4,16 @@ import numpy as np
 import pytest
 import yaml
 
-from semantic_switch import Check, ConfigError, Runtime, files, quality, tools
+from semantic_switch.artifacts import read_export
+from semantic_switch import Check, ConfigError, Runtime, files, tools
+from bench import quality
+from bench.latency import latency
 from semantic_switch.compiler import compile_spec
 from semantic_switch.judge import Scored, Scores
 
 from .conftest import FakeScorer
 from .test_switch import ROOT, t
+from .conftest import envelopes
 
 
 def write(tmp_path, spec, name="s.yaml"):
@@ -66,7 +70,7 @@ def test_saved_judgment_takes_the_same_bare_string(tmp_path):
 
 
 def test_inline_requires_is_rejected(rt):
-    with pytest.raises(ConfigError, match="YAML-only"):
+    with pytest.raises(ConfigError, match="requires is exact eligibility"):
         rt.pick("x", "q", {"a": {"description": "A", "requires": "x == 1"}, "b": "B"})
 
 
@@ -119,7 +123,7 @@ def test_specialize_needs_two_values(tmp_path):
     spec = yaml.safe_load(path.read_text())
     spec["facts"]["refund"]["specialize"] = "lexical"
     path.write_text(yaml.safe_dump(spec))
-    with pytest.raises(tools.LockError, match="two values"):
+    with pytest.raises(ConfigError, match="semantic-trainer"):
         tools.lock(rt, path)
 
 
@@ -127,13 +131,14 @@ def test_export_rows_carry_runtime_token_ids(tmp_path):
     shutil.copy(ROOT / "switches" / "route_ticket.yaml", tmp_path / "route_ticket.yaml")
     path = tmp_path / "route_ticket.yaml"
     rt = Runtime({"judge": FakeScorer()})
-    report = tools.export(rt, path)
-    rows = files.read_jsonl(tmp_path / "route_ticket.export.jsonl")
+    report = tools.export(rt, path, split=None, native=True)
+    manifest, rows = read_export(report["path"], fitting=False, native=True)
     assert report["rows"] == len(rows) == 2
+    assert manifest["split"] == "all" and {r["id"] for r in manifest["rows"]} == {r["id"] for r in rows}
     judge = rt.judge()
-    row = rows[0]
+    row = rows[0]["native"]["presentations"][0]
     assert judge.scorer.detokenize(row["input"]).startswith("<input>")
-    assert row["fact"] == "legal_threat" and row["label"] in (0, 1) and row["split"] in ("tune", "check")
+    assert rows[0]["fact"] == "legal_threat" and row["label"] in (0, 1) and rows[0]["split"] in ("tune", "check")
     assert row["answer_slots"] and all(isinstance(t, int) for t in row["question"])
 
 
@@ -173,9 +178,9 @@ def test_failed_export_keeps_the_previous_file(tmp_path):
     out = tmp_path / "rows.jsonl"
     out.write_text("previous\n")
     with pytest.raises(RuntimeError):
-        tools.export(Runtime({"judge": Broken()}), tmp_path / "route_ticket.yaml", str(out))
+        tools.export(Runtime({"judge": Broken()}), tmp_path / "route_ticket.yaml", str(out), native=True)
     assert out.read_text() == "previous\n"
-    with pytest.raises(ConfigError, match="own files"):
+    with pytest.raises(ConfigError, match="collides"):
         tools.export(Runtime({"judge": FakeScorer()}), tmp_path / "route_ticket.yaml",
                      str(tmp_path / "route_ticket.yaml"))
 
@@ -186,13 +191,13 @@ def test_export_keeps_groups_and_rejects_conflicts(tmp_path):
     rt = Runtime({"judge": FakeScorer()})
     sw = rt.load(path)
     sw.correct(t("refund please"), fact="refund_requested", value=True)
-    files.append_jsonl(tmp_path / "route_ticket.test.jsonl",
-                       [{"input": t("refund please"), "facts": {"refund_requested": True}, "group": "g1"}])
-    tools.export(rt, path)
-    rows = [r for r in files.read_jsonl(tmp_path / "route_ticket.export.jsonl") if r["fact"] == "refund_requested"]
-    assert [r["group"] for r in rows if r["label"] == 0] == ["g1"]
-    files.append_jsonl(tmp_path / "route_ticket.test.jsonl",
-                       [{"input": t("refund please"), "facts": {"refund_requested": False}}])
+    files.append(tmp_path / "route_ticket.test.jsonl",
+                       envelopes([{"input": t("refund please"), "facts": {"refund_requested": True}, "group": "g1"}]))
+    rows = [r for r in read_export(tools.export(rt, path, split=None)["path"], fitting=False)[1] if r["fact"] == "refund_requested"]
+    assert len({r["group"] for r in rows if r["label"] == 0}) == 1
+    assert rows[0]["taught"] and rows[0]["text"] and rows[0]["claim"]
+    files.append(tmp_path / "route_ticket.test.jsonl",
+                       envelopes([{"input": t("refund please"), "facts": {"refund_requested": False}}]))
     with pytest.raises(ConfigError, match="conflicting labels"):
         tools.export(rt, path)
 
@@ -224,4 +229,4 @@ def test_inline_and_saved_focus_share_the_escape_decision(tmp_path):
 def test_bench_without_inputs_explains_itself(tmp_path):
     spec = {"name": "e", "fields": {"r": {"type": "text"}}, "reads": ["r"], "facts": {"c": {"check": "C."}}}
     with pytest.raises(ConfigError, match="no test inputs"):
-        tools.bench(Runtime({"judge": FakeScorer()}), write(tmp_path, spec), n=1)
+        latency(Runtime({"judge": FakeScorer()}), write(tmp_path, spec), n=1)

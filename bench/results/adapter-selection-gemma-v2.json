@@ -1,0 +1,392 @@
+{
+ "schema": 2,
+ "kind": "predictor-selection",
+ "membership_complete": true,
+ "rows": [
+  {
+   "id": "48934e12a868acd8dad6b2cc5ffc77d632e328a45d1ab4f966f398531fce68c1",
+   "fact": "target_repair_0",
+   "projection": "{\"message\":\"The previously hot unit cooled down and passed its post-repair temperature test.\"}",
+   "group": "group:adaptation:maintenance:5",
+   "family_seeds": [
+    [
+     "group",
+     "adaptation:maintenance:5"
+    ],
+    [
+     "key",
+     "c3c8162a4296dc2873cb87f365069c03c2ab67b07bbb5b74cb95db964fbf4840"
+    ],
+    [
+     "pair",
+     "adaptation:maintenance-contrast:5"
+    ]
+   ],
+   "source": "/tmp/semantic-adaptation-v2/cohort/target_repair_0.export.jsonl",
+   "export_sha256": "56d8caace8daa113d88dd28fb5bf1885f0d80efc042eb89718d95aeed88063f4",
+   "task_family": "adaptation:maintenance",
+   "use": "select"
+  },
+  {
+   "id": "512ac8bf82c0919a3be401d94251c2d5585b8bd80ebdeb461f284189bef16ad5",
+   "fact": "target_repair_0",
+   "projection": "{\"message\":\"No overheating occurred on this unit; the technician replaced a cosmetic panel.\"}",
+   "group": "group:adaptation:maintenance:10",
+   "family_seeds": [
+    [
+     "group",
+     "adaptation:maintenance:10"
+    ],
+    [
+     "key",
+     "0009e1c6c11fb519b498585891c161e5adaebf55eddc04b762a5ec2bfad68eed"
+    ],
+    [
+     "pair",
+     "adaptation:maintenance-contrast:10"
+    ]
+   ],
+   "source": "/tmp/semantic-adaptation-v2/cohort/target_repair_0.export.jsonl",
+   "export_sha256": "56d8caace8daa113d88dd28fb5bf1885f0d80efc042eb89718d95aeed88063f4",
+   "task_family": "adaptation:maintenance",
+   "use": "select"
+  },
+  {
+   "id": "afcd78d71b6cdd68178207462b1ff4d0c6dacebfb15f762b2b17e44ac9222692",
+   "fact": "target_repair_0",
+   "projection": "{\"message\":\"The operator copied a message ordering escalation, but records establish normal temperature throughout.\"}",
+   "group": "group:adaptation:maintenance:11",
+   "family_seeds": [
+    [
+     "group",
+     "adaptation:maintenance:11"
+    ],
+    [
+     "key",
+     "4d57d3e051835c961193aca6d383e6d76b4d36444622f84a779e4a914f0aefcb"
+    ],
+    [
+     "pair",
+     "adaptation:maintenance-contrast:11"
+    ]
+   ],
+   "source": "/tmp/semantic-adaptation-v2/cohort/target_repair_0.export.jsonl",
+   "export_sha256": "56d8caace8daa113d88dd28fb5bf1885f0d80efc042eb89718d95aeed88063f4",
+   "task_family": "adaptation:maintenance",
+   "use": "select"
+  },
+  {
+   "id": "4feca909ad4a2c0a99cc397754f12b4b1091ff402a2b6d82ad51ff3601318925",
+   "fact": "target_repair_0",
+   "projection": "{\"message\":\"The repair is complete, yet the unit is still above its allowed temperature.\"}",
+   "group": "group:adaptation:maintenance:12",
+   "family_seeds": [
+    [
+     "group",
+     "adaptation:maintenance:12"
+    ],
+    [
+     "key",
+     "2548f41f612cd97f18276da8c4e6f0cc4f73f954f7411851696bb7a452d6df8a"
+    ],
+    [
+     "pair",
+     "adaptation:maintenance-contrast:12"
+    ]
+   ],
+   "source": "/tmp/semantic-adaptation-v2/cohort/target_repair_0.export.jsonl",
+   "export_sha256": "56d8caace8daa113d88dd28fb5bf1885f0d80efc042eb89718d95aeed88063f4",
+   "task_family": "adaptation:maintenance",
+   "use": "select"
+  },
+  {
+   "id": "84105682e633108c6216f1316a20efc0037a833ae0a59acb7c8afb72fedffb21",
+   "fact": "target_repair_1",
+   "projection": "{\"message\":\"The previously hot unit cooled down and passed its post-repair temperature test.\"}",
+   "group": "group:adaptation:maintenance:5",
+   "family_seeds": [
+    [
+     "group",
+     "adaptation:maintenance:5"
+    ],
+    [
+     "key",
+     "c3c8162a4296dc2873cb87f365069c03c2ab67b07bbb5b74cb95db964fbf4840"
+    ],
+    [
+     "pair",
+     "adaptation:maintenance-contrast:5"
+    ]
+   ],
+   "source": "/tmp/semantic-adaptation-v2/cohort/target_repair_1.export.jsonl",
+   "export_sha256": "a8daeff91c10e50a976c7208c87262c3ed4488249e10acdf42294cc3ac1c4612",
+   "task_family": "adaptation:maintenance",
+   "use": "select"
+  },
+  {
+   "id": "7d62b0d81b8ae99f7522f8abe09295c68aa2e8986cf51201e9c3108e3d0c34c5",
+   "fact": "target_repair_1",
+   "projection": "{\"message\":\"No overheating occurred on this unit; the technician replaced a cosmetic panel.\"}",
+   "group": "group:adaptation:maintenance:10",
+   "family_seeds": [
+    [
+     "group",
+     "adaptation:maintenance:10"
+    ],
+    [
+     "key",
+     "0009e1c6c11fb519b498585891c161e5adaebf55eddc04b762a5ec2bfad68eed"
+    ],
+    [
+     "pair",
+     "adaptation:maintenance-contrast:10"
+    ]
+   ],
+   "source": "/tmp/semantic-adaptation-v2/cohort/target_repair_1.export.jsonl",
+   "export_sha256": "a8daeff91c10e50a976c7208c87262c3ed4488249e10acdf42294cc3ac1c4612",
+   "task_family": "adaptation:maintenance",
+   "use": "select"
+  },
+  {
+   "id": "b32b22478cdee7e6db5b805258ed2d5cf7b1e988e6bbc775316d06e104a333e2",
+   "fact": "target_repair_1",
+   "projection": "{\"message\":\"The operator copied a message ordering escalation, but records establish normal temperature throughout.\"}",
+   "group": "group:adaptation:maintenance:11",
+   "family_seeds": [
+    [
+     "group",
+     "adaptation:maintenance:11"
+    ],
+    [
+     "key",
+     "4d57d3e051835c961193aca6d383e6d76b4d36444622f84a779e4a914f0aefcb"
+    ],
+    [
+     "pair",
+     "adaptation:maintenance-contrast:11"
+    ]
+   ],
+   "source": "/tmp/semantic-adaptation-v2/cohort/target_repair_1.export.jsonl",
+   "export_sha256": "a8daeff91c10e50a976c7208c87262c3ed4488249e10acdf42294cc3ac1c4612",
+   "task_family": "adaptation:maintenance",
+   "use": "select"
+  },
+  {
+   "id": "37c69547723ad1b56bc6f2e492f935578d6b18af6941d055cbf74265b857bef9",
+   "fact": "target_repair_1",
+   "projection": "{\"message\":\"The repair is complete, yet the unit is still above its allowed temperature.\"}",
+   "group": "group:adaptation:maintenance:12",
+   "family_seeds": [
+    [
+     "group",
+     "adaptation:maintenance:12"
+    ],
+    [
+     "key",
+     "2548f41f612cd97f18276da8c4e6f0cc4f73f954f7411851696bb7a452d6df8a"
+    ],
+    [
+     "pair",
+     "adaptation:maintenance-contrast:12"
+    ]
+   ],
+   "source": "/tmp/semantic-adaptation-v2/cohort/target_repair_1.export.jsonl",
+   "export_sha256": "a8daeff91c10e50a976c7208c87262c3ed4488249e10acdf42294cc3ac1c4612",
+   "task_family": "adaptation:maintenance",
+   "use": "select"
+  }
+ ],
+ "job_id": "b39706e1a6ed2d28fee838eea180c49a89087d33db1523a613fe34612f40819b",
+ "judge": {
+  "presentation": {
+   "evidence": "named-fields@2",
+   "choices": "full-criteria@2"
+  },
+  "file": "base-q8.gguf",
+  "sha256": "6dbeb53a43e28b175383d6519fc837be408a190162fdec239a836c27cebc913c",
+  "template": "chat@2:0a2c8073",
+  "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+  "lora_sha256": "82463e2e82fb91fe0823b7ee25ef1f2b28eed12abb7db6617a3649e09d424a68",
+  "lora_file": "adapter.gguf",
+  "lora_scale": 1.0
+ },
+ "selected": "/tmp/semantic-adaptation-v2/fitted/adapter.gguf",
+ "criterion": "lexicographic raw errors, failed pairs, mass/failure count, preserved-case regressions; ties prefer base then declared candidate order",
+ "trials": [
+  {
+   "adapter": null,
+   "identity": {
+    "presentation": {
+     "evidence": "named-fields@2",
+     "choices": "full-criteria@2"
+    },
+    "file": "base-q8.gguf",
+    "sha256": "6dbeb53a43e28b175383d6519fc837be408a190162fdec239a836c27cebc913c",
+    "template": "chat@2:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+    "lora_sha256": null
+   },
+   "criterion": [
+    3,
+    2,
+    0,
+    0
+   ],
+   "outcomes": [
+    {
+     "id": "48934e12a868acd8dad6b2cc5ffc77d632e328a45d1ab4f966f398531fce68c1",
+     "gold": 1,
+     "prediction": 1,
+     "correct": true,
+     "mass": 1.0,
+     "error": null
+    },
+    {
+     "id": "512ac8bf82c0919a3be401d94251c2d5585b8bd80ebdeb461f284189bef16ad5",
+     "gold": 1,
+     "prediction": 1,
+     "correct": true,
+     "mass": 1.0,
+     "error": null
+    },
+    {
+     "id": "afcd78d71b6cdd68178207462b1ff4d0c6dacebfb15f762b2b17e44ac9222692",
+     "gold": 1,
+     "prediction": 2,
+     "correct": false,
+     "mass": 0.9999997019767761,
+     "error": null
+    },
+    {
+     "id": "4feca909ad4a2c0a99cc397754f12b4b1091ff402a2b6d82ad51ff3601318925",
+     "gold": 0,
+     "prediction": 0,
+     "correct": true,
+     "mass": 0.9999896287918091,
+     "error": null
+    },
+    {
+     "id": "84105682e633108c6216f1316a20efc0037a833ae0a59acb7c8afb72fedffb21",
+     "gold": 0,
+     "prediction": 1,
+     "correct": false,
+     "mass": 0.9999999403953552,
+     "error": null
+    },
+    {
+     "id": "7d62b0d81b8ae99f7522f8abe09295c68aa2e8986cf51201e9c3108e3d0c34c5",
+     "gold": 1,
+     "prediction": 1,
+     "correct": true,
+     "mass": 1.0,
+     "error": null
+    },
+    {
+     "id": "b32b22478cdee7e6db5b805258ed2d5cf7b1e988e6bbc775316d06e104a333e2",
+     "gold": 1,
+     "prediction": 2,
+     "correct": false,
+     "mass": 1.0,
+     "error": null
+    },
+    {
+     "id": "37c69547723ad1b56bc6f2e492f935578d6b18af6941d055cbf74265b857bef9",
+     "gold": 0,
+     "prediction": 0,
+     "correct": true,
+     "mass": 1.0,
+     "error": null
+    }
+   ]
+  },
+  {
+   "adapter": "/tmp/semantic-adaptation-v2/fitted/adapter.gguf",
+   "identity": {
+    "presentation": {
+     "evidence": "named-fields@2",
+     "choices": "full-criteria@2"
+    },
+    "file": "base-q8.gguf",
+    "sha256": "6dbeb53a43e28b175383d6519fc837be408a190162fdec239a836c27cebc913c",
+    "template": "chat@2:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+    "lora_sha256": "82463e2e82fb91fe0823b7ee25ef1f2b28eed12abb7db6617a3649e09d424a68",
+    "lora_file": "adapter.gguf",
+    "lora_scale": 1.0
+   },
+   "criterion": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "outcomes": [
+    {
+     "id": "48934e12a868acd8dad6b2cc5ffc77d632e328a45d1ab4f966f398531fce68c1",
+     "gold": 1,
+     "prediction": 1,
+     "correct": true,
+     "mass": 1.0,
+     "error": null
+    },
+    {
+     "id": "512ac8bf82c0919a3be401d94251c2d5585b8bd80ebdeb461f284189bef16ad5",
+     "gold": 1,
+     "prediction": 1,
+     "correct": true,
+     "mass": 1.0,
+     "error": null
+    },
+    {
+     "id": "afcd78d71b6cdd68178207462b1ff4d0c6dacebfb15f762b2b17e44ac9222692",
+     "gold": 1,
+     "prediction": 1,
+     "correct": true,
+     "mass": 0.9999995827674866,
+     "error": null
+    },
+    {
+     "id": "4feca909ad4a2c0a99cc397754f12b4b1091ff402a2b6d82ad51ff3601318925",
+     "gold": 0,
+     "prediction": 0,
+     "correct": true,
+     "mass": 0.9999999403953552,
+     "error": null
+    },
+    {
+     "id": "84105682e633108c6216f1316a20efc0037a833ae0a59acb7c8afb72fedffb21",
+     "gold": 0,
+     "prediction": 1,
+     "correct": false,
+     "mass": 0.9999966621398926,
+     "error": null
+    },
+    {
+     "id": "7d62b0d81b8ae99f7522f8abe09295c68aa2e8986cf51201e9c3108e3d0c34c5",
+     "gold": 1,
+     "prediction": 1,
+     "correct": true,
+     "mass": 0.9999998807907104,
+     "error": null
+    },
+    {
+     "id": "b32b22478cdee7e6db5b805258ed2d5cf7b1e988e6bbc775316d06e104a333e2",
+     "gold": 1,
+     "prediction": 0,
+     "correct": false,
+     "mass": 0.9999688267707825,
+     "error": null
+    },
+    {
+     "id": "37c69547723ad1b56bc6f2e492f935578d6b18af6941d055cbf74265b857bef9",
+     "gold": 0,
+     "prediction": 0,
+     "correct": true,
+     "mass": 1.0,
+     "error": null
+    }
+   ]
+  }
+ ],
+ "id": "bc02d690f10eff33f83fce07f3ecce1d8a9946dfd446b4ea8bb54fa2e356e999"
+}

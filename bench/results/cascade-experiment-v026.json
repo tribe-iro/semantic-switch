@@ -1,0 +1,6458 @@
+{
+ "schema": 1,
+ "population": "existing development probe; grouped tune/check experiment; not untouched task evidence",
+ "production_promoted": false,
+ "provenance": {
+  "schema": 1,
+  "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+  "dirty": true,
+  "working_tree": "d27d93b09feed0af8198765d9b187f491688fa35219feda89632900e901275c3",
+  "dataset": "ec6411a5bec424545481a5f61e31740a695510ade594bb331b085174119022e9",
+  "execution": {
+   "identity": {
+    "file": "gemma-4-E2B-it-Q4_0.gguf",
+    "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+    "template": "chat@2:0a2c8073",
+    "prompt": "be9692a8b9069bdf60ba4da20f36153879a6d52edbe9654bb56c8774fa30059d",
+    "lora_sha256": null
+   },
+   "requested_device": "gpu",
+   "threads": null,
+   "build": "0.3.36",
+   "loaded": true,
+   "accelerated": true,
+   "batch_inputs": 8,
+   "max_slots": 20,
+   "capabilities": {
+    "shared": true,
+    "conformance": true,
+    "counters": {
+     "prefix_hits": 29,
+     "prefix_misses": 1,
+     "state_hits": 0,
+     "state_misses": 240,
+     "state_tokens": 6731,
+     "suffix_tokens": 8904,
+     "submissions": 42,
+     "branch_groups": 30,
+     "failures": 0
+    }
+   },
+   "capacity": {
+    "n_ctx": 15360,
+    "n_batch": 512,
+    "n_seq_max": 41
+   }
+  },
+  "boundary": "explicit backend diagnostic"
+ },
+ "identities": {
+  "judge": {
+   "file": "gemma-4-E2B-it-Q4_0.gguf",
+   "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+   "template": "chat@2:0a2c8073",
+   "prompt": "be9692a8b9069bdf60ba4da20f36153879a6d52edbe9654bb56c8774fa30059d",
+   "lora_sha256": null
+  },
+  "precise": {
+   "file": "gemma-4-E4B_q4_0-it.gguf",
+   "sha256": "676c35070db6dbe52f93e9c864ee0fba4eddea94b9c875d9cb10daff453fbaee",
+   "template": "chat@2:0a2c8073",
+   "prompt": "be9692a8b9069bdf60ba4da20f36153879a6d52edbe9654bb56c8774fa30059d",
+   "lora_sha256": null
+  }
+ },
+ "loads_ms": {
+  "judge": 1240.0962129977415,
+  "precise": 9891.13760300097
+ },
+ "policies": {
+  "small": {
+   "theta": 0.51,
+   "state": "met-on-tune",
+   "accepted": 120
+  },
+  "large": {
+   "theta": 0.6,
+   "state": "met-on-tune",
+   "accepted": 120
+  },
+  "residue": {
+   "theta": 0.9,
+   "state": "insufficient-or-missed",
+   "accepted": 0
+  }
+ },
+ "small": {
+  "labelled": 120,
+  "accepted": 120,
+  "correct": 113,
+  "wrong": 7,
+  "coverage": 1.0,
+  "precision": 0.9416666666666667
+ },
+ "large": {
+  "labelled": 120,
+  "accepted": 120,
+  "correct": 116,
+  "wrong": 4,
+  "coverage": 1.0,
+  "precision": 0.9666666666666667
+ },
+ "residue": {
+  "labelled": 0,
+  "accepted": 0,
+  "correct": 0,
+  "wrong": 0,
+  "coverage": null,
+  "precision": null
+ },
+ "cascade": {
+  "labelled": 120,
+  "accepted": 120,
+  "correct": 113,
+  "wrong": 7,
+  "coverage": 1.0,
+  "precision": 0.9416666666666667
+ },
+ "rows": [
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "I was charged twice for May. Please refund one of the charges.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "refund:0",
+   "family": "refund:0",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.998485053832722,
+    "mass": 0.997419536113739,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9975729079365891,
+    "mass": 0.9996483325958252,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "I was charged twice for May, but the second charge was already refunded. Thanks.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "refund:0",
+   "family": "refund:0",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9156407878455518,
+    "mass": 0.997817873954773,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.10014551311162848,
+    "mass": 0.9997345805168152,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "Don't send a replacement; I want my money back.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "refund:1",
+   "family": "refund:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9858672996478745,
+    "mass": 0.997778594493866,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9904734050787043,
+    "mass": 0.9998320937156677,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "Don't give me my money back; I want a replacement.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "refund:1",
+   "family": "refund:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0017353247502212236,
+    "mass": 0.9996342062950134,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0033034761074821404,
+    "mass": 0.9999010562896729,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "My friend told me not to bother asking, but I am asking: refund my last payment.",
+   "label": true,
+   "tag": "reported",
+   "lang": "en",
+   "pair": "refund:2",
+   "family": "refund:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9982022106540611,
+    "mass": 0.9990004897117615,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9982104948581463,
+    "mass": 0.9995984435081482,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "My friend told me to ask for a refund, but I don't want one. Just fix the invoice address.",
+   "label": false,
+   "tag": "reported",
+   "lang": "en",
+   "pair": "refund:2",
+   "family": "refund:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.01862994108871942,
+    "mass": 0.9996421933174133,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0034502299968388367,
+    "mass": 0.9999073147773743,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "Reverse the $40 charge from yesterday, it was not authorized.",
+   "label": true,
+   "tag": "implicit",
+   "lang": "en",
+   "pair": "refund:3",
+   "family": "refund:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9937925732391604,
+    "mass": 0.9991662502288818,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9986581072528504,
+    "mass": 0.999640941619873,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "The $40 charge from yesterday is correct, I just need a copy of the receipt.",
+   "label": false,
+   "tag": "implicit",
+   "lang": "en",
+   "pair": "refund:3",
+   "family": "refund:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.002464682008851968,
+    "mass": 0.9996558427810669,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0006346104340922457,
+    "mass": 0.9999687075614929,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "If you can't fix it today, refund me. And you clearly can't, so refund me.",
+   "label": true,
+   "tag": "hypothetical",
+   "lang": "en",
+   "pair": "refund:4",
+   "family": "refund:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9848925222044193,
+    "mass": 0.9973580837249756,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9943131433988351,
+    "mass": 0.9996379017829895,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "If the refund policy covers annual plans, I may ask for one next year.",
+   "label": false,
+   "tag": "hypothetical",
+   "lang": "en",
+   "pair": "refund:4",
+   "family": "refund:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00821014761056217,
+    "mass": 0.9995872378349304,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.04033905578001599,
+    "mass": 0.9994048476219177,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "I'm not asking for a discount, I'm asking for the payment back.",
+   "label": true,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "refund:5",
+   "family": "refund:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.913964399340965,
+    "mass": 0.9988085031509399,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9948189610380358,
+    "mass": 0.9996466636657715,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "I'm not asking for the payment back, I'm asking for a discount on the next one.",
+   "label": false,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "refund:5",
+   "family": "refund:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00047044371230433067,
+    "mass": 0.9997490644454956,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0013995730689349453,
+    "mass": 0.9999604225158691,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "Fui cobrado duas vezes este m\u00eas. Quero o estorno de uma das cobran\u00e7as.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "refund:6",
+   "family": "refund:0",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9985870891522838,
+    "mass": 0.9981439709663391,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9980743890362664,
+    "mass": 0.9997805953025818,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "Fui cobrado duas vezes este m\u00eas, mas voc\u00eas j\u00e1 estornaram uma. Obrigado.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "refund:6",
+   "family": "refund:0",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9963469230909859,
+    "mass": 0.9986183047294617,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.21945456998273732,
+    "mass": 0.9994195103645325,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "N\u00e3o quero troca, quero meu dinheiro de volta.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "refund:7",
+   "family": "refund:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9960305475700735,
+    "mass": 0.9985060095787048,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9965655278059906,
+    "mass": 0.9998322129249573,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "N\u00e3o quero meu dinheiro de volta, quero a troca.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "refund:7",
+   "family": "refund:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0035767344007022347,
+    "mass": 0.999627411365509,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0025225191470673596,
+    "mass": 0.999923586845398,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "Devolvam o valor que paguei pelo plano anual.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "refund:8",
+   "family": "refund:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9274020750698672,
+    "mass": 0.9976845383644104,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9977913137532248,
+    "mass": 0.9998114705085754,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "Quanto custa o plano anual? Ainda n\u00e3o paguei nada.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "refund:8",
+   "family": "refund:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0010068957480193156,
+    "mass": 0.999038577079773,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001331943451598772,
+    "mass": 0.9999403357505798,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "Minha esposa disse para n\u00e3o pedir reembolso, mas eu pe\u00e7o: devolvam o pagamento.",
+   "label": true,
+   "tag": "reported",
+   "lang": "pt",
+   "pair": "refund:9",
+   "family": "refund:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9956736841426861,
+    "mass": 0.997948944568634,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9968599915190741,
+    "mass": 0.9998274445533752,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "Minha esposa disse para pedir reembolso, mas eu n\u00e3o quero. S\u00f3 corrijam o endere\u00e7o.",
+   "label": false,
+   "tag": "reported",
+   "lang": "pt",
+   "pair": "refund:9",
+   "family": "refund:3",
+   "split": "check",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.4529688379870534,
+    "mass": 0.9947623014450073,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.006812237491685034,
+    "mass": 0.9998603463172913,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "A cobran\u00e7a de R$ 89 n\u00e3o foi autorizada; cancelem e devolvam o valor.",
+   "label": true,
+   "tag": "implicit",
+   "lang": "pt",
+   "pair": "refund:10",
+   "family": "refund:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9938232420286882,
+    "mass": 0.9986705183982849,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9984189958728913,
+    "mass": 0.9998390674591064,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "A cobran\u00e7a de R$ 89 est\u00e1 correta; preciso apenas da nota fiscal.",
+   "label": false,
+   "tag": "implicit",
+   "lang": "pt",
+   "pair": "refund:10",
+   "family": "refund:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001877115569607482,
+    "mass": 0.9995676279067993,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0008256091534025591,
+    "mass": 0.9999725818634033,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "N\u00e3o \u00e9 que eu n\u00e3o queira o reembolso: eu quero, sim.",
+   "label": true,
+   "tag": "double_negation",
+   "lang": "pt",
+   "pair": "refund:11",
+   "family": "refund:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9710144592921865,
+    "mass": 0.9979047775268555,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9852623454807399,
+    "mass": 0.9995470643043518,
+    "error": null
+   }
+  },
+  {
+   "fact": "refund",
+   "claim": "The customer asks to receive money back for a charge.",
+   "excludes": [],
+   "text": "N\u00e3o \u00e9 que eu queira o reembolso: s\u00f3 quero entender a cobran\u00e7a.",
+   "label": false,
+   "tag": "double_negation",
+   "lang": "pt",
+   "pair": "refund:11",
+   "family": "refund:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.007782034424135277,
+    "mass": 0.9993487596511841,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0023775434482205373,
+    "mass": 0.9999070763587952,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "Fix this by Friday or my lawyer will file a lawsuit.",
+   "label": true,
+   "tag": "exception",
+   "lang": "en",
+   "pair": "legal:0",
+   "family": "legal:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9628181214428196,
+    "mass": 0.9916131496429443,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.8417782853686222,
+    "mass": 0.9989379048347473,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "My lawyer asked me to request an invoice for my records.",
+   "label": false,
+   "tag": "exception",
+   "lang": "en",
+   "pair": "legal:0",
+   "family": "legal:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0036712238962363724,
+    "mass": 0.9995385408401489,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.04313445878293708,
+    "mass": 0.9998287558555603,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "I will take you to small claims court if this is not resolved.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "legal:1",
+   "family": "legal:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9937119045360453,
+    "mass": 0.993613064289093,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9404583094830082,
+    "mass": 0.999582052230835,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "I work at a small claims court, so I know support is hard. Just a question about my plan.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "legal:1",
+   "family": "legal:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.003841404188295874,
+    "mass": 0.9987241625785828,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.008842563086887002,
+    "mass": 0.999939501285553,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "This is my last warning before I sue you.",
+   "label": true,
+   "tag": "reported",
+   "lang": "en",
+   "pair": "legal:2",
+   "family": "legal:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9960273531638565,
+    "mass": 0.9943993091583252,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.8347913285852879,
+    "mass": 0.9990723133087158,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "My neighbour said he would sue you, but I just want my password reset.",
+   "label": false,
+   "tag": "reported",
+   "lang": "en",
+   "pair": "legal:2",
+   "family": "legal:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.04804009061636721,
+    "mass": 0.9976926445960999,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.2642869202662435,
+    "mass": 0.9995879530906677,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "I am filing a complaint with the consumer agency and a lawsuit against your company.",
+   "label": true,
+   "tag": "exception",
+   "lang": "en",
+   "pair": "legal:3",
+   "family": "legal:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9569631395394733,
+    "mass": 0.9927048683166504,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9655013347383516,
+    "mass": 0.9994490742683411,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "I'm a lawyer myself, and I'd like to upgrade my plan.",
+   "label": false,
+   "tag": "exception",
+   "lang": "en",
+   "pair": "legal:3",
+   "family": "legal:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.029204061017089528,
+    "mass": 0.9991207122802734,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.021546547724357067,
+    "mass": 0.9999129772186279,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "I'm not bluffing: my attorney is preparing the case against you.",
+   "label": true,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "legal:4",
+   "family": "legal:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9643828591526746,
+    "mass": 0.9949935078620911,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.7859218237874528,
+    "mass": 0.998988151550293,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "I'm not suing anyone, I just want the bug fixed.",
+   "label": false,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "legal:4",
+   "family": "legal:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0007804393896718846,
+    "mass": 0.9994653463363647,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.14211262511650172,
+    "mass": 0.9997683763504028,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "Keep ignoring me and you'll hear from my lawyers.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "legal:5",
+   "family": "legal:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9823702586749822,
+    "mass": 0.9776667356491089,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.8324867358965856,
+    "mass": 0.9989894032478333,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "Ignore my earlier message about lawyers; I calmed down and won't take any action.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "legal:5",
+   "family": "legal:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.01483412566409542,
+    "mass": 0.9989250302314758,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.04308770207182412,
+    "mass": 0.9997879266738892,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "Se n\u00e3o resolverem at\u00e9 sexta, vou entrar com um processo.",
+   "label": true,
+   "tag": "exception",
+   "lang": "pt",
+   "pair": "legal:6",
+   "family": "legal:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9776097509134626,
+    "mass": 0.9806755185127258,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9472653710811824,
+    "mass": 0.9994347095489502,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "Meu advogado pediu a segunda via do boleto.",
+   "label": false,
+   "tag": "exception",
+   "lang": "pt",
+   "pair": "legal:6",
+   "family": "legal:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.008244690806827559,
+    "mass": 0.9987621307373047,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.044219236682893806,
+    "mass": 0.9998413324356079,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "Vou acionar voc\u00eas no Procon e na justi\u00e7a.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "legal:7",
+   "family": "legal:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9586144114014044,
+    "mass": 0.9724385142326355,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9594818243568979,
+    "mass": 0.9995845556259155,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "Trabalho no Procon e queria tirar uma d\u00favida sobre meu plano.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "legal:7",
+   "family": "legal:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.000838858968455811,
+    "mass": 0.9979391098022461,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.01076755263398852,
+    "mass": 0.9999216794967651,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "Esta \u00e9 a \u00faltima vez que pe\u00e7o antes de processar a empresa.",
+   "label": true,
+   "tag": "reported",
+   "lang": "pt",
+   "pair": "legal:8",
+   "family": "legal:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.01517802316842722,
+    "mass": 0.9973979592323303,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.8138257509150245,
+    "mass": 0.9995774626731873,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "Meu vizinho disse que vai processar voc\u00eas, mas eu s\u00f3 quero trocar a senha.",
+   "label": false,
+   "tag": "reported",
+   "lang": "pt",
+   "pair": "legal:8",
+   "family": "legal:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.036554816673638406,
+    "mass": 0.9944009184837341,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.2934776107023616,
+    "mass": 0.9994905591011047,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "Meu advogado j\u00e1 est\u00e1 preparando a a\u00e7\u00e3o contra voc\u00eas.",
+   "label": true,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "legal:9",
+   "family": "legal:3",
+   "split": "tune",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.798972604781687,
+    "mass": 0.9901415705680847,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.6050925047010144,
+    "mass": 0.9995944499969482,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "N\u00e3o vou processar ningu\u00e9m, s\u00f3 quero que corrijam o erro.",
+   "label": false,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "legal:9",
+   "family": "legal:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0003684019977946185,
+    "mass": 0.9987515807151794,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.13445297489685482,
+    "mass": 0.999739944934845,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "Continuem me ignorando e voc\u00eas v\u00e3o se ver com meu advogado.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "legal:10",
+   "family": "legal:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.991700252037768,
+    "mass": 0.9840428829193115,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.8832079829631999,
+    "mass": 0.999178409576416,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "Esque\u00e7am o que falei sobre advogado; j\u00e1 me acalmei e n\u00e3o vou fazer nada.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "legal:10",
+   "family": "legal:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.004835075017067079,
+    "mass": 0.9987363219261169,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.06880473710508277,
+    "mass": 0.999754786491394,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "N\u00e3o pensem que \u00e9 blefe: vou \u00e0 justi\u00e7a.",
+   "label": true,
+   "tag": "double_negation",
+   "lang": "pt",
+   "pair": "legal:11",
+   "family": "legal:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9932950519739326,
+    "mass": 0.9816974997520447,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9336215956764756,
+    "mass": 0.9991396069526672,
+    "error": null
+   }
+  },
+  {
+   "fact": "legal",
+   "claim": "The customer threatens legal action against us.",
+   "excludes": [
+    "merely mentioning a lawyer",
+    "quoting someone else's threat"
+   ],
+   "text": "N\u00e3o \u00e9 que eu v\u00e1 \u00e0 justi\u00e7a; s\u00f3 estou decepcionado.",
+   "label": false,
+   "tag": "double_negation",
+   "lang": "pt",
+   "pair": "legal:11",
+   "family": "legal:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.004324808104881535,
+    "mass": 0.9988318681716919,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.09920163793928201,
+    "mass": 0.9996262788772583,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Please cancel my subscription at the end of this month.",
+   "label": true,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "cancel:0",
+   "family": "cancel:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.999945341114403,
+    "mass": 0.9991161823272705,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9989270758789779,
+    "mass": 0.9996318221092224,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Please don't cancel my subscription; the payment failure was my bank's fault.",
+   "label": false,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "cancel:0",
+   "family": "cancel:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.018226564065939154,
+    "mass": 0.998416543006897,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0005727724233186999,
+    "mass": 0.9999591708183289,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "I've decided to stop my plan. Turn off the renewal.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "cancel:1",
+   "family": "cancel:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.999483535670391,
+    "mass": 0.9997788667678833,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9987877442835136,
+    "mass": 0.9995415210723877,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "I've decided to keep my plan, even though I thought about cancelling last week.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "cancel:1",
+   "family": "cancel:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0014365857703033064,
+    "mass": 0.9997268915176392,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0003936271221036518,
+    "mass": 0.9999698996543884,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "My manager told me to keep the subscription, but I want it cancelled.",
+   "label": true,
+   "tag": "role",
+   "lang": "en",
+   "pair": "cancel:2",
+   "family": "cancel:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9991017780201966,
+    "mass": 0.9996670484542847,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9665523258496271,
+    "mass": 0.9996205568313599,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "My manager told me to cancel the subscription, but I'm keeping it.",
+   "label": false,
+   "tag": "role",
+   "lang": "en",
+   "pair": "cancel:2",
+   "family": "cancel:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.008326635992373802,
+    "mass": 0.9995937943458557,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0021518814313254415,
+    "mass": 0.9999538064002991,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "How do I cancel? I don't want to be charged again.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "cancel:3",
+   "family": "cancel:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9857471884097777,
+    "mass": 0.9985433220863342,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9993980901587476,
+    "mass": 0.9994632601737976,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "How do I cancel an order for a single item? I love my subscription.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "cancel:3",
+   "family": "cancel:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.011081041481482036,
+    "mass": 0.9999075531959534,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.009210920082856306,
+    "mass": 0.999817967414856,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Not upgrading, not downgrading: ending it.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "cancel:4",
+   "family": "cancel:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9760414335942105,
+    "mass": 0.9995554089546204,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9901035826220493,
+    "mass": 0.9992347359657288,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Not ending it, just downgrading to the basic tier.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "cancel:4",
+   "family": "cancel:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0049996253698095135,
+    "mass": 0.9998101592063904,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.002722834962527646,
+    "mass": 0.9999613761901855,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "I'm moving abroad and won't need the service anymore, so stop the subscription.",
+   "label": true,
+   "tag": "implicit",
+   "lang": "en",
+   "pair": "cancel:5",
+   "family": "cancel:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.999924499562611,
+    "mass": 0.9997404217720032,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9995805353151442,
+    "mass": 0.9997066855430603,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "I'm moving abroad; can I keep using my subscription there?",
+   "label": false,
+   "tag": "implicit",
+   "lang": "en",
+   "pair": "cancel:5",
+   "family": "cancel:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0004745815329076622,
+    "mass": 0.9994615316390991,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0004476658602596678,
+    "mass": 0.9999529719352722,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Quero cancelar minha assinatura a partir do m\u00eas que vem.",
+   "label": true,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "cancel:6",
+   "family": "cancel:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9999532953716354,
+    "mass": 0.9989283084869385,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9981668354796025,
+    "mass": 0.9998126029968262,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "N\u00e3o cancelem minha assinatura; o pagamento falhou por erro do banco.",
+   "label": false,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "cancel:6",
+   "family": "cancel:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.005258612403670282,
+    "mass": 0.9992860555648804,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001066687373224578,
+    "mass": 0.9999403357505798,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Decidi encerrar o plano. N\u00e3o renovem mais.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "cancel:7",
+   "family": "cancel:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9999409140238879,
+    "mass": 0.9996289014816284,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9986330787621379,
+    "mass": 0.9997673630714417,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Pensei em cancelar semana passada, mas decidi continuar com o plano.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "cancel:7",
+   "family": "cancel:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0022131889762454613,
+    "mass": 0.9992456436157227,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0007447377545551825,
+    "mass": 0.9999622106552124,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Como fa\u00e7o para cancelar? N\u00e3o quero mais ser cobrado.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "cancel:8",
+   "family": "cancel:2",
+   "split": "check",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.17617458111036927,
+    "mass": 0.9950417280197144,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9989746022512781,
+    "mass": 0.999656617641449,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Como cancelo um pedido avulso? Adoro minha assinatura.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "cancel:8",
+   "family": "cancel:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.007565768001953804,
+    "mass": 0.9998044967651367,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.042713746244526854,
+    "mass": 0.9995502233505249,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Meu s\u00f3cio quer manter a assinatura, mas eu quero cancelar.",
+   "label": true,
+   "tag": "role",
+   "lang": "pt",
+   "pair": "cancel:9",
+   "family": "cancel:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9198083539857449,
+    "mass": 0.9974058270454407,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.8543459427957274,
+    "mass": 0.9991831183433533,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Meu s\u00f3cio quer cancelar a assinatura, mas eu vou manter.",
+   "label": false,
+   "tag": "role",
+   "lang": "pt",
+   "pair": "cancel:9",
+   "family": "cancel:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.06753359409854029,
+    "mass": 0.9984047412872314,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.03502811597427454,
+    "mass": 0.99982750415802,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Nem upgrade nem downgrade: quero encerrar.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "cancel:10",
+   "family": "cancel:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.995610821440178,
+    "mass": 0.9993535280227661,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9832946417602507,
+    "mass": 0.9993432760238647,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "N\u00e3o quero encerrar, s\u00f3 mudar para o plano b\u00e1sico.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "cancel:10",
+   "family": "cancel:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0019007581367028437,
+    "mass": 0.9997653365135193,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0006377057482899204,
+    "mass": 0.999962568283081,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Vou me mudar e n\u00e3o vou mais usar o servi\u00e7o; parem a assinatura.",
+   "label": true,
+   "tag": "implicit",
+   "lang": "pt",
+   "pair": "cancel:11",
+   "family": "cancel:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9999302551038318,
+    "mass": 0.9996901154518127,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9994355827515026,
+    "mass": 0.9998419284820557,
+    "error": null
+   }
+  },
+  {
+   "fact": "cancel",
+   "claim": "The customer wants to cancel their subscription.",
+   "excludes": [],
+   "text": "Vou me mudar; consigo usar a assinatura no novo endere\u00e7o?",
+   "label": false,
+   "tag": "implicit",
+   "lang": "pt",
+   "pair": "cancel:11",
+   "family": "cancel:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.000489018238661461,
+    "mass": 0.9989932775497437,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0005051756813488418,
+    "mass": 0.9999624490737915,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Stop the bot answers. I need to speak with a real person.",
+   "label": true,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "human:0",
+   "family": "human:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9998709310700535,
+    "mass": 0.9993329644203186,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9995348357653474,
+    "mass": 0.999596357345581,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Your bot answered perfectly, no need for a person. Thanks!",
+   "label": false,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "human:0",
+   "family": "human:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.019858078176270163,
+    "mass": 0.9997631907463074,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0004099821270921263,
+    "mass": 0.99997878074646,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Can someone from your team call me?",
+   "label": true,
+   "tag": "implicit",
+   "lang": "en",
+   "pair": "human:1",
+   "family": "human:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.984446480899107,
+    "mass": 0.9993168115615845,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9985794561511542,
+    "mass": 0.9995561838150024,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Can your app notify me automatically when the order ships?",
+   "label": false,
+   "tag": "implicit",
+   "lang": "en",
+   "pair": "human:1",
+   "family": "human:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0032093914262592395,
+    "mass": 0.9995614290237427,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0035410347347087463,
+    "mass": 0.9999379515647888,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Transfer me to an agent, please.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "human:2",
+   "family": "human:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9997546664783227,
+    "mass": 0.9995302557945251,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.999265950581679,
+    "mass": 0.9995518326759338,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Last week the agent I was transferred to solved it; today I only need the FAQ link.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "human:2",
+   "family": "human:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.004782563000279387,
+    "mass": 0.9998021125793457,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0011331921119089258,
+    "mass": 0.9999738335609436,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "I don't want to chat with a machine, put me through to a human.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "human:3",
+   "family": "human:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9998075823714814,
+    "mass": 0.9994588494300842,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9995820863674302,
+    "mass": 0.9996522068977356,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "I don't need a human, the machine can handle a password reset.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "human:3",
+   "family": "human:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.008441677108054957,
+    "mass": 0.9997209906578064,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0006135216097335775,
+    "mass": 0.9999787211418152,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "My son keeps saying the bot is fine; I still want a person.",
+   "label": true,
+   "tag": "role",
+   "lang": "en",
+   "pair": "human:4",
+   "family": "human:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9996961890367474,
+    "mass": 0.9996839165687561,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9987530570410103,
+    "mass": 0.9997614622116089,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "My son wants a person on the line; I'm fine with the bot.",
+   "label": false,
+   "tag": "role",
+   "lang": "en",
+   "pair": "human:4",
+   "family": "human:4",
+   "split": "check",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.4246379685176109,
+    "mass": 0.9992142915725708,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9911656720175023,
+    "mass": 0.9997887015342712,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Is there any human there? Please, a human.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "human:5",
+   "family": "human:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.999168971042042,
+    "mass": 0.999273419380188,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9995724417677321,
+    "mass": 0.9996233582496643,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Is there a human-readable version of the invoice?",
+   "label": false,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "human:5",
+   "family": "human:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.049594527830538096,
+    "mass": 0.9995848536491394,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.05321483704876508,
+    "mass": 0.9996922612190247,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Quero falar com um atendente de verdade, n\u00e3o com rob\u00f4.",
+   "label": true,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "human:6",
+   "family": "human:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9999491158293285,
+    "mass": 0.9993865489959717,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9995366890367924,
+    "mass": 0.9997718334197998,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "O rob\u00f4 resolveu meu problema, n\u00e3o preciso de atendente.",
+   "label": false,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "human:6",
+   "family": "human:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00984012028950236,
+    "mass": 0.9996692538261414,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001967700264199188,
+    "mass": 0.9999557733535767,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Algu\u00e9m da equipe pode me ligar?",
+   "label": true,
+   "tag": "implicit",
+   "lang": "pt",
+   "pair": "human:7",
+   "family": "human:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9988250778875608,
+    "mass": 0.9994441866874695,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9980692070855266,
+    "mass": 0.9997730851173401,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "O aplicativo pode me avisar quando o pedido sair?",
+   "label": false,
+   "tag": "implicit",
+   "lang": "pt",
+   "pair": "human:7",
+   "family": "human:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.011889713094463633,
+    "mass": 0.9991748332977295,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.004473494196414719,
+    "mass": 0.9999064803123474,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Me transfere para um humano, por favor.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "human:8",
+   "family": "human:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9999494555433877,
+    "mass": 0.9996180534362793,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9992055134663478,
+    "mass": 0.9997109770774841,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Semana passada um atendente resolveu; hoje s\u00f3 quero o link do FAQ.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "human:8",
+   "family": "human:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.002191415560331644,
+    "mass": 0.9996193647384644,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0034682192593905527,
+    "mass": 0.9999417662620544,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Meu filho acha que o rob\u00f4 basta; eu quero uma pessoa.",
+   "label": true,
+   "tag": "role",
+   "lang": "pt",
+   "pair": "human:9",
+   "family": "human:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9998472189558384,
+    "mass": 0.9995753765106201,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.999233662381292,
+    "mass": 0.9998751878738403,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Meu filho quer falar com uma pessoa; eu estou satisfeito com o rob\u00f4.",
+   "label": false,
+   "tag": "role",
+   "lang": "pt",
+   "pair": "human:9",
+   "family": "human:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9988084980296094,
+    "mass": 0.9997022747993469,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.996624031190929,
+    "mass": 0.9998245239257812,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "N\u00e3o quero conversar com m\u00e1quina, quero um atendente.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "human:10",
+   "family": "human:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9998583464613496,
+    "mass": 0.9994949102401733,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9994453428788169,
+    "mass": 0.9997444748878479,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "N\u00e3o preciso de atendente, a m\u00e1quina resolve a troca de senha.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "human:10",
+   "family": "human:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.015481885392007904,
+    "mass": 0.9993582963943481,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001737798984695761,
+    "mass": 0.9999512434005737,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Tem algu\u00e9m a\u00ed? Uma pessoa, por favor.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "human:11",
+   "family": "human:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.997923849652229,
+    "mass": 0.9996352791786194,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9979682432090428,
+    "mass": 0.9996930360794067,
+    "error": null
+   }
+  },
+  {
+   "fact": "human",
+   "claim": "The customer asks to talk to a human agent.",
+   "excludes": [],
+   "text": "Tem alguma pessoa da fam\u00edlia que possa usar meu plano?",
+   "label": false,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "human:11",
+   "family": "human:5",
+   "split": "check",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.22730127675002607,
+    "mass": 0.9991801381111145,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.033573421404669186,
+    "mass": 0.9996614456176758,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "The app crashes every time I open it.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "broken:0",
+   "family": "broken:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9995244201226946,
+    "mass": 0.9996429085731506,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9988539044104199,
+    "mass": 0.9997004866600037,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "The app used to crash, but since the last update it works perfectly.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "broken:0",
+   "family": "broken:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.020524273450839913,
+    "mass": 0.9997305870056152,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0027939082037527537,
+    "mass": 0.9999716877937317,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "Nothing loads on the dashboard since this morning.",
+   "label": true,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "broken:1",
+   "family": "broken:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9980370706886033,
+    "mass": 0.9994807243347168,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9957326217689892,
+    "mass": 0.9997047185897827,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "The dashboard loads fine; I just want to change the color theme.",
+   "label": false,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "broken:1",
+   "family": "broken:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.005020610404084377,
+    "mass": 0.9998819231987,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0021099926322277946,
+    "mass": 0.9999629259109497,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "I'm not saying it's slow, I'm saying it doesn't start at all.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "broken:2",
+   "family": "broken:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.996774384173624,
+    "mass": 0.9997885823249817,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9952095787710561,
+    "mass": 0.9997245073318481,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "I'm not saying it doesn't work, I'm saying the font is small.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "broken:2",
+   "family": "broken:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0063402427509053,
+    "mass": 0.9995625019073486,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0006201840728672491,
+    "mass": 0.9999727010726929,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "My colleague says the export works for him, but on my account it fails with an error.",
+   "label": true,
+   "tag": "role",
+   "lang": "en",
+   "pair": "broken:3",
+   "family": "broken:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9922782754889489,
+    "mass": 0.9991923570632935,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9847390051422479,
+    "mass": 0.9996449947357178,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "My colleague thought the export was broken, but it was his browser; it works for both of us.",
+   "label": false,
+   "tag": "role",
+   "lang": "en",
+   "pair": "broken:3",
+   "family": "broken:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.017511840882398086,
+    "mass": 0.9997568726539612,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.022447179015771673,
+    "mass": 0.9998548626899719,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "Error 500 when I try to pay.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "broken:4",
+   "family": "broken:4",
+   "split": "check",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.5892952371849639,
+    "mass": 0.997017502784729,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.05639438043960358,
+    "mass": 0.9997419714927673,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "What does error 500 mean in general? Just curious, everything works.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "broken:4",
+   "family": "broken:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.015328148808849612,
+    "mass": 0.9995620846748352,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.004626577252431251,
+    "mass": 0.9998924732208252,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "When I click save, my changes disappear.",
+   "label": true,
+   "tag": "hypothetical",
+   "lang": "en",
+   "pair": "broken:5",
+   "family": "broken:5",
+   "split": "check",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.7343696201793832,
+    "mass": 0.9989850521087646,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.989191788730146,
+    "mass": 0.9996967315673828,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "When I click save, will my changes sync to my phone too?",
+   "label": false,
+   "tag": "hypothetical",
+   "lang": "en",
+   "pair": "broken:5",
+   "family": "broken:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.014302292569643264,
+    "mass": 0.9867695569992065,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.007860138284150157,
+    "mass": 0.9996988773345947,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "O aplicativo fecha sozinho toda vez que abro.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "broken:6",
+   "family": "broken:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9990748354641853,
+    "mass": 0.9994499087333679,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9979046137755115,
+    "mass": 0.9998335838317871,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "O aplicativo fechava sozinho, mas depois da atualiza\u00e7\u00e3o funciona bem.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "broken:6",
+   "family": "broken:0",
+   "split": "tune",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.7018857288011846,
+    "mass": 0.9957721829414368,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.052247554466516785,
+    "mass": 0.9999439716339111,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "N\u00e3o carrega nada no painel desde cedo.",
+   "label": true,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "broken:7",
+   "family": "broken:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9985708547348998,
+    "mass": 0.9994957447052002,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9842267650454734,
+    "mass": 0.9995274543762207,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "O painel carrega normal; s\u00f3 quero mudar o tema.",
+   "label": false,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "broken:7",
+   "family": "broken:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.006920748750676761,
+    "mass": 0.9998438954353333,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0030565040750334346,
+    "mass": 0.9999496340751648,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "D\u00e1 erro 500 quando tento pagar.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "broken:8",
+   "family": "broken:2",
+   "split": "check",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.2975839176278147,
+    "mass": 0.9955094456672668,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.20152289071100102,
+    "mass": 0.9996314644813538,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "O que significa erro 500? S\u00f3 curiosidade, est\u00e1 tudo funcionando.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "broken:8",
+   "family": "broken:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.007516013414068927,
+    "mass": 0.999315619468689,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0072823631486354,
+    "mass": 0.9997770190238953,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "Quando clico em salvar, as altera\u00e7\u00f5es somem.",
+   "label": true,
+   "tag": "hypothetical",
+   "lang": "pt",
+   "pair": "broken:9",
+   "family": "broken:3",
+   "split": "check",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.29973526042427495,
+    "mass": 0.998329222202301,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9762917547308636,
+    "mass": 0.9995303153991699,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "Quando clico em salvar, as altera\u00e7\u00f5es v\u00e3o para o celular tamb\u00e9m?",
+   "label": false,
+   "tag": "hypothetical",
+   "lang": "pt",
+   "pair": "broken:9",
+   "family": "broken:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.007143815280240115,
+    "mass": 0.9882863163948059,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.014130348629272335,
+    "mass": 0.9990088939666748,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "N\u00e3o estou dizendo que est\u00e1 lento; n\u00e3o abre de jeito nenhum.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "broken:10",
+   "family": "broken:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.983859934200929,
+    "mass": 0.9996440410614014,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9890202596596976,
+    "mass": 0.999641478061676,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "N\u00e3o estou dizendo que n\u00e3o funciona; s\u00f3 acho a letra pequena.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "broken:10",
+   "family": "broken:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.005271388583237951,
+    "mass": 0.9993176460266113,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0007792921742648413,
+    "mass": 0.999961793422699,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "N\u00e3o \u00e9 verdade que esteja funcionando: continua travando.",
+   "label": true,
+   "tag": "double_negation",
+   "lang": "pt",
+   "pair": "broken:11",
+   "family": "broken:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9865037722629658,
+    "mass": 0.9986960887908936,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9859823085830859,
+    "mass": 0.9996452927589417,
+    "error": null
+   }
+  },
+  {
+   "fact": "broken",
+   "claim": "The customer reports that the product is not working.",
+   "excludes": [],
+   "text": "N\u00e3o \u00e9 verdade que esteja travando: funciona bem, foi engano meu.",
+   "label": false,
+   "tag": "double_negation",
+   "lang": "pt",
+   "pair": "broken:11",
+   "family": "broken:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.021665423237648508,
+    "mass": 0.9995086193084717,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0017561209916187581,
+    "mass": 0.9999385476112366,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "It's been three weeks and my package still hasn't arrived.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "late:0",
+   "family": "late:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9996926857777747,
+    "mass": 0.9994478225708008,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.999065580858489,
+    "mass": 0.9996938705444336,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "My package arrived today, three weeks late, but it's here.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "late:0",
+   "family": "late:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.07277380238804373,
+    "mass": 0.9996163249015808,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001058739679725942,
+    "mass": 0.999963641166687,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "The tracking says delivered, but there is nothing at my door.",
+   "label": true,
+   "tag": "implicit",
+   "lang": "en",
+   "pair": "late:1",
+   "family": "late:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9990541238655704,
+    "mass": 0.999492883682251,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9981215852210853,
+    "mass": 0.9997732639312744,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "The tracking says delivered and I have the box. Can I return one item?",
+   "label": false,
+   "tag": "implicit",
+   "lang": "en",
+   "pair": "late:1",
+   "family": "late:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.006486813255299853,
+    "mass": 0.9984680414199829,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0006382801131945833,
+    "mass": 0.9999375343322754,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "I'm not complaining about the quality; the order never came.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "late:2",
+   "family": "late:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.998816918266419,
+    "mass": 0.9995819330215454,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9979474112318296,
+    "mass": 0.9997282028198242,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "I'm not complaining about the delivery; the quality is poor.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "late:2",
+   "family": "late:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00038663964650684175,
+    "mass": 0.9997577667236328,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0005645047241663507,
+    "mass": 0.9999778866767883,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "My sister's order arrived, mine didn't.",
+   "label": true,
+   "tag": "role",
+   "lang": "en",
+   "pair": "late:3",
+   "family": "late:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9974281750494465,
+    "mass": 0.999542236328125,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9952043952923303,
+    "mass": 0.9997732639312744,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "My order arrived; my sister's didn't, and she will contact you herself.",
+   "label": false,
+   "tag": "role",
+   "lang": "en",
+   "pair": "late:3",
+   "family": "late:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.012757266084672378,
+    "mass": 0.9996331930160522,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.24883844945562597,
+    "mass": 0.9993972182273865,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "Where is my order #4512? Still waiting.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "late:4",
+   "family": "late:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9975101718150883,
+    "mass": 0.9980977177619934,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9988127051390641,
+    "mass": 0.9997521638870239,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "Where can I see my order history? Just for my records.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "late:4",
+   "family": "late:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00015067843115264447,
+    "mass": 0.999333381652832,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0006301311075190301,
+    "mass": 0.9999643564224243,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "It was supposed to arrive Monday; it's Thursday and nothing.",
+   "label": true,
+   "tag": "hypothetical",
+   "lang": "en",
+   "pair": "late:5",
+   "family": "late:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9992760355027858,
+    "mass": 0.9995692372322083,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.998960616233607,
+    "mass": 0.9998071193695068,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "It is supposed to arrive Monday; can I change the delivery address before then?",
+   "label": false,
+   "tag": "hypothetical",
+   "lang": "en",
+   "pair": "late:5",
+   "family": "late:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00271706473020687,
+    "mass": 0.9981025457382202,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.029904642447616432,
+    "mass": 0.9995862245559692,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "J\u00e1 faz tr\u00eas semanas e meu pedido n\u00e3o chegou.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "late:6",
+   "family": "late:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9972173186063614,
+    "mass": 0.9965366125106812,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.998625715181587,
+    "mass": 0.9997819066047668,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "Meu pedido chegou hoje, atrasado, mas chegou.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "late:6",
+   "family": "late:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.025002907940008336,
+    "mass": 0.9994559288024902,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0006934923617797637,
+    "mass": 0.9999372959136963,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "O rastreio diz entregue, mas n\u00e3o recebi nada.",
+   "label": true,
+   "tag": "implicit",
+   "lang": "pt",
+   "pair": "late:7",
+   "family": "late:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9772483862282493,
+    "mass": 0.9959139823913574,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9977048853602052,
+    "mass": 0.9996045231819153,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "O rastreio diz entregue e estou com a caixa. Posso trocar um item?",
+   "label": false,
+   "tag": "implicit",
+   "lang": "pt",
+   "pair": "late:7",
+   "family": "late:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.043423385882461016,
+    "mass": 0.9968449473381042,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.012716937941964372,
+    "mass": 0.9995594024658203,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "Cad\u00ea meu pedido 4512? Continuo esperando.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "late:8",
+   "family": "late:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9963140734148154,
+    "mass": 0.9958113431930542,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9981929620483924,
+    "mass": 0.99981689453125,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "Onde vejo meu hist\u00f3rico de pedidos? S\u00f3 para controle.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "late:8",
+   "family": "late:2",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00042815702624353114,
+    "mass": 0.9975668787956238,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0006501150158808927,
+    "mass": 0.999957263469696,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "O pedido da minha irm\u00e3 chegou, o meu n\u00e3o.",
+   "label": true,
+   "tag": "role",
+   "lang": "pt",
+   "pair": "late:9",
+   "family": "late:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9653552275386083,
+    "mass": 0.9990252256393433,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9916895080665034,
+    "mass": 0.9997389316558838,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "O meu chegou; o da minha irm\u00e3 \u00e9 que n\u00e3o, e ela mesma vai falar com voc\u00eas.",
+   "label": false,
+   "tag": "role",
+   "lang": "pt",
+   "pair": "late:9",
+   "family": "late:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.02012890090944922,
+    "mass": 0.998497486114502,
+    "error": null
+   },
+   "large": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.7650795887375414,
+    "mass": 0.9987381100654602,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "N\u00e3o reclamo da qualidade; o pedido nunca veio.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "late:10",
+   "family": "late:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9828393849507734,
+    "mass": 0.9985531568527222,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9938213950590234,
+    "mass": 0.9996342062950134,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "N\u00e3o reclamo da entrega; a qualidade \u00e9 que \u00e9 ruim.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "late:10",
+   "family": "late:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00036420983041427976,
+    "mass": 0.9996417760848999,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0006911732006258481,
+    "mass": 0.9999682307243347,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "Era para chegar segunda; j\u00e1 \u00e9 quinta e nada.",
+   "label": true,
+   "tag": "hypothetical",
+   "lang": "pt",
+   "pair": "late:11",
+   "family": "late:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9981985292749536,
+    "mass": 0.998753011226654,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9967844981702728,
+    "mass": 0.999809980392456,
+    "error": null
+   }
+  },
+  {
+   "fact": "late",
+   "claim": "The customer complains that an order has not arrived.",
+   "excludes": [],
+   "text": "Deve chegar segunda; posso mudar o endere\u00e7o antes?",
+   "label": false,
+   "tag": "hypothetical",
+   "lang": "pt",
+   "pair": "late:11",
+   "family": "late:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.006062559267493414,
+    "mass": 0.9896551370620728,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.06806617226992157,
+    "mass": 0.9987725615501404,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "Never mind, it works now. Thanks!",
+   "label": true,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "solved:0",
+   "family": "solved:0",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9999417352938027,
+    "mass": 0.9997790455818176,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9991014177427865,
+    "mass": 0.9996065497398376,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "It worked for a minute, but now it's broken again.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "solved:0",
+   "family": "solved:0",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 9.036245049969887e-05,
+    "mass": 0.9998460412025452,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0009509810753208675,
+    "mass": 0.9999205470085144,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "I restarted the router as you said and everything is fine now.",
+   "label": true,
+   "tag": "plain",
+   "lang": "en",
+   "pair": "solved:1",
+   "family": "solved:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9987111624457683,
+    "mass": 0.9997039437294006,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9987590651099171,
+    "mass": 0.9995377063751221,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "I restarted the router as you said and nothing changed.",
+   "label": false,
+   "tag": "plain",
+   "lang": "en",
+   "pair": "solved:1",
+   "family": "solved:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.002726214060627004,
+    "mass": 0.997645914554596,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0009156627076809939,
+    "mass": 0.9998612999916077,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "You can close the ticket, all good.",
+   "label": true,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "solved:2",
+   "family": "solved:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9975570239450903,
+    "mass": 0.9992722272872925,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9984749735471355,
+    "mass": 0.9995518922805786,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "Please don't close the ticket, it's not fixed.",
+   "label": false,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "solved:2",
+   "family": "solved:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0013775252087224737,
+    "mass": 0.9995101690292358,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001017104201423351,
+    "mass": 0.99992835521698,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "My husband thought it was still broken, but I checked: it's fixed.",
+   "label": true,
+   "tag": "role",
+   "lang": "en",
+   "pair": "solved:3",
+   "family": "solved:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9972807824322893,
+    "mass": 0.9996606707572937,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9975700580812485,
+    "mass": 0.9996888041496277,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "I thought it was fixed, but my husband checked: it's still broken.",
+   "label": false,
+   "tag": "role",
+   "lang": "en",
+   "pair": "solved:3",
+   "family": "solved:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0003474654992551513,
+    "mass": 0.9998016953468323,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0007933428796588166,
+    "mass": 0.9999229311943054,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "No need to reply anymore, I found the setting myself.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "solved:4",
+   "family": "solved:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9993994565095006,
+    "mass": 0.9997119307518005,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9981320998392786,
+    "mass": 0.9994422793388367,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "No reply yet, and I still can't find the setting.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "solved:4",
+   "family": "solved:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0010823466492129773,
+    "mass": 0.9997435212135315,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0011993586048699312,
+    "mass": 0.9999200105667114,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "It's not that it's still failing; it's fine now.",
+   "label": true,
+   "tag": "double_negation",
+   "lang": "en",
+   "pair": "solved:5",
+   "family": "solved:5",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9934568460477283,
+    "mass": 0.9997217655181885,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.995639251329197,
+    "mass": 0.9994810819625854,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "It's not that it's fine now; it's still failing.",
+   "label": false,
+   "tag": "double_negation",
+   "lang": "en",
+   "pair": "solved:5",
+   "family": "solved:5",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0002458424619021215,
+    "mass": 0.9998582601547241,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0007515418260667201,
+    "mass": 0.999906599521637,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "Deixa pra l\u00e1, j\u00e1 funcionou. Obrigado!",
+   "label": true,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "solved:6",
+   "family": "solved:0",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9997831674485733,
+    "mass": 0.9997625946998596,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9982326870314489,
+    "mass": 0.9995476007461548,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "Funcionou por um minuto, mas voltou a dar erro.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "solved:6",
+   "family": "solved:0",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0014445994533197693,
+    "mass": 0.999751091003418,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00169922902965216,
+    "mass": 0.9998766183853149,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "Reiniciei o roteador como pediram e agora est\u00e1 tudo certo.",
+   "label": true,
+   "tag": "plain",
+   "lang": "pt",
+   "pair": "solved:7",
+   "family": "solved:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9992093803235907,
+    "mass": 0.9997599720954895,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9973605540222671,
+    "mass": 0.9996110796928406,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "Reiniciei o roteador como pediram e nada mudou.",
+   "label": false,
+   "tag": "plain",
+   "lang": "pt",
+   "pair": "solved:7",
+   "family": "solved:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00409597587086839,
+    "mass": 0.9987226128578186,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0012634506243475447,
+    "mass": 0.9998727440834045,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "Podem fechar o chamado, est\u00e1 tudo bem.",
+   "label": true,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "solved:8",
+   "family": "solved:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9870171154270021,
+    "mass": 0.9984130263328552,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.997565600007714,
+    "mass": 0.9996691346168518,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "N\u00e3o fechem o chamado, ainda n\u00e3o resolveu.",
+   "label": false,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "solved:8",
+   "family": "solved:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.002440361087620262,
+    "mass": 0.9996080994606018,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0012128871100078613,
+    "mass": 0.9999299645423889,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "Meu marido achava que ainda estava com defeito, mas conferi: est\u00e1 resolvido.",
+   "label": true,
+   "tag": "role",
+   "lang": "pt",
+   "pair": "solved:9",
+   "family": "solved:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9985086013452091,
+    "mass": 0.9995127320289612,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9975302156478832,
+    "mass": 0.9996387362480164,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "Eu achava que estava resolvido, mas meu marido conferiu: continua com defeito.",
+   "label": false,
+   "tag": "role",
+   "lang": "pt",
+   "pair": "solved:9",
+   "family": "solved:3",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00028245552854250114,
+    "mass": 0.9995444416999817,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0008615791584848917,
+    "mass": 0.999869167804718,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "N\u00e3o precisa mais responder, achei a configura\u00e7\u00e3o sozinho.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "solved:10",
+   "family": "solved:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9996320441037013,
+    "mass": 0.9997891783714294,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9963887096311066,
+    "mass": 0.9994944930076599,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "Ningu\u00e9m respondeu ainda e continuo sem achar a configura\u00e7\u00e3o.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "solved:10",
+   "family": "solved:4",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001221564329050564,
+    "mass": 0.9997952580451965,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0012146164500009492,
+    "mass": 0.9999338984489441,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "N\u00e3o \u00e9 que continue falhando; agora est\u00e1 ok.",
+   "label": true,
+   "tag": "double_negation",
+   "lang": "pt",
+   "pair": "solved:11",
+   "family": "solved:5",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9977564014910699,
+    "mass": 0.9997367262840271,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9917245952753607,
+    "mass": 0.9994015693664551,
+    "error": null
+   }
+  },
+  {
+   "fact": "solved",
+   "claim": "The customer says their problem is now solved.",
+   "excludes": [],
+   "text": "N\u00e3o \u00e9 que agora esteja ok; continua falhando.",
+   "label": false,
+   "tag": "double_negation",
+   "lang": "pt",
+   "pair": "solved:11",
+   "family": "solved:5",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0003661859654904879,
+    "mass": 0.9997342824935913,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001107831497518193,
+    "mass": 0.9998504519462585,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Under GDPR, delete all the personal data you hold about me.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "erase:0",
+   "family": "erase:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.978584158017711,
+    "mass": 0.9923785924911499,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9995357712949023,
+    "mass": 0.9995267391204834,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Under GDPR, send me a copy of the personal data you hold about me.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "erase:0",
+   "family": "erase:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0066609624152524916,
+    "mass": 0.9989520311355591,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0006390719286497005,
+    "mass": 0.9999496936798096,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Erase my account and everything you stored about me.",
+   "label": true,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "erase:1",
+   "family": "erase:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9974583728435871,
+    "mass": 0.9963358640670776,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9989782642714191,
+    "mass": 0.9994816184043884,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Don't erase my account, I only want to change my email.",
+   "label": false,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "erase:1",
+   "family": "erase:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0022500932068090676,
+    "mass": 0.9998114109039307,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.005007357910483374,
+    "mass": 0.999907910823822,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Remove my phone number and address from your systems.",
+   "label": true,
+   "tag": "plain",
+   "lang": "en",
+   "pair": "erase:2",
+   "family": "erase:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9989886807716691,
+    "mass": 0.9989741444587708,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.999032044367901,
+    "mass": 0.9995238184928894,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Add my new phone number and address to your systems.",
+   "label": false,
+   "tag": "plain",
+   "lang": "en",
+   "pair": "erase:2",
+   "family": "erase:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0005551008334104902,
+    "mass": 0.9996463656425476,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0003510863814098392,
+    "mass": 0.9999591708183289,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "I asked last month to keep my data; I've changed my mind, delete it.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "erase:3",
+   "family": "erase:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9998402637075526,
+    "mass": 0.9994319677352905,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9981030438281401,
+    "mass": 0.9997443556785583,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "I asked last month to delete my data; I've changed my mind, keep it.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "erase:3",
+   "family": "erase:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.015349959866918755,
+    "mass": 0.9995306134223938,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00691146198967374,
+    "mass": 0.9998856782913208,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Please wipe the photos and records you keep about me.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "erase:4",
+   "family": "erase:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9963438194079925,
+    "mass": 0.9972063302993774,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9991040793510395,
+    "mass": 0.9994708299636841,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Please back up the photos I uploaded so I don't lose them.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "erase:4",
+   "family": "erase:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001079681682267938,
+    "mass": 0.9993919730186462,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00045092294082848275,
+    "mass": 0.9999421238899231,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "My lawyer says I can't force you to delete my data, but I'm asking you to anyway.",
+   "label": true,
+   "tag": "reported",
+   "lang": "en",
+   "pair": "erase:5",
+   "family": "erase:5",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9901009160106125,
+    "mass": 0.996681809425354,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9960123751362785,
+    "mass": 0.9997957348823547,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "My lawyer says I can force you to delete my data, but I don't want that; just stop the emails.",
+   "label": false,
+   "tag": "reported",
+   "lang": "en",
+   "pair": "erase:5",
+   "family": "erase:5",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.013993695844847087,
+    "mass": 0.999340832233429,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.011897942285592891,
+    "mass": 0.9997991919517517,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Pela LGPD, apaguem todos os meus dados pessoais.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "erase:6",
+   "family": "erase:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.997333011900387,
+    "mass": 0.9966943860054016,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9992143395548797,
+    "mass": 0.9998369812965393,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Pela LGPD, me enviem uma c\u00f3pia dos meus dados pessoais.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "erase:6",
+   "family": "erase:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0028794902350917067,
+    "mass": 0.9993800520896912,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001283717969932125,
+    "mass": 0.9999030232429504,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Excluam minha conta e tudo o que guardaram sobre mim.",
+   "label": true,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "erase:7",
+   "family": "erase:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9967933421559673,
+    "mass": 0.9976080656051636,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9986734125153636,
+    "mass": 0.9998058080673218,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "N\u00e3o excluam minha conta, s\u00f3 quero trocar o e-mail.",
+   "label": false,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "erase:7",
+   "family": "erase:1",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001983418729050766,
+    "mass": 0.9995906352996826,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0030572328929378756,
+    "mass": 0.9999114274978638,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Removam meu telefone e endere\u00e7o do sistema de voc\u00eas.",
+   "label": true,
+   "tag": "plain",
+   "lang": "pt",
+   "pair": "erase:8",
+   "family": "erase:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9991935379817485,
+    "mass": 0.9990502595901489,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9985124607559727,
+    "mass": 0.9997557997703552,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Adicionem meu novo telefone e endere\u00e7o ao sistema.",
+   "label": false,
+   "tag": "plain",
+   "lang": "pt",
+   "pair": "erase:8",
+   "family": "erase:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0005817015672319111,
+    "mass": 0.9995470643043518,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0004048211778251521,
+    "mass": 0.9999598860740662,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Pedi m\u00eas passado para manter meus dados; mudei de ideia, apaguem.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "erase:9",
+   "family": "erase:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9994499376150857,
+    "mass": 0.9993094205856323,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9970151481642678,
+    "mass": 0.9998217821121216,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Pedi m\u00eas passado para apagar meus dados; mudei de ideia, mantenham.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "erase:9",
+   "family": "erase:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.05149424508391276,
+    "mass": 0.9974637031555176,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.012499200856664621,
+    "mass": 0.9998772740364075,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Apaguem as fotos e registros que voc\u00eas t\u00eam sobre mim.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "erase:10",
+   "family": "erase:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9328504353676034,
+    "mass": 0.9940469861030579,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9985889978815108,
+    "mass": 0.9997782111167908,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Fa\u00e7am backup das fotos que enviei para eu n\u00e3o perder.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "erase:10",
+   "family": "erase:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0013278582854683023,
+    "mass": 0.9994676113128662,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0019244837392150308,
+    "mass": 0.9999096393585205,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Meu advogado diz que n\u00e3o posso obrigar voc\u00eas a apagar meus dados, mas pe\u00e7o mesmo assim.",
+   "label": true,
+   "tag": "reported",
+   "lang": "pt",
+   "pair": "erase:11",
+   "family": "erase:5",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9950480005239367,
+    "mass": 0.988191545009613,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9920164975263558,
+    "mass": 0.999796450138092,
+    "error": null
+   }
+  },
+  {
+   "fact": "erase",
+   "claim": "The customer asks us to delete their personal data.",
+   "excludes": [],
+   "text": "Meu advogado diz que posso obrigar voc\u00eas a apagar meus dados, mas n\u00e3o quero; s\u00f3 parem os e-mails.",
+   "label": false,
+   "tag": "reported",
+   "lang": "pt",
+   "pair": "erase:11",
+   "family": "erase:5",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.01772407007932634,
+    "mass": 0.9981853365898132,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.01242022992381076,
+    "mass": 0.9997926354408264,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "How much is the premium plan per month?",
+   "label": true,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "price:0",
+   "family": "price:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9809666102743307,
+    "mass": 0.9926313161849976,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9986637702267352,
+    "mass": 0.999725878238678,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "I already pay for the premium plan; how do I add a user?",
+   "label": false,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "price:0",
+   "family": "price:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0003899083351132423,
+    "mass": 0.9997151494026184,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0021360426881027504,
+    "mass": 0.9999608993530273,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "What would it cost to add two more seats?",
+   "label": true,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "price:1",
+   "family": "price:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9980303518573813,
+    "mass": 0.9967455267906189,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9983712499176779,
+    "mass": 0.9997134208679199,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "I added two more seats; the cost was fine.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "price:1",
+   "family": "price:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.008628524738954441,
+    "mass": 0.9997268915176392,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.003159515403395359,
+    "mass": 0.9999556541442871,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "Before I buy, tell me the price of the 1TB option.",
+   "label": true,
+   "tag": "plain",
+   "lang": "en",
+   "pair": "price:2",
+   "family": "price:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9979113741406183,
+    "mass": 0.9984034299850464,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9983269778649839,
+    "mass": 0.9997426867485046,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "I bought the 1TB option; tell me how to activate it.",
+   "label": false,
+   "tag": "plain",
+   "lang": "en",
+   "pair": "price:2",
+   "family": "price:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0006668735700920535,
+    "mass": 0.9995526671409607,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0014211847840349338,
+    "mass": 0.9999676942825317,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "Is the yearly plan cheaper? What's the price?",
+   "label": true,
+   "tag": "implicit",
+   "lang": "en",
+   "pair": "price:3",
+   "family": "price:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9975049305659455,
+    "mass": 0.998812198638916,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9959549448900102,
+    "mass": 0.999790608882904,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "The yearly plan is cheaper, I know. I want to switch to it.",
+   "label": false,
+   "tag": "implicit",
+   "lang": "en",
+   "pair": "price:3",
+   "family": "price:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.005342847457656014,
+    "mass": 0.9995781183242798,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0031429310223164307,
+    "mass": 0.9999635815620422,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "My boss knows the price, I don't; how much is it?",
+   "label": true,
+   "tag": "role",
+   "lang": "en",
+   "pair": "price:4",
+   "family": "price:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9996632194302696,
+    "mass": 0.9992724657058716,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9984373480686998,
+    "mass": 0.9996747970581055,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "I know the price; my boss doesn't, and he'll check your website.",
+   "label": false,
+   "tag": "role",
+   "lang": "en",
+   "pair": "price:4",
+   "family": "price:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.09889181508634218,
+    "mass": 0.9997843503952026,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0383074109855463,
+    "mass": 0.9997915029525757,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "I'm not asking about features, just the price.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "price:5",
+   "family": "price:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9993926631062999,
+    "mass": 0.9996175765991211,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9966415948081797,
+    "mass": 0.9997631907463074,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "I'm not asking about the price, just the features.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "en",
+   "pair": "price:5",
+   "family": "price:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0010354125606444236,
+    "mass": 0.9998356103897095,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0010752713938501682,
+    "mass": 0.9999727010726929,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "Quanto custa o plano premium por m\u00eas?",
+   "label": true,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "price:6",
+   "family": "price:0",
+   "split": "tune",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.48324214477930433,
+    "mass": 0.9004296064376831,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.99800716942925,
+    "mass": 0.9998436570167542,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "J\u00e1 pago o plano premium; como adiciono um usu\u00e1rio?",
+   "label": false,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "price:6",
+   "family": "price:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001255210652106209,
+    "mass": 0.9991792440414429,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.002030215018094628,
+    "mass": 0.9999625086784363,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "Quanto sairia adicionar mais dois usu\u00e1rios?",
+   "label": true,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "price:7",
+   "family": "price:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.958168649900706,
+    "mass": 0.9926119446754456,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.997029748015701,
+    "mass": 0.9998182654380798,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "Adicionei mais dois usu\u00e1rios; o valor ficou ok.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "price:7",
+   "family": "price:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.020035645460419128,
+    "mass": 0.9996095895767212,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00664756917380489,
+    "mass": 0.999914824962616,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "Antes de comprar, me diz o pre\u00e7o da op\u00e7\u00e3o de 1TB.",
+   "label": true,
+   "tag": "plain",
+   "lang": "pt",
+   "pair": "price:8",
+   "family": "price:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9961703521085661,
+    "mass": 0.9971616864204407,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9975390395506994,
+    "mass": 0.9998708963394165,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "Comprei a op\u00e7\u00e3o de 1TB; como ativo?",
+   "label": false,
+   "tag": "plain",
+   "lang": "pt",
+   "pair": "price:8",
+   "family": "price:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0011567711677787414,
+    "mass": 0.9990119338035583,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.002393083775457284,
+    "mass": 0.9999352097511292,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "Meu chefe sabe o pre\u00e7o, eu n\u00e3o; quanto \u00e9?",
+   "label": true,
+   "tag": "role",
+   "lang": "pt",
+   "pair": "price:9",
+   "family": "price:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9983704583204671,
+    "mass": 0.9932953715324402,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9960462454715342,
+    "mass": 0.9998064041137695,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "Eu sei o pre\u00e7o; meu chefe n\u00e3o, e ele vai olhar no site.",
+   "label": false,
+   "tag": "role",
+   "lang": "pt",
+   "pair": "price:9",
+   "family": "price:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.042234136582757306,
+    "mass": 0.999480664730072,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.05875402354091252,
+    "mass": 0.9996708035469055,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "N\u00e3o pergunto das fun\u00e7\u00f5es, s\u00f3 do pre\u00e7o.",
+   "label": true,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "price:10",
+   "family": "price:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9979496044176319,
+    "mass": 0.9994455575942993,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.986008446005051,
+    "mass": 0.9998001456260681,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "N\u00e3o pergunto do pre\u00e7o, s\u00f3 das fun\u00e7\u00f5es.",
+   "label": false,
+   "tag": "contrast",
+   "lang": "pt",
+   "pair": "price:10",
+   "family": "price:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0014255081282144224,
+    "mass": 0.9996934533119202,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0021296842306789496,
+    "mass": 0.9999566674232483,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "O plano anual \u00e9 mais barato? Qual o valor?",
+   "label": true,
+   "tag": "implicit",
+   "lang": "pt",
+   "pair": "price:11",
+   "family": "price:5",
+   "split": "check",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.8114932172207505,
+    "mass": 0.972989559173584,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9920689765288149,
+    "mass": 0.9998008608818054,
+    "error": null
+   }
+  },
+  {
+   "fact": "price",
+   "claim": "The customer asks how much something costs.",
+   "excludes": [],
+   "text": "O plano anual \u00e9 mais barato, eu sei. Quero mudar para ele.",
+   "label": false,
+   "tag": "implicit",
+   "lang": "pt",
+   "pair": "price:11",
+   "family": "price:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.010514742690501793,
+    "mass": 0.998867928981781,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.005445849111334669,
+    "mass": 0.9999430775642395,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "I need this fixed today, my store opens tomorrow morning.",
+   "label": true,
+   "tag": "plain",
+   "lang": "en",
+   "pair": "today:0",
+   "family": "today:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9981419550004127,
+    "mass": 0.9979785084724426,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9991827544685508,
+    "mass": 0.9996343851089478,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "No rush at all, next week is fine.",
+   "label": false,
+   "tag": "plain",
+   "lang": "en",
+   "pair": "today:0",
+   "family": "today:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.00038136370553995167,
+    "mass": 0.9996007680892944,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0010036414475642936,
+    "mass": 0.9999633431434631,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "It can't wait until tomorrow.",
+   "label": true,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "today:1",
+   "family": "today:1",
+   "split": "check",
+   "small": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.415878939338981,
+    "mass": 0.9985228180885315,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9990880880314756,
+    "mass": 0.9995737671852112,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "It can wait until tomorrow, or even later.",
+   "label": false,
+   "tag": "negation",
+   "lang": "en",
+   "pair": "today:1",
+   "family": "today:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.002765783267725416,
+    "mass": 0.9994896650314331,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0007393763884461008,
+    "mass": 0.9999750852584839,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "My partner says it can wait; it can't, I need it today.",
+   "label": true,
+   "tag": "role",
+   "lang": "en",
+   "pair": "today:2",
+   "family": "today:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9996865097652834,
+    "mass": 0.99882972240448,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9978084391856189,
+    "mass": 0.9997956156730652,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "My partner says it's urgent; it isn't, whenever you can.",
+   "label": false,
+   "tag": "role",
+   "lang": "en",
+   "pair": "today:2",
+   "family": "today:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.008395152509807541,
+    "mass": 0.9995349049568176,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.012754340395230325,
+    "mass": 0.9997930526733398,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Yesterday it wasn't urgent, but now I need it solved before tonight.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "today:3",
+   "family": "today:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9579708509222435,
+    "mass": 0.9983010292053223,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9975540061520854,
+    "mass": 0.9997795820236206,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Yesterday it was urgent, but I found a workaround, so no hurry.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "en",
+   "pair": "today:3",
+   "family": "today:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0015622011923407248,
+    "mass": 0.999328076839447,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.004304058395193616,
+    "mass": 0.999940812587738,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Today, please. Today.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "today:4",
+   "family": "today:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9998373344020312,
+    "mass": 0.9982225298881531,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9987107309485235,
+    "mass": 0.9994829297065735,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Today I'm just collecting information for a project next quarter.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "en",
+   "pair": "today:4",
+   "family": "today:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001216951605718788,
+    "mass": 0.9996414184570312,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.001953782591595608,
+    "mass": 0.9999445080757141,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "It's not that I can wait: I need it today.",
+   "label": true,
+   "tag": "double_negation",
+   "lang": "en",
+   "pair": "today:5",
+   "family": "today:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.999082558514953,
+    "mass": 0.9977134466171265,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9992325217935413,
+    "mass": 0.9996978044509888,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "It's not that I need it today: I can wait.",
+   "label": false,
+   "tag": "double_negation",
+   "lang": "en",
+   "pair": "today:5",
+   "family": "today:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0012859314822195199,
+    "mass": 0.9995411038398743,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0008477570101496885,
+    "mass": 0.9999675154685974,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Preciso disso resolvido hoje, minha loja abre amanh\u00e3 cedo.",
+   "label": true,
+   "tag": "plain",
+   "lang": "pt",
+   "pair": "today:6",
+   "family": "today:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9998147890517154,
+    "mass": 0.9971020221710205,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9989215681212816,
+    "mass": 0.9997548460960388,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Sem pressa nenhuma, semana que vem est\u00e1 \u00f3timo.",
+   "label": false,
+   "tag": "plain",
+   "lang": "pt",
+   "pair": "today:6",
+   "family": "today:0",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0011979731232306904,
+    "mass": 0.9992920756340027,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0019599466834696283,
+    "mass": 0.9999624490737915,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "N\u00e3o pode esperar at\u00e9 amanh\u00e3.",
+   "label": true,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "today:7",
+   "family": "today:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9988392848639289,
+    "mass": 0.9985374808311462,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.998742566831587,
+    "mass": 0.9997369647026062,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Pode esperar at\u00e9 amanh\u00e3, ou mais.",
+   "label": false,
+   "tag": "negation",
+   "lang": "pt",
+   "pair": "today:7",
+   "family": "today:1",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.013858034119975913,
+    "mass": 0.9987753033638,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0018823914026719366,
+    "mass": 0.9999598860740662,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Meu s\u00f3cio diz que pode esperar; n\u00e3o pode, preciso hoje.",
+   "label": true,
+   "tag": "role",
+   "lang": "pt",
+   "pair": "today:8",
+   "family": "today:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9998715697971192,
+    "mass": 0.9985383749008179,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.999236790537073,
+    "mass": 0.9998798966407776,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Meu s\u00f3cio diz que \u00e9 urgente; n\u00e3o \u00e9, quando puderem.",
+   "label": false,
+   "tag": "role",
+   "lang": "pt",
+   "pair": "today:8",
+   "family": "today:2",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.016745633691934186,
+    "mass": 0.9987393021583557,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.005464273211099403,
+    "mass": 0.9998506307601929,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Ontem n\u00e3o era urgente, mas agora preciso antes da noite.",
+   "label": true,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "today:9",
+   "family": "today:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.990546054128103,
+    "mass": 0.9989298582077026,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9904677523822152,
+    "mass": 0.9996510148048401,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Ontem era urgente, mas achei uma alternativa, ent\u00e3o sem pressa.",
+   "label": false,
+   "tag": "temporal",
+   "lang": "pt",
+   "pair": "today:9",
+   "family": "today:3",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0022387915653377197,
+    "mass": 0.9987640380859375,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.004548168549446073,
+    "mass": 0.9999396800994873,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Hoje, por favor. Hoje.",
+   "label": true,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "today:10",
+   "family": "today:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.999694897841501,
+    "mass": 0.9967857599258423,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9986965960487889,
+    "mass": 0.9997283220291138,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "Hoje s\u00f3 estou levantando informa\u00e7\u00f5es para um projeto do pr\u00f3ximo trimestre.",
+   "label": false,
+   "tag": "keyword",
+   "lang": "pt",
+   "pair": "today:10",
+   "family": "today:4",
+   "split": "tune",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0017338929960727604,
+    "mass": 0.9992882609367371,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0013911967341756278,
+    "mass": 0.9999533295631409,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "N\u00e3o \u00e9 que eu possa esperar: preciso hoje.",
+   "label": true,
+   "tag": "double_negation",
+   "lang": "pt",
+   "pair": "today:11",
+   "family": "today:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9998573757614585,
+    "mass": 0.996200442314148,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9990894918968221,
+    "mass": 0.9997752904891968,
+    "error": null
+   }
+  },
+  {
+   "fact": "today",
+   "claim": "The customer says they need a solution today.",
+   "excludes": [],
+   "text": "N\u00e3o \u00e9 que eu precise hoje: posso esperar.",
+   "label": false,
+   "tag": "double_negation",
+   "lang": "pt",
+   "pair": "today:11",
+   "family": "today:5",
+   "split": "check",
+   "small": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.002540436094907958,
+    "mass": 0.9988076090812683,
+    "error": null
+   },
+   "large": {
+    "status": "ok",
+    "value": false,
+    "p_true": 0.0027718948687158944,
+    "mass": 0.9999555349349976,
+    "error": null
+   }
+  }
+ ],
+ "fixed_band_0.9": {
+  "small": {
+   "labelled": 120,
+   "accepted": 110,
+   "correct": 107,
+   "wrong": 3,
+   "coverage": 0.9166666666666666,
+   "precision": 0.9727272727272728
+  },
+  "residue": {
+   "labelled": 10,
+   "accepted": 9,
+   "correct": 7,
+   "wrong": 2,
+   "coverage": 0.9,
+   "precision": 0.7777777777777778
+  },
+  "cascade": {
+   "labelled": 120,
+   "accepted": 119,
+   "correct": 114,
+   "wrong": 5,
+   "coverage": 0.9916666666666667,
+   "precision": 0.957983193277311
+  }
+ }
+}

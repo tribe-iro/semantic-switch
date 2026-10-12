@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Version** | v0.23 (2026-10-06) |
-| **Implemented** | v0.23 (`semantic_switch/`, 171 tests: 155 deterministic, 16 on real models). Open work is the experiments in §9.1. History is in `CHANGELOG.md`; evidence is in `bench/README.md`. |
+| **Version** | v0.26 (2026-10-06) |
+| **Implemented** | v0.26 (`semantic_switch/`, 194 tests: 176 deterministic, 18 on real models). §9.1 items 1–13 are implemented; the open experiment E8 remains. History is in `CHANGELOG.md`; evidence is in `bench/README.md`. |
 | **Owner** | Tulio Ribeiro |
 | **One line** | Language-based judgments inside ordinary code: local, cheap, multilingual, open source, with rules you can read, teach and diff. |
 
@@ -35,6 +35,17 @@ route(ticket)
 Until a switch is locked and tested, treat its answers as drafts.
 
 **The product, in one line: a decision compiler.** Exact evidence, cheap learned shortcuts and shared semantic judgments, combined so that model compute goes only to what remains unresolved.
+
+**What is and isn't distinctive.**
+- **Typed judgments over shared input are now a commodity:** the OpenAI Decisions API (October 2026) offers predicate / choice / score at $0.10 per million input tokens.
+- **What this library adds is everything around the judgment:**
+  - exact eligibility and identifiers enforced in code;
+  - facts and cases resolved with three-valued logic;
+  - claims shared across a catalogue;
+  - corrections and lexical heads that settle recurring inputs without a model;
+  - measured abstention (held-out observations with intervals, not guarantees);
+  - local, private and offline execution;
+  - any judge behind one contract, including a hosted one.
 
 ### Zero to hero (one new concept per step)
 
@@ -122,29 +133,29 @@ Results have no truth value: `bool(result)` raises `TypeError` ("use `.value`").
 
 ```python
 rt.check(state, statement, *, excludes=(), unstated=False, fields=None, min_score=None)
-rt.pick(state, question, options, *, describe=None, eligible=None, allow_none=False,
+rt.pick(state, question, options, *, definition=None, eligible=None, allow_none=False,
         shortlist=None, ids=None, focus=None, fields=None, min_score=None)
 rt.rate(state, question, levels, *, fields=None, min_score=None)
 rt.ask(state, {"legal": ss.Check(...), "topic": ss.Pick(...), "urgency": ss.Rate(...)})   # one shared read
 ```
 
 - `state` is a string or a dict; `fields=[...]` selects and orders dict fields. **Inline and saved inputs render identically** (§4.1).
-- `options` are a dict `{id: description | {description, aliases}}`, a list of strings, or a list of objects with `describe=`.
-- **Acceptance is the same everywhere** (§4.5): one rule, `settle`, used by inline calls, switches and tools. A judgment's policy is `(θ_true, θ_false)`, both read as "this side's probability is at least θ", 0.90 / 0.90 by default:
-  - a check is True at `p(true) ≥ θ_true` and False at `p(false) ≥ θ_false`;
-  - a pick or rate value is chosen when its own probability is `≥ θ_true`.
+- `options` are a dict `{id: description | {description, aliases}}`, a list of strings, or a list of objects with `definition=`.
+- **Acceptance is the same everywhere** (§4.5): one rule, `settle`, used by inline calls, switches and tools. A judgment's policy reads "this answer's probability is at least θ", 0.90 by default:
+  - **a check has two sides,** one per answer: it answers True at `p(true) ≥ θ_true` and False at `p(false) ≥ θ_false`;
+  - **a pick or rate has one θ:** a value is chosen when its own probability is `≥ θ`.
 
   Anything in between is `uncertain`, so a 0.55 never comes back as an answer.
-  - `min_score=m`, with `0.5 < m ≤ 1`, sets both sides to `m`. It is a **majority** threshold, not "take the most likely answer": with 0.45 / 0.35 / 0.20 nothing settles at any allowed `m`.
+  - `min_score=m`, with `0.5 < m ≤ 1`, sets every θ to `m`. It is a **majority** threshold, not "take the most likely answer": with 0.45 / 0.35 / 0.20 nothing settles at any allowed `m`.
   - θ above 0.5 is what makes acceptance consistent by arithmetic: two answers that exclude each other can never both be accepted.
 - **Answer format is checked first, the same way inline and in switches:** under 0.5 of the probability on valid answer tokens → `uncertain`, `error="low answer mass"`.
-- **Cheap work runs before model work.** Validation, eligibility, candidate limits and immediate answers (no eligible candidate, an empty `ask`) never load a model. `describe()` runs only for eligible candidates, after the limit check.
+- **Cheap work runs before model work.** Validation, eligibility, candidate limits and immediate answers (no eligible candidate, an empty `ask`) never load a model. `definition()` runs only for eligible candidates, after the limit check.
 - Programming errors (invalid `min_score`, malformed options, too many levels) raise; execution problems return `status="failed"` with `r.error`.
 
 ```python
 r = rt.check(ticket, "The customer threatens legal action against us", min_score=0.9)
 r.status, r.value, r.p_true, r.mass          # "ok", True, 0.97, 1.0; three-way adds r.p_unstated
-r = rt.pick(doc, "Which address?", addresses, describe=lambda a: a.text)
+r = rt.pick(doc, "Which address?", addresses, definition=lambda a: a.text)
 r.value, r.index, r.score, r.scores, r.removed, r.truncated, r.focus
 r = rt.rate(idea, "How feasible?", levels)
 r.value, r.index, r.scores
@@ -174,7 +185,9 @@ else:
 
 The saved judgment answers exactly as the inline one did until `ss lock` tunes its policy, which is an explicit change.
 
-**What saves:** `Pick` saves only with dict options. Inline dict options take `description` and `aliases`. `requires` is YAML-only (inline uses `eligible=`), and inline raises `ConfigError` if it is given.
+**What saves:** `Pick` saves only with dict options and no callbacks or shortlist. Inline dict options take `description`, `excludes` and `aliases`, validated by the same rules as `ss ask` question files and saved switches. `requires` is YAML-only (inline uses `eligible=`), and inline raises `ConfigError` if it is given.
+
+**Inspection:** `item.describe()` and `switch.describe()` return immutable authored metadata (address, kind, definition, reads, guidance references, revision) without loading a model. Verbose results (`as_dict(True)`) carry `presentations`: each stage actually sent (`full`, `mentions`, `fallback`) with its answer → key/option mapping.
 
 ### 3.3 `pick` rules
 
@@ -343,7 +356,12 @@ facts:
 **Claims and identity:**
 - An `applies_when` / `excludes` entry is either **`{fact: name}`**, naming a **check** fact of the switch (use this for anything shared), or a **plain claim string**, which compiles to an anonymous check fact reading the switch's `reads`. Facts never depend on `select` results, so the dependency graph is cases → facts / selects → claims, and has no cycles except `supersedes`, which is validated.
 - Identity is the fact's `meaning_rev` (kind, text, `excludes`, `unstated`, `reads`, the full definition of every read field). Two entries are the same judgment only if their identities match, never because their text does.
-- `applies_when` claims are closed-world: silence means they don't hold. Exclusions are written as three-way facts (`unstated: true`): "states true" rejects the card, and "does not say" leaves it `unresolved` with `not_stated`. An exclusion given as a plain string compiles to a three-way check.
+- `applies_when` claims are closed-world: silence means they don't hold. Exclusions are open-world, three-way facts: "states true" rejects the card, and "does not say" leaves it `unresolved` with `not_stated`.
+  - An exclusion given as a plain string compiles to a three-way check.
+  - An exclusion given as `{fact: name}` **must name a three-way check** (`unstated: true`); otherwise it is a `ConfigError`. A two-way check would read silence as a confident "false" and let the card apply.
+- **Authoring rule:** what kind of claim is it?
+  - **About the text itself:** "the report requests a refund" is an ordinary check, and silence means no.
+  - **About the world:** "the equipment has a leak" is a three-way check or an exact observation (`requires: 'leak_sensor == true'`). Silence about the world is not evidence that it is false.
 - **Authoritative codes are exact rules on structured fields:** `requires: 'mentions(active_alarms, "E17")'`. A code merely mentioned in the operator's text is an `alias`. It ranks, and never decides ("a historical E17 on another machine" mustn't qualify).
 
 | Card state (base) | Means | `has "id"` |
@@ -403,17 +421,29 @@ There is no `eval`, no attribute access and no other functions. Unknown names an
 | `exists(field)` | exact | never UNKNOWN |
 | `mentions(field, …)` | exact | §3.4 boundaries; "does it name it", never "what does it say about it" |
 
-**A condition over one judgment is evaluated on its distribution, never assembled from separately accepted pieces.**
-- **Compile time:** every maximal sub-expression that refers to a single fact becomes **one semantic atom**: `u >= "today" and u < "high"`, `u == "today"`, `topic in [billing, technical]` or `not leak`. The compiler enumerates the fact's values (at most 20) and records the atom's **truth vector**: TRUE, FALSE or UNKNOWN for each value. Three-way "does not say" is UNKNOWN for every atom over that fact.
-- **Runtime:** with `p` the judgment's distribution,
-  - `pT` = the mass of values where the atom is TRUE, and `pF` = the mass where it is FALSE;
-  - the atom is **TRUE** at `pT ≥ θ_true`, **FALSE** at `pF ≥ θ_false`, otherwise **UNKNOWN**.
-- **Example:** with 0.08 / 0.84 / 0.08, `u == "today"` has `pT = 0.84` → UNKNOWN. Separately accepted `>=` pieces would have reached 0.92 and fired, and that rewrite is gone.
-- **Consistency** holds by arithmetic, so there is no propagation step: θ above 0.5 means exclusive atoms can't both be TRUE, and a narrower atom is never more probable than a wider one.
+**A condition over one judgment is evaluated on its distribution, never assembled from separately accepted pieces, and never changed by how it is written.**
+- **Compile time:**
+  1. **Flatten:** nested `and` / `or` of the same operator are flattened first, because both are associative and commutative. `(u >= "today" and g) and u < "high"` and `u >= "today" and u < "high" and g` compile to the same atoms. Nothing else is rewritten; there is no distribution and no probabilistic algebra.
+  2. **Group:** within each flattened `and` / `or`, the operands that refer to the same fact (and `not` over them) become **one semantic atom**: `u >= "today" and u < "high"`, `u == "today"`, `topic in [billing, technical]`. Operands over different facts stay separate and are combined in Kleene logic.
+  3. **Truth vector:** the compiler enumerates the fact's values (at most 20) and records the atom's truth vector: TRUE, FALSE or UNKNOWN for each value. Three-way "does not say" is UNKNOWN for every atom.
+- **Before v0.26, both of the following failed** (reproduced):
+  - **grouping only looked at immediate children:** at 0.08 / 0.84 / 0.08, `(u >= "today" and g) and u < "high"` returned `ok` while the flat form returned `uncertain`;
+  - **`not` was folded into the truth vector before acceptance:** a disabled FALSE side was bypassed by writing `not leak`.
+- **Runtime, by the fact's kind:**
+  - **Check facts: answer first, then evaluate.**
+    - The check settles its **answer**: *true* at `p(true) ≥ θ_true`, *false* at `p(false) ≥ θ_false`, *unstated* when the "does not say" mass reaches `θ_true`; otherwise it is unsettled.
+    - Every atom over the check is its truth vector **evaluated at that answer** (UNKNOWN while unsettled).
+    - `not leak` is therefore Kleene negation of a settled answer: a disabled side stays disabled whatever the expression, and asymmetric thresholds can't make `not x` differ from negating `x`.
+  - **Pick and rate facts: set events under one θ.**
+    - With `p` the distribution, `pT` is the mass of values where the atom is TRUE and `pF` the mass where it is FALSE.
+    - The atom is **TRUE** at `pT ≥ θ`, **FALSE** at `pF ≥ θ`, otherwise **UNKNOWN**.
+    - One symmetric θ makes negation and complements consistent by construction: `not S` is the complement set under the same θ. Since θ > 0.5, exclusive atoms can't both be TRUE, and a narrower atom is never more probable than a wider one.
+- **Example:** with 0.08 / 0.84 / 0.08, `u == "today"` has `pT = 0.84` → UNKNOWN, written either way.
+- **A set condition is a different event from an answer.** With A .46 / B .46 / C .08, no answer settles, but `topic in [A, B]` is TRUE at 0.92. Policies are tuned on answers, so `ss lock` reports each compiled condition's own held-out precision separately (§5.3); a judgment's target does not transfer to its set conditions automatically.
 
 **Kleene logic combines accepted judgments; it does not compute the probability that a compound decision is right.** `legal_threat and topic == "billing"` is TRUE when both atoms are accepted, and that is weaker evidence than either alone. End-to-end correctness is measured with `ss test`.
 
-**One pure function decides acceptance:** `settle(p, truth_vector, policy, mass) → (state, reason)`. Inline results, switch atoms, a fact's own value (the atom "fact == v" for each v), lock tuning, `specialize` and `ss test` all call it. Nothing else interprets scores.
+**One pure function decides acceptance:** `settle(judgment, p, truth_vector, policy, mass, pending) → (state, reason)`. It applies the answer-first rule for checks and the set rule for picks and rates. Inline results, switch atoms, a fact's own value, lock tuning and validation, `specialize` and `ss test` all call it. Nothing else interprets scores.
 
 **Reasons for UNKNOWN,** in order:
 1. answer mass under 0.5 → `low_answer_mass`;
@@ -421,7 +451,11 @@ There is no `eval`, no attribute access and no other functions. Unknown names an
 3. the "does not say" mass is `≥ θ_true` → `not_stated`;
 4. otherwise `uncertain`.
 
-**Policy.** One policy per judgment: `(θ_true, θ_false)`, default 0.90 / 0.90 (or the fact's `min_score`), until `ss lock` tunes it. It is the same policy as inline calls (§3.1). Per-atom thresholds are gone: with one policy per judgment, all atoms over a fact agree.
+**Policy.** One policy per judgment, until `ss lock` tunes it:
+- **checks:** `(θ_true, θ_false)`, one per answer;
+- **picks and rates:** a single `θ`.
+
+The default is 0.90 (or the fact's `min_score`). It is the same policy as inline calls (§3.1). There are no per-atom thresholds, so all atoms over a fact agree.
 
 **Eligibility:**
 - An option whose `requires` is FALSE is removed before scoring (its mass is dropped and the rest renormalised), and from exact overrides too.
@@ -452,7 +486,21 @@ Errors in facts that don't decide never change the result. `resolve: all` return
 2. Evaluate exact atoms and eligibility.
 3. Find the facts the cases still need: **directly** (their atoms are in a case) or **through a `select`** (only its cards need them; these obey that catalogue's budget, §4.4).
 4. Settle what's cheap: rules, then exact overrides, then lexical heads. Re-simplify after each.
-5. **Two-stage scoring:** score the first unresolved case's facts in one round; if that settles the switch, stop; otherwise score everything still needed in a second round. Each round is one batched judge call per input. **An input runs all its rounds before the next input starts**, so the input cache makes the second round cost only its questions (`many()` processes inputs in order).
+5. **Two-stage scoring:** score the first unresolved case's facts in one round; if that settles the switch, stop; otherwise score everything still needed in a second round. Each round is one batched judge call.
+
+   **Two execution surfaces,** because responsiveness and throughput are different needs:
+
+   | Surface | Behaviour | For |
+   |---|---|---|
+   | `sw(input)`, `sw.many(iterable)`, `ss run --each` | **streaming:** each input runs all its rounds and its result is yielded before the next input is read | interactive use, pipes, iterators that wait on their consumer |
+   | `sw.run(list)`, `ss run --each --batch N` | **finite batch:** inputs go in windows of the judge's batch capacity; each round runs for the whole window in **one decode** (every input in its own sequence, every question in its own branch); an input that settles in round 1 leaves the window's later rounds | throughput over a known set |
+
+   - **The judge declares its batch capacity** (`Judge.batch_inputs`): `LlamaJudge` on a GPU 8, on the CPU 1, and hosted judges their own. The executor doesn't guess from the device.
+   - Results always come back in input order.
+
+   **Measured** (one question per input, default judge):
+   - **GPU:** one decode over 4 / 8 / 16 inputs gave 2.5× / 3.5× / 3.9× the throughput of sequential calls at 20 tokens, and 1.3–1.4× at 261 tokens, with identical scores (max difference 0.0002).
+   - **CPU:** 0.92–1.13×, so no gain; its compute is already saturated.
    - Measured with the cache (E4, route_ticket, default judge): when the first case decides, 243 ms against 942 ms for scoring every fact at once; when a later case decides, within 0–8% of it. There is no `schedule` option.
 6. Accept (`settle`), resolve, build the result. A rendered projection is built once per call and reused by heads, questions and the result.
 
@@ -465,7 +513,8 @@ r = route(ticket)
 r                # <ok · 'billing' · case refund_other · 2 judged · 181 ms>
 r.status, r.answer, r.case, r.missing, r.invalid, r.uncertain, r.blocked_by, r.errors
 r.facts          # {"refund_requested": Fact(True, 0.96, judge), ...}
-r.cost           # {"rules": 3, "example": 0, "classifier": 0, "judge": 2, "rounds": 1, "tokens": 412, "ms": 181.0}
+r.cost           # {"rules": 3, "example": 0, "classifier": 0, "judge": 2, "rounds": 1, "tokens": 412,
+                 #  "elapsed_ms": 181.0, "amortized_ms": 181.0}
 print(r.explain())   # cases ✓/✗/·, facts with value, score, source, why; explain(raw=True) adds atom states
 ```
 
@@ -475,7 +524,11 @@ print(r.explain())   # cases ✓/✗/·, facts with value, score, source, why; e
 - **`why`** is short ("uncertain", "low answer mass", "missing: payment.status", "not stated in the input", "error: …"). Reasons are typed internally, and the strings are made at the boundary.
 - **Truncation is visible:** `r.truncated` lists the fields cut by `max_chars` for this call. A settled answer on a truncated input stays settled, but the result says what the judge didn't see.
 - **Internals:** compiled atom keys and raw distributions never appear in the result.
-- **`ms`** is the batch time divided by its calls.
+- **Timing, two quantities:**
+  - **`elapsed_ms`** is the wall time of the operation that produced this result: what a caller actually waited;
+  - **`amortized_ms`** is that operation's time divided by its inputs, a throughput figure.
+
+  They are equal for a single call. Eight results from one 400 ms batch each show 400 elapsed and 50 amortized.
 
 ---
 
@@ -508,36 +561,55 @@ Tool-written labels record the revisions they were made under; hand-written line
 
 ### 5.3 Lock, test, diff
 
-The test file holds labelled inputs: `{"input": …, "facts": {…}, "case": "…", "group": "…"}`. It is split once, deterministically, into **tune** and **check** halves:
+The test file holds labelled inputs in the versioned envelope: `{"schema": 2, "input": …, "facts": {…}, "label_sources": {…}, "case": "…", "groups": […], "pairs": […], "role": …, "tags": […], "selections": […]}`. `label_sources` mirrors `facts`: every labelled fact or member keeps an ordered history of sources (origin human, rule, synthetic or unknown; producer; artifact digest; address; review entries). The per-target `label_origin` in exports and reports is derived from that history (`mixed` when contributors differ), never an input.
+
+**One labelled-data collector.** Export, lock, `specialize` and membership all read labels through a single collector, so tools can't disagree about what an example is:
+- **Sources:** corrections, test-file labels, and (if E8 is adopted) teacher labels.
+- **Merging:** records are merged per fact meaning and input projection; one input is one example, whatever its source.
+- **Groups are joined, never chosen.** Each example starts in its decision key's group plus every explicit `group` any of its records names. Groups that share an example are merged (union-find). Two explicit groups meeting on one input are joined, with a warning naming both. Joining can only make held-out sets more conservative; choosing one would leak the other.
+- **Conflicts:** conflicting labels for one example are a `ConfigError` naming the input. Agreeing records merge their source histories; no origin wins by rank.
+- **Splits and folds** are assigned to the joined groups, never to raw records. **Corrections are examples too:** a correction whose group falls in the check half validates and never trains, while it still fixes its exact input at runtime.
+- **Taught inputs are excluded from validation:** an exact correction settles its input by rule, so it is no evidence for any policy.
+
+It is split once, deterministically, into **tune** and **check** halves:
 - **by the decision key:** the canonical projection of every field any fact reads or any exact rule tests, so two lines differing only in unused fields land together;
 - **with an optional `group` kept together,** for translations, paraphrases and near-duplicates.
 
 **`ss lock`** is the only writer of frozen behaviour. `--dry-run` shows what it would choose without writing.
 1. Compile.
-2. **Train lexical heads** for `specialize: lexical` facts on that fact's examples **plus its tune-half labels** (§5.4).
+2. **Train lexical heads** for `specialize: lexical` facts on that fact's **tune-split examples** (corrections and labels alike, §5.4).
 3. **Choose one policy per judgment and source** (the judge; the lexical head):
-   - the TRUE side scores "the fact's value is v" over the labelled values (checks: v = true); the FALSE side scores "is not v" (checks: v = false);
+   - **checks:** the TRUE side scores "the answer is true"; the FALSE side scores "the answer is false";
+   - **picks and rates:** a single θ scores "the top answer is the labelled one";
    - candidate θ run from 0.99 down to 0.51;
    - pick the θ with the **highest coverage** whose precision is at least the fact's `target`, among θ with at least 20 accepted items. Precision isn't monotonic in θ, so the scan doesn't stop at the first failure; among equal coverage, the highest θ wins;
-   - **where the scores come from:** the judge's on the tune half. A head's are **out-of-fold** predictions over its own training rows, with folds that keep each `group` (or decision key) together, so a head is never tuned on inputs it was trained on.
-4. **Validate each chosen θ once on the check half,** which no step above has seen. Every side ends in one of three recorded states, reported by `ss lock` and `ss test` with the held-out precision, its count and its 95% interval:
-   - **met:** at least 20 check-half items were accepted and their precision reaches `target`. The side settles at θ.
-   - **not met:** no θ met the target on the tune half, or the check half shows precision below `target`. **The side never settles**: the switch abstains rather than guess. The other side may still settle.
-   - **untuned:** too few labels to choose θ, or to validate it (fewer than 20 accepted on either half). The judge keeps its default policy (or `min_score`); a head never settles. The report says the target was **not established**.
+   - **where the scores come from:** the judge's on the tune half. A head's are **out-of-fold** predictions over its own training rows, with folds that keep each `group` (or decision key) together, so a head is never tuned on inputs it was trained on;
+   - **acceptance is the runtime's:** a candidate θ counts an answer as accepted only if `settle` (§4.5) would accept it, with answer mass, silence and pending options included. An answer the runtime would reject never counts toward coverage or precision. Without this, a judge returning p(true) 0.99 at answer mass 0.10 was reported `met` on 57 held-out answers that the runtime returns as `uncertain`.
+4. **Validate each chosen θ once on the check half,** which no step above has seen (taught inputs excluded).
+   - **When a head exists, the judge is validated on the inputs the head leaves to it.** That residue is the judge's real workload in the deployed cascade, and it is harder than the full population: a judge right on 980 of 1,000 can be 80% precise on the 100 a head doesn't settle.
+   - **Every side ends in one of three recorded states,** always shown with its count and 95% interval. They are observations, not guarantees: 20/20 correct has an interval down to about 84%.
+     - **observed target met:** at least 20 check-half items were accepted and their precision reaches `target`. The side settles at θ.
+     - **observed target missed:** no θ met the target on the tune half, or the check half shows precision below it. **The side never settles**: the switch abstains rather than guess, and the other side may still settle.
+     - **insufficient evidence:** too few labels to choose θ, or to validate it (fewer than 20 accepted on either half). The judge keeps its default policy (or `min_score`); a head never settles.
+   - **The consequence is reported, not hidden.** Adding labels can move a side from "insufficient evidence" (default policy, settling) to "observed target missed" (abstaining). The lock shows each side's check-half coverage under the default and under the result, so a drop in automation is visible.
+5. **Report two more levels of evidence on the check half.** They are reported, not gated: a target is set per judgment, and doesn't transfer automatically.
+   - **Conditions:** each compiled atom the cases use (for example `topic in [A, B]`, or `urgency >= today`), with its own held-out precision and coverage.
+   - **Decisions:** the deployed snapshot (corrections → heads → judge → resolution) runs on the check half's labelled cases. It reports correct, wrong, abstained, coverage and judge calls avoided. This is the number a user acts on.
 
    **Why the check half, measured** (300 random splits by sentence family, target 0.95, true side):
    - **Fresh suite:** a θ chosen on one half reached only **83.4%** precision on the other, and **0 of 300** splits met the target. Tuning-only locks had reported "tuned" in all 300. The judge's errors are confident (p ≥ 0.99), so the half that tunes can't see the other half's.
    - **Selection suite:** the gate passed 255 of 300.
 
    A lock that skipped validation would promise a precision it doesn't deliver.
-5. Run the YAML `tests` against the frozen plan; any failure aborts.
-6. Record membership: the decision keys used for tuning, and for each fact the projection keys its head was trained or its policy tuned on.
-7. Write one self-contained file atomically: spec, examples, heads, policies with their states and held-out evidence, membership and model identities.
+6. Run the YAML `tests` against the frozen plan; any failure aborts.
+7. Record membership per merged example: **trained** (head training), **tuned** (policy choice), **validated** (check half), and **trained the judge** (from an adapter's training manifest, §6.6). If the judge was trained on check-half examples, the lock warns that its validation is not independent.
+8. Write one self-contained file atomically: spec, examples, heads, policies with their states and held-out evidence, the condition and decision reports, membership and model identities.
 
 **Groups are load-bearing.** Translations, paraphrases and near-duplicates must share a `group`, or the split leaks. On the fresh suite, a readout trained with the translated twin of a test item present scored 0.931 accuracy; with the whole translation family held out it scored 0.844, below the plain judge.
 
 **Model pinning:**
-- **At load,** each model's sha256 and prompt-template version are compared with the runtime's. A mismatch fails with a `ConfigError`.
+- **At load,** each local model's sha256 and the prompt-template version are compared with the runtime's. A mismatch fails with a `ConfigError`.
+- **Hosted judges can't be pinned to a file.** The lock records the requested model name and the model identity the provider returns, and warns when the returned identity changes. That is the reproducibility a hosted service allows.
 - **`allow_model_change=True`** resets the affected thresholds, with a warning.
 - **Rollback** is `git checkout` of the lock file.
 
@@ -545,13 +617,19 @@ The test file holds labelled inputs: `{"input": …, "facts": {…}, "case": "�
 - Reports in plain sentences (JSON when piped).
 - Reports three groups separately:
   - **taught:** the input is an exact correction;
-  - **trained-on:** its decision key was used for tuning, or any of its fact projections was used to train that fact's head or tune its policy (a model that learned from a projection has seen every input sharing it);
-  - **unseen:** everything else, the only group that measures generalisation.
-- **Never counts tuning or training inputs as unseen**, whatever the file later gains.
-- Gives per check fact: silent misses, the judge's **ranking AUC** (true above false), and each policy side's state (met / not met / untuned) with its held-out precision and interval. It also gives optional exact 95% intervals, and a note when fewer than about 60 accepted inputs make 90% and 95% indistinguishable.
-- **Diagnosis, not a mechanism:**
-  - **high AUC with errors:** the judge ranks the claim correctly but its boundary sits wrong;
-  - **low AUC (below about 0.75):** it barely separates the claim; reword it, add exact rules, or use `--precise`.
+  - **used by the lock:** it trained a head, tuned a policy, validated one, or trained the judge (from an adapter manifest). Validation decides which policies run, so it is not an untouched evaluation; the report names the use;
+  - **fresh:** everything else, the only group that measures generalisation. After a lock, fresh inputs are new lines in the test file or a `--data` file.
+- **Never counts training, tuning or validation inputs as fresh**, whatever the file later gains. Membership is matched by fact projection, so an input sharing a projection with a used one counts as used.
+- Gives, per check fact:
+  - **the deployed result** (whatever settled it: correction, head or judge): silent misses, and each policy side's state (observed target met / missed / insufficient evidence) with its held-out precision and interval;
+  - **a separate judge-only pass** for diagnosis: the judge's **ranking AUC** (true above false). Corrections and heads never contribute to it.
+- **Contrast metrics:**
+  - **both-correct pair rate:** both members of a `pair` answered right. Correct ordering alone isn't enough; 0.99 vs 0.98 passes ordering;
+  - **group invariance:** among groups whose members carry the **same label** (translations, paraphrases), the share answered consistently. Scenario families with different labels inside are excluded; for those, differing answers are expected.
+- Optional exact 95% intervals, and a note when fewer than about 60 accepted inputs make 90% and 95% indistinguishable.
+- **Diagnosis, worded for what it shows:**
+  - **AUC ≥ 0.9 with errors:** "ranking is strong; a boundary change may help". Strong ranking doesn't prove every error is a boundary error;
+  - **AUC below about 0.75:** "the judge barely separates this claim; reword it, add exact rules, or use `--precise`".
 
 **`ss diff`** runs the lock and the edited draft and lists every input whose **observable outcome** changed:
 - With cases: status and answer.
@@ -564,7 +642,7 @@ Its inputs are the test file plus every example record, stale ones included as i
 
 A per-fact linear model on hashed word 1–2-grams and character 3–5-grams of the rendered input. It costs microseconds and no model call. It keeps codes and exact wording, and like any classifier it doesn't fix negation. It buys **speed on recurring wording**, never better semantics.
 
-- **Training data:** that fact's examples (corrections) plus its tune-half labels from the test file. It needs at least two distinct values; otherwise `ss lock` fails with a `ConfigError` naming the fact and the value it has. The check half is never trained on; it validates (§5.3).
+- **Training data:** that fact's examples in the **tune split**: corrections and test labels, merged by the collector (§5.3). A correction whose group falls in the check half doesn't train; it validates. It needs at least two distinct values; otherwise `ss lock` fails with a `ConfigError` naming the fact and the value it has.
 - **Binding:** bound to the fact's `meaning_rev`, so editing the claim drops it.
 - **It never settles unless validated:** its policy is chosen on out-of-fold predictions and must be `met` on the check half.
 - **Fallback:** whenever an atom the decision needs is still UNKNOWN after the head, the judge scores the fact.
@@ -572,7 +650,10 @@ A per-fact linear model on hashed word 1–2-grams and character 3–5-grams of 
   1. Gather the fact's labelled inputs (examples and test labels) and assign 5 folds by `group` (or decision key).
   2. Per fold, train the head and choose its policy on out-of-fold predictions of the training part. This runs **outside** the timed section.
   3. Install the head in a temporary snapshot whose corrections exclude the held-out fold.
-  4. Run the held-out inputs through the executor twice, judge alone and head-then-judge, and time only those warm runs.
+  4. Run the held-out inputs through the executor twice, judge alone and head-then-judge. **Measurement:**
+     - the judge is loaded and warmed before any timing; load time is reported separately;
+     - the two arms alternate order from fold to fold, so neither always inherits the other's cache;
+     - latency is total elapsed time over total inputs, not an average of fold averages.
 
   **It reports:**
   - the judge alone: correct, wrong, abstained, ms per input, and its ranking AUC with the diagnosis above;
@@ -593,9 +674,13 @@ A per-fact linear model on hashed word 1–2-grams and character 3–5-grams of 
 
   The differences sit inside one standard error (about 2.7 points), and higher precision came only from settling less. An earlier "+7 points" for the probe came from translated twins in training. A boundary-only claim ("leave": AUC 1.0, accuracy 0.80) was fixed by calibration and by the probe alike; a weakly separated one ("decline": AUC 0.67) by neither.
 - **The remedy is diagnosis** (`ss test`, `ss specialize`): reword, add exact rules, abstain, or use `--precise`.
-- **Re-test on real traffic** (E2), where near-duplicates of labelled inputs recur (`bench/probe.py`).
+- **Verdict: rejected.** It is not offered, and its benchmark code is scheduled for removal.
 
-**Heavier specialists stay outside the library.** A decision-trained judge (E1) is just another `--judge`. An activated LoRA on the judge (E8) needs hundreds of labels and must beat the plain judge on held-out families. Training for both happens externally, from `ss export` (§5.7). The library never trains model weights.
+**Specialisation keeps the base model frozen.** The intended path is LoRA specialists on the off-the-shelf judge, decided by E8 (`EXPERIMENTS.md`):
+- trained externally from `ss export` (§5.7); the library never trains model weights;
+- adopted only if they beat the plain judge on held-out families.
+
+Any other model, including a fully fine-tuned one, remains just another `--judge`.
 
 ### 5.5 What each teaching action changes
 
@@ -605,11 +690,14 @@ Users of example-based routers report adding examples and seeing no change, beca
 |---|---|---|---|
 | `correct()` | that exact input's fact (exact override) | any other input | `scope`, `effective` |
 | `ss label --to test` | the labelled data only | any answer, until you lock | how many inputs were labelled |
-| `ss lock` | **when** each judgment answers (its policy), validated on held-out labels, and trains configured heads | what the judge thinks | each policy side: met / not met / untuned, with held-out precision |
+| `ss lock` | **when** each judgment answers (its policy), validated on held-out labels, and trains configured heads | what the judge thinks | each policy side: observed target met / missed / insufficient evidence, with held-out precision and interval; condition and decision reports |
 | `specialize: lexical` + `ss lock` | adds a cheaper predictor in front of the judge | the judge; inputs the head can't settle | `ss specialize`: errors introduced and corrected, coverage, latency |
 | `--judge` / `--precise` | the judge itself, so every semantic answer | rules, corrections | `ss doctor --quality`, then `ss test` (re-lock required) |
 
-Nothing learns implicitly: there are no prompt examples, no automatic threshold relaxation as labels or categories grow, and no change in behaviour without `ss lock`.
+No implicit learned changes:
+- there are no prompt examples and no automatic threshold relaxation as labels or categories grow;
+- policies and heads change only at `ss lock`;
+- the one immediate change is an explicit correction on a draft, which fixes exactly its input.
 
 ### 5.6 The teaching path
 
@@ -625,9 +713,11 @@ ss test support_route                                 # 6. measure on unseen lab
 ### 5.7 `ss export`: training data for an external judge or adapter
 
 `ss export <switch> [--to rows.jsonl]` writes one row per labelled judgment, in the **exact runtime form**:
+- **Readable context:** the rendered input text, the claim or question text with its options or levels, and the fact's `excludes`, so a row can be inspected and used by other tools.
 - **Model input:** the judge identity and template, then the token ids of each segment (prompt prefix, rendered input, question suffix) **from the runtime's own tokenizer**. Tokens, not text: re-tokenising a concatenation can merge segment boundaries and silently change the training input (an activated LoRA's invocation boundary is exactly such a boundary).
 - **Answer:** the answer-slot token ids and the labelled slot.
-- **Bookkeeping:** fact, `meaning_rev`, decision key, `group`, and split.
+- **Bookkeeping:** fact, `meaning_rev`, decision key, joined `group`, split, and example id.
+- **Manifest:** `ss export --split tune` (the default) writes only tune-split rows, so the check half stays independent of anything trained on the export. A manifest beside the rows lists the example ids, groups and splits exported. `--split all` exists, and its manifest says so.
 - **Merging:** a correction and a test label for the same input and fact become one row. An explicit `group` is kept, and conflicting labels fail with a `ConfigError` naming the input.
 - **Writing:** rows go to a temporary file that replaces the destination only after every row was built. A destination that is one of the switch's own files is refused.
 
@@ -675,11 +765,25 @@ class Scores:
 
 `LlamaJudge` (adapter + scorer) implements it, and so can any non-decoder judge (a cross-encoder, a remote API) directly.
 
+**Hosted judges** implement the same contract through one built-in binding, OpenRouter (`judge_from('openrouter:MODEL')`): chat log probabilities for ordinary models, System One for an explicit table of verified structured models (`typesafe/jev-1.13`, used only with TypeSafe's consent; `openai/gpt-6-luna-decisions`). Applications may supply any other `Judge`. The structured mapping:
+- **Probabilities:** per-option and per-level probabilities map to `probs`. A predicate's probability p maps to (p, 1 − p).
+- **Answer mass:** `None`, since there are no answer tokens.
+- **Refusals** become `Scores(None, None, error)`.
+- **Provider "confidence":** carried in the optional `Scores.confidence` field as a diagnostic only. Acceptance reads probabilities through `settle`, and `ss lock` calibrates against your labels (OpenAI's own guidance).
+- **A provider's scalar score** (OpenAI's is the probability-weighted mean of level indices) **is never used in rules.** A distribution split between levels 0 and 2 has mean 1 with no mass on level 1. Rate atoms sum probability over level sets (§4.5).
+- **Training: hosted outputs never become training data. That is this library's policy, stated as such.**
+  - **Jev:** TypeSafe's agreement §2.3(b) forbids training on its outputs.
+  - **OpenAI:** the terms forbid using output to develop competing models, with a *Permitted Exception* for internal classifiers that are not distributed or sold.
+  - **Why a blanket policy:** the library can't verify which case a user is in, so the tools never route hosted outputs into training (no `ss distill` from hosted judges, no hosted rows in `ss export`). Users with their own legal basis can still do it outside the library.
+
 **Output contract,** checked at one boundary function that every caller (inline, executor, tools) goes through:
 - one `Scored` per item, one `Scores` per question, in order;
 - `probs` has exactly the question's width, finite, non-negative, summing to 1 within 1e-3;
 - `mass` is `None` or a finite value in [0, 1] (NaN used to slip through and settle an answer);
+- `confidence` is `None` or a finite value in [0, 1], and is never read by acceptance;
 - a per-question failure is `Scores(None, None, error)`.
+
+The judge also declares **`batch_inputs`**, how many independent inputs it scores per call (§4.7). The executor uses it to size batch windows.
 
 A judge that breaks the contract raises a `TypeError` naming the judge, the item and the violation. It is a programming error, not a result. Below it: `Scorer.score(ScoreRequest…) -> ScoreBlock`. Rows are reduced through views before the next decode, and no result keeps native memory. The reduction is a logsumexp over the whole vocabulary per answer row (for answer mass), about 0.2 ms; only the compact result is kept.
 
@@ -708,16 +812,16 @@ llama-cpp-python's low-level API: tokenise, batch decode, `llama_get_logits_ith`
 
 ```
 seq 0: system prompt, decoded once per context
-seq 1: system + input, kept between calls (the input cache)
-per call, under the context lock:
-  if (prompt, input) == cached: reuse seq 1
-  else: rebuild seq 1 from seq 0 and decode the input in n_batch chunks
-  seq_cp(1 → 2+i) per question; decode all question suffixes in chunks, logits only at each suffix end
-  reduce each row before the next decode; finally seq_rm(2+i)
+seq 1..W: system + input, one sequence per input in the window (W = 1 on CPU, up to 8 on GPU), kept between rounds
+per round, under the context lock:
+  for each input: reuse its sequence if (prompt, input) is unchanged, else rebuild it from seq 0
+  decode every new input in one batch (n_batch chunks)
+  seq_cp(input → branch) per question; decode all question suffixes in one batch, logits only at each suffix end
+  reduce each row before the next decode; remove the branches
 ```
 
 - **Why the cache:** without it, every round re-reads the input. On a 261-token ticket that's about 1.1 s with the default judge; staged round 2, pick and focus fallbacks, and `specialize` all repeat inputs.
-- **One cached input per context.** It pays off because an input runs all its rounds consecutively (§4.7). Interleaving inputs would evict it, and that's why the executor doesn't interleave.
+- **One cached input per sequence.** A CPU context keeps one input (rounds run consecutively, §4.7); a GPU context keeps the window's inputs, one per sequence, for the window's rounds. The context is sized for the window (8 inputs at the 1,024-token input limit plus their questions), and a window that doesn't fit is split.
 - **Exact reuse only, by measurement.** Common-prefix reuse (trim seq 1, decode the rest) was implemented and removed: quantised kernels give batch-shape-dependent results, so a trimmed cache made the same input score differently depending on the previous one (Qwen3-0.6B: 0.11 vs 0.06, 0.60 vs 0.48 on the probe; 9 vs 10 of 12 correct). Exact reuse returns byte-identical scores to a fresh read, and the slow suite checks it.
 - **Capacity:** a request over capacity is split, or fails with `limit`.
 - **Lifetime:**
@@ -791,7 +895,11 @@ Earlier tables cleared the cached system prompt as well (324 / 1,009 ms CPU, 147
 - **Quality belongs to model + quantisation + backend.** Gemma 4 E2B Q4_0 agrees across CPU and GPU to two decimals; Qwen3-0.6B Q4_K_M shifts by 0.10–0.26 on Vulkan and flips 2 of 12 probe answers. Run `ss doctor --quality` on each device you deploy on; its cache is keyed by backend and device.
 - **Two-stage scoring on the GPU** is a symmetric trade: 27–29% faster than eager when the first case decides, 16–21% slower otherwise. It stays the only behaviour.
 - **`device="gpu"` is a requirement:** a build without GPU offload raises `ConfigError` instead of silently running on CPU.
-- `ss doctor` and `ss bench` report the device actually used.
+- `ss doctor` and `ss bench` report the **requested device** (`gpu` = offload requested and supported by this build). llama.cpp doesn't expose where each layer finally runs, so reports never claim more than that.
+
+**Specialists are ordinary models.** A task specialist is one merged, quantized GGUF built by `semantic-trainer select` (LoRA converted to an F16 adapter, merged into the F16 base with `llama-export-lora`, quantized with `llama-quantize`); it is bound as `Runtime.from_specialization(receipt)` (weights, bundled task, frozen policies and realized execution) or model-only as `Model.from_specialization(receipt)`. There is no runtime adapter loading.
+- Its identity is the merged file's sha256 and template, pinned by locks like any model.
+- **Provenance:** the deployment `receipt.json` records every observation that adapted, selected or calibrated it, and `Model.from_specialization` retains that verified record on the model. The lock marks those examples "trained the judge", so `ss test` never counts them as fresh, and warns if any fall in the check half. A plain `Model(path)` has unknown provenance and supports no independent-evidence interval; filenames prove nothing.
 
 ---
 
@@ -825,7 +933,7 @@ ss correct · label · specialize · lock [--dry-run] · test [--intervals] · d
 
 **Behaviour:**
 - **`ss bench`** reports three workloads, each named for what it measures: the same input repeated (cached responsiveness); a new input each time with the system prompt cached (a normal request); and 4 questions on a new input. With a switch it adds per-decision latency and `many()` throughput. A switch with no labelled inputs or YAML tests is a `ConfigError`, not a crash.
-- **`--each`** answers each line as it arrives. There is no `--batch`: nothing batches across inputs today (§6.4), so the option would only add latency. `many()` likewise yields each result as soon as it is decided.
+- **`--each`** answers each line as it arrives (streaming). **`--each --batch N`** reads N lines, runs them as one finite batch, and emits their results in order. It pays only on judges with batch capacity above 1 (§4.7).
 - **`ss label`** parses answers through the fact's own values and re-asks on invalid answers. Its prompts go to stderr.
 - **Model sources must name exactly one file:** `repo:file.gguf`, or `repo:Q4_0` when it matches exactly one file.
 - **Malformed JSONL** is reported by line.
@@ -841,7 +949,7 @@ ss correct · label · specialize · lock [--dry-run] · test [--intervals] · d
 | `--precise` | Gemma 4 E4B instruct, official QAT `Q4_0` | most precise; 2.2× slower; 7.5 GB |
 | alternative (`--judge`) | Qwen3.5-2B `Q8_0` | best-calibrated small judge (95% precision at 66% coverage on fresh items), 2.8 GB, slower |
 
-**There is no fast judge.** Qwen3-0.6B committed 8 wrong procedures on the equipment set and settles 13% of fresh items at 90% precision; a sub-1B judge returns only if a fine-tuned one passes the gate (`EXPERIMENTS.md` E1).
+**There is no fast judge.** Qwen3-0.6B committed 8 wrong procedures on the equipment set and settles 13% of fresh items at 90% precision; a sub-1B judge isn't offered.
 
 **Judge quality** (16-core laptop CPU). "Fresh" is a suite written after the default was chosen and never used for selection:
 
@@ -853,7 +961,7 @@ ss correct · label · specialize · lock [--dry-run] · test [--intervals] · d
 | Qwen3-0.6B Q4_K_M (not offered) | 0.74 → 0.66 | 13% at 90% | 100 / 420 |
 
 **Readings:**
-- **No small judge reaches 95% untuned precision at high coverage on unseen domains.** Stricter thresholds don't fix it (the errors are confident), so precision comes from `ss lock` on your labels.
+- **None of the small judges we tested reached 95% untuned precision at high coverage on unseen domains.** Stricter thresholds don't fix it (the errors are confident). `ss lock` measures what a judge achieves on your labels and abstains where it falls short; a stronger judge (`--precise`) is the measured way to raise precision.
 - **Measured contributions:**
   - three-way checks turn confident false answers on silence into `needs_input` (9/10 correct);
   - focus halves 20-option picks;
@@ -864,12 +972,20 @@ ss correct · label · specialize · lock [--dry-run] · test [--intervals] · d
   - two-stage scoring with the input cache: 4× faster than eager when the first case decides, within 0–8% when a later case decides (E4);
   - the input cache removes the input re-read on repeated rounds, with byte-identical scores;
   - **option position** (`bench/positions.py`, correct option at slots 1–20 of 20): no late-position failure (24/24 at slots 5–20). Order bias appears only between two plausible options: "can't log in to see my invoices" → billing 0.95 in one order, account 0.85 in the other; clear items don't move;
-  - **averaging two option orders was measured and rejected** (`bench/permute.py`): no wrong answer removed on the selection, fresh or 20-option suites, 3 fewer settled at 20 options, +37–66% latency. Ambiguity is handled by labels, tuning and abstention, not by permutation;
+  - **averaging two option orders was measured and rejected** (removed `permute` script; results in `bench/results/permute.json`): no wrong answer removed on the selection, fresh or 20-option suites, 3 fewer settled at 20 options, +37–66% latency. Ambiguity is handled by labels, tuning and abstention, not by permutation;
   - **comparative choice** (§1): the default anchors on the situation when the goal contradicts it (3 of 23 settled were wrong); `--precise` was 24/24;
   - **readout adaptation (probe, calibration, cutpoint) with about 16 labels per judgment does not beat the plain judge on new expression families** (§5.4). An earlier +7 points for a hidden-state probe came from translated twins in training, and was retracted;
   - **answer mass is a format check, not a correctness signal:** the default judge's 23 fresh-suite errors have mean mass 0.9986, and its correct answers 0.9987;
   - **falling back from E2B to E4B on uncertain answers doesn't raise precision:** it escalates 9.4% of items and ends at 89.9%, unchanged, because E2B's 16 wrong answers were confident and never escalate (E4B would fix 9). With a GPU, use `--precise` outright (94.7%);
-  - **lock tuning must be validated on held-out data** (§5.3): tuned on one half of the fresh suite's families, θ held 83% on the other, not the 95% target.
+  - **lock tuning must be validated on held-out data** (§5.3): tuned on one half of the fresh suite's families, θ held 83% on the other, not the 95% target;
+  - **batching inputs per decode** pays on the GPU only (2.5–3.9× throughput for short inputs, §4.7);
+  - **a question-first prompt layout** (cache the question, decode only each new input) was measured and rejected: 110 vs 104 ms per input on the GPU, 325 vs 289 ms on the CPU, with the same accuracy (0.863). It settled fewer answers at higher precision, a calibration shift rather than a better judge.
+
+**Against the OpenAI Decisions API** (released 2026-10-06, beta, `gpt-6-luna`):
+- **What OpenAI claims:** "10× faster than the Responses API", and nothing against Jev or local engines. Its absolute latency and accuracy on our suites are **unmeasured**.
+- **Cost:** $0.10 per million input tokens, so about $50 per million decisions at 500 tokens. A local GPU's marginal cost is energy, around $0.25 per million decisions at about 60 W and 10 decisions per second (an estimate), before hardware and upkeep.
+- **Where each wins:** local wins on marginal cost at volume, privacy and offline use; hosted wins without hardware, at low volume, or where its quality is needed.
+- **The comparison that matters:** the Decisions API **inside** our pipeline against the Decisions API choosing directly, which isolates what structure contributes whatever the judge. It needs an OpenAI key.
 
 **Against hosted Jev** (warm, network included):
 - **Speed:** Jev is flat at 270–292 ms. The default judge on the GPU is faster at every measured shape: 104–224 ms for 1–7 questions on 20–261-token inputs, with the system prompt cached. On the CPU it wins only a short single question (164 ms) and loses on long inputs.
@@ -878,7 +994,7 @@ ss correct · label · specialize · lock [--dry-run] · test [--intervals] · d
   - a near miss: "the other unit leaked yesterday; this unit has no leak" scores 0.86–0.89 for "states false";
   - a real misread: a hypothetical about another unit, read as "not stated".
 
-  The set can't separate designs (E6). The fair comparison is correct decisions at equal error rate: abstaining on everything also commits no wrong procedure.
+  The set can't separate designs; the equipment benchmark replaces it (§9.1). The fair comparison is correct decisions at equal error rate: abstaining on everything also commits no wrong procedure.
 - **Jev's agreement §2.3(b)** restricts using its outputs to train or develop competing products. Further runs wait for a reading of it or consent, and Jev outputs never enter training data.
 
 **Beating Jev: decisions, not questions.** A 2B model on a CPU won't out-answer a hosted model question by question. We win decision by decision:
@@ -887,7 +1003,7 @@ ss correct · label · specialize · lock [--dry-run] · test [--intervals] · d
 3. **Fewer, smaller questions:** shared claims, situation-only questions, cached input.
 4. **A precision target you can measure:** labels → per-judgment policy tuned to a target → abstention where it isn't met, with `ss test` / `ss diff` and pinned locks. A target is not a guarantee; `ss test` reports what was achieved on unseen inputs. Plus local, private, offline, and no rate limit.
 
-**The scoreboard,** run on the expanded equipment set (`EXPERIMENTS.md` E6), per decision:
+**The scoreboard,** run on the equipment benchmark (§9.1), per decision:
 - correct;
 - **wrong action**;
 - correct `needs_input`;
@@ -895,11 +1011,11 @@ ss correct · label · specialize · lock [--dry-run] · test [--intervals] · d
 - **settled with no model call**;
 - p50 / p95 latency, reported twice: over **all decisions** under the stated workload, and over **the decisions that needed the judge** (with their input lengths and question counts), so cheap exact matches can't hide a slow language path. Cold start (process to first answer) is reported separately from warm latency.
 
-Run it for our pipeline (default and `--precise`), and for Jev only with TypeSafe's consent. **Where we still lose:** raw per-question quality on unseen phrasing and long single questions on CPU. The levers are `--precise` (on a GPU, about Jev's latency), a better judge (E1, E8), and structure: exact rules, shared facts, abstention.
+Run it for our pipeline (default and `--precise`), and for Jev only with TypeSafe's consent. **Where we still lose:** raw per-question quality on unseen phrasing and long single questions on CPU. The levers are `--precise` (on a GPU, about Jev's latency), LoRA specialists (E8), and structure: exact rules, shared facts, abstention.
 
 **Evaluation protocol:**
 - Changing the default judge, prompt rules or quantisation must hold on **both** the fresh suite and the selection suite.
-- Changing procedure selection must hold on the expanded equipment set (`EXPERIMENTS.md` E6). The current set has 34 cases but only 10 distinct report texts and 2 facts, so differences of a few cases between designs or judges are noise.
+- Changing procedure selection must hold on the equipment benchmark (§9.1). The current set has 34 cases but only 10 distinct report texts and 2 facts, so differences of a few cases between designs or judges are noise.
 - `ss test` on your own labelled data is the only measure for a switch.
 - Detailed tables and every benchmark are in `bench/README.md`.
 
@@ -909,16 +1025,62 @@ Run it for our pipeline (default and `--precise`), and for Jev only with TypeSaf
 
 ### 9.1 Work
 
-v0.17–v0.23 are implemented (see `CHANGELOG.md`). What remains are experiments.
+v0.17–v0.26 are implemented (see `CHANGELOG.md`). **v0.24–v0.26, as built:**
+1. **Kernel correctness** (§4.5):
+   - flatten nested `and` / `or` before grouping same-fact operands;
+   - checks settle their answer first, then atoms are evaluated at it;
+   - picks and rates use one symmetric θ for set events.
 
-**Experiments** (`EXPERIMENTS.md`):
-- the expanded equipment set and scoreboard (E6), the gate for procedure selection;
-- fine-tuning a small judge (E1), with Jeff as the outside reference point;
-- real traffic (E2);
-- batching independent inputs into one decode on the GPU, where an extra question costs about 60 ms (E3 follow-up);
-- the question-first cache layout for one question over a stream of inputs (E7);
-- activated LoRA specialists on the judge (E8), which must beat the plain judge on held-out families;
-- readout adaptation on real traffic, where near-duplicates of labelled inputs recur (`bench/probe.py`).
+   These fix two reproduced bugs: parentheses changing a decision, and `not` bypassing a disabled side.
+2. **One labelled-data collector** (§5.3):
+   - merge per fact meaning and input projection;
+   - join groups with union-find;
+   - assign splits to joined groups, so check-half corrections never train;
+   - exclude taught inputs from validation;
+   - reject conflicting labels.
+3. **Lock evidence** (§5.3):
+   - acceptance through `settle` (answer mass, silence, pending options);
+   - the judge validated on the residue a head leaves;
+   - states named "observed target met / missed / insufficient evidence", with intervals and coverage before and after;
+   - condition-level and decision-level reports on the check half;
+   - membership recorded, including validation and judge training.
+4. **Honest diagnostics:**
+   - judge-only AUC, with wording that doesn't overclaim;
+   - both-correct pair rate (optional `pair` field), and group invariance over same-label groups only;
+   - `specialize` warm, alternating and total-time measurement;
+   - a public way for tools to read a fact's settled value (§5.3, §5.4).
+5. **Execution surfaces** (§4.7, §4.8, §6.4):
+   - streaming `sw(x)` / `sw.many()` / `--each`, and finite batches `sw.run(list)` / `--each --batch N`;
+   - windows sized by `Judge.batch_inputs` (GPU llama 8, CPU 1);
+   - `elapsed_ms` and `amortized_ms`.
+6. **Merged specialists** bound as ordinary models (`Model.from_specialization(receipt)`), with training provenance from the deployment receipt (§6.6).
+7. **Hosted judges** behind the `Judge` contract (§6.2):
+   - OpenRouter chat log probabilities; System One for verified structured models (Jev with consent);
+   - probabilities mapped, `mass=None`, refusals as errors, `Scores.confidence` as a diagnostic;
+   - protocol, requested provider and returned model and provider recorded; locking requires a pinned provider;
+   - never training data, by library policy.
+
+   Then the matched comparison of the Decisions API inside the pipeline vs choosing directly, when a key is provided (§8).
+8. **Catalogue authoring:** `{fact: …}` exclusions must be three-way checks, with the text-vs-world authoring rule (§4.4).
+9. **Export:** readable context; a default tune-split export with a manifest (§5.7).
+10. **Cost and immutability:** lexical features built once per input projection per call; catalogue payloads deep-frozen once at load.
+11. **Housekeeping:**
+    - the package version follows the implemented spec version;
+    - `ss doctor` / `ss bench` say "requested device";
+    - `.gitignore` adds `*.export.jsonl`.
+12. **The equipment benchmark** (formerly E6) as a permanent gate for procedure selection:
+    - **at least 40 distinct reports** in English and Portuguese, over at least 4 facts and both catalogue shapes;
+    - **the trap types:** near-identical machines, firmware and pressure boundaries, operator vs sensor contradictions, other units, past and resolved faults, hypotheticals, missing observations, and no applicable procedure;
+    - **it reports** correct decisions at equal error rate, wrong actions, correct `needs_input`, decisions with no model call, and latency;
+    - **it runs** on E2B and E4B, and on Jev only with TypeSafe's consent.
+13. **Remove concluded experiment code** from `bench/`: the probe, order-averaging, staged/eager, prompt-example, model-comparison, prompt-framing, learning-curve, topical and GPU scripts. Their raw JSON results stay in `bench/results/` as data for reproducibility, and their summaries in `bench/README.md` and `CHANGELOG.md`. `bench/` keeps only benchmarks that gate decisions.
+
+**The one open experiment:** E8, a frozen base model plus LoRA specialists on question tokens (`EXPERIMENTS.md`). It is the intended path for specialisation and is decided by its own rule: adopted or rejected, not left open.
+
+**How experiments are run:**
+- An experiment is a question with a setup and a decision rule, decided in one campaign.
+- Its code lives outside `semantic_switch/` and outside the permanent benchmarks.
+- Its result is recorded and the verdict applied to the spec; then its code is deleted, while the raw results stay as data.
 
 ### 9.2 Invariants (the deterministic suite enforces these and more)
 
@@ -929,17 +1091,20 @@ v0.17–v0.23 are implemented (see `CHANGELOG.md`). What remains are experiments
 5. `Fact.value` is set only when the fact's own answer settles, and a switch without cases is `ok` only when every output's value settled.
 6. Inline and saved judgments answer identically on the same input: same meaning, same question, same acceptance policy. A catalogue and its equivalent hand-written cases and facts answer identically too.
 7. Only an exact rule or an examination rules a candidate out. An incomplete search (a catalogue over budget, a shortlisted pick), or any unresolved card, never yields `none`. Precedence reads base applicability, and cycles are rejected. How a claim is written never changes its budget.
-8. A correction fixes exactly its input; labels go stale when meaning changes; tuning inputs never count as unseen.
-9. A lexical head settles only on a policy side validated on held-out labels. A lock never reports a target as met unless held-out data showed it. `ss specialize` never recommends a head that adds wrong answers. A lock never reports a target as met unless that side is `tuned`.
+8. A correction fixes exactly its input; labels go stale when meaning changes; inputs used by a lock never count as fresh.
+9. A lexical head settles only on a policy side whose target was observed met on held-out labels. `ss specialize` never recommends a head that adds wrong answers.
 10. A lock runs exactly what was tested, on exactly the pinned models.
 11. Limits fail one question, never a whole call.
 12. Payloads and catalog instructions never reach the model.
-13. A condition over one judgment is evaluated on that judgment's distribution, so its acceptance never exceeds what the distribution supports. One function interprets scores everywhere.
+13. A condition over one judgment is evaluated on that judgment's distribution, so its acceptance never exceeds what the distribution supports. **Equivalent expressions get equivalent answers:** regrouping with parentheses or writing `not` never changes acceptance, and a side that doesn't settle can't be reached through negation. One function interprets scores everywhere.
 14. A malformed judge output fails loudly at the boundary; it never reaches resolution.
+15. Batching inputs never changes an answer: windowed and sequential scoring agree within kernel noise (D2's tolerance), and results keep input order. Streaming never waits on later inputs.
+16. Every tool sees the same examples: one input is one example per fact, groups are joined rather than chosen, check-half examples never train, conflicting labels fail, and lock tuning and validation accept exactly what the runtime accepts.
+17. Outputs of hosted judges never become training data through the library's tools.
 
 ### 9.3 Known limitations
 
-- **Untuned precision** is about 89% on unseen domains, and the default judge's errors are confident. Labels and `ss lock` give validated abstention, not a smarter judge; a stronger judge (`--precise`) is the measured way up (94.7%).
+- **Untuned precision** is about 89% on unseen domains, and the default judge's errors are confident. Labels and `ss lock` give measured abstention (observations with intervals, not guarantees), not a smarter judge. A stronger judge (`--precise`) is the measured way up (94.7%).
 - **Speed:** on CPU, cost grows with input length; long single questions are slower than a hosted GPU service.
 - **Memory:** the default judge needs about 4 GB of RAM; Qwen3.5-2B needs about 2.8 GB. There is no supported judge for smaller machines yet.
 - **Slots:** 20 per question; more candidates need `shortlist`.

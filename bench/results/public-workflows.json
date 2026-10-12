@@ -1,0 +1,6089 @@
+{
+ "schema": 1,
+ "population": "authored executable regression examples; not independent domain evidence",
+ "runtime": {
+  "identity": {
+   "file": "gemma-4-E2B-it-Q4_0.gguf",
+   "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+   "template": "chat@2:0a2c8073",
+   "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+   "lora_sha256": null
+  },
+  "requested_device": "auto",
+  "threads": null,
+  "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+  "loaded": true,
+  "observed_models": [],
+  "accelerated": true,
+  "batch_inputs": 8,
+  "max_slots": 20,
+  "capabilities": {
+   "shared": true,
+   "fused": true,
+   "conformance": true,
+   "counters": {
+    "prefix_hits": 24,
+    "prefix_misses": 16,
+    "state_hits": 6,
+    "state_misses": 51,
+    "state_tokens": 841,
+    "suffix_tokens": 6629,
+    "submissions": 72,
+    "branch_groups": 40,
+    "failures": 0,
+    "prefix_tokens": 1134,
+    "prefix_evictions": 1,
+    "submitted_tokens": 8604
+   }
+  },
+  "requested_capacity": {
+   "n_ctx": 15360,
+   "n_batch": 512,
+   "n_seq_max": 44
+  },
+  "configuration": {
+   "max_input_tokens": 1024,
+   "prefix_slots": 4
+  },
+  "capacity": {
+   "n_ctx": 15360,
+   "n_batch": 512,
+   "n_seq_max": 44
+  }
+ },
+ "contrasts": [
+  {
+   "id": "cash",
+   "expected": {
+    "value": true,
+    "status": "ok"
+   },
+   "actual": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.33865991046089394,
+    "mass": 0.9987211227416992,
+    "error": null,
+    "guidance": [
+     [
+      "guidance",
+      "41b154f8473df8edbb7451c06ed03ec38d78ab55438bd4778a515bb31677e800"
+     ]
+    ],
+    "observed_models": [],
+    "p_unstated": 0.06181104108937508
+   },
+   "correct": false
+  },
+  {
+   "id": "replacement",
+   "expected": {
+    "value": false,
+    "status": "ok"
+   },
+   "actual": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.15604359139973964,
+    "mass": 0.9993976950645447,
+    "error": null,
+    "guidance": [
+     [
+      "guidance",
+      "b5349964ff36d013690f531bd3a1c4cbb34a25b043a404243a098327712aa508"
+     ]
+    ],
+    "observed_models": [],
+    "p_unstated": 0.019513981950906593
+   },
+   "correct": false
+  },
+  {
+   "id": "credit_included",
+   "expected": {
+    "value": true,
+    "status": "ok"
+   },
+   "actual": {
+    "status": "ok",
+    "value": true,
+    "p_true": 0.9815362552269942,
+    "mass": 0.9995574355125427,
+    "error": null,
+    "guidance": [
+     [
+      "guidance",
+      "5885fee94595922261cea196cf907d3db45134d0829ae01e5f63149873508119"
+     ]
+    ],
+    "observed_models": [],
+    "p_unstated": 0.0018626578345492275
+   },
+   "correct": true
+  },
+  {
+   "id": "credit_excluded",
+   "expected": {
+    "value": false,
+    "status": "ok"
+   },
+   "actual": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.6441945102899062,
+    "mass": 0.9988762140274048,
+    "error": null,
+    "guidance": [
+     [
+      "guidance",
+      "1fc32df3145ad7fabf8bce0ab9939390ed832a8f400783a50a1d92987e3b04ee"
+     ]
+    ],
+    "observed_models": [],
+    "p_unstated": 0.08347614560000913
+   },
+   "correct": false
+  },
+  {
+   "id": "missing",
+   "expected": {
+    "value": null,
+    "status": "needs_input"
+   },
+   "actual": {
+    "status": "needs_input",
+    "value": null,
+    "p_true": 0.00846662249277301,
+    "mass": 0.9963294863700867,
+    "error": "insufficient_evidence",
+    "guidance": [
+     [
+      "guidance",
+      "2b9ca45bfaf5ddda1cab1b7e2c3eb62d1c9df3f7cad35e3c273d64425436bb4e"
+     ]
+    ],
+    "observed_models": [],
+    "p_unstated": 0.9902158847363878
+   },
+   "correct": true
+  },
+  {
+   "id": "hostile",
+   "expected": {
+    "value": false,
+    "status": "ok"
+   },
+   "actual": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.11486287383300801,
+    "mass": 0.999103307723999,
+    "error": null,
+    "guidance": [
+     [
+      "guidance",
+      "b5349964ff36d013690f531bd3a1c4cbb34a25b043a404243a098327712aa508"
+     ]
+    ],
+    "observed_models": [],
+    "p_unstated": 0.02601773600255419
+   },
+   "correct": false
+  }
+ ],
+ "cli": [
+  {
+   "arguments": [
+    "--judge",
+    "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+    "--json",
+    "check",
+    "The customer requests a refund.",
+    "--unstated",
+    "--guidance",
+    "/tmp/semantic-workflow-95x0y9ph/policy.txt"
+   ],
+   "result": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.41640565045677913,
+    "mass": 0.9994964599609375,
+    "error": null,
+    "guidance": [
+     [
+      "guidance",
+      "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+     ]
+    ],
+    "observed_models": [],
+    "p_unstated": 0.015652031250022954
+   },
+   "exit_code": 2,
+   "elapsed_ms": 14486.633717009681,
+   "stderr": "",
+   "sdk": {
+    "status": "uncertain",
+    "value": null,
+    "p_true": 0.41640565045677913,
+    "mass": 0.9994964599609375,
+    "error": null,
+    "guidance": [
+     [
+      "guidance",
+      "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+     ]
+    ],
+    "observed_models": [],
+    "p_unstated": 0.015652031250022954
+   },
+   "same_public_outcome": true
+  },
+  {
+   "arguments": [
+    "--judge",
+    "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+    "--json",
+    "ask",
+    "/tmp/semantic-workflow-95x0y9ph/questions.yaml",
+    "--guidance",
+    "/tmp/semantic-workflow-95x0y9ph/policy.txt"
+   ],
+   "result": {
+    "refund": {
+     "status": "uncertain",
+     "value": null,
+     "p_true": 0.41640565045677913,
+     "mass": 0.9994964599609375,
+     "error": null,
+     "guidance": [
+      [
+       "guidance",
+       "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+      ]
+     ],
+     "observed_models": [],
+     "p_unstated": 0.015652031250022954
+    }
+   },
+   "exit_code": 2,
+   "elapsed_ms": 3695.925020001596,
+   "stderr": "",
+   "sdk": {
+    "refund": {
+     "status": "uncertain",
+     "value": null,
+     "p_true": 0.41640565045677913,
+     "mass": 0.9994964599609375,
+     "error": null,
+     "guidance": [
+      [
+       "guidance",
+       "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+      ]
+     ],
+     "observed_models": [],
+     "p_unstated": 0.015652031250022954
+    }
+   },
+   "same_public_outcome": true
+  },
+  {
+   "arguments": [
+    "--judge",
+    "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+    "--json",
+    "run",
+    "/tmp/semantic-workflow-95x0y9ph/support.yaml"
+   ],
+   "result": {
+    "status": "uncertain",
+    "answer": null,
+    "case": null,
+    "missing": [],
+    "invalid": [],
+    "uncertain": [
+     "refund"
+    ],
+    "blocked_by": "refund",
+    "errors": {},
+    "facts": {
+     "refund": {
+      "status": "uncertain",
+      "value": null,
+      "settled": false,
+      "score": 0.537842738591929,
+      "source": "judge",
+      "why": "uncertain",
+      "mass": 0.9994580745697021,
+      "guidance": [
+       [
+        "policy",
+        "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+       ]
+      ],
+      "observed_models": []
+     },
+     "topic": {
+      "status": "ok",
+      "value": "billing",
+      "settled": true,
+      "score": 1.0,
+      "source": "judge",
+      "why": null,
+      "mass": 0.999462366104126,
+      "guidance": [
+       [
+        "policy",
+        "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+       ]
+      ],
+      "observed_models": []
+     }
+    },
+    "truncated": []
+   },
+   "exit_code": 2,
+   "elapsed_ms": 2419.0516759990714,
+   "stderr": "",
+   "sdk": {
+    "status": "uncertain",
+    "answer": null,
+    "case": null,
+    "missing": [],
+    "invalid": [],
+    "uncertain": [
+     "refund"
+    ],
+    "blocked_by": "refund",
+    "errors": {},
+    "facts": {
+     "refund": {
+      "status": "uncertain",
+      "value": null,
+      "settled": false,
+      "score": 0.5193332048283444,
+      "source": "judge",
+      "why": "uncertain",
+      "mass": 0.9994438290596008,
+      "guidance": [
+       [
+        "policy",
+        "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+       ]
+      ],
+      "observed_models": [],
+      "scores": {
+       "true": 0.5193332048283444,
+       "false": 0.46314488073780385,
+       "unstated": 0.017521914433851687
+      }
+     },
+     "topic": {
+      "status": "ok",
+      "value": "billing",
+      "settled": true,
+      "score": 1.0,
+      "source": "judge",
+      "why": null,
+      "mass": 0.9994748830795288,
+      "guidance": [
+       [
+        "policy",
+        "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+       ]
+      ],
+      "observed_models": [],
+      "scores": {
+       "billing": 1.0,
+       "other": 0.0
+      }
+     }
+    },
+    "truncated": [],
+    "partial": [],
+    "cost": {
+     "rules": 1,
+     "rule": 0,
+     "example": 0,
+     "classifier": 0,
+     "judge": 2,
+     "rounds": 1,
+     "logical_tokens": 203,
+     "batch_native_work": {
+      "submissions": 2,
+      "submitted_tokens": 203
+     },
+     "elapsed_ms": 184.01,
+     "amortized_ms": 184.01
+    }
+   },
+   "same_public_outcome": true
+  },
+  {
+   "arguments": [
+    "--judge",
+    "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+    "--json",
+    "run",
+    "/tmp/semantic-workflow-95x0y9ph/support.yaml"
+   ],
+   "result": {
+    "status": "needs_input",
+    "answer": null,
+    "case": null,
+    "missing": [
+     "allowed"
+    ],
+    "invalid": [],
+    "uncertain": [],
+    "blocked_by": null,
+    "errors": {
+     "allowed": "missing_context: allowed"
+    },
+    "facts": {},
+    "truncated": []
+   },
+   "exit_code": 2,
+   "elapsed_ms": 2146.9425440009218,
+   "stderr": "",
+   "sdk": {
+    "status": "needs_input",
+    "answer": null,
+    "case": null,
+    "missing": [
+     "allowed"
+    ],
+    "invalid": [],
+    "uncertain": [],
+    "blocked_by": null,
+    "errors": {
+     "allowed": "missing_context: allowed"
+    },
+    "facts": {},
+    "truncated": [],
+    "partial": [],
+    "cost": {}
+   },
+   "same_public_outcome": true
+  },
+  {
+   "arguments": [
+    "--judge",
+    "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+    "--json",
+    "run",
+    "/tmp/semantic-workflow-95x0y9ph/support.yaml"
+   ],
+   "result": {
+    "status": "failed",
+    "answer": null,
+    "case": null,
+    "missing": [],
+    "invalid": [
+     "message"
+    ],
+    "uncertain": [],
+    "blocked_by": null,
+    "errors": {
+     "message": "invalid_context: message expected text"
+    },
+    "facts": {},
+    "truncated": []
+   },
+   "exit_code": 3,
+   "elapsed_ms": 2170.743307986413,
+   "stderr": "",
+   "sdk": {
+    "status": "failed",
+    "answer": null,
+    "case": null,
+    "missing": [],
+    "invalid": [
+     "message"
+    ],
+    "uncertain": [],
+    "blocked_by": null,
+    "errors": {
+     "message": "invalid_context: message expected text"
+    },
+    "facts": {},
+    "truncated": [],
+    "partial": [],
+    "cost": {}
+   },
+   "same_public_outcome": true
+  }
+ ],
+ "native_replay": {
+  "schema": 1,
+  "candidate_id": "9be7498f798fb8e7dddaad93f2eaec3756032ebf42ecbaffbcc43932ca6a5d73",
+  "runtime": {
+   "identity": {
+    "file": "gemma-4-E2B-it-Q4_0.gguf",
+    "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+    "template": "chat@2:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+    "lora_sha256": null
+   },
+   "requested_device": "auto",
+   "threads": null,
+   "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+   "loaded": true,
+   "observed_models": [],
+   "accelerated": true,
+   "batch_inputs": 8,
+   "max_slots": 20,
+   "capabilities": {
+    "shared": true,
+    "fused": true,
+    "conformance": true,
+    "counters": {
+     "prefix_hits": 21,
+     "prefix_misses": 13,
+     "state_hits": 4,
+     "state_misses": 46,
+     "state_tokens": 761,
+     "suffix_tokens": 5874,
+     "submissions": 63,
+     "branch_groups": 34,
+     "failures": 0,
+     "prefix_tokens": 909,
+     "prefix_evictions": 1,
+     "submitted_tokens": 7544
+    }
+   },
+   "requested_capacity": {
+    "n_ctx": 15360,
+    "n_batch": 512,
+    "n_seq_max": 44
+   },
+   "configuration": {
+    "max_input_tokens": 1024,
+    "prefix_slots": 4
+   },
+   "capacity": {
+    "n_ctx": 15360,
+    "n_batch": 512,
+    "n_seq_max": 44
+   }
+  },
+  "boundary": "actual frozen per-fact policies; complete SDK and JSON materialization",
+  "policies": {
+   "judge": {
+    "refund": {
+     "true": 0.9,
+     "false": 0.9
+    },
+    "topic": {
+     "true": 0.9,
+     "false": 0.9
+    }
+   }
+  },
+  "arms": [
+   {
+    "iteration": 0,
+    "fused": true,
+    "shape": "serial",
+    "elapsed_ms": 2381.332471006317,
+    "observations": [
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.53347717319106,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9992384314537048,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.53347717319106,
+         "false": 0.4474925226721476,
+         "unstated": 0.01903030413679221
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "billing",
+        "settled": true,
+        "score": 0.990711962864432,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9993878602981567,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.990711962864432,
+         "other": 0.00928803713556796
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 2,
+        "submitted_tokens": 201
+       },
+       "elapsed_ms": 900.05,
+       "amortized_ms": 900.05
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8204500662759012,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9995113611221313,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.16525336201111496,
+         "false": 0.8204500662759012,
+         "unstated": 0.01429657171298377
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8396597796587866,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9989903569221497,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.8396597796587866,
+         "other": 0.16034022034121342
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 1,
+        "submitted_tokens": 130
+       },
+       "elapsed_ms": 345.15,
+       "amortized_ms": 345.15
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5909452205143235,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994333982467651,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.3960356533020581,
+         "false": 0.5909452205143235,
+         "unstated": 0.013019126183618442
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7832284471055679,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991544485092163,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7832284471055679,
+         "other": 0.21677155289443203
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 1,
+        "submitted_tokens": 127
+       },
+       "elapsed_ms": 94.08,
+       "amortized_ms": 94.08
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5909452205143235,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994333982467651,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.3960356533020581,
+         "false": 0.5909452205143235,
+         "unstated": 0.013019126183618442
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7832284471055679,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991544485092163,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7832284471055679,
+         "other": 0.21677155289443203
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 1,
+        "submitted_tokens": 113
+       },
+       "elapsed_ms": 90.97,
+       "amortized_ms": 90.97
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "needs_input",
+        "value": null,
+        "settled": false,
+        "score": 0.9754798112754336,
+        "source": "judge",
+        "why": "insufficient_evidence",
+        "mass": 0.9976150989532471,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.015278498885573035,
+         "false": 0.009241689838993334,
+         "unstated": 0.9754798112754336
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "other",
+        "settled": true,
+        "score": 0.9865223837742059,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9990687966346741,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.013477616225794164,
+         "other": 0.9865223837742059
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 1,
+        "submitted_tokens": 127
+       },
+       "elapsed_ms": 285.97,
+       "amortized_ms": 285.97
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8433107949873833,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990781545639038,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.11320223732555013,
+         "false": 0.8433107949873833,
+         "unstated": 0.04348696768706652
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5107376455262718,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990314245223999,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.5107376455262718,
+         "other": 0.4892623544737283
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 205,
+       "batch_native_work": {
+        "submissions": 1,
+        "submitted_tokens": 134
+       },
+       "elapsed_ms": 663.89,
+       "amortized_ms": 663.89
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 0,
+       "rounds": 0,
+       "logical_tokens": 0,
+       "batch_native_work": {},
+       "elapsed_ms": 0.03,
+       "amortized_ms": 0.03
+      }
+     },
+     {
+      "status": "needs_input",
+      "answer": null,
+      "case": null,
+      "missing": [
+       "allowed"
+      ],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "allowed": "missing_context: allowed"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     },
+     {
+      "status": "failed",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [
+       "message"
+      ],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "message": "invalid_context: message expected text"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     }
+    ],
+    "native_work": {
+     "prefix_hits": 5,
+     "prefix_misses": 1,
+     "state_hits": 1,
+     "state_misses": 5,
+     "state_tokens": 83,
+     "suffix_tokens": 678,
+     "submissions": 7,
+     "branch_groups": 6,
+     "failures": 0,
+     "prefix_tokens": 71,
+     "prefix_evictions": 0,
+     "submitted_tokens": 832
+    }
+   },
+   {
+    "iteration": 0,
+    "fused": true,
+    "shape": "finite_batch",
+    "elapsed_ms": 685.482303990284,
+    "observations": [
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.546444698822169,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9992374181747437,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.546444698822169,
+         "false": 0.4344505230641093,
+         "unstated": 0.01910477811372168
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "billing",
+        "settled": true,
+        "score": 0.9908935900402998,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9994151592254639,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.9908935900402998,
+         "other": 0.009106409959700267
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 684.81,
+       "amortized_ms": 85.6
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8307343994823825,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9995315670967102,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.15552511068882163,
+         "false": 0.8307343994823825,
+         "unstated": 0.013740489828795863
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8405227600487774,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990360736846924,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.8405227600487774,
+         "other": 0.15947723995122265
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 684.81,
+       "amortized_ms": 85.6
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5823132976575851,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994533061981201,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.40469128761537654,
+         "false": 0.5823132976575851,
+         "unstated": 0.012995414727038293
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7774939672275595,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991563558578491,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7774939672275595,
+         "other": 0.22250603277244063
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 684.81,
+       "amortized_ms": 85.6
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5914571603869274,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994380474090576,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.39550271351904115,
+         "false": 0.5914571603869274,
+         "unstated": 0.013040126094031356
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7688420348263111,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991682767868042,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7688420348263111,
+         "other": 0.23115796517368895
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 684.81,
+       "amortized_ms": 85.6
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "needs_input",
+        "value": null,
+        "settled": false,
+        "score": 0.9745790211342183,
+        "source": "judge",
+        "why": "insufficient_evidence",
+        "mass": 0.9976069331169128,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.01572135603927822,
+         "false": 0.009699622826503388,
+         "unstated": 0.9745790211342183
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "other",
+        "settled": true,
+        "score": 0.9862994193077533,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9990337491035461,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.013700580692246712,
+         "other": 0.9862994193077533
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 684.81,
+       "amortized_ms": 85.6
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8483354145717844,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990749955177307,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.10771989952212789,
+         "false": 0.8483354145717844,
+         "unstated": 0.04394468590608782
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5211574680647743,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990324378013611,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.5211574680647743,
+         "other": 0.47884253193522575
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 205,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 684.81,
+       "amortized_ms": 85.6
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 0,
+       "rounds": 0,
+       "logical_tokens": 0,
+       "batch_native_work": {},
+       "elapsed_ms": 684.81,
+       "amortized_ms": 85.6
+      }
+     },
+     {
+      "status": "needs_input",
+      "answer": null,
+      "case": null,
+      "missing": [
+       "allowed"
+      ],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "allowed": "missing_context: allowed"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     },
+     {
+      "status": "failed",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [
+       "message"
+      ],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "message": "invalid_context: message expected text"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     }
+    ],
+    "native_work": {
+     "prefix_hits": 0,
+     "prefix_misses": 1,
+     "state_hits": 0,
+     "state_misses": 5,
+     "state_tokens": 83,
+     "suffix_tokens": 678,
+     "submissions": 3,
+     "branch_groups": 1,
+     "failures": 0,
+     "prefix_tokens": 71,
+     "prefix_evictions": 0,
+     "submitted_tokens": 832
+    }
+   },
+   {
+    "iteration": 0,
+    "fused": false,
+    "shape": "serial",
+    "elapsed_ms": 1037.9845979914535,
+    "observations": [
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.53347717319106,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9992384314537048,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.53347717319106,
+         "false": 0.4474925226721476,
+         "unstated": 0.01903030413679221
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "billing",
+        "settled": true,
+        "score": 0.990711962864432,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9993878602981567,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.990711962864432,
+         "other": 0.00928803713556796
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 201
+       },
+       "elapsed_ms": 233.76,
+       "amortized_ms": 233.76
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8204500662759012,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9995113611221313,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.16525336201111496,
+         "false": 0.8204500662759012,
+         "unstated": 0.01429657171298377
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8396597796587866,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9989903569221497,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.8396597796587866,
+         "other": 0.16034022034121342
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 2,
+        "submitted_tokens": 130
+       },
+       "elapsed_ms": 185.85,
+       "amortized_ms": 185.85
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5909452205143235,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994333982467651,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.3960356533020581,
+         "false": 0.5909452205143235,
+         "unstated": 0.013019126183618442
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7832284471055679,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991544485092163,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7832284471055679,
+         "other": 0.21677155289443203
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 2,
+        "submitted_tokens": 127
+       },
+       "elapsed_ms": 188.53,
+       "amortized_ms": 188.53
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5909452205143235,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994333982467651,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.3960356533020581,
+         "false": 0.5909452205143235,
+         "unstated": 0.013019126183618442
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7832284471055679,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991544485092163,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7832284471055679,
+         "other": 0.21677155289443203
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 1,
+        "submitted_tokens": 113
+       },
+       "elapsed_ms": 100.48,
+       "amortized_ms": 100.48
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "needs_input",
+        "value": null,
+        "settled": false,
+        "score": 0.9754798112754336,
+        "source": "judge",
+        "why": "insufficient_evidence",
+        "mass": 0.9976150989532471,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.015278498885573035,
+         "false": 0.009241689838993334,
+         "unstated": 0.9754798112754336
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "other",
+        "settled": true,
+        "score": 0.9865223837742059,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9990687966346741,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.013477616225794164,
+         "other": 0.9865223837742059
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 2,
+        "submitted_tokens": 127
+       },
+       "elapsed_ms": 167.43,
+       "amortized_ms": 167.43
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8433107949873833,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990781545639038,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.11320223732555013,
+         "false": 0.8433107949873833,
+         "unstated": 0.04348696768706652
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5107376455262718,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990314245223999,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.5107376455262718,
+         "other": 0.4892623544737283
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 205,
+       "batch_native_work": {
+        "submissions": 2,
+        "submitted_tokens": 134
+       },
+       "elapsed_ms": 160.66,
+       "amortized_ms": 160.66
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 0,
+       "rounds": 0,
+       "logical_tokens": 0,
+       "batch_native_work": {},
+       "elapsed_ms": 0.04,
+       "amortized_ms": 0.04
+      }
+     },
+     {
+      "status": "needs_input",
+      "answer": null,
+      "case": null,
+      "missing": [
+       "allowed"
+      ],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "allowed": "missing_context: allowed"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     },
+     {
+      "status": "failed",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [
+       "message"
+      ],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "message": "invalid_context: message expected text"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     }
+    ],
+    "native_work": {
+     "prefix_hits": 5,
+     "prefix_misses": 1,
+     "state_hits": 1,
+     "state_misses": 5,
+     "state_tokens": 83,
+     "suffix_tokens": 678,
+     "submissions": 12,
+     "branch_groups": 6,
+     "failures": 0,
+     "prefix_tokens": 71,
+     "prefix_evictions": 0,
+     "submitted_tokens": 832
+    }
+   },
+   {
+    "iteration": 0,
+    "fused": false,
+    "shape": "finite_batch",
+    "elapsed_ms": 545.3550460078986,
+    "observations": [
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.546444698822169,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9992374181747437,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.546444698822169,
+         "false": 0.4344505230641093,
+         "unstated": 0.01910477811372168
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "billing",
+        "settled": true,
+        "score": 0.9908935900402998,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9994151592254639,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.9908935900402998,
+         "other": 0.009106409959700267
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 4,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 544.47,
+       "amortized_ms": 68.06
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8307343994823825,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9995315670967102,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.15552511068882163,
+         "false": 0.8307343994823825,
+         "unstated": 0.013740489828795863
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8405227600487774,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990360736846924,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.8405227600487774,
+         "other": 0.15947723995122265
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 4,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 544.47,
+       "amortized_ms": 68.06
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5823132976575851,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994533061981201,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.40469128761537654,
+         "false": 0.5823132976575851,
+         "unstated": 0.012995414727038293
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7774939672275595,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991563558578491,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7774939672275595,
+         "other": 0.22250603277244063
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 4,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 544.47,
+       "amortized_ms": 68.06
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5914571603869274,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994380474090576,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.39550271351904115,
+         "false": 0.5914571603869274,
+         "unstated": 0.013040126094031356
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7688420348263111,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991682767868042,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7688420348263111,
+         "other": 0.23115796517368895
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 4,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 544.47,
+       "amortized_ms": 68.06
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "needs_input",
+        "value": null,
+        "settled": false,
+        "score": 0.9745790211342183,
+        "source": "judge",
+        "why": "insufficient_evidence",
+        "mass": 0.9976069331169128,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.01572135603927822,
+         "false": 0.009699622826503388,
+         "unstated": 0.9745790211342183
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "other",
+        "settled": true,
+        "score": 0.9862994193077533,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9990337491035461,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.013700580692246712,
+         "other": 0.9862994193077533
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 4,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 544.47,
+       "amortized_ms": 68.06
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8483354145717844,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990749955177307,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.10771989952212789,
+         "false": 0.8483354145717844,
+         "unstated": 0.04394468590608782
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5211574680647743,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990324378013611,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.5211574680647743,
+         "other": 0.47884253193522575
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 205,
+       "batch_native_work": {
+        "submissions": 4,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 544.47,
+       "amortized_ms": 68.06
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 0,
+       "rounds": 0,
+       "logical_tokens": 0,
+       "batch_native_work": {},
+       "elapsed_ms": 544.47,
+       "amortized_ms": 68.06
+      }
+     },
+     {
+      "status": "needs_input",
+      "answer": null,
+      "case": null,
+      "missing": [
+       "allowed"
+      ],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "allowed": "missing_context: allowed"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     },
+     {
+      "status": "failed",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [
+       "message"
+      ],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "message": "invalid_context: message expected text"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     }
+    ],
+    "native_work": {
+     "prefix_hits": 0,
+     "prefix_misses": 1,
+     "state_hits": 0,
+     "state_misses": 5,
+     "state_tokens": 83,
+     "suffix_tokens": 678,
+     "submissions": 4,
+     "branch_groups": 1,
+     "failures": 0,
+     "prefix_tokens": 71,
+     "prefix_evictions": 0,
+     "submitted_tokens": 832
+    }
+   },
+   {
+    "iteration": 1,
+    "fused": false,
+    "shape": "serial",
+    "elapsed_ms": 1351.5250549971825,
+    "observations": [
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.53347717319106,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9992384314537048,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.53347717319106,
+         "false": 0.4474925226721476,
+         "unstated": 0.01903030413679221
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "billing",
+        "settled": true,
+        "score": 0.990711962864432,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9993878602981567,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.990711962864432,
+         "other": 0.00928803713556796
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 201
+       },
+       "elapsed_ms": 531.01,
+       "amortized_ms": 531.01
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8204500662759012,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9995113611221313,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.16525336201111496,
+         "false": 0.8204500662759012,
+         "unstated": 0.01429657171298377
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8396597796587866,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9989903569221497,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.8396597796587866,
+         "other": 0.16034022034121342
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 2,
+        "submitted_tokens": 130
+       },
+       "elapsed_ms": 233.01,
+       "amortized_ms": 233.01
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5909452205143235,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994333982467651,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.3960356533020581,
+         "false": 0.5909452205143235,
+         "unstated": 0.013019126183618442
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7832284471055679,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991544485092163,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7832284471055679,
+         "other": 0.21677155289443203
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 2,
+        "submitted_tokens": 127
+       },
+       "elapsed_ms": 187.58,
+       "amortized_ms": 187.58
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5909452205143235,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994333982467651,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.3960356533020581,
+         "false": 0.5909452205143235,
+         "unstated": 0.013019126183618442
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7832284471055679,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991544485092163,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7832284471055679,
+         "other": 0.21677155289443203
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 1,
+        "submitted_tokens": 113
+       },
+       "elapsed_ms": 87.39,
+       "amortized_ms": 87.39
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "needs_input",
+        "value": null,
+        "settled": false,
+        "score": 0.9754798112754336,
+        "source": "judge",
+        "why": "insufficient_evidence",
+        "mass": 0.9976150989532471,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.015278498885573035,
+         "false": 0.009241689838993334,
+         "unstated": 0.9754798112754336
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "other",
+        "settled": true,
+        "score": 0.9865223837742059,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9990687966346741,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.013477616225794164,
+         "other": 0.9865223837742059
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 2,
+        "submitted_tokens": 127
+       },
+       "elapsed_ms": 154.76,
+       "amortized_ms": 154.76
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8433107949873833,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990781545639038,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.11320223732555013,
+         "false": 0.8433107949873833,
+         "unstated": 0.04348696768706652
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5107376455262718,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990314245223999,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.5107376455262718,
+         "other": 0.4892623544737283
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 205,
+       "batch_native_work": {
+        "submissions": 2,
+        "submitted_tokens": 134
+       },
+       "elapsed_ms": 156.49,
+       "amortized_ms": 156.49
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 0,
+       "rounds": 0,
+       "logical_tokens": 0,
+       "batch_native_work": {},
+       "elapsed_ms": 0.04,
+       "amortized_ms": 0.04
+      }
+     },
+     {
+      "status": "needs_input",
+      "answer": null,
+      "case": null,
+      "missing": [
+       "allowed"
+      ],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "allowed": "missing_context: allowed"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     },
+     {
+      "status": "failed",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [
+       "message"
+      ],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "message": "invalid_context: message expected text"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     }
+    ],
+    "native_work": {
+     "prefix_hits": 5,
+     "prefix_misses": 1,
+     "state_hits": 1,
+     "state_misses": 5,
+     "state_tokens": 83,
+     "suffix_tokens": 678,
+     "submissions": 12,
+     "branch_groups": 6,
+     "failures": 0,
+     "prefix_tokens": 71,
+     "prefix_evictions": 0,
+     "submitted_tokens": 832
+    }
+   },
+   {
+    "iteration": 1,
+    "fused": false,
+    "shape": "finite_batch",
+    "elapsed_ms": 527.419384001405,
+    "observations": [
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.546444698822169,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9992374181747437,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.546444698822169,
+         "false": 0.4344505230641093,
+         "unstated": 0.01910477811372168
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "billing",
+        "settled": true,
+        "score": 0.9908935900402998,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9994151592254639,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.9908935900402998,
+         "other": 0.009106409959700267
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 4,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 526.78,
+       "amortized_ms": 65.85
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8307343994823825,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9995315670967102,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.15552511068882163,
+         "false": 0.8307343994823825,
+         "unstated": 0.013740489828795863
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8405227600487774,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990360736846924,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.8405227600487774,
+         "other": 0.15947723995122265
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 4,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 526.78,
+       "amortized_ms": 65.85
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5823132976575851,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994533061981201,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.40469128761537654,
+         "false": 0.5823132976575851,
+         "unstated": 0.012995414727038293
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7774939672275595,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991563558578491,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7774939672275595,
+         "other": 0.22250603277244063
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 4,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 526.78,
+       "amortized_ms": 65.85
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5914571603869274,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994380474090576,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.39550271351904115,
+         "false": 0.5914571603869274,
+         "unstated": 0.013040126094031356
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7688420348263111,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991682767868042,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7688420348263111,
+         "other": 0.23115796517368895
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 4,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 526.78,
+       "amortized_ms": 65.85
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "needs_input",
+        "value": null,
+        "settled": false,
+        "score": 0.9745790211342183,
+        "source": "judge",
+        "why": "insufficient_evidence",
+        "mass": 0.9976069331169128,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.01572135603927822,
+         "false": 0.009699622826503388,
+         "unstated": 0.9745790211342183
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "other",
+        "settled": true,
+        "score": 0.9862994193077533,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9990337491035461,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.013700580692246712,
+         "other": 0.9862994193077533
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 4,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 526.78,
+       "amortized_ms": 65.85
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8483354145717844,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990749955177307,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.10771989952212789,
+         "false": 0.8483354145717844,
+         "unstated": 0.04394468590608782
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5211574680647743,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990324378013611,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.5211574680647743,
+         "other": 0.47884253193522575
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 205,
+       "batch_native_work": {
+        "submissions": 4,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 526.78,
+       "amortized_ms": 65.85
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 0,
+       "rounds": 0,
+       "logical_tokens": 0,
+       "batch_native_work": {},
+       "elapsed_ms": 526.78,
+       "amortized_ms": 65.85
+      }
+     },
+     {
+      "status": "needs_input",
+      "answer": null,
+      "case": null,
+      "missing": [
+       "allowed"
+      ],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "allowed": "missing_context: allowed"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     },
+     {
+      "status": "failed",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [
+       "message"
+      ],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "message": "invalid_context: message expected text"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     }
+    ],
+    "native_work": {
+     "prefix_hits": 0,
+     "prefix_misses": 1,
+     "state_hits": 0,
+     "state_misses": 5,
+     "state_tokens": 83,
+     "suffix_tokens": 678,
+     "submissions": 4,
+     "branch_groups": 1,
+     "failures": 0,
+     "prefix_tokens": 71,
+     "prefix_evictions": 0,
+     "submitted_tokens": 832
+    }
+   },
+   {
+    "iteration": 1,
+    "fused": true,
+    "shape": "serial",
+    "elapsed_ms": 729.7827909933403,
+    "observations": [
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.53347717319106,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9992384314537048,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.53347717319106,
+         "false": 0.4474925226721476,
+         "unstated": 0.01903030413679221
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "billing",
+        "settled": true,
+        "score": 0.990711962864432,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9993878602981567,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.990711962864432,
+         "other": 0.00928803713556796
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 2,
+        "submitted_tokens": 201
+       },
+       "elapsed_ms": 192.66,
+       "amortized_ms": 192.66
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8204500662759012,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9995113611221313,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.16525336201111496,
+         "false": 0.8204500662759012,
+         "unstated": 0.01429657171298377
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8396597796587866,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9989903569221497,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.8396597796587866,
+         "other": 0.16034022034121342
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 1,
+        "submitted_tokens": 130
+       },
+       "elapsed_ms": 108.88,
+       "amortized_ms": 108.88
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5909452205143235,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994333982467651,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.3960356533020581,
+         "false": 0.5909452205143235,
+         "unstated": 0.013019126183618442
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7832284471055679,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991544485092163,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7832284471055679,
+         "other": 0.21677155289443203
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 1,
+        "submitted_tokens": 127
+       },
+       "elapsed_ms": 103.97,
+       "amortized_ms": 103.97
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5909452205143235,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994333982467651,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.3960356533020581,
+         "false": 0.5909452205143235,
+         "unstated": 0.013019126183618442
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7832284471055679,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991544485092163,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7832284471055679,
+         "other": 0.21677155289443203
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 1,
+        "submitted_tokens": 113
+       },
+       "elapsed_ms": 102.94,
+       "amortized_ms": 102.94
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "needs_input",
+        "value": null,
+        "settled": false,
+        "score": 0.9754798112754336,
+        "source": "judge",
+        "why": "insufficient_evidence",
+        "mass": 0.9976150989532471,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.015278498885573035,
+         "false": 0.009241689838993334,
+         "unstated": 0.9754798112754336
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "other",
+        "settled": true,
+        "score": 0.9865223837742059,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9990687966346741,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.013477616225794164,
+         "other": 0.9865223837742059
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 1,
+        "submitted_tokens": 127
+       },
+       "elapsed_ms": 103.81,
+       "amortized_ms": 103.81
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8433107949873833,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990781545639038,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.11320223732555013,
+         "false": 0.8433107949873833,
+         "unstated": 0.04348696768706652
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5107376455262718,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990314245223999,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.5107376455262718,
+         "other": 0.4892623544737283
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 205,
+       "batch_native_work": {
+        "submissions": 1,
+        "submitted_tokens": 134
+       },
+       "elapsed_ms": 116.44,
+       "amortized_ms": 116.44
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 0,
+       "rounds": 0,
+       "logical_tokens": 0,
+       "batch_native_work": {},
+       "elapsed_ms": 0.04,
+       "amortized_ms": 0.04
+      }
+     },
+     {
+      "status": "needs_input",
+      "answer": null,
+      "case": null,
+      "missing": [
+       "allowed"
+      ],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "allowed": "missing_context: allowed"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     },
+     {
+      "status": "failed",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [
+       "message"
+      ],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "message": "invalid_context: message expected text"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     }
+    ],
+    "native_work": {
+     "prefix_hits": 5,
+     "prefix_misses": 1,
+     "state_hits": 1,
+     "state_misses": 5,
+     "state_tokens": 83,
+     "suffix_tokens": 678,
+     "submissions": 7,
+     "branch_groups": 6,
+     "failures": 0,
+     "prefix_tokens": 71,
+     "prefix_evictions": 0,
+     "submitted_tokens": 832
+    }
+   },
+   {
+    "iteration": 1,
+    "fused": true,
+    "shape": "finite_batch",
+    "elapsed_ms": 428.48811399016995,
+    "observations": [
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.546444698822169,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9992374181747437,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.546444698822169,
+         "false": 0.4344505230641093,
+         "unstated": 0.01910477811372168
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "billing",
+        "settled": true,
+        "score": 0.9908935900402998,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9994151592254639,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.9908935900402998,
+         "other": 0.009106409959700267
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 427.63,
+       "amortized_ms": 53.45
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8307343994823825,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9995315670967102,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.15552511068882163,
+         "false": 0.8307343994823825,
+         "unstated": 0.013740489828795863
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8405227600487774,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990360736846924,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.8405227600487774,
+         "other": 0.15947723995122265
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 201,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 427.63,
+       "amortized_ms": 53.45
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5823132976575851,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994533061981201,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.40469128761537654,
+         "false": 0.5823132976575851,
+         "unstated": 0.012995414727038293
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7774939672275595,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991563558578491,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7774939672275595,
+         "other": 0.22250603277244063
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 427.63,
+       "amortized_ms": 53.45
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5914571603869274,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9994380474090576,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.39550271351904115,
+         "false": 0.5914571603869274,
+         "unstated": 0.013040126094031356
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.7688420348263111,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9991682767868042,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.7688420348263111,
+         "other": 0.23115796517368895
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 427.63,
+       "amortized_ms": 53.45
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "needs_input",
+        "value": null,
+        "settled": false,
+        "score": 0.9745790211342183,
+        "source": "judge",
+        "why": "insufficient_evidence",
+        "mass": 0.9976069331169128,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.01572135603927822,
+         "false": 0.009699622826503388,
+         "unstated": 0.9745790211342183
+        }
+       },
+       "topic": {
+        "status": "ok",
+        "value": "other",
+        "settled": true,
+        "score": 0.9862994193077533,
+        "source": "judge",
+        "why": null,
+        "mass": 0.9990337491035461,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.013700580692246712,
+         "other": 0.9862994193077533
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 198,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 427.63,
+       "amortized_ms": 53.45
+      }
+     },
+     {
+      "status": "uncertain",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [],
+      "uncertain": [
+       "refund",
+       "topic"
+      ],
+      "blocked_by": "refund",
+      "errors": {},
+      "facts": {
+       "refund": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.8483354145717844,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990749955177307,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "true": 0.10771989952212789,
+         "false": 0.8483354145717844,
+         "unstated": 0.04394468590608782
+        }
+       },
+       "topic": {
+        "status": "uncertain",
+        "value": null,
+        "settled": false,
+        "score": 0.5211574680647743,
+        "source": "judge",
+        "why": "uncertain",
+        "mass": 0.9990324378013611,
+        "guidance": [
+         [
+          "policy",
+          "e290064d10696f31b2abef32d4fdd8ddc65e474af191a41cbb1d043608189e73"
+         ]
+        ],
+        "observed_models": [],
+        "scores": {
+         "billing": 0.5211574680647743,
+         "other": 0.47884253193522575
+        }
+       }
+      },
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 2,
+       "rounds": 1,
+       "logical_tokens": 205,
+       "batch_native_work": {
+        "submissions": 3,
+        "submitted_tokens": 832
+       },
+       "elapsed_ms": 427.63,
+       "amortized_ms": 53.45
+      }
+     },
+     {
+      "status": "ok",
+      "answer": {
+       "action": "support"
+      },
+      "case": "otherwise",
+      "missing": [],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {},
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {
+       "rules": 1,
+       "rule": 0,
+       "example": 0,
+       "classifier": 0,
+       "judge": 0,
+       "rounds": 0,
+       "logical_tokens": 0,
+       "batch_native_work": {},
+       "elapsed_ms": 427.63,
+       "amortized_ms": 53.45
+      }
+     },
+     {
+      "status": "needs_input",
+      "answer": null,
+      "case": null,
+      "missing": [
+       "allowed"
+      ],
+      "invalid": [],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "allowed": "missing_context: allowed"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     },
+     {
+      "status": "failed",
+      "answer": null,
+      "case": null,
+      "missing": [],
+      "invalid": [
+       "message"
+      ],
+      "uncertain": [],
+      "blocked_by": null,
+      "errors": {
+       "message": "invalid_context: message expected text"
+      },
+      "facts": {},
+      "truncated": [],
+      "partial": [],
+      "cost": {}
+     }
+    ],
+    "native_work": {
+     "prefix_hits": 0,
+     "prefix_misses": 1,
+     "state_hits": 0,
+     "state_misses": 5,
+     "state_tokens": 83,
+     "suffix_tokens": 678,
+     "submissions": 3,
+     "branch_groups": 1,
+     "failures": 0,
+     "prefix_tokens": 71,
+     "prefix_evictions": 0,
+     "submitted_tokens": 832
+    }
+   }
+  ],
+  "differences": [
+   {
+    "iteration": 0,
+    "input": 0,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 0,
+    "input": 1,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 0,
+    "input": 2,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 0,
+    "input": 3,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 0,
+    "input": 4,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 0,
+    "input": 5,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 0,
+    "input": 6,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 7,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 8,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 0,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 1,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 2,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 3,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 4,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 5,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 6,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 7,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 8,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 0,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 0,
+    "input": 1,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 0,
+    "input": 2,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 0,
+    "input": 3,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 0,
+    "input": 4,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 0,
+    "input": 5,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 0,
+    "input": 6,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 7,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 0,
+    "input": 8,
+    "baseline": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 0,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 1,
+    "input": 1,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 1,
+    "input": 2,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 1,
+    "input": 3,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 1,
+    "input": 4,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 1,
+    "input": 5,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 1,
+    "input": 6,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 7,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 8,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": false,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 0,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 1,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 2,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 3,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 4,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 5,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 6,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 7,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 8,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "serial"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 0,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 1,
+    "input": 1,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 1,
+    "input": 2,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 1,
+    "input": 3,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 1,
+    "input": 4,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 1,
+    "input": 5,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": [
+     "refund",
+     "topic"
+    ]
+   },
+   {
+    "iteration": 1,
+    "input": 6,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 7,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   },
+   {
+    "iteration": 1,
+    "input": 8,
+    "baseline": {
+     "fused": false,
+     "shape": "serial"
+    },
+    "arm": {
+     "fused": true,
+     "shape": "finite_batch"
+    },
+    "status_changed": false,
+    "case_changed": false,
+    "action_changed": false,
+    "fact_outcomes_changed": [],
+    "scores_changed": []
+   }
+  ]
+ },
+ "quickstart": {
+  "answers": [
+   {
+    "refund": {
+     "status": "ok",
+     "value": true,
+     "p_true": 0.920555258125264,
+     "mass": 0.9992325305938721,
+     "error": null,
+     "guidance": [
+      [
+       "guidance",
+       "87fd5121d92085dedbe09cbcc57a6a0820cb36723d9e5dd8d7c6d49a931aacda"
+      ]
+     ],
+     "observed_models": [],
+     "p_unstated": 0.0027472016825396133
+    },
+    "topic": {
+     "status": "ok",
+     "value": "billing",
+     "index": "billing",
+     "score": 0.9992919413085872,
+     "error": null,
+     "complete": true,
+     "guidance": [
+      [
+       "guidance",
+       "87fd5121d92085dedbe09cbcc57a6a0820cb36723d9e5dd8d7c6d49a931aacda"
+      ]
+     ],
+     "observed_models": [],
+     "scores": {
+      "billing": 0.9992919413085872,
+      "product": 0.0007080586914127185
+     },
+     "removed": {
+      "ineligible": [],
+      "not_examined": []
+     },
+     "truncated": [],
+     "mass": 0.999649703502655,
+     "focus": "full",
+     "presented_options": [
+      {
+       "key": "billing",
+       "description": "charges and payments"
+      },
+      {
+       "key": "product",
+       "description": "product faults"
+      }
+     ]
+    },
+    "urgency": {
+     "status": "uncertain",
+     "value": null,
+     "index": null,
+     "score": 0.6655973816735837,
+     "error": null,
+     "guidance": [
+      [
+       "guidance",
+       "87fd5121d92085dedbe09cbcc57a6a0820cb36723d9e5dd8d7c6d49a931aacda"
+      ]
+     ],
+     "observed_models": [],
+     "expected": 1.2572492282480914,
+     "scores": {
+      "can wait": 0.038576695039162424,
+      "today": 0.6655973816735837,
+      "immediately": 0.2958259232872539
+     },
+     "mass": 0.9973095059394836
+    }
+   },
+   {
+    "refund": {
+     "status": "uncertain",
+     "value": null,
+     "p_true": 0.023625529876358322,
+     "mass": 0.9992181658744812,
+     "error": null,
+     "guidance": [
+      [
+       "guidance",
+       "87fd5121d92085dedbe09cbcc57a6a0820cb36723d9e5dd8d7c6d49a931aacda"
+      ]
+     ],
+     "observed_models": [],
+     "p_unstated": 0.11874775248091833
+    },
+    "topic": {
+     "status": "ok",
+     "value": "billing",
+     "index": "billing",
+     "score": 0.9919499869545353,
+     "error": null,
+     "complete": true,
+     "guidance": [
+      [
+       "guidance",
+       "87fd5121d92085dedbe09cbcc57a6a0820cb36723d9e5dd8d7c6d49a931aacda"
+      ]
+     ],
+     "observed_models": [],
+     "scores": {
+      "billing": 0.9919499869545353,
+      "product": 0.008050013045464587
+     },
+     "removed": {
+      "ineligible": [],
+      "not_examined": []
+     },
+     "truncated": [],
+     "mass": 0.9992086887359619,
+     "focus": "full",
+     "presented_options": [
+      {
+       "key": "billing",
+       "description": "charges and payments"
+      },
+      {
+       "key": "product",
+       "description": "product faults"
+      }
+     ]
+    },
+    "urgency": {
+     "status": "ok",
+     "value": "can wait",
+     "index": 0,
+     "score": 0.9253835653501739,
+     "error": null,
+     "guidance": [
+      [
+       "guidance",
+       "87fd5121d92085dedbe09cbcc57a6a0820cb36723d9e5dd8d7c6d49a931aacda"
+      ]
+     ],
+     "observed_models": [],
+     "expected": 0.10236096489562416,
+     "scores": {
+      "can wait": 0.9253835653501739,
+      "today": 0.04687190440402788,
+      "immediately": 0.027744530245798142
+     },
+     "mass": 0.992705762386322
+    }
+   }
+  ],
+  "uncorrected": {
+   "status": "ok",
+   "answer": {
+    "action": "return_money"
+   },
+   "case": "refund",
+   "missing": [],
+   "invalid": [],
+   "uncertain": [],
+   "blocked_by": null,
+   "errors": {},
+   "facts": {
+    "refund": {
+     "status": "ok",
+     "value": true,
+     "settled": true,
+     "score": 0.9218497923139343,
+     "source": "judge",
+     "why": null,
+     "mass": 0.9992601871490479,
+     "guidance": [
+      [
+       "guidance",
+       "87fd5121d92085dedbe09cbcc57a6a0820cb36723d9e5dd8d7c6d49a931aacda"
+      ]
+     ],
+     "observed_models": [],
+     "scores": {
+      "true": 0.9218497923139343,
+      "false": 0.07551259608989672,
+      "unstated": 0.0026376115961690575
+     }
+    }
+   },
+   "truncated": [],
+   "partial": [],
+   "cost": {
+    "rules": 1,
+    "rule": 0,
+    "example": 0,
+    "classifier": 0,
+    "judge": 1,
+    "rounds": 1,
+    "logical_tokens": 177,
+    "batch_native_work": {
+     "submissions": 1,
+     "submitted_tokens": 75
+    },
+    "elapsed_ms": 85.0,
+    "amortized_ms": 85.0
+   }
+  },
+  "excluded": {
+   "status": "uncertain",
+   "answer": null,
+   "case": null,
+   "missing": [],
+   "invalid": [],
+   "uncertain": [
+    "refund"
+   ],
+   "blocked_by": "refund",
+   "errors": {},
+   "facts": {
+    "refund": {
+     "status": "uncertain",
+     "value": null,
+     "settled": false,
+     "score": 0.8597810440396779,
+     "source": "judge",
+     "why": "uncertain",
+     "mass": 0.9992084503173828,
+     "guidance": [
+      [
+       "guidance",
+       "87fd5121d92085dedbe09cbcc57a6a0820cb36723d9e5dd8d7c6d49a931aacda"
+      ]
+     ],
+     "observed_models": [],
+     "scores": {
+      "true": 0.024192725883863647,
+      "false": 0.8597810440396779,
+      "unstated": 0.11602623007645844
+     }
+    }
+   },
+   "truncated": [],
+   "partial": [],
+   "cost": {
+    "rules": 1,
+    "rule": 0,
+    "example": 0,
+    "classifier": 0,
+    "judge": 1,
+    "rounds": 1,
+    "logical_tokens": 172,
+    "batch_native_work": {
+     "submissions": 1,
+     "submitted_tokens": 90
+    },
+    "elapsed_ms": 86.27,
+    "amortized_ms": 86.27
+   }
+  },
+  "correction": {
+   "recorded": 1,
+   "case_label_recorded": false,
+   "facts": [
+    "refund"
+   ],
+   "scope": "this exact input",
+   "effective": "now"
+  },
+  "restored": {
+   "status": "ok",
+   "answer": {
+    "action": "return_money"
+   },
+   "case": "refund",
+   "missing": [],
+   "invalid": [],
+   "uncertain": [],
+   "blocked_by": null,
+   "errors": {},
+   "facts": {
+    "refund": {
+     "status": "ok",
+     "value": true,
+     "settled": true,
+     "score": 1.0,
+     "source": "example",
+     "why": null,
+     "mass": null,
+     "guidance": [
+      [
+       "guidance",
+       "87fd5121d92085dedbe09cbcc57a6a0820cb36723d9e5dd8d7c6d49a931aacda"
+      ]
+     ],
+     "observed_models": [],
+     "scores": {
+      "true": 1.0,
+      "false": 0.0,
+      "unstated": 0.0
+     }
+    }
+   },
+   "truncated": [],
+   "partial": [],
+   "cost": {
+    "rules": 1,
+    "rule": 0,
+    "example": 1,
+    "classifier": 0,
+    "judge": 0,
+    "rounds": 1,
+    "logical_tokens": 0,
+    "batch_native_work": {},
+    "elapsed_ms": 0.07,
+    "amortized_ms": 0.07
+   }
+  },
+  "missing": {
+   "status": "needs_input",
+   "answer": null,
+   "case": null,
+   "missing": [
+    "message"
+   ],
+   "invalid": [],
+   "uncertain": [],
+   "blocked_by": null,
+   "errors": {
+    "message": "missing_context: message"
+   },
+   "facts": {},
+   "truncated": [],
+   "partial": [],
+   "cost": {}
+  },
+  "label_envelope": {
+   "schema": 1,
+   "input": {
+    "message": "I was charged twice. Refund one to my card.",
+    "duplicate_charge": true
+   },
+   "group": "ticket-42",
+   "selection": {
+    "selected_by": "manual"
+   }
+  }
+ }
+}

@@ -53,7 +53,7 @@ def test_repr_and_explain_speak_the_users_language(rt, path):
 
 def test_missing_and_invalid_context_fail(rt, path):
     r = rt.load(path)({"subject": "x"})
-    assert (r.status, r.missing, r.invalid) == ("failed", ("body",), ())
+    assert (r.status, r.missing, r.invalid) == ("needs_input", ("body",), ())
     r = rt.load(path)(t("hi", payment={"status": "weird"}))
     assert (r.status, r.invalid, r.missing) == ("failed", ("payment.status",), ())
 
@@ -224,7 +224,8 @@ def test_stale_examples_are_ignored_after_meaning_change(rt, path):
 
 def test_specialize_without_lock_warns(rt, path):
     edit(path, lambda s: s["facts"]["refund_requested"].update(specialize="lexical"))
-    assert any("specialize: lexical" in w for w in rt.load(path).warnings)
+    with pytest.raises(ConfigError, match="semantic-trainer"):
+        rt.load(path)
 
 
 def test_many_preserves_order_and_is_lazy(rt, path):
@@ -248,13 +249,12 @@ def test_answer_label_derivation(rt, path):
     assert derive_fact_labels(plan, "refund_settled") == {"legal_threat": False, "refund_requested": True}
 
 
-def test_lexical_head_settles_and_falls_back(rt, path, fake):
+def test_lexical_head_settles_and_falls_back(rt, path, fake, head_bundle):
     sw = rt.load(path)
     for i in range(12):
         sw.correct(t(f"please refund my charge number {i}"), fact="refund_requested", value=True)
         sw.correct(t(f"hello there friend number {i}"), fact="refund_requested", value=False)
-    edit(path, lambda s: s["facts"]["refund_requested"].update(specialize="lexical"))
-    tools.lock(rt, path)
+    tools.lock(rt, path, head_bundles={"refund_requested": head_bundle(rt, path)})
     locked = rt.load(path)
     assert "refund_requested" in locked.snapshot.heads
     r = locked(t("please refund my charge number 99", payment={"status": "settled"}))

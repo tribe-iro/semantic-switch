@@ -1,0 +1,28 @@
+{
+ "schema": 1,
+ "population": "native build/attention controls; no production changes or quality claims",
+ "source": "/tmp/claude-1000/-home-tribeiro-Projects-semantic-select/e15f7c12-d489-4926-8214-9d69c829ea39/scratchpad/lcp-src/llama_cpp_python-0.3.36/vendor/llama.cpp",
+ "source_kind": "locally available llama-cpp-python 0.3.36 vendor archive; not asserted identical to installed native source",
+ "source_cpu_sha256": "94e4c599aa8e6a0e047b1e4a40830cd5b54a5e0bc773acaccd3be2d4702caf39",
+ "cmake_cache_sha256": "cf2d3054b14d62e18d0c3a71de02b5cca207974f80ae6939e4999026a34260cf",
+ "library_sha256": "89dc7de314fce585eed697ae2095e5385185c97e3f9a78c905db70563a628d79",
+ "controls": [
+  "bench/results/native-segmentation-q8-plain.json",
+  "bench/results/native-segmentation-q8-f32kv.json",
+  "bench/results/native-segmentation-q8-f32attention.json",
+  "bench/results/native-segmentation-q8-no-flash-cpu.json",
+  "bench/results/native-segmentation-q8-no-flash-gpu.json",
+  "bench/results/lora-native-validation-qwen3-no-flash.json"
+ ],
+ "production_attention_changed": false,
+ "rejected_change": {
+  "global_nonflash": {
+   "short_qwen_fixture": {
+    "correct": 9,
+    "submitted": 12,
+    "required": 10
+   },
+   "guided_gemma_prefix_replay": "accepted status changed at min_score 0.8; test_guidance_native_prefix_residency_preserves_scores"
+  }
+ }
+}

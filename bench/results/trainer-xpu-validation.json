@@ -1,0 +1,286 @@
+{
+ "schema": 1,
+ "task": {
+  "definition": "trainer-xpu-validation/action.yaml",
+  "labels": "trainer-xpu-validation/labels.jsonl",
+  "label_origin": "synthetic (agent-authored)",
+  "families": 40,
+  "situations": 120,
+  "task_family": "maintenance:overheating"
+ },
+ "assets": {
+  "manifest": "1091cf490496e232e5f97d712f496b9cf839fa7441eed47d617f7a67a22e7477",
+  "quant": "Q4_0",
+  "base_sha256": "4d0933b6e1b8ac3e176939544c95fcb10f968bebac8cc783891acced981ccbbe"
+ },
+ "environment": {
+  "trainer": ".venv-xpu: torch 2.14.1+xpu, transformers 5.19.0, peft 0.21.2, llama-cpp-python 0.3.36 (Vulkan build)",
+  "device": "Intel Arc B390 (integrated, shared host memory)"
+ },
+ "roles": {
+  "fit": {
+   "families": 9,
+   "observations": 27
+  },
+  "model_select": {
+   "families": 3,
+   "observations": 9
+  },
+  "acceptance_fit": {
+   "families": 1,
+   "observations": 3
+  },
+  "check": {
+   "families": 27,
+   "observations": 81
+  }
+ },
+ "recipe": {
+  "rank": 16,
+  "alpha": 32,
+  "dropout": 0.0,
+  "learning_rate": 0.0002,
+  "warmup_ratio": 0.05,
+  "schedule": "constant",
+  "weight_decay": 0.01,
+  "gradient_clip": 1.0,
+  "epochs": 2,
+  "seed": 0,
+  "batch_size": 8,
+  "microbatch": 1,
+  "report_every": 10,
+  "target_modules": [
+   "q_proj",
+   "k_proj",
+   "v_proj",
+   "o_proj",
+   "gate_proj",
+   "up_proj",
+   "down_proj"
+  ]
+ },
+ "placement": {
+  "": "xpu:0",
+  "model.language_model.embed_tokens_per_layer": "cpu"
+ },
+ "trainable_parameters": 24158208,
+ "seconds": {
+  "export_native": 3.2,
+  "prepare": 1.1,
+  "dry_run": 5.0,
+  "fit": 144.3,
+  "select": 214.5,
+  "from_specialization_and_call": 8.7
+ },
+ "epochs": [
+  {
+   "epoch": 1,
+   "loss": 0.8563782252250028,
+   "predicted": {
+    "clarify": 9.5,
+    "continue": 9.5,
+    "escalate": 8.0
+   },
+   "presentations": 54,
+   "tokens": 9664,
+   "steps": 4,
+   "seconds": 25.919560882961378,
+   "peak_device_bytes": 7287219712,
+   "peak_host_bytes": 9541304320
+  },
+  {
+   "epoch": 2,
+   "loss": 0.09168775655303905,
+   "predicted": {
+    "clarify": 7.5,
+    "continue": 9.5,
+    "escalate": 10.0
+   },
+   "presentations": 54,
+   "tokens": 9664,
+   "steps": 8,
+   "seconds": 21.50662940798793,
+   "peak_device_bytes": 7190586880,
+   "peak_host_bytes": 9541304320
+  }
+ ],
+ "step_seconds": [
+  6.48,
+  5.38
+ ],
+ "fit_learning": {
+  "all_presentations_correct_before": 17,
+  "after": 27,
+  "of": 27
+ },
+ "base_fidelity": {
+  "presentations": 54,
+  "max_hf_native_base_logp_difference": 10.420963764190674,
+  "top_answer_agreement_with_bf16_hf": {
+   "pipeline_q4_0": 35,
+   "ggml_org_q4_0": 47
+  }
+ },
+ "candidates": [
+  "zero",
+  "epoch-1",
+  "epoch-2"
+ ],
+ "zero_merge_byte_identical": true,
+ "selection": {
+  "selected": "epoch-1",
+  "rule": "most raw-correct model_select observations, then fewer answer classes regressing against base, then earlier epoch, then base on ties",
+  "candidates": [
+   {
+    "name": "base",
+    "gguf_sha256": "4d0933b6e1b8ac3e176939544c95fcb10f968bebac8cc783891acced981ccbbe",
+    "raw_correct": 6,
+    "submitted": 9,
+    "failures": 0,
+    "class_regressions": [],
+    "family_fixes": [],
+    "family_regressions": [],
+    "per_class": {
+     "action": {
+      "escalate": {
+       "gold": 3,
+       "predicted": 0,
+       "correct": 0
+      },
+      "continue": {
+       "gold": 3,
+       "predicted": 5,
+       "correct": 3
+      },
+      "clarify": {
+       "gold": 3,
+       "predicted": 4,
+       "correct": 3
+      }
+     }
+    },
+    "p50_ms": 1535.563292040024
+   },
+   {
+    "name": "epoch-1",
+    "gguf_sha256": "6f034b304e5a5beed5f500fbb3919a725797c226e322fcfd286384c26a6d0412",
+    "raw_correct": 7,
+    "submitted": 9,
+    "failures": 0,
+    "class_regressions": [
+     "action:clarify"
+    ],
+    "family_fixes": [
+     "group:kiln",
+     "group:robot-arm"
+    ],
+    "family_regressions": [],
+    "per_class": {
+     "action": {
+      "escalate": {
+       "gold": 3,
+       "predicted": 3,
+       "correct": 2
+      },
+      "continue": {
+       "gold": 3,
+       "predicted": 4,
+       "correct": 3
+      },
+      "clarify": {
+       "gold": 3,
+       "predicted": 2,
+       "correct": 2
+      }
+     }
+    },
+    "p50_ms": 657.0738399750553
+   },
+   {
+    "name": "epoch-2",
+    "gguf_sha256": "0326c8eb9fb7b1a74315fff4eff48384570bc8646f1fe00bd053975ffd471d5b",
+    "raw_correct": 4,
+    "submitted": 9,
+    "failures": 0,
+    "class_regressions": [
+     "action:continue"
+    ],
+    "family_fixes": [],
+    "family_regressions": [],
+    "per_class": {
+     "action": {
+      "escalate": {
+       "gold": 3,
+       "predicted": 1,
+       "correct": 1
+      },
+      "continue": {
+       "gold": 3,
+       "predicted": 0,
+       "correct": 0
+      },
+      "clarify": {
+       "gold": 3,
+       "predicted": 8,
+       "correct": 3
+      }
+     }
+    },
+    "p50_ms": 656.2273100134917
+   }
+  ]
+ },
+ "acceptance": {
+  "acceptance_fit": {
+   "observations": 3,
+   "families": 1,
+   "policies": {
+    "action": {
+     "answer": 0.9
+    }
+   }
+  },
+  "check": {
+   "families": 27,
+   "submitted": 81,
+   "predicted": 81,
+   "raw_correct": 77,
+   "raw_wrong": 4,
+   "accuracy_given_prediction": 0.9506172839506173,
+   "correct_per_submission": 0.9506172839506173,
+   "accepted": 68,
+   "correct_accepted": 67,
+   "wrong_accepted": 1,
+   "coverage": 0.8395061728395061,
+   "precision": 0.9852941176470589,
+   "correct_accepted_rate": 0.8271604938271605,
+   "correct_rejected": 10,
+   "wrong_rejected": 3
+  }
+ },
+ "public_call": {
+  "specialist": {
+   "value": "continue",
+   "status": "ok",
+   "scores": {
+    "escalate": 0.0002602007964715455,
+    "continue": 0.9934444854576083,
+    "clarify": 0.006295313745920066
+   },
+   "mass": 0.9999438524246216,
+   "sha256": "6f034b304e5a5beed5f500fbb3919a725797c226e322fcfd286384c26a6d0412"
+  },
+  "base": {
+   "value": "continue",
+   "status": "ok",
+   "scores": {
+    "escalate": 7.617031545190035e-06,
+    "continue": 0.9988966067439329,
+    "clarify": 0.001095776224522069
+   },
+   "mass": 0.9999926686286926,
+   "sha256": "4d0933b6e1b8ac3e176939544c95fcb10f968bebac8cc783891acced981ccbbe"
+  }
+ },
+ "quality_claim": false
+}

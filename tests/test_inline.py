@@ -42,7 +42,7 @@ class Address:
 
 def test_pick_returns_original_object(rt):
     objs = [Address("login, profile or access"), Address("charges and invoices")]
-    r = rt.pick(TICKET, "What is the message mainly about?", objs, describe=lambda a: a.text)
+    r = rt.pick(TICKET, "What is the message mainly about?", objs, definition=lambda a: a.text)
     assert r.status == "ok" and r.value is objs[1] and r.index == 1
 
 
@@ -53,7 +53,7 @@ def test_pick_dict_options_return_keys(rt):
 
 def test_pick_no_eligible(rt):
     r = rt.pick(TICKET, "q", ["a", "b"], eligible=lambda o: False)
-    assert r.status == "failed" and r.removed["ineligible"] == [0, 1]
+    assert r.status == "none" and r.removed["ineligible"] == [0, 1]
     r = rt.pick(TICKET, "q", ["a", "b"], eligible=lambda o: False, allow_none=True)
     assert r.status == "none"
 
@@ -73,10 +73,10 @@ def test_pick_single_candidate_is_scored(rt, fake):
     assert len(fake.requests) == before + 1
 
 
-def test_pick_truncates_long_candidates(rt):
+def test_pick_preserves_long_candidates(rt):
     long = "charges " + "word " * 200
     r = rt.pick(TICKET, "What is the message mainly about?", [long, "login"])
-    assert r.truncated == [0]
+    assert r.presentations[-1]["answers"][0]["option"] == long
 
 
 def test_rate(rt):

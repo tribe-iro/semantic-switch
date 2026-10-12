@@ -6,7 +6,9 @@ Run from the repository root:
 import sys
 import time
 
-from semantic_switch import Model, Runtime
+from semantic_switch import Model
+from bench.outcomes import runtime
+
 SMALL = {"MX-120": "MX-120, standard mixer", "MX-120A": "MX-120A, advanced mixer (also called Mixer 120 Advanced)",
          "MX-120B": "MX-120B, budget mixer", "MX-210": "MX-210, industrial mixer"}
 BIG = dict(SMALL, **{f"MX-{n}{s}": f"MX-{n}{s}, mixer" for n in (110, 112, 121, 122, 130) for s in ("", "A", "B")})
@@ -27,13 +29,20 @@ CASES = [
  ("Both MX-120 and MX-120B were checked; only the B unit failed.", "MX-120B"),
 ]
 Q = "Which machine does the text say failed or stopped working?"
-src = sys.argv[1]
-with Runtime({"judge": Model(src, adapter="chat")}) as rt:
-    rt.check("warm", "x")
-    for name, opts in (("4 options", SMALL), ("20 options", BIG)):
-        ok, conf_wrong, t0 = 0, 0, time.perf_counter()
-        for text, want in CASES:
-            r = rt.pick(f"[technician] report: {text}", Q, opts)
-            ok += r.index == want; conf_wrong += r.index != want and r.score >= .9
-            if r.index != want: print(f"   miss {name}: {text[:55]!r} -> {r.index} {r.score:.2f}")
-        print(f"{src.split(':')[1]:28} {name}: {ok}/{len(CASES)} correct, {conf_wrong} confidently wrong, {(time.perf_counter()-t0)/len(CASES)*1000:.0f} ms/pick")
+
+
+def main():
+    src = sys.argv[1]
+    with runtime(Model(src, adapter="chat")) as rt:
+        rt.check("warm", "x")
+        for name, opts in (("4 options", SMALL), ("20 options", BIG)):
+            ok, conf_wrong, t0 = 0, 0, time.perf_counter()
+            for text, want in CASES:
+                r = rt.pick(f"[technician] report: {text}", Q, opts)
+                ok += r.index == want; conf_wrong += r.index != want and r.score >= .9
+                if r.index != want: print(f"   miss {name}: {text[:55]!r} -> {r.index} {r.score:.2f}")
+            print(f"{src.split(':')[1]:28} {name}: {ok}/{len(CASES)} correct, {conf_wrong} confidently wrong, {(time.perf_counter()-t0)/len(CASES)*1000:.0f} ms/pick")
+
+
+if __name__ == "__main__":
+    main()

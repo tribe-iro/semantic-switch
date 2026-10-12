@@ -1,0 +1,1109 @@
+{
+ "family_seeds": {
+  "refund": {
+   "trained": [],
+   "tuned": [
+    [
+     "group",
+     "development-0"
+    ],
+    [
+     "group",
+     "development-2"
+    ],
+    [
+     "group",
+     "development-3"
+    ],
+    [
+     "group",
+     "development-6"
+    ],
+    [
+     "group",
+     "development-7"
+    ],
+    [
+     "group",
+     "development-8"
+    ],
+    [
+     "group",
+     "development-9"
+    ],
+    [
+     "key",
+     "0dc4f92a709d36dc10e80833bce0755a0ed75bd4f0a9ff043901e68c9ef9344a"
+    ],
+    [
+     "key",
+     "28a3f5f4cb3672a4247103d1c51bf3ca24868b46f828cb7ce0651d875aea41f4"
+    ],
+    [
+     "key",
+     "39f80814ee705c825c47abfef32e0640b3bdfd77b56cbb60569612161ea4478f"
+    ],
+    [
+     "key",
+     "3d73c3310947287543790cfbce4341da1160840344788434169defe560ef52ec"
+    ],
+    [
+     "key",
+     "773e27e247715f1500a5a428c09fda686a90a6113b5232db45879cd344ec181b"
+    ],
+    [
+     "key",
+     "7e161c174f916bdcb101117b3e47c889bedb9e91fd36a87dcce41228b5634195"
+    ],
+    [
+     "key",
+     "9474f4cbc82d61a37d93ce0e399cbc4bd294033d943df07345cf77b734a576f6"
+    ],
+    [
+     "key",
+     "9f87994d69c038c8d2b46613d21d9382bb5b63fda741bd87aa9eb89c659caf4f"
+    ],
+    [
+     "key",
+     "a8736c9af9f90706171f1d9863e641d0936feefdce37623db9d0bf17ce9c3f69"
+    ],
+    [
+     "key",
+     "ade210baa1325aabf9405897c90222a7a8719537ea08b4af8e726c6021a6f161"
+    ],
+    [
+     "key",
+     "b7b91a8cb557b0b2c25d33a11f9d3edac3ee2ae72041ac0fbc80572cae7814f6"
+    ],
+    [
+     "key",
+     "c2fc670e7ed907d1a299680d576f435cfd8d09d8e60ecfb4e37408bd8346ed3c"
+    ],
+    [
+     "key",
+     "cf37aef14355b0d9a06321393842aa5ded21967150c7265816c296f7842cc689"
+    ],
+    [
+     "key",
+     "e6b37371d24b27b3ec55d4aa3bc1d81e6acbce206e399e8024da5e6151232490"
+    ]
+   ],
+   "validated": [
+    [
+     "group",
+     "development-1"
+    ],
+    [
+     "group",
+     "development-10"
+    ],
+    [
+     "group",
+     "development-11"
+    ],
+    [
+     "group",
+     "development-4"
+    ],
+    [
+     "group",
+     "development-5"
+    ],
+    [
+     "key",
+     "2ed917b6a64014ad797a5f34922960916192e89a5d10d0c3e98090c62f0b4d0e"
+    ],
+    [
+     "key",
+     "304fed5e8924ac62a37389a940e1946b1992495b0bbd49aa5866aa00bb4888f1"
+    ],
+    [
+     "key",
+     "494d760fdcd6401239299f89cc3626ffea32c33a9499eef6056304a03f4ab08b"
+    ],
+    [
+     "key",
+     "4af58840a94cc91e85185bbeff645043d886d93b3d83a3771bbf611b9e986639"
+    ],
+    [
+     "key",
+     "7d43378605f04d0d1fe8ccd4572c48dbe127c8f992065ec4dd08063a4414b166"
+    ],
+    [
+     "key",
+     "933de74f149185a4ba4d057da7ac0077c09bbe17215bd45140112306e08f7ccb"
+    ],
+    [
+     "key",
+     "bcb6ea3c88ec21f164fd852f7b9fa81ccedeeb2bfef40e0bdd85f9fd346ef085"
+    ],
+    [
+     "key",
+     "c052f3c731c9ab34341b4b2c5d72952e944de712f139cd9730b0326b6844ca83"
+    ],
+    [
+     "key",
+     "e0a07288934a85d7e59049d71bdab91dcce220789f59d1c78f597e2ee9f988c5"
+    ],
+    [
+     "key",
+     "edc4d74714a77d9c2076a05d27a3d58c048cef0c0fae39cde0593bda062f0710"
+    ]
+   ],
+   "judge": []
+  }
+ },
+ "schema": 10,
+ "framing": null,
+ "dataset": {
+  "schema": 2,
+  "key_version": 2,
+  "sources": {
+   "/home/tribeiro/Projects/semantic-select/bench/results/openrouter-regression-fixtures/typesafe--jev-1.13/decision.yaml": "e8c69774d3dfcbe87074d3c4799b42424b00081abc021a76cc65f738dbaeec9e",
+   "/home/tribeiro/Projects/semantic-select/bench/results/openrouter-regression-fixtures/typesafe--jev-1.13/decision.examples.jsonl": null,
+   "/home/tribeiro/Projects/semantic-select/bench/results/openrouter-regression-fixtures/typesafe--jev-1.13/decision.test.jsonl": "fa24049fa9cb3c50429618e372ee59a9e648a77b65e893c046772a7bcf489d5c"
+  },
+  "families": {
+   "group:development-0": {
+    "split": "tune",
+    "fold": 3,
+    "seeds": [
+     [
+      "group",
+      "development-0"
+     ],
+     [
+      "key",
+      "b7b91a8cb557b0b2c25d33a11f9d3edac3ee2ae72041ac0fbc80572cae7814f6"
+     ],
+     [
+      "key",
+      "cf37aef14355b0d9a06321393842aa5ded21967150c7265816c296f7842cc689"
+     ]
+    ],
+    "aliases": [
+     "group:development-0"
+    ]
+   },
+   "group:development-1": {
+    "split": "check",
+    "fold": 2,
+    "seeds": [
+     [
+      "group",
+      "development-1"
+     ],
+     [
+      "key",
+      "7d43378605f04d0d1fe8ccd4572c48dbe127c8f992065ec4dd08063a4414b166"
+     ],
+     [
+      "key",
+      "bcb6ea3c88ec21f164fd852f7b9fa81ccedeeb2bfef40e0bdd85f9fd346ef085"
+     ]
+    ],
+    "aliases": [
+     "group:development-1"
+    ]
+   },
+   "group:development-10": {
+    "split": "check",
+    "fold": 0,
+    "seeds": [
+     [
+      "group",
+      "development-10"
+     ],
+     [
+      "key",
+      "933de74f149185a4ba4d057da7ac0077c09bbe17215bd45140112306e08f7ccb"
+     ],
+     [
+      "key",
+      "e0a07288934a85d7e59049d71bdab91dcce220789f59d1c78f597e2ee9f988c5"
+     ]
+    ],
+    "aliases": [
+     "group:development-10"
+    ]
+   },
+   "group:development-11": {
+    "split": "check",
+    "fold": 3,
+    "seeds": [
+     [
+      "group",
+      "development-11"
+     ],
+     [
+      "key",
+      "304fed5e8924ac62a37389a940e1946b1992495b0bbd49aa5866aa00bb4888f1"
+     ],
+     [
+      "key",
+      "edc4d74714a77d9c2076a05d27a3d58c048cef0c0fae39cde0593bda062f0710"
+     ]
+    ],
+    "aliases": [
+     "group:development-11"
+    ]
+   },
+   "group:development-2": {
+    "split": "tune",
+    "fold": 1,
+    "seeds": [
+     [
+      "group",
+      "development-2"
+     ],
+     [
+      "key",
+      "39f80814ee705c825c47abfef32e0640b3bdfd77b56cbb60569612161ea4478f"
+     ],
+     [
+      "key",
+      "3d73c3310947287543790cfbce4341da1160840344788434169defe560ef52ec"
+     ]
+    ],
+    "aliases": [
+     "group:development-2"
+    ]
+   },
+   "group:development-3": {
+    "split": "tune",
+    "fold": 1,
+    "seeds": [
+     [
+      "group",
+      "development-3"
+     ],
+     [
+      "key",
+      "9f87994d69c038c8d2b46613d21d9382bb5b63fda741bd87aa9eb89c659caf4f"
+     ],
+     [
+      "key",
+      "c2fc670e7ed907d1a299680d576f435cfd8d09d8e60ecfb4e37408bd8346ed3c"
+     ]
+    ],
+    "aliases": [
+     "group:development-3"
+    ]
+   },
+   "group:development-4": {
+    "split": "check",
+    "fold": 0,
+    "seeds": [
+     [
+      "group",
+      "development-4"
+     ],
+     [
+      "key",
+      "2ed917b6a64014ad797a5f34922960916192e89a5d10d0c3e98090c62f0b4d0e"
+     ],
+     [
+      "key",
+      "4af58840a94cc91e85185bbeff645043d886d93b3d83a3771bbf611b9e986639"
+     ]
+    ],
+    "aliases": [
+     "group:development-4"
+    ]
+   },
+   "group:development-5": {
+    "split": "check",
+    "fold": 3,
+    "seeds": [
+     [
+      "group",
+      "development-5"
+     ],
+     [
+      "key",
+      "494d760fdcd6401239299f89cc3626ffea32c33a9499eef6056304a03f4ab08b"
+     ],
+     [
+      "key",
+      "c052f3c731c9ab34341b4b2c5d72952e944de712f139cd9730b0326b6844ca83"
+     ]
+    ],
+    "aliases": [
+     "group:development-5"
+    ]
+   },
+   "group:development-6": {
+    "split": "tune",
+    "fold": 3,
+    "seeds": [
+     [
+      "group",
+      "development-6"
+     ],
+     [
+      "key",
+      "28a3f5f4cb3672a4247103d1c51bf3ca24868b46f828cb7ce0651d875aea41f4"
+     ],
+     [
+      "key",
+      "7e161c174f916bdcb101117b3e47c889bedb9e91fd36a87dcce41228b5634195"
+     ]
+    ],
+    "aliases": [
+     "group:development-6"
+    ]
+   },
+   "group:development-7": {
+    "split": "tune",
+    "fold": 4,
+    "seeds": [
+     [
+      "group",
+      "development-7"
+     ],
+     [
+      "key",
+      "9474f4cbc82d61a37d93ce0e399cbc4bd294033d943df07345cf77b734a576f6"
+     ],
+     [
+      "key",
+      "ade210baa1325aabf9405897c90222a7a8719537ea08b4af8e726c6021a6f161"
+     ]
+    ],
+    "aliases": [
+     "group:development-7"
+    ]
+   },
+   "group:development-8": {
+    "split": "tune",
+    "fold": 2,
+    "seeds": [
+     [
+      "group",
+      "development-8"
+     ],
+     [
+      "key",
+      "773e27e247715f1500a5a428c09fda686a90a6113b5232db45879cd344ec181b"
+     ],
+     [
+      "key",
+      "e6b37371d24b27b3ec55d4aa3bc1d81e6acbce206e399e8024da5e6151232490"
+     ]
+    ],
+    "aliases": [
+     "group:development-8"
+    ]
+   },
+   "group:development-9": {
+    "split": "tune",
+    "fold": 4,
+    "seeds": [
+     [
+      "group",
+      "development-9"
+     ],
+     [
+      "key",
+      "0dc4f92a709d36dc10e80833bce0755a0ed75bd4f0a9ff043901e68c9ef9344a"
+     ],
+     [
+      "key",
+      "a8736c9af9f90706171f1d9863e641d0936feefdce37623db9d0bf17ce9c3f69"
+     ]
+    ],
+    "aliases": [
+     "group:development-9"
+    ]
+   }
+  },
+  "observations": [
+   {
+    "id": "0bb63d621a6ee80eb9523193797621c3529e5131dae08d1406a363bc222eec39",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-6",
+    "label": 0,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "0bfd23c176f0f8530386e1210a75d30bbe2b425eb5b6930d35d2bef3f88930a5",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-7",
+    "label": 1,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "0c13c3c2dd566b792e7e4136d2ca637a74e9a759d1b602e2c7892310ff993b58",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-11",
+    "label": 1,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "0dc488cc8f728f2257d69428099796ad1aa79d405769e6cd8b0973676a98e812",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-1",
+    "label": 0,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "1b13bf098f555208f57af874a4473d8a378c899fa0670eab2b4459e3e9700276",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-1",
+    "label": 1,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "1fe362b6f4a34d7c61cb1abf1f18e91e1a1c9f39e1a7b454bd88bb279907ef14",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-4",
+    "label": 0,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "3147e908f69c960778a85c773689da4cd4ebe9bc6cb5097c9d87b48fa584394a",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-10",
+    "label": 0,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "36062f4dd0cdece652aee429d4f3545bf0bad895d4ac678c47504f0111bdb1f4",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-9",
+    "label": 0,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "47491df72bc158a6b0dfa6170ab95834661b4b7268427125fea1c06cc0a98be9",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-8",
+    "label": 0,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "49cdfcfdcfcb1a77a57854f4b025d7d1b4cf11a2d399db3c97dcd3fc414b970f",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-6",
+    "label": 1,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "4cbdf2850dc30e754e129755f0776510ad74ce1e5df644448fca38e223a8e553",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-3",
+    "label": 0,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "5ecfeab3b0e7d52c5112804ee582e9735a60aeb7573c42f08b73490d3fa4f9b6",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-10",
+    "label": 1,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "76b67c86e39341831e46c8d0c0aaac98ededd8b64e72650ad00012164b8e477e",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-2",
+    "label": 1,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "8610577080f9a1c1c17e880c5d0bbfb92f46d99b202137a04021a97bf93e2b91",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-2",
+    "label": 0,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "8a21a1309f8e2ee4351a85972a63bc94ff8abed41749ca6af04db226d875e6ab",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-8",
+    "label": 1,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "a42a7b9f64f6dc1516adfed7b3c4e58e7900d08a6e91a9bcd48a2ef3ac2c2b83",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-7",
+    "label": 0,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "acd2ddc179e70e05891b11a71ecfd1f0c0d5fa672820b88bd8102c671bd2ca4e",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-9",
+    "label": 1,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "b498099e5f8955dc4a7a28afe6ce1438b98450dc1f5afa63e68572df024675ae",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-0",
+    "label": 1,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "bb89102de3c4fe8a97ab15856e7d5bddb40067f49f3c89ac029088cff0acf1d4",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-3",
+    "label": 1,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "bd1461b8d1882abde1706377367a6f915431be9f0cb7b3494bead376c71a5a49",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-5",
+    "label": 1,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "c9794d97590b92be6bdbc5b3e8f735370598a89404e8c0d6ba8ff748dc3e20ff",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-5",
+    "label": 0,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "d83e8b436611a2b771e07a1caedae999b5094477bc26895c97737fd251a2899e",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-4",
+    "label": 1,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "dc84f29a47e0b7302f15a8a30d551ddc39facf33e2aac19de727f0758755bb7a",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-11",
+    "label": 0,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   },
+   {
+    "id": "e87bb7ab22f3d2bf369faa0739f0ba65ef8ea04f96199c96098d01a5c4c43db7",
+    "fact": "refund",
+    "meaning_rev": "f6cfe388",
+    "family": "group:development-0",
+    "label": 0,
+    "taught": false,
+    "selections": [
+     {
+      "selected_by": "manual",
+      "unit": "observation",
+      "independent": false
+     }
+    ],
+    "label_origin": "synthetic"
+   }
+  ],
+  "training_id": "bda8f4dddfd0b30d7a42f3193b5ce2ef953fa00aa393f8d3319ccbea20852f69",
+  "id": "bcd38408e1f7ad02e63b051789de2499b9ea77c10045cfa424b0048b008ff713"
+ },
+ "artifacts": {},
+ "lineage": {
+  "judge:refund": {
+   "state": "declared_disjoint",
+   "overlap": [],
+   "reason": null
+  }
+ },
+ "switch": "regression",
+ "switch_rev": "ae6d43d0",
+ "spec": {
+  "guidance": {
+   "policy": {
+    "text": "Refund means returning money to the original payment method. Store credit and replacements are not refunds."
+   }
+  },
+  "name": "regression",
+  "fields": {
+   "message": {
+    "type": "text",
+    "required": true,
+    "max_chars": null,
+    "truncate": "end",
+    "values": null,
+    "author": null,
+    "source": null
+   }
+  },
+  "reads": [
+   "message"
+  ],
+  "facts": {
+   "refund": {
+    "guidance": null,
+    "check": "The customer requests a refund under the supplied definition.",
+    "excludes": [],
+    "unstated": true,
+    "specialize": null,
+    "min_score": null,
+    "reads": null,
+    "target": 0.95,
+    "examples": []
+   }
+  },
+  "cases": [
+   {
+    "id": "refund",
+    "when": "refund",
+    "then": {
+     "action": "return_money"
+    }
+   }
+  ],
+  "otherwise": {
+   "action": "support"
+  },
+  "resolve": "first",
+  "exact_override": true,
+  "tests": []
+ },
+ "models": {
+  "judge": {
+   "source": "systemone",
+   "model": "typesafe/jev-1.13",
+   "endpoint": "https://openrouter.ai/api/v1/systemone",
+   "question_scope": "joint",
+   "provider": "TypeSafe"
+  }
+ },
+ "returned_models": {
+  "judge": [
+   "typesafe/jev-1.13-20260917"
+  ]
+ },
+ "facts": {
+  "refund": {
+   "meaning_rev": "f6cfe388",
+   "examples": [],
+   "head": null,
+   "policies": {
+    "judge": {
+     "true": {
+      "theta": 0.9,
+      "candidate": null,
+      "state": "insufficient",
+      "held_out_precision": 1.0,
+      "held_out_accepted": 5,
+      "held_out_submitted": 10,
+      "wrong_accepted": 0,
+      "wrong_acceptance_rate": 0.0,
+      "correct_accepted": 5,
+      "coverage_default": 0.5,
+      "coverage_result": 0.5,
+      "population": "identified sample",
+      "interval_95": null,
+      "interval_reason": "independent uniform sampling frame not declared",
+      "interval": {
+       "method": "wilson",
+       "level": 0.95,
+       "interval": null,
+       "reason": "independent uniform sampling frame not declared"
+      },
+      "lineage": {
+       "state": "declared_disjoint",
+       "overlap": [],
+       "reason": null
+      },
+      "dataset_id": "bcd38408e1f7ad02e63b051789de2499b9ea77c10045cfa424b0048b008ff713",
+      "candidate_id": "d73c2be2c4e31f59fd71c1754a2dcbfb2134b65c624a606691bf6cd0b8d694dd",
+      "audit_use": {
+       "state": "fixed_candidate",
+       "consulted_families": [],
+       "scope": "tool-recorded exposure; external inspections require caller disclosure"
+      }
+     },
+     "false": {
+      "theta": 0.9,
+      "candidate": null,
+      "state": "insufficient",
+      "held_out_precision": 1.0,
+      "held_out_accepted": 5,
+      "held_out_submitted": 10,
+      "wrong_accepted": 0,
+      "wrong_acceptance_rate": 0.0,
+      "correct_accepted": 5,
+      "coverage_default": 0.5,
+      "coverage_result": 0.5,
+      "population": "identified sample",
+      "interval_95": null,
+      "interval_reason": "independent uniform sampling frame not declared",
+      "interval": {
+       "method": "wilson",
+       "level": 0.95,
+       "interval": null,
+       "reason": "independent uniform sampling frame not declared"
+      },
+      "lineage": {
+       "state": "declared_disjoint",
+       "overlap": [],
+       "reason": null
+      },
+      "dataset_id": "bcd38408e1f7ad02e63b051789de2499b9ea77c10045cfa424b0048b008ff713",
+      "candidate_id": "d73c2be2c4e31f59fd71c1754a2dcbfb2134b65c624a606691bf6cd0b8d694dd",
+      "audit_use": {
+       "state": "fixed_candidate",
+       "consulted_families": [],
+       "scope": "tool-recorded exposure; external inspections require caller disclosure"
+      }
+     }
+    }
+   },
+   "membership": {
+    "trained": [],
+    "tuned": [
+     "{\"message\":\"Ticket 0: Give me store credit, not money.\"}",
+     "{\"message\":\"Ticket 0: Return the duplicate payment to my card.\"}",
+     "{\"message\":\"Ticket 2: Give me store credit, not money.\"}",
+     "{\"message\":\"Ticket 2: Return the duplicate payment to my card.\"}",
+     "{\"message\":\"Ticket 3: Give me store credit, not money.\"}",
+     "{\"message\":\"Ticket 3: Return the duplicate payment to my card.\"}",
+     "{\"message\":\"Ticket 6: Give me store credit, not money.\"}",
+     "{\"message\":\"Ticket 6: Return the duplicate payment to my card.\"}",
+     "{\"message\":\"Ticket 7: Give me store credit, not money.\"}",
+     "{\"message\":\"Ticket 7: Return the duplicate payment to my card.\"}",
+     "{\"message\":\"Ticket 8: Give me store credit, not money.\"}",
+     "{\"message\":\"Ticket 8: Return the duplicate payment to my card.\"}",
+     "{\"message\":\"Ticket 9: Give me store credit, not money.\"}",
+     "{\"message\":\"Ticket 9: Return the duplicate payment to my card.\"}"
+    ],
+    "validated": [
+     "{\"message\":\"Ticket 10: Give me store credit, not money.\"}",
+     "{\"message\":\"Ticket 10: Return the duplicate payment to my card.\"}",
+     "{\"message\":\"Ticket 11: Give me store credit, not money.\"}",
+     "{\"message\":\"Ticket 11: Return the duplicate payment to my card.\"}",
+     "{\"message\":\"Ticket 1: Give me store credit, not money.\"}",
+     "{\"message\":\"Ticket 1: Return the duplicate payment to my card.\"}",
+     "{\"message\":\"Ticket 4: Give me store credit, not money.\"}",
+     "{\"message\":\"Ticket 4: Return the duplicate payment to my card.\"}",
+     "{\"message\":\"Ticket 5: Give me store credit, not money.\"}",
+     "{\"message\":\"Ticket 5: Return the duplicate payment to my card.\"}"
+    ],
+    "judge": []
+   }
+  }
+ },
+ "tuned_keys": [],
+ "evidence": {
+  "diagnostics": {
+   "judge:refund": {
+    "development_curve": {
+     "true": [
+      {
+       "threshold": 1.0,
+       "submitted": 14,
+       "accepted": 7,
+       "correct": 7,
+       "wrong": 0,
+       "coverage": 0.5,
+       "precision": 1.0,
+       "population": "development; not independent audit"
+      },
+      {
+       "threshold": 0.5000000000000001,
+       "submitted": 14,
+       "accepted": 7,
+       "correct": 7,
+       "wrong": 0,
+       "coverage": 0.5,
+       "precision": 1.0,
+       "population": "development; not independent audit"
+      }
+     ],
+     "false": [
+      {
+       "threshold": 1.0,
+       "submitted": 14,
+       "accepted": 7,
+       "correct": 7,
+       "wrong": 0,
+       "coverage": 0.5,
+       "precision": 1.0,
+       "population": "development; not independent audit"
+      },
+      {
+       "threshold": 0.5000000000000001,
+       "submitted": 14,
+       "accepted": 7,
+       "correct": 7,
+       "wrong": 0,
+       "coverage": 0.5,
+       "precision": 1.0,
+       "population": "development; not independent audit"
+      }
+     ]
+    },
+    "scores": {
+     "score_kind": "categorical_score",
+     "submitted": 14,
+     "valid": 14,
+     "distinct": 1,
+     "ties": 13,
+     "zero": 0,
+     "one": 14,
+     "at_least_0_999": 14,
+     "accepted": 14,
+     "wrong_accepted": 0,
+     "thresholds": {
+      "true": 0.9,
+      "false": 0.9
+     },
+     "per_class": [
+      {
+       "class": "true",
+       "distinct": 2,
+       "zero": 7,
+       "one": 7
+      },
+      {
+       "class": "false",
+       "distinct": 2,
+       "zero": 7,
+       "one": 7
+      },
+      {
+       "class": "unstated",
+       "distinct": 1,
+       "zero": 14,
+       "one": 0
+      }
+     ]
+    }
+   }
+  },
+  "audit_use": {
+   "state": "fixed_candidate",
+   "consulted_families": [],
+   "scope": "tool-recorded exposure; external inspections require caller disclosure"
+  },
+  "conditions": {
+   "refund in ['true']": {
+    "labelled": 10,
+    "coverage": 1.0,
+    "true_precision": 1.0,
+    "false_precision": 1.0,
+    "accepted": 10
+   }
+  },
+  "decisions": {
+   "labelled": 0,
+   "correct": 0,
+   "wrong": 0,
+   "abstained": 0,
+   "coverage": null,
+   "no_model_call": 0
+  }
+ },
+ "tests": "0/0 passed against this plan",
+ "candidate_id": "d73c2be2c4e31f59fd71c1754a2dcbfb2134b65c624a606691bf6cd0b8d694dd",
+ "id": "49b0cf9ad401",
+ "created": "2026-10-08T14:01:38+00:00"
+}

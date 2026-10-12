@@ -1,3 +1,4 @@
+import json
 import io
 import shutil
 import sys
@@ -11,9 +12,9 @@ from semantic_switch import ConfigError, Model, Runtime, cli, files, tools
 from semantic_switch.api import _resolve
 from semantic_switch.compiler import compile_spec
 from semantic_switch.examples import derive_fact_labels
-from semantic_switch.heads import train_lexical
+from semantic_switch.heads import LexicalHead
 from semantic_switch.judgment import Policy
-from semantic_switch.inline import ESCAPE
+from semantic_switch.judgment import ESCAPE
 from semantic_switch.judge import Scored, Scores
 
 from .conftest import FakeScorer, letters_of
@@ -101,7 +102,7 @@ def test_cheap_paths_never_acquire_the_judge():
 
 def test_limits_are_checked_before_describe_and_slots(rt):
     seen = []
-    r = rt.pick("x", "q", [f"o{i}" for i in range(1001)], describe=lambda o: seen.append(o) or o, shortlist="lexical")
+    r = rt.pick("x", "q", [f"o{i}" for i in range(1001)], definition=lambda o: seen.append(o) or o, shortlist="lexical")
     assert r.status == "failed" and seen == []
     with pytest.raises(ConfigError, match="at most 20 levels"):
         rt.rate("x", "q", [f"l{i}" for i in range(21)])
@@ -109,7 +110,8 @@ def test_limits_are_checked_before_describe_and_slots(rt):
 
 def test_tuned_lexical_head_settles_and_untuned_defers(route):
     msg = t("please refund my charge", payment={"status": "pending"})
-    head = train_lexical(["please refund my charge", "hello friend"] * 3, [0, 1] * 3, ("true", "false"))
+    head = LexicalHead(("true", "false"), np.array([], dtype=np.int32),
+                       np.zeros((0, 2), dtype=np.float32), np.array([3., 0.], dtype=np.float32))
     for table, source in (({"refund_requested": Policy(0.6, 0.6)}, "classifier"), ({}, "judge")):
         sw = fake_rt().load(route)
         sw._snap = replace(sw.snapshot, heads={"refund_requested": head}, policies={"classifier": table})
@@ -123,9 +125,8 @@ def test_changing_reads_makes_labels_stale(route):
     assert compile_spec(spec).fact("legal_threat").meaning_rev != before
 
 
-def test_cache_key_names_backend_and_build(rt):
-    key = rt.cache_key()
-    assert '"backend": "cpu"' in key and '"build"' in key
+def test_cache_key_names_execution_identity(rt):
+    assert json.loads(rt.cache_key())["execution"] == rt.execution() is None
 
 
 def test_model_sources_and_names_are_validated(monkeypatch):
@@ -384,7 +385,7 @@ def test_engine_runs_on_a_minimal_non_decoder_judge(tmp_path):
 
 
 def test_threshold_choice_accepts_numpy_truths():
-    from semantic_switch.tools.lock import choose
+    from semantic_switch.tools.policy import choose
 
     rows = list(zip([0.97] * 30 + [0.03] * 30, np.array([True] * 30 + [False] * 30)))
     enough, theta = choose(rows, 0.95)
@@ -392,20 +393,17 @@ def test_threshold_choice_accepts_numpy_truths():
 
 
 def test_threshold_scan_takes_highest_coverage_not_first_failure():
-    from semantic_switch.tools.lock import choose
+    from semantic_switch.tools.policy import choose
 
     rows = list(zip([0.99] * 25 + [0.95] * 2 + [0.9] * 40, [True] * 25 + [False] * 2 + [True] * 40))
     assert choose(rows, 0.95) == (True, 0.9)
 
 
-def test_policy_sides_are_validated_on_held_out_data():
-    from semantic_switch.tools.lock import validate
-
+def test_policy_sides_are_validated_without_mutating_thresholds():
+    from semantic_switch.tools.policy import validate
     good, bad = [(0.97, True)] * 30, [(0.97, True)] * 20 + [(0.97, False)] * 10
-    assert validate((False, None), good, 0.95, 0.9) == {"theta": 0.9, "state": "untuned"}
-    assert validate((True, None), good, 0.95, 0.9)["state"] == "not_met"
-    assert validate((True, 0.9), good, 0.95, 0.9)["state"] == "met"
-    assert validate((True, 0.9), bad, 0.95, 0.9) | {"interval_95": None} == {
-        "candidate": 0.9, "held_out_precision": 0.667, "held_out_accepted": 30, "interval_95": None,
-        "theta": None, "state": "not_met"}
-    assert validate((True, 0.9), good[:5], 0.95, 0.9)["state"] == "untuned"
+    assert validate(good, .95, .9, .9)['state'] == 'met'
+    missed = validate(bad, .95, .9, .9)
+    assert missed['state'] == 'missed' and missed['theta'] == .9
+    assert missed['held_out_precision'] == pytest.approx(2/3)
+    assert validate(good[:5], .95, .9, .9)['state'] == 'insufficient'

@@ -2,7 +2,7 @@ import pytest
 
 from semantic_switch.compiler import compile_spec
 from semantic_switch.errors import ConfigError
-from semantic_switch.judgment import Policy, settle
+from semantic_switch.judgment import Judgment, Policy, settle
 from semantic_switch.kernel import F, T, U, Exact, Sem, conj, disj, evaluate, exact_state, neg, relevant
 from semantic_switch.kernel import atom as A
 
@@ -31,23 +31,36 @@ def test_exists_is_never_unknown():
     assert exact_state(Exact("x", "==", 1), {}) == U
 
 
-def test_settle_reads_both_sides_from_the_distribution():
+CHECK = Judgment.check("C.")
+THREE = Judgment.check("C.", unstated=True)
+PICK = Judgment("pick", "Which?", ("a", "b", "c"))
+
+
+def test_checks_settle_their_answer_first():
     policy = Policy()
-    assert settle([0.95, 0.05], (T, F), policy) == (T, None)
-    assert settle([0.05, 0.95], (T, F), policy) == (F, None)
-    assert settle([0.6, 0.4], (T, F), policy) == (U, "uncertain")
-    assert settle([0.6, 0.4], (T, F), policy, mass=0.3) == (U, "low_answer_mass")
+    assert settle(CHECK, [0.95, 0.05], (T, F), policy) == (T, None)
+    assert settle(CHECK, [0.05, 0.95], (T, F), policy) == (F, None)
+    assert settle(CHECK, [0.05, 0.95], (F, T), policy) == (T, None)
+    assert settle(CHECK, [0.6, 0.4], (T, F), policy) == (U, "uncertain")
+    assert settle(CHECK, [0.6, 0.4], (T, F), policy, mass=0.3) == (U, "low_answer_mass")
+
+
+def test_negation_cannot_reach_a_disabled_side():
+    off_false = Policy(0.9, None)
+    assert settle(CHECK, [0.03, 0.97], (T, F), off_false) == (U, "uncertain")
+    assert settle(CHECK, [0.03, 0.97], (F, T), off_false) == (U, "uncertain")
 
 
 def test_three_way_silence_needs_evidence():
-    silence = frozenset({2})
-    assert settle([0.33, 0.33, 0.34], (T, F, U), Policy(), silence=silence) == (U, "uncertain")
-    assert settle([0.02, 0.03, 0.95], (T, F, U), Policy(), silence=silence) == (U, "not_stated")
-    assert settle([0.02, 0.93, 0.05], (T, F, U), Policy(), silence=silence) == (F, None)
+    assert settle(THREE, [0.33, 0.33, 0.34], (T, F, U), Policy()) == (U, "uncertain")
+    assert settle(THREE, [0.02, 0.03, 0.95], (T, F, U), Policy()) == (U, "not_stated")
+    assert settle(THREE, [0.02, 0.93, 0.05], (T, F, U), Policy()) == (F, None)
 
 
-def test_pending_options_cannot_make_an_atom_true():
-    assert settle([0.95, 0.05], (T, F), Policy(), pending=frozenset({0})) == (U, "missing_input")
+def test_set_events_use_one_symmetric_threshold():
+    assert settle(PICK, [0.46, 0.46, 0.08], (T, T, F), Policy()) == (T, None)
+    assert settle(PICK, [0.46, 0.46, 0.08], (F, F, T), Policy()) == (F, None)
+    assert settle(PICK, [0.95, 0.05, 0.0], (T, F, F), Policy(), pending=frozenset({0})) == (U, "missing_input")
 
 
 SPEC = {
@@ -79,7 +92,13 @@ def test_one_judgment_conditions_become_one_atom():
     assert compiled('r >= "mid" and r < "high"').atoms == eq.atoms
     assert compiled('r > "low" and r <= "mid" and r < "high" and r >= "low"').atoms == eq.atoms
     assert compiled('r in ["low", "mid"]').atoms == (Sem(2, (T, T, F)),)
-    assert settle([0.08, 0.84, 0.08], eq.atoms[0].truth, Policy())[0] == U
+    assert settle(Judgment("rate", "q", ("low", "mid", "high")), [0.08, 0.84, 0.08], eq.atoms[0].truth, Policy())[0] == U
+
+
+def test_parentheses_never_change_the_atoms():
+    flat = compiled('r >= "mid" and r < "high" and c')
+    for when in ('(r >= "mid" and c) and r < "high"', 'r >= "mid" and (c and r < "high")'):
+        assert set(compiled(when).atoms) == set(flat.atoms)
 
 
 def test_atoms_across_judgments_stay_separate():

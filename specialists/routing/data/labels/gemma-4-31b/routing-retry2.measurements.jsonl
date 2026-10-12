@@ -1,0 +1,1 @@
+{"fact": "routing", "input": {"message": "Customer: Someone changed my password; I will mention it.\nCustomer: My main need is to cancel immediately.\nAgent: Processing your request now."}, "prediction": {"key": "security", "kind": "value", "score": 0.8341839440018723, "value": "security"}, "status": "uncertain", "why": "uncertain"}

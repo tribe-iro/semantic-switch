@@ -1,0 +1,4709 @@
+{
+  "policy": "Use the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.",
+  "boundary_convention": "90 is normal; 120 is red",
+  "fixtures": [
+    [
+      20,
+      "normal"
+    ],
+    [
+      89.9,
+      "normal"
+    ],
+    [
+      90,
+      "normal"
+    ],
+    [
+      90.1,
+      "red"
+    ],
+    [
+      119.9,
+      "red"
+    ],
+    [
+      120,
+      "red"
+    ],
+    [
+      120.1,
+      "purple"
+    ],
+    [
+      150,
+      "purple"
+    ]
+  ],
+  "arms": {
+    "exact": {
+      "rows": [
+        {
+          "temperature_c": 20,
+          "expected": "normal",
+          "result": {
+            "status": "ok",
+            "answer": "normal",
+            "case": "normal",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {},
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 3,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 0,
+              "rounds": 0,
+              "logical_tokens": 0,
+              "batch_native_work": {},
+              "elapsed_ms": 0.21,
+              "amortized_ms": 0.21
+            }
+          },
+          "elapsed_ms": 0.2960279962280765
+        },
+        {
+          "temperature_c": 89.9,
+          "expected": "normal",
+          "result": {
+            "status": "ok",
+            "answer": "normal",
+            "case": "normal",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {},
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 3,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 0,
+              "rounds": 0,
+              "logical_tokens": 0,
+              "batch_native_work": {},
+              "elapsed_ms": 0.02,
+              "amortized_ms": 0.02
+            }
+          },
+          "elapsed_ms": 0.06381398998200893
+        },
+        {
+          "temperature_c": 90,
+          "expected": "normal",
+          "result": {
+            "status": "ok",
+            "answer": "normal",
+            "case": "normal",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {},
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 3,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 0,
+              "rounds": 0,
+              "logical_tokens": 0,
+              "batch_native_work": {},
+              "elapsed_ms": 0.01,
+              "amortized_ms": 0.01
+            }
+          },
+          "elapsed_ms": 0.042230996768921614
+        },
+        {
+          "temperature_c": 90.1,
+          "expected": "red",
+          "result": {
+            "status": "ok",
+            "answer": "red",
+            "case": "red",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {},
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 3,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 0,
+              "rounds": 0,
+              "logical_tokens": 0,
+              "batch_native_work": {},
+              "elapsed_ms": 0.02,
+              "amortized_ms": 0.02
+            }
+          },
+          "elapsed_ms": 0.04321899905335158
+        },
+        {
+          "temperature_c": 119.9,
+          "expected": "red",
+          "result": {
+            "status": "ok",
+            "answer": "red",
+            "case": "red",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {},
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 3,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 0,
+              "rounds": 0,
+              "logical_tokens": 0,
+              "batch_native_work": {},
+              "elapsed_ms": 0.01,
+              "amortized_ms": 0.01
+            }
+          },
+          "elapsed_ms": 0.03775200457312167
+        },
+        {
+          "temperature_c": 120,
+          "expected": "red",
+          "result": {
+            "status": "ok",
+            "answer": "red",
+            "case": "red",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {},
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 3,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 0,
+              "rounds": 0,
+              "logical_tokens": 0,
+              "batch_native_work": {},
+              "elapsed_ms": 0.01,
+              "amortized_ms": 0.01
+            }
+          },
+          "elapsed_ms": 0.03346199810039252
+        },
+        {
+          "temperature_c": 120.1,
+          "expected": "purple",
+          "result": {
+            "status": "ok",
+            "answer": "purple",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {},
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 3,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 0,
+              "rounds": 0,
+              "logical_tokens": 0,
+              "batch_native_work": {},
+              "elapsed_ms": 0.01,
+              "amortized_ms": 0.01
+            }
+          },
+          "elapsed_ms": 0.03614999877754599
+        },
+        {
+          "temperature_c": 150,
+          "expected": "purple",
+          "result": {
+            "status": "ok",
+            "answer": "purple",
+            "case": "otherwise",
+            "missing": [],
+            "invalid": [],
+            "uncertain": [],
+            "blocked_by": null,
+            "errors": {},
+            "facts": {},
+            "truncated": [],
+            "partial": [],
+            "cost": {
+              "rules": 3,
+              "rule": 0,
+              "example": 0,
+              "classifier": 0,
+              "judge": 0,
+              "rounds": 0,
+              "logical_tokens": 0,
+              "batch_native_work": {},
+              "elapsed_ms": 0.01,
+              "amortized_ms": 0.01
+            }
+          },
+          "elapsed_ms": 0.032400988857261837
+        }
+      ],
+      "correct": 8,
+      "median_ms": 0.03999150067102164
+    },
+    "E2B": {
+      "rows": [
+        {
+          "case_id": "0",
+          "family": "0",
+          "temperature_c": 20,
+          "expected": {
+            "value": "normal",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "normal",
+            "index": "normal",
+            "score": 0.9886900438873696,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 0.9886900438873696,
+              "red": 0.010334765435395299,
+              "purple": 0.0009751906772351237
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9983340501785278,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 226.16169799584895
+        },
+        {
+          "case_id": "1",
+          "family": "1",
+          "temperature_c": 89.9,
+          "expected": {
+            "value": "normal",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "normal",
+            "index": "normal",
+            "score": 0.9810292262318606,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 0.9810292262318606,
+              "red": 0.017782735889281056,
+              "purple": 0.0011880378788583588
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9988358020782471,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 104.8675009951694
+        },
+        {
+          "case_id": "2",
+          "family": "2",
+          "temperature_c": 90,
+          "expected": {
+            "value": "normal",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "normal",
+            "index": "normal",
+            "score": 0.9883488522870021,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 0.9883488522870021,
+              "red": 0.010782447487748432,
+              "purple": 0.0008687002252494421
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9991556406021118,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 94.31619600218255
+        },
+        {
+          "case_id": "3",
+          "family": "3",
+          "temperature_c": 90.1,
+          "expected": {
+            "value": "red",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "red",
+            "index": "red",
+            "score": 0.9115362949059369,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 0.08523480992484157,
+              "red": 0.9115362949059369,
+              "purple": 0.003228895169221398
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9985834360122681,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 96.24113599420525
+        },
+        {
+          "case_id": "4",
+          "family": "4",
+          "temperature_c": 119.9,
+          "expected": {
+            "value": "red",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "red",
+            "index": "red",
+            "score": 0.9819192865848927,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 0.006170487618893363,
+              "red": 0.9819192865848927,
+              "purple": 0.011910225796213912
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9983771443367004,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 100.37400100554805
+        },
+        {
+          "case_id": "5",
+          "family": "5",
+          "temperature_c": 120,
+          "expected": {
+            "value": "red",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "purple",
+            "index": "purple",
+            "score": 0.980764762683769,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 0.004561799937185841,
+              "red": 0.014673437379045149,
+              "purple": 0.980764762683769
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9949943423271179,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 101.0340049979277
+        },
+        {
+          "case_id": "6",
+          "family": "6",
+          "temperature_c": 120.1,
+          "expected": {
+            "value": "purple",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "purple",
+            "index": "purple",
+            "score": 0.9697329767673891,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 0.0061235984424776995,
+              "red": 0.02414342479013322,
+              "purple": 0.9697329767673891
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9945505261421204,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 94.6198559977347
+        },
+        {
+          "case_id": "7",
+          "family": "7",
+          "temperature_c": 150,
+          "expected": {
+            "value": "purple",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "purple",
+            "index": "purple",
+            "score": 0.9426362449212894,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 0.00956550458432987,
+              "red": 0.047798250494380634,
+              "purple": 0.9426362449212894
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9905207753181458,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 93.64367098896764
+        }
+      ],
+      "metrics": {
+        "submitted": 8,
+        "unique_cases": 8,
+        "families": 8,
+        "raw_scored": 8,
+        "raw_correct": 7,
+        "raw_agreement_all": 0.875,
+        "accepted": 8,
+        "accepted_correct": 7,
+        "wrong_accepted": 1,
+        "coverage": 1.0,
+        "accepted_precision": 0.875,
+        "status_agreement": 8,
+        "operational_agreement": 7,
+        "statuses": {
+          "ok": 8,
+          "uncertain": 0,
+          "needs_input": 0,
+          "failed": 0,
+          "none": 0
+        },
+        "protocol_failures": 0
+      },
+      "median_ms": 98.30756849987665,
+      "model_load_ms": 1458.753863000311,
+      "identity": {
+        "file": "gemma-4-E2B-it-Q4_0.gguf",
+        "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+        "template": "chat@2:0a2c8073",
+        "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+        "lora_sha256": null
+      }
+    },
+    "E4B": {
+      "rows": [
+        {
+          "case_id": "0",
+          "family": "0",
+          "temperature_c": 20,
+          "expected": {
+            "value": "normal",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "normal",
+            "index": "normal",
+            "score": 0.999876901086145,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 0.999876901086145,
+              "red": 8.480408085663802e-05,
+              "purple": 3.829483299833474e-05
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9999446868896484,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 512.7854349993868
+        },
+        {
+          "case_id": "1",
+          "family": "1",
+          "temperature_c": 89.9,
+          "expected": {
+            "value": "normal",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "normal",
+            "index": "normal",
+            "score": 0.999938455297582,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 0.999938455297582,
+              "red": 2.4301920513180488e-05,
+              "purple": 3.724278190490166e-05
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9999440908432007,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 166.19680100120604
+        },
+        {
+          "case_id": "2",
+          "family": "2",
+          "temperature_c": 90,
+          "expected": {
+            "value": "normal",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "normal",
+            "index": "normal",
+            "score": 0.9995934002132106,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 0.9995934002132106,
+              "red": 0.00035670651457492643,
+              "purple": 4.989327221450715e-05
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9999521970748901,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 161.67071099334862
+        },
+        {
+          "case_id": "3",
+          "family": "3",
+          "temperature_c": 90.1,
+          "expected": {
+            "value": "red",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "red",
+            "index": "red",
+            "score": 0.9998912102042607,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 5.9563335018309236e-06,
+              "red": 0.9998912102042607,
+              "purple": 0.00010283346223741265
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.999995768070221,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 158.85416499804705
+        },
+        {
+          "case_id": "4",
+          "family": "4",
+          "temperature_c": 119.9,
+          "expected": {
+            "value": "red",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "red",
+            "index": "red",
+            "score": 0.9999115340227047,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 3.6673918990156013e-05,
+              "red": 0.9999115340227047,
+              "purple": 5.179205830510947e-05
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9999915957450867,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 159.15620300802402
+        },
+        {
+          "case_id": "5",
+          "family": "5",
+          "temperature_c": 120,
+          "expected": {
+            "value": "red",
+            "status": "ok"
+          },
+          "result": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.6124126268949762,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 0.015710752006284547,
+              "red": 0.6124126268949762,
+              "purple": 0.3718766210987392
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9998327493667603,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 159.6869049972156
+        },
+        {
+          "case_id": "6",
+          "family": "6",
+          "temperature_c": 120.1,
+          "expected": {
+            "value": "purple",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "purple",
+            "index": "purple",
+            "score": 0.9999945382689086,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 2.4913207581069365e-06,
+              "red": 2.970410333332512e-06,
+              "purple": 0.9999945382689086
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9999913573265076,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 159.8973130021477
+        },
+        {
+          "case_id": "7",
+          "family": "7",
+          "temperature_c": 150,
+          "expected": {
+            "value": "purple",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "purple",
+            "index": "purple",
+            "score": 0.9999947698289984,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [],
+            "scores": {
+              "normal": 1.4421917652162448e-06,
+              "red": 3.7879792363912505e-06,
+              "purple": 0.9999947698289984
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": 0.9999809265136719,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 158.0634639976779
+        }
+      ],
+      "metrics": {
+        "submitted": 8,
+        "unique_cases": 8,
+        "families": 8,
+        "raw_scored": 8,
+        "raw_correct": 8,
+        "raw_agreement_all": 1.0,
+        "accepted": 7,
+        "accepted_correct": 7,
+        "wrong_accepted": 0,
+        "coverage": 0.875,
+        "accepted_precision": 1.0,
+        "status_agreement": 7,
+        "operational_agreement": 7,
+        "statuses": {
+          "ok": 7,
+          "uncertain": 1,
+          "needs_input": 0,
+          "failed": 0,
+          "none": 0
+        },
+        "protocol_failures": 0
+      },
+      "median_ms": 159.79210899968166,
+      "model_load_ms": 4260.736930998974,
+      "identity": {
+        "file": "gemma-4-E4B_q4_0-it.gguf",
+        "sha256": "676c35070db6dbe52f93e9c864ee0fba4eddea94b9c875d9cb10daff453fbaee",
+        "template": "chat@2:0a2c8073",
+        "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+        "lora_sha256": null
+      }
+    },
+    "Jev": {
+      "rows": [
+        {
+          "case_id": "0",
+          "family": "0",
+          "temperature_c": 20,
+          "expected": {
+            "value": "normal",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "normal",
+            "index": "normal",
+            "score": 1.0,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "typesafe/jev-1.13-20260917"
+            ],
+            "scores": {
+              "normal": 1.0,
+              "red": 0.0,
+              "purple": 0.0
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 702.9031710117124
+        },
+        {
+          "case_id": "1",
+          "family": "1",
+          "temperature_c": 89.9,
+          "expected": {
+            "value": "normal",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "normal",
+            "index": "normal",
+            "score": 1.0,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "typesafe/jev-1.13-20260917"
+            ],
+            "scores": {
+              "normal": 1.0,
+              "red": 0.0,
+              "purple": 0.0
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 431.1619310028618
+        },
+        {
+          "case_id": "2",
+          "family": "2",
+          "temperature_c": 90,
+          "expected": {
+            "value": "normal",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "normal",
+            "index": "normal",
+            "score": 1.0,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "typesafe/jev-1.13-20260917"
+            ],
+            "scores": {
+              "normal": 1.0,
+              "red": 0.0,
+              "purple": 0.0
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 462.97940899967216
+        },
+        {
+          "case_id": "3",
+          "family": "3",
+          "temperature_c": 90.1,
+          "expected": {
+            "value": "red",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "red",
+            "index": "red",
+            "score": 0.96,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "typesafe/jev-1.13-20260917"
+            ],
+            "scores": {
+              "normal": 0.04,
+              "red": 0.96,
+              "purple": 0.0
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 392.4560800078325
+        },
+        {
+          "case_id": "4",
+          "family": "4",
+          "temperature_c": 119.9,
+          "expected": {
+            "value": "red",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "red",
+            "index": "red",
+            "score": 1.0,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "typesafe/jev-1.13-20260917"
+            ],
+            "scores": {
+              "normal": 0.0,
+              "red": 1.0,
+              "purple": 0.0
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 425.2987150102854
+        },
+        {
+          "case_id": "5",
+          "family": "5",
+          "temperature_c": 120,
+          "expected": {
+            "value": "red",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "red",
+            "index": "red",
+            "score": 1.0,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "typesafe/jev-1.13-20260917"
+            ],
+            "scores": {
+              "normal": 0.0,
+              "red": 1.0,
+              "purple": 0.0
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 447.1228559996234
+        },
+        {
+          "case_id": "6",
+          "family": "6",
+          "temperature_c": 120.1,
+          "expected": {
+            "value": "purple",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "purple",
+            "index": "purple",
+            "score": 0.99,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "typesafe/jev-1.13-20260917"
+            ],
+            "scores": {
+              "normal": 0.0,
+              "red": 0.01,
+              "purple": 0.99
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 391.42018600250594
+        },
+        {
+          "case_id": "7",
+          "family": "7",
+          "temperature_c": 150,
+          "expected": {
+            "value": "purple",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "purple",
+            "index": "purple",
+            "score": 0.99,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "typesafe/jev-1.13-20260917"
+            ],
+            "scores": {
+              "normal": 0.0,
+              "red": 0.01,
+              "purple": 0.99
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 387.1731469989754
+        }
+      ],
+      "metrics": {
+        "submitted": 8,
+        "unique_cases": 8,
+        "families": 8,
+        "raw_scored": 8,
+        "raw_correct": 8,
+        "raw_agreement_all": 1.0,
+        "accepted": 8,
+        "accepted_correct": 8,
+        "wrong_accepted": 0,
+        "coverage": 1.0,
+        "accepted_precision": 1.0,
+        "status_agreement": 8,
+        "operational_agreement": 8,
+        "statuses": {
+          "ok": 8,
+          "uncertain": 0,
+          "needs_input": 0,
+          "failed": 0,
+          "none": 0
+        },
+        "protocol_failures": 0
+      },
+      "median_ms": 428.2303230065736,
+      "identity": {
+        "source": "systemone",
+        "model": "typesafe/jev-1.13",
+        "endpoint": "https://openrouter.ai/api/v1/systemone",
+        "question_scope": "joint",
+        "provider": "TypeSafe"
+      },
+      "pricing": {
+        "retrieved_at": "2026-10-08T19:20:36+00:00",
+        "model": "typesafe/jev-1.13",
+        "selected_endpoint": {
+          "name": "TypeSafe | typesafe/jev-1.13-20260917",
+          "model_id": "typesafe/jev-1.13",
+          "model_name": "TypeSafe: Jev 1.13",
+          "context_length": 64000,
+          "pricing": {
+            "prompt": "0.000000042",
+            "completion": "0",
+            "discount": 0
+          },
+          "provider_name": "TypeSafe",
+          "tag": "typesafe",
+          "quantization": "unknown",
+          "max_completion_tokens": 57600,
+          "max_prompt_tokens": 32000,
+          "supported_parameters": [],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": true,
+            "function": true
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 98.54166666666667,
+          "supports_implicit_caching": false,
+          "native_tools": {},
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        "metadata": {
+          "id": "typesafe/jev-1.13",
+          "name": "TypeSafe: Jev 1.13",
+          "created": 1789689684,
+          "description": "Jev is a structured decision model from TypeSafe, and the first of its System One models. System One models make fast, structured decisions for software, returning a typed choice rather...",
+          "architecture": {
+            "tokenizer": "Other",
+            "instruct_type": null,
+            "modality": "text->decisions",
+            "input_modalities": [
+              "text"
+            ],
+            "output_modalities": [
+              "decisions"
+            ]
+          },
+          "endpoints": [
+            {
+              "name": "TypeSafe | typesafe/jev-1.13-20260917",
+              "model_id": "typesafe/jev-1.13",
+              "model_name": "TypeSafe: Jev 1.13",
+              "context_length": 64000,
+              "pricing": {
+                "prompt": "0.000000042",
+                "completion": "0",
+                "discount": 0
+              },
+              "provider_name": "TypeSafe",
+              "tag": "typesafe",
+              "quantization": "unknown",
+              "max_completion_tokens": 57600,
+              "max_prompt_tokens": 32000,
+              "supported_parameters": [],
+              "supports_tool_choice": {
+                "none": true,
+                "auto": true,
+                "required": true,
+                "function": true
+              },
+              "status": 0,
+              "uptime_last_30m": 100,
+              "uptime_last_5m": 100,
+              "uptime_last_1d": 98.54166666666667,
+              "supports_implicit_caching": false,
+              "native_tools": {},
+              "supports_voice_cloning": false,
+              "supports_multiple_audio_references": false,
+              "supports_image_reference": false,
+              "latency_last_30m": null,
+              "throughput_last_30m": null
+            }
+          ]
+        }
+      },
+      "transport": {
+        "requests": 8,
+        "billed_cost_usd": 0.000137928,
+        "complete": true,
+        "stop_reason": null,
+        "reported_cost_subtotal_usd": 0.000137928,
+        "requests_with_unknown_billing": 0,
+        "estimated_cost_usd": 0.000137928,
+        "by_operation": {
+          "temperature-rules": {
+            "requests": 8,
+            "billed_cost_usd": 0.000137928,
+            "reported_cost_subtotal_usd": 0.000137928,
+            "warmup": false
+          }
+        },
+        "budget_basis": "conservative pre-dispatch reservation; actual provider billing retained",
+        "receipts": [
+          {
+            "attempt": 1,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "typesafe/jev-1.13",
+            "requested_provider": "TypeSafe",
+            "request": {
+              "model": "typesafe/jev-1.13",
+              "state": "20",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "TypeSafe"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 409,
+              "output_tokens": 39,
+              "cost": 1.7178e-05
+            },
+            "billed_cost_usd": 1.7178e-05,
+            "estimated_cost_usd": 1.7178e-05,
+            "reservation_usd": 6.9006e-05,
+            "pricing": {
+              "prompt": "0.000000042",
+              "completion": "0",
+              "discount": 0
+            },
+            "returned_model": "typesafe/jev-1.13-20260917",
+            "returned_provider": "TypeSafe",
+            "response_id": "gen-dec-1791487236-8z2gSo6nz5Qw2XO8Byqj",
+            "response": {
+              "model": "typesafe/jev-1.13-20260917",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "A",
+                  "probabilities": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 0
+                  },
+                  "confidence": 0.99
+                }
+              },
+              "usage": {
+                "input_tokens": 409,
+                "output_tokens": 39,
+                "cost": 1.7178e-05
+              },
+              "id": "gen-dec-1791487236-8z2gSo6nz5Qw2XO8Byqj",
+              "provider": "TypeSafe"
+            },
+            "error": null,
+            "elapsed_ms": 701.9192699954147
+          },
+          {
+            "attempt": 2,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "typesafe/jev-1.13",
+            "requested_provider": "TypeSafe",
+            "request": {
+              "model": "typesafe/jev-1.13",
+              "state": "89.9",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "TypeSafe"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 411,
+              "output_tokens": 39,
+              "cost": 1.7262e-05
+            },
+            "billed_cost_usd": 1.7262e-05,
+            "estimated_cost_usd": 1.7262e-05,
+            "reservation_usd": 6.909e-05,
+            "pricing": {
+              "prompt": "0.000000042",
+              "completion": "0",
+              "discount": 0
+            },
+            "returned_model": "typesafe/jev-1.13-20260917",
+            "returned_provider": "TypeSafe",
+            "response_id": "gen-dec-1791487237-wJZgENr1G7MghJuwjA1S",
+            "response": {
+              "model": "typesafe/jev-1.13-20260917",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "A",
+                  "probabilities": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 0
+                  },
+                  "confidence": 1
+                }
+              },
+              "usage": {
+                "input_tokens": 411,
+                "output_tokens": 39,
+                "cost": 1.7262e-05
+              },
+              "id": "gen-dec-1791487237-wJZgENr1G7MghJuwjA1S",
+              "provider": "TypeSafe"
+            },
+            "error": null,
+            "elapsed_ms": 430.318762009847
+          },
+          {
+            "attempt": 3,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "typesafe/jev-1.13",
+            "requested_provider": "TypeSafe",
+            "request": {
+              "model": "typesafe/jev-1.13",
+              "state": "90",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "TypeSafe"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 409,
+              "output_tokens": 39,
+              "cost": 1.7178e-05
+            },
+            "billed_cost_usd": 1.7178e-05,
+            "estimated_cost_usd": 1.7178e-05,
+            "reservation_usd": 6.9006e-05,
+            "pricing": {
+              "prompt": "0.000000042",
+              "completion": "0",
+              "discount": 0
+            },
+            "returned_model": "typesafe/jev-1.13-20260917",
+            "returned_provider": "TypeSafe",
+            "response_id": "gen-dec-1791487237-PdQqNeW25nnOfKPjvXh9",
+            "response": {
+              "model": "typesafe/jev-1.13-20260917",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "A",
+                  "probabilities": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 0
+                  },
+                  "confidence": 1
+                }
+              },
+              "usage": {
+                "input_tokens": 409,
+                "output_tokens": 39,
+                "cost": 1.7178e-05
+              },
+              "id": "gen-dec-1791487237-PdQqNeW25nnOfKPjvXh9",
+              "provider": "TypeSafe"
+            },
+            "error": null,
+            "elapsed_ms": 462.06141500442754
+          },
+          {
+            "attempt": 4,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "typesafe/jev-1.13",
+            "requested_provider": "TypeSafe",
+            "request": {
+              "model": "typesafe/jev-1.13",
+              "state": "90.1",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "TypeSafe"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 411,
+              "output_tokens": 39,
+              "cost": 1.7262e-05
+            },
+            "billed_cost_usd": 1.7262e-05,
+            "estimated_cost_usd": 1.7262e-05,
+            "reservation_usd": 6.909e-05,
+            "pricing": {
+              "prompt": "0.000000042",
+              "completion": "0",
+              "discount": 0
+            },
+            "returned_model": "typesafe/jev-1.13-20260917",
+            "returned_provider": "TypeSafe",
+            "response_id": "gen-dec-1791487237-JdBeKMDcB0PtAW8TvcTK",
+            "response": {
+              "model": "typesafe/jev-1.13-20260917",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "B",
+                  "probabilities": {
+                    "A": 0.04,
+                    "B": 0.96,
+                    "C": 0
+                  },
+                  "confidence": 0.94
+                }
+              },
+              "usage": {
+                "input_tokens": 411,
+                "output_tokens": 39,
+                "cost": 1.7262e-05
+              },
+              "id": "gen-dec-1791487237-JdBeKMDcB0PtAW8TvcTK",
+              "provider": "TypeSafe"
+            },
+            "error": null,
+            "elapsed_ms": 391.3286539900582
+          },
+          {
+            "attempt": 5,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "typesafe/jev-1.13",
+            "requested_provider": "TypeSafe",
+            "request": {
+              "model": "typesafe/jev-1.13",
+              "state": "119.9",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "TypeSafe"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 412,
+              "output_tokens": 39,
+              "cost": 1.7304e-05
+            },
+            "billed_cost_usd": 1.7304e-05,
+            "estimated_cost_usd": 1.7304e-05,
+            "reservation_usd": 6.9132e-05,
+            "pricing": {
+              "prompt": "0.000000042",
+              "completion": "0",
+              "discount": 0
+            },
+            "returned_model": "typesafe/jev-1.13-20260917",
+            "returned_provider": "TypeSafe",
+            "response_id": "gen-dec-1791487238-S7JWWnPbYb01Zm1JYBXf",
+            "response": {
+              "model": "typesafe/jev-1.13-20260917",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "B",
+                  "probabilities": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 0
+                  },
+                  "confidence": 1
+                }
+              },
+              "usage": {
+                "input_tokens": 412,
+                "output_tokens": 39,
+                "cost": 1.7304e-05
+              },
+              "id": "gen-dec-1791487238-S7JWWnPbYb01Zm1JYBXf",
+              "provider": "TypeSafe"
+            },
+            "error": null,
+            "elapsed_ms": 424.12275199603755
+          },
+          {
+            "attempt": 6,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "typesafe/jev-1.13",
+            "requested_provider": "TypeSafe",
+            "request": {
+              "model": "typesafe/jev-1.13",
+              "state": "120",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "TypeSafe"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 410,
+              "output_tokens": 39,
+              "cost": 1.722e-05
+            },
+            "billed_cost_usd": 1.722e-05,
+            "estimated_cost_usd": 1.722e-05,
+            "reservation_usd": 6.9048e-05,
+            "pricing": {
+              "prompt": "0.000000042",
+              "completion": "0",
+              "discount": 0
+            },
+            "returned_model": "typesafe/jev-1.13-20260917",
+            "returned_provider": "TypeSafe",
+            "response_id": "gen-dec-1791487238-poie2QDiLN5soDmKMVbY",
+            "response": {
+              "model": "typesafe/jev-1.13-20260917",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "B",
+                  "probabilities": {
+                    "C": 0,
+                    "A": 0,
+                    "B": 1
+                  },
+                  "confidence": 1
+                }
+              },
+              "usage": {
+                "input_tokens": 410,
+                "output_tokens": 39,
+                "cost": 1.722e-05
+              },
+              "id": "gen-dec-1791487238-poie2QDiLN5soDmKMVbY",
+              "provider": "TypeSafe"
+            },
+            "error": null,
+            "elapsed_ms": 446.1727439920651
+          },
+          {
+            "attempt": 7,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "typesafe/jev-1.13",
+            "requested_provider": "TypeSafe",
+            "request": {
+              "model": "typesafe/jev-1.13",
+              "state": "120.1",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "TypeSafe"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 412,
+              "output_tokens": 39,
+              "cost": 1.7304e-05
+            },
+            "billed_cost_usd": 1.7304e-05,
+            "estimated_cost_usd": 1.7304e-05,
+            "reservation_usd": 6.9132e-05,
+            "pricing": {
+              "prompt": "0.000000042",
+              "completion": "0",
+              "discount": 0
+            },
+            "returned_model": "typesafe/jev-1.13-20260917",
+            "returned_provider": "TypeSafe",
+            "response_id": "gen-dec-1791487239-HF0kKugreyLLmlRBVpP3",
+            "response": {
+              "model": "typesafe/jev-1.13-20260917",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "C",
+                  "probabilities": {
+                    "A": 0,
+                    "B": 0.01,
+                    "C": 0.99
+                  },
+                  "confidence": 0.98
+                }
+              },
+              "usage": {
+                "input_tokens": 412,
+                "output_tokens": 39,
+                "cost": 1.7304e-05
+              },
+              "id": "gen-dec-1791487239-HF0kKugreyLLmlRBVpP3",
+              "provider": "TypeSafe"
+            },
+            "error": null,
+            "elapsed_ms": 390.64356200105976
+          },
+          {
+            "attempt": 8,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "typesafe/jev-1.13",
+            "requested_provider": "TypeSafe",
+            "request": {
+              "model": "typesafe/jev-1.13",
+              "state": "150",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "TypeSafe"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 410,
+              "output_tokens": 39,
+              "cost": 1.722e-05
+            },
+            "billed_cost_usd": 1.722e-05,
+            "estimated_cost_usd": 1.722e-05,
+            "reservation_usd": 6.9048e-05,
+            "pricing": {
+              "prompt": "0.000000042",
+              "completion": "0",
+              "discount": 0
+            },
+            "returned_model": "typesafe/jev-1.13-20260917",
+            "returned_provider": "TypeSafe",
+            "response_id": "gen-dec-1791487239-N4QOY1wfcbAM4O9WA2zv",
+            "response": {
+              "model": "typesafe/jev-1.13-20260917",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "C",
+                  "probabilities": {
+                    "A": 0,
+                    "B": 0.01,
+                    "C": 0.99
+                  },
+                  "confidence": 0.99
+                }
+              },
+              "usage": {
+                "input_tokens": 410,
+                "output_tokens": 39,
+                "cost": 1.722e-05
+              },
+              "id": "gen-dec-1791487239-N4QOY1wfcbAM4O9WA2zv",
+              "provider": "TypeSafe"
+            },
+            "error": null,
+            "elapsed_ms": 386.08348899288103
+          }
+        ]
+      },
+      "receipts": [
+        {
+          "attempt": 1,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "typesafe/jev-1.13",
+          "requested_provider": "TypeSafe",
+          "request": {
+            "model": "typesafe/jev-1.13",
+            "state": "20",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "TypeSafe"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 409,
+            "output_tokens": 39,
+            "cost": 1.7178e-05
+          },
+          "billed_cost_usd": 1.7178e-05,
+          "estimated_cost_usd": 1.7178e-05,
+          "reservation_usd": 6.9006e-05,
+          "pricing": {
+            "prompt": "0.000000042",
+            "completion": "0",
+            "discount": 0
+          },
+          "returned_model": "typesafe/jev-1.13-20260917",
+          "returned_provider": "TypeSafe",
+          "response_id": "gen-dec-1791487236-8z2gSo6nz5Qw2XO8Byqj",
+          "response": {
+            "model": "typesafe/jev-1.13-20260917",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "A",
+                "probabilities": {
+                  "A": 1,
+                  "B": 0,
+                  "C": 0
+                },
+                "confidence": 0.99
+              }
+            },
+            "usage": {
+              "input_tokens": 409,
+              "output_tokens": 39,
+              "cost": 1.7178e-05
+            },
+            "id": "gen-dec-1791487236-8z2gSo6nz5Qw2XO8Byqj",
+            "provider": "TypeSafe"
+          },
+          "error": null,
+          "elapsed_ms": 701.9192699954147
+        },
+        {
+          "attempt": 2,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "typesafe/jev-1.13",
+          "requested_provider": "TypeSafe",
+          "request": {
+            "model": "typesafe/jev-1.13",
+            "state": "89.9",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "TypeSafe"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 411,
+            "output_tokens": 39,
+            "cost": 1.7262e-05
+          },
+          "billed_cost_usd": 1.7262e-05,
+          "estimated_cost_usd": 1.7262e-05,
+          "reservation_usd": 6.909e-05,
+          "pricing": {
+            "prompt": "0.000000042",
+            "completion": "0",
+            "discount": 0
+          },
+          "returned_model": "typesafe/jev-1.13-20260917",
+          "returned_provider": "TypeSafe",
+          "response_id": "gen-dec-1791487237-wJZgENr1G7MghJuwjA1S",
+          "response": {
+            "model": "typesafe/jev-1.13-20260917",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "A",
+                "probabilities": {
+                  "A": 1,
+                  "B": 0,
+                  "C": 0
+                },
+                "confidence": 1
+              }
+            },
+            "usage": {
+              "input_tokens": 411,
+              "output_tokens": 39,
+              "cost": 1.7262e-05
+            },
+            "id": "gen-dec-1791487237-wJZgENr1G7MghJuwjA1S",
+            "provider": "TypeSafe"
+          },
+          "error": null,
+          "elapsed_ms": 430.318762009847
+        },
+        {
+          "attempt": 3,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "typesafe/jev-1.13",
+          "requested_provider": "TypeSafe",
+          "request": {
+            "model": "typesafe/jev-1.13",
+            "state": "90",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "TypeSafe"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 409,
+            "output_tokens": 39,
+            "cost": 1.7178e-05
+          },
+          "billed_cost_usd": 1.7178e-05,
+          "estimated_cost_usd": 1.7178e-05,
+          "reservation_usd": 6.9006e-05,
+          "pricing": {
+            "prompt": "0.000000042",
+            "completion": "0",
+            "discount": 0
+          },
+          "returned_model": "typesafe/jev-1.13-20260917",
+          "returned_provider": "TypeSafe",
+          "response_id": "gen-dec-1791487237-PdQqNeW25nnOfKPjvXh9",
+          "response": {
+            "model": "typesafe/jev-1.13-20260917",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "A",
+                "probabilities": {
+                  "A": 1,
+                  "B": 0,
+                  "C": 0
+                },
+                "confidence": 1
+              }
+            },
+            "usage": {
+              "input_tokens": 409,
+              "output_tokens": 39,
+              "cost": 1.7178e-05
+            },
+            "id": "gen-dec-1791487237-PdQqNeW25nnOfKPjvXh9",
+            "provider": "TypeSafe"
+          },
+          "error": null,
+          "elapsed_ms": 462.06141500442754
+        },
+        {
+          "attempt": 4,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "typesafe/jev-1.13",
+          "requested_provider": "TypeSafe",
+          "request": {
+            "model": "typesafe/jev-1.13",
+            "state": "90.1",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "TypeSafe"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 411,
+            "output_tokens": 39,
+            "cost": 1.7262e-05
+          },
+          "billed_cost_usd": 1.7262e-05,
+          "estimated_cost_usd": 1.7262e-05,
+          "reservation_usd": 6.909e-05,
+          "pricing": {
+            "prompt": "0.000000042",
+            "completion": "0",
+            "discount": 0
+          },
+          "returned_model": "typesafe/jev-1.13-20260917",
+          "returned_provider": "TypeSafe",
+          "response_id": "gen-dec-1791487237-JdBeKMDcB0PtAW8TvcTK",
+          "response": {
+            "model": "typesafe/jev-1.13-20260917",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "B",
+                "probabilities": {
+                  "A": 0.04,
+                  "B": 0.96,
+                  "C": 0
+                },
+                "confidence": 0.94
+              }
+            },
+            "usage": {
+              "input_tokens": 411,
+              "output_tokens": 39,
+              "cost": 1.7262e-05
+            },
+            "id": "gen-dec-1791487237-JdBeKMDcB0PtAW8TvcTK",
+            "provider": "TypeSafe"
+          },
+          "error": null,
+          "elapsed_ms": 391.3286539900582
+        },
+        {
+          "attempt": 5,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "typesafe/jev-1.13",
+          "requested_provider": "TypeSafe",
+          "request": {
+            "model": "typesafe/jev-1.13",
+            "state": "119.9",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "TypeSafe"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 412,
+            "output_tokens": 39,
+            "cost": 1.7304e-05
+          },
+          "billed_cost_usd": 1.7304e-05,
+          "estimated_cost_usd": 1.7304e-05,
+          "reservation_usd": 6.9132e-05,
+          "pricing": {
+            "prompt": "0.000000042",
+            "completion": "0",
+            "discount": 0
+          },
+          "returned_model": "typesafe/jev-1.13-20260917",
+          "returned_provider": "TypeSafe",
+          "response_id": "gen-dec-1791487238-S7JWWnPbYb01Zm1JYBXf",
+          "response": {
+            "model": "typesafe/jev-1.13-20260917",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "B",
+                "probabilities": {
+                  "A": 0,
+                  "B": 1,
+                  "C": 0
+                },
+                "confidence": 1
+              }
+            },
+            "usage": {
+              "input_tokens": 412,
+              "output_tokens": 39,
+              "cost": 1.7304e-05
+            },
+            "id": "gen-dec-1791487238-S7JWWnPbYb01Zm1JYBXf",
+            "provider": "TypeSafe"
+          },
+          "error": null,
+          "elapsed_ms": 424.12275199603755
+        },
+        {
+          "attempt": 6,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "typesafe/jev-1.13",
+          "requested_provider": "TypeSafe",
+          "request": {
+            "model": "typesafe/jev-1.13",
+            "state": "120",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "TypeSafe"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 410,
+            "output_tokens": 39,
+            "cost": 1.722e-05
+          },
+          "billed_cost_usd": 1.722e-05,
+          "estimated_cost_usd": 1.722e-05,
+          "reservation_usd": 6.9048e-05,
+          "pricing": {
+            "prompt": "0.000000042",
+            "completion": "0",
+            "discount": 0
+          },
+          "returned_model": "typesafe/jev-1.13-20260917",
+          "returned_provider": "TypeSafe",
+          "response_id": "gen-dec-1791487238-poie2QDiLN5soDmKMVbY",
+          "response": {
+            "model": "typesafe/jev-1.13-20260917",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "B",
+                "probabilities": {
+                  "C": 0,
+                  "A": 0,
+                  "B": 1
+                },
+                "confidence": 1
+              }
+            },
+            "usage": {
+              "input_tokens": 410,
+              "output_tokens": 39,
+              "cost": 1.722e-05
+            },
+            "id": "gen-dec-1791487238-poie2QDiLN5soDmKMVbY",
+            "provider": "TypeSafe"
+          },
+          "error": null,
+          "elapsed_ms": 446.1727439920651
+        },
+        {
+          "attempt": 7,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "typesafe/jev-1.13",
+          "requested_provider": "TypeSafe",
+          "request": {
+            "model": "typesafe/jev-1.13",
+            "state": "120.1",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "TypeSafe"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 412,
+            "output_tokens": 39,
+            "cost": 1.7304e-05
+          },
+          "billed_cost_usd": 1.7304e-05,
+          "estimated_cost_usd": 1.7304e-05,
+          "reservation_usd": 6.9132e-05,
+          "pricing": {
+            "prompt": "0.000000042",
+            "completion": "0",
+            "discount": 0
+          },
+          "returned_model": "typesafe/jev-1.13-20260917",
+          "returned_provider": "TypeSafe",
+          "response_id": "gen-dec-1791487239-HF0kKugreyLLmlRBVpP3",
+          "response": {
+            "model": "typesafe/jev-1.13-20260917",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "C",
+                "probabilities": {
+                  "A": 0,
+                  "B": 0.01,
+                  "C": 0.99
+                },
+                "confidence": 0.98
+              }
+            },
+            "usage": {
+              "input_tokens": 412,
+              "output_tokens": 39,
+              "cost": 1.7304e-05
+            },
+            "id": "gen-dec-1791487239-HF0kKugreyLLmlRBVpP3",
+            "provider": "TypeSafe"
+          },
+          "error": null,
+          "elapsed_ms": 390.64356200105976
+        },
+        {
+          "attempt": 8,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "typesafe/jev-1.13",
+          "requested_provider": "TypeSafe",
+          "request": {
+            "model": "typesafe/jev-1.13",
+            "state": "150",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "TypeSafe"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 410,
+            "output_tokens": 39,
+            "cost": 1.722e-05
+          },
+          "billed_cost_usd": 1.722e-05,
+          "estimated_cost_usd": 1.722e-05,
+          "reservation_usd": 6.9048e-05,
+          "pricing": {
+            "prompt": "0.000000042",
+            "completion": "0",
+            "discount": 0
+          },
+          "returned_model": "typesafe/jev-1.13-20260917",
+          "returned_provider": "TypeSafe",
+          "response_id": "gen-dec-1791487239-N4QOY1wfcbAM4O9WA2zv",
+          "response": {
+            "model": "typesafe/jev-1.13-20260917",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "C",
+                "probabilities": {
+                  "A": 0,
+                  "B": 0.01,
+                  "C": 0.99
+                },
+                "confidence": 0.99
+              }
+            },
+            "usage": {
+              "input_tokens": 410,
+              "output_tokens": 39,
+              "cost": 1.722e-05
+            },
+            "id": "gen-dec-1791487239-N4QOY1wfcbAM4O9WA2zv",
+            "provider": "TypeSafe"
+          },
+          "error": null,
+          "elapsed_ms": 386.08348899288103
+        }
+      ]
+    },
+    "OpenAI Decisions": {
+      "rows": [
+        {
+          "case_id": "0",
+          "family": "0",
+          "temperature_c": 20,
+          "expected": {
+            "value": "normal",
+            "status": "ok"
+          },
+          "result": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.83,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "openai/gpt-6-luna-decisions-20261006"
+            ],
+            "scores": {
+              "normal": 0.83,
+              "red": 0.1,
+              "purple": 0.07
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 471.40052801114507
+        },
+        {
+          "case_id": "1",
+          "family": "1",
+          "temperature_c": 89.9,
+          "expected": {
+            "value": "normal",
+            "status": "ok"
+          },
+          "result": {
+            "status": "ok",
+            "value": "normal",
+            "index": "normal",
+            "score": 0.93,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "openai/gpt-6-luna-decisions-20261006"
+            ],
+            "scores": {
+              "normal": 0.93,
+              "red": 0.05,
+              "purple": 0.02
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 853.3333590021357
+        },
+        {
+          "case_id": "2",
+          "family": "2",
+          "temperature_c": 90,
+          "expected": {
+            "value": "normal",
+            "status": "ok"
+          },
+          "result": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.64,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "openai/gpt-6-luna-decisions-20261006"
+            ],
+            "scores": {
+              "normal": 0.64,
+              "red": 0.22,
+              "purple": 0.14
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 377.9407380061457
+        },
+        {
+          "case_id": "3",
+          "family": "3",
+          "temperature_c": 90.1,
+          "expected": {
+            "value": "red",
+            "status": "ok"
+          },
+          "result": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.76,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "openai/gpt-6-luna-decisions-20261006"
+            ],
+            "scores": {
+              "normal": 0.76,
+              "red": 0.12,
+              "purple": 0.12
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 368.1737360020634
+        },
+        {
+          "case_id": "4",
+          "family": "4",
+          "temperature_c": 119.9,
+          "expected": {
+            "value": "red",
+            "status": "ok"
+          },
+          "result": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.88,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "openai/gpt-6-luna-decisions-20261006"
+            ],
+            "scores": {
+              "normal": 0.06,
+              "red": 0.88,
+              "purple": 0.06
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 380.33289700979367
+        },
+        {
+          "case_id": "5",
+          "family": "5",
+          "temperature_c": 120,
+          "expected": {
+            "value": "red",
+            "status": "ok"
+          },
+          "result": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.74,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "openai/gpt-6-luna-decisions-20261006"
+            ],
+            "scores": {
+              "normal": 0.74,
+              "red": 0.15,
+              "purple": 0.11
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 338.16100099647883
+        },
+        {
+          "case_id": "6",
+          "family": "6",
+          "temperature_c": 120.1,
+          "expected": {
+            "value": "purple",
+            "status": "ok"
+          },
+          "result": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.68,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "openai/gpt-6-luna-decisions-20261006"
+            ],
+            "scores": {
+              "normal": 0.68,
+              "red": 0.19,
+              "purple": 0.13
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 363.7462000042433
+        },
+        {
+          "case_id": "7",
+          "family": "7",
+          "temperature_c": 150,
+          "expected": {
+            "value": "purple",
+            "status": "ok"
+          },
+          "result": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.64,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "96a13a377427fdf897d6dfd73022d05d17166c72de8d2a2dd532401988a0e00b"
+              ]
+            ],
+            "observed_models": [
+              "openai/gpt-6-luna-decisions-20261006"
+            ],
+            "scores": {
+              "normal": 0.64,
+              "red": 0.2,
+              "purple": 0.16
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "normal",
+                "description": "normal; press no button"
+              },
+              {
+                "key": "red",
+                "description": "press the red button"
+              },
+              {
+                "key": "purple",
+                "description": "press the purple button"
+              }
+            ]
+          },
+          "elapsed_ms": 393.8595850049751
+        }
+      ],
+      "metrics": {
+        "submitted": 8,
+        "unique_cases": 8,
+        "families": 8,
+        "raw_scored": 8,
+        "raw_correct": 4,
+        "raw_agreement_all": 0.5,
+        "accepted": 1,
+        "accepted_correct": 1,
+        "wrong_accepted": 0,
+        "coverage": 0.125,
+        "accepted_precision": 1.0,
+        "status_agreement": 1,
+        "operational_agreement": 1,
+        "statuses": {
+          "ok": 1,
+          "uncertain": 7,
+          "needs_input": 0,
+          "failed": 0,
+          "none": 0
+        },
+        "protocol_failures": 0
+      },
+      "median_ms": 379.1368175079697,
+      "identity": {
+        "source": "systemone",
+        "model": "openai/gpt-6-luna-decisions",
+        "endpoint": "https://openrouter.ai/api/v1/systemone",
+        "question_scope": "joint",
+        "provider": "OpenAI"
+      },
+      "pricing": {
+        "retrieved_at": "2026-10-08T19:20:40+00:00",
+        "model": "openai/gpt-6-luna-decisions",
+        "selected_endpoint": {
+          "name": "OpenAI | openai/gpt-6-luna-decisions-20261006",
+          "model_id": "openai/gpt-6-luna-decisions",
+          "model_name": "OpenAI: GPT-6 Luna Decisions",
+          "context_length": 1050000,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0",
+            "web_search": "0.01",
+            "input_cache_read": "0",
+            "input_cache_write": "0",
+            "discount": 0
+          },
+          "provider_name": "OpenAI",
+          "tag": "openai",
+          "quantization": "unknown",
+          "max_completion_tokens": 945000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": true,
+            "function": true
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 98.75,
+          "supports_implicit_caching": false,
+          "native_tools": {},
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        "metadata": {
+          "id": "openai/gpt-6-luna-decisions",
+          "name": "OpenAI: GPT-6 Luna Decisions",
+          "created": 1791321558,
+          "description": "GPT-6 Luna Decisions is [GPT-6 Luna](/openai/gpt-6-luna) served through OpenAI's Decisions API. Instead of generating text, it reads the content passed as `state` (text, JSON, or images) and returns typed, probabilistic...",
+          "architecture": {
+            "tokenizer": "GPT",
+            "instruct_type": null,
+            "modality": "text+image->decisions",
+            "input_modalities": [
+              "text",
+              "image"
+            ],
+            "output_modalities": [
+              "decisions"
+            ]
+          },
+          "endpoints": [
+            {
+              "name": "OpenAI | openai/gpt-6-luna-decisions-20261006",
+              "model_id": "openai/gpt-6-luna-decisions",
+              "model_name": "OpenAI: GPT-6 Luna Decisions",
+              "context_length": 1050000,
+              "pricing": {
+                "prompt": "0.0000001",
+                "completion": "0",
+                "web_search": "0.01",
+                "input_cache_read": "0",
+                "input_cache_write": "0",
+                "discount": 0
+              },
+              "provider_name": "OpenAI",
+              "tag": "openai",
+              "quantization": "unknown",
+              "max_completion_tokens": 945000,
+              "max_prompt_tokens": null,
+              "supported_parameters": [],
+              "supports_tool_choice": {
+                "none": true,
+                "auto": true,
+                "required": true,
+                "function": true
+              },
+              "status": 0,
+              "uptime_last_30m": 100,
+              "uptime_last_5m": 100,
+              "uptime_last_1d": 98.75,
+              "supports_implicit_caching": false,
+              "native_tools": {},
+              "supports_voice_cloning": false,
+              "supports_multiple_audio_references": false,
+              "supports_image_reference": false,
+              "latency_last_30m": null,
+              "throughput_last_30m": null
+            }
+          ]
+        }
+      },
+      "transport": {
+        "requests": 8,
+        "billed_cost_usd": 0.0001608,
+        "complete": true,
+        "stop_reason": null,
+        "reported_cost_subtotal_usd": 0.0001608,
+        "requests_with_unknown_billing": 0,
+        "estimated_cost_usd": 0.0001608,
+        "by_operation": {
+          "temperature-rules": {
+            "requests": 8,
+            "billed_cost_usd": 0.0001608,
+            "reported_cost_subtotal_usd": 0.0001608,
+            "warmup": false
+          }
+        },
+        "budget_basis": "conservative pre-dispatch reservation; actual provider billing retained",
+        "receipts": [
+          {
+            "attempt": 1,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "openai/gpt-6-luna-decisions",
+            "requested_provider": "OpenAI",
+            "request": {
+              "model": "openai/gpt-6-luna-decisions",
+              "state": "20",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "OpenAI"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 200,
+              "output_tokens": 0,
+              "cost": 2e-05
+            },
+            "billed_cost_usd": 2e-05,
+            "estimated_cost_usd": 1.9999999999999998e-05,
+            "reservation_usd": 0.0001651,
+            "pricing": {
+              "prompt": "0.0000001",
+              "completion": "0",
+              "web_search": "0.01",
+              "input_cache_read": "0",
+              "input_cache_write": "0",
+              "discount": 0
+            },
+            "returned_model": "openai/gpt-6-luna-decisions-20261006",
+            "returned_provider": "OpenAI",
+            "response_id": "gen-dec-1791487240-2EbWlhGau5gvE6DfXEC1",
+            "response": {
+              "model": "openai/gpt-6-luna-decisions-20261006",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "A",
+                  "probabilities": {
+                    "A": 0.83,
+                    "B": 0.1,
+                    "C": 0.07
+                  },
+                  "confidence": 0.74
+                }
+              },
+              "usage": {
+                "input_tokens": 200,
+                "output_tokens": 0,
+                "cost": 2e-05
+              },
+              "id": "gen-dec-1791487240-2EbWlhGau5gvE6DfXEC1",
+              "provider": "OpenAI"
+            },
+            "error": null,
+            "elapsed_ms": 470.014671998797
+          },
+          {
+            "attempt": 2,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "openai/gpt-6-luna-decisions",
+            "requested_provider": "OpenAI",
+            "request": {
+              "model": "openai/gpt-6-luna-decisions",
+              "state": "89.9",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "OpenAI"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 202,
+              "output_tokens": 0,
+              "cost": 2.02e-05
+            },
+            "billed_cost_usd": 2.02e-05,
+            "estimated_cost_usd": 2.02e-05,
+            "reservation_usd": 0.00016529999999999998,
+            "pricing": {
+              "prompt": "0.0000001",
+              "completion": "0",
+              "web_search": "0.01",
+              "input_cache_read": "0",
+              "input_cache_write": "0",
+              "discount": 0
+            },
+            "returned_model": "openai/gpt-6-luna-decisions-20261006",
+            "returned_provider": "OpenAI",
+            "response_id": "gen-dec-1791487240-aaWWrBXAqimkNH5W4BO0",
+            "response": {
+              "model": "openai/gpt-6-luna-decisions-20261006",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "A",
+                  "probabilities": {
+                    "A": 0.93,
+                    "B": 0.05,
+                    "C": 0.02
+                  },
+                  "confidence": 0.89
+                }
+              },
+              "usage": {
+                "input_tokens": 202,
+                "output_tokens": 0,
+                "cost": 2.02e-05
+              },
+              "id": "gen-dec-1791487240-aaWWrBXAqimkNH5W4BO0",
+              "provider": "OpenAI"
+            },
+            "error": null,
+            "elapsed_ms": 852.754334002384
+          },
+          {
+            "attempt": 3,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "openai/gpt-6-luna-decisions",
+            "requested_provider": "OpenAI",
+            "request": {
+              "model": "openai/gpt-6-luna-decisions",
+              "state": "90",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "OpenAI"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 200,
+              "output_tokens": 0,
+              "cost": 2e-05
+            },
+            "billed_cost_usd": 2e-05,
+            "estimated_cost_usd": 1.9999999999999998e-05,
+            "reservation_usd": 0.0001651,
+            "pricing": {
+              "prompt": "0.0000001",
+              "completion": "0",
+              "web_search": "0.01",
+              "input_cache_read": "0",
+              "input_cache_write": "0",
+              "discount": 0
+            },
+            "returned_model": "openai/gpt-6-luna-decisions-20261006",
+            "returned_provider": "OpenAI",
+            "response_id": "gen-dec-1791487241-4zhmwy9Ar2gM1JS4ALTu",
+            "response": {
+              "model": "openai/gpt-6-luna-decisions-20261006",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "A",
+                  "probabilities": {
+                    "A": 0.64,
+                    "B": 0.22,
+                    "C": 0.14
+                  },
+                  "confidence": 0.46
+                }
+              },
+              "usage": {
+                "input_tokens": 200,
+                "output_tokens": 0,
+                "cost": 2e-05
+              },
+              "id": "gen-dec-1791487241-4zhmwy9Ar2gM1JS4ALTu",
+              "provider": "OpenAI"
+            },
+            "error": null,
+            "elapsed_ms": 376.8423529982101
+          },
+          {
+            "attempt": 4,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "openai/gpt-6-luna-decisions",
+            "requested_provider": "OpenAI",
+            "request": {
+              "model": "openai/gpt-6-luna-decisions",
+              "state": "90.1",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "OpenAI"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 202,
+              "output_tokens": 0,
+              "cost": 2.02e-05
+            },
+            "billed_cost_usd": 2.02e-05,
+            "estimated_cost_usd": 2.02e-05,
+            "reservation_usd": 0.00016529999999999998,
+            "pricing": {
+              "prompt": "0.0000001",
+              "completion": "0",
+              "web_search": "0.01",
+              "input_cache_read": "0",
+              "input_cache_write": "0",
+              "discount": 0
+            },
+            "returned_model": "openai/gpt-6-luna-decisions-20261006",
+            "returned_provider": "OpenAI",
+            "response_id": "gen-dec-1791487241-nVvIn2GfkLS36nCwsiXi",
+            "response": {
+              "model": "openai/gpt-6-luna-decisions-20261006",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "A",
+                  "probabilities": {
+                    "A": 0.76,
+                    "B": 0.12,
+                    "C": 0.12
+                  },
+                  "confidence": 0.64
+                }
+              },
+              "usage": {
+                "input_tokens": 202,
+                "output_tokens": 0,
+                "cost": 2.02e-05
+              },
+              "id": "gen-dec-1791487241-nVvIn2GfkLS36nCwsiXi",
+              "provider": "OpenAI"
+            },
+            "error": null,
+            "elapsed_ms": 366.9594739913009
+          },
+          {
+            "attempt": 5,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "openai/gpt-6-luna-decisions",
+            "requested_provider": "OpenAI",
+            "request": {
+              "model": "openai/gpt-6-luna-decisions",
+              "state": "119.9",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "OpenAI"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 202,
+              "output_tokens": 0,
+              "cost": 2.02e-05
+            },
+            "billed_cost_usd": 2.02e-05,
+            "estimated_cost_usd": 2.02e-05,
+            "reservation_usd": 0.00016539999999999998,
+            "pricing": {
+              "prompt": "0.0000001",
+              "completion": "0",
+              "web_search": "0.01",
+              "input_cache_read": "0",
+              "input_cache_write": "0",
+              "discount": 0
+            },
+            "returned_model": "openai/gpt-6-luna-decisions-20261006",
+            "returned_provider": "OpenAI",
+            "response_id": "gen-dec-1791487242-a0ApAS3D45f3pYq1EHsM",
+            "response": {
+              "model": "openai/gpt-6-luna-decisions-20261006",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "B",
+                  "probabilities": {
+                    "A": 0.06,
+                    "B": 0.88,
+                    "C": 0.06
+                  },
+                  "confidence": 0.82
+                }
+              },
+              "usage": {
+                "input_tokens": 202,
+                "output_tokens": 0,
+                "cost": 2.02e-05
+              },
+              "id": "gen-dec-1791487242-a0ApAS3D45f3pYq1EHsM",
+              "provider": "OpenAI"
+            },
+            "error": null,
+            "elapsed_ms": 379.4825229997514
+          },
+          {
+            "attempt": 6,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "openai/gpt-6-luna-decisions",
+            "requested_provider": "OpenAI",
+            "request": {
+              "model": "openai/gpt-6-luna-decisions",
+              "state": "120",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "OpenAI"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 200,
+              "output_tokens": 0,
+              "cost": 2e-05
+            },
+            "billed_cost_usd": 2e-05,
+            "estimated_cost_usd": 1.9999999999999998e-05,
+            "reservation_usd": 0.0001652,
+            "pricing": {
+              "prompt": "0.0000001",
+              "completion": "0",
+              "web_search": "0.01",
+              "input_cache_read": "0",
+              "input_cache_write": "0",
+              "discount": 0
+            },
+            "returned_model": "openai/gpt-6-luna-decisions-20261006",
+            "returned_provider": "OpenAI",
+            "response_id": "gen-dec-1791487242-3es3PFgg9wvEmwFmjebL",
+            "response": {
+              "model": "openai/gpt-6-luna-decisions-20261006",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "A",
+                  "probabilities": {
+                    "A": 0.74,
+                    "B": 0.15,
+                    "C": 0.11
+                  },
+                  "confidence": 0.61
+                }
+              },
+              "usage": {
+                "input_tokens": 200,
+                "output_tokens": 0,
+                "cost": 2e-05
+              },
+              "id": "gen-dec-1791487242-3es3PFgg9wvEmwFmjebL",
+              "provider": "OpenAI"
+            },
+            "error": null,
+            "elapsed_ms": 337.4679219996324
+          },
+          {
+            "attempt": 7,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "openai/gpt-6-luna-decisions",
+            "requested_provider": "OpenAI",
+            "request": {
+              "model": "openai/gpt-6-luna-decisions",
+              "state": "120.1",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "OpenAI"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 202,
+              "output_tokens": 0,
+              "cost": 2.02e-05
+            },
+            "billed_cost_usd": 2.02e-05,
+            "estimated_cost_usd": 2.02e-05,
+            "reservation_usd": 0.00016539999999999998,
+            "pricing": {
+              "prompt": "0.0000001",
+              "completion": "0",
+              "web_search": "0.01",
+              "input_cache_read": "0",
+              "input_cache_write": "0",
+              "discount": 0
+            },
+            "returned_model": "openai/gpt-6-luna-decisions-20261006",
+            "returned_provider": "OpenAI",
+            "response_id": "gen-dec-1791487242-rEC3RWQ3pBWx8dlbmuKk",
+            "response": {
+              "model": "openai/gpt-6-luna-decisions-20261006",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "A",
+                  "probabilities": {
+                    "A": 0.68,
+                    "B": 0.19,
+                    "C": 0.13
+                  },
+                  "confidence": 0.52
+                }
+              },
+              "usage": {
+                "input_tokens": 202,
+                "output_tokens": 0,
+                "cost": 2.02e-05
+              },
+              "id": "gen-dec-1791487242-rEC3RWQ3pBWx8dlbmuKk",
+              "provider": "OpenAI"
+            },
+            "error": null,
+            "elapsed_ms": 363.16934299247805
+          },
+          {
+            "attempt": 8,
+            "operation": {
+              "id": "temperature-rules",
+              "warmup": false
+            },
+            "endpoint": "https://openrouter.ai/api/v1/systemone",
+            "requested_model": "openai/gpt-6-luna-decisions",
+            "requested_provider": "OpenAI",
+            "request": {
+              "model": "openai/gpt-6-luna-decisions",
+              "state": "150",
+              "questions": {
+                "q0": {
+                  "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                  "type": "choice",
+                  "criteria": {
+                    "A": "normal; press no button",
+                    "B": "press the red button",
+                    "C": "press the purple button"
+                  }
+                }
+              },
+              "provider": {
+                "only": [
+                  "OpenAI"
+                ],
+                "allow_fallbacks": false
+              }
+            },
+            "dispatched": true,
+            "completion": "response",
+            "usage": {
+              "input_tokens": 200,
+              "output_tokens": 0,
+              "cost": 2e-05
+            },
+            "billed_cost_usd": 2e-05,
+            "estimated_cost_usd": 1.9999999999999998e-05,
+            "reservation_usd": 0.0001652,
+            "pricing": {
+              "prompt": "0.0000001",
+              "completion": "0",
+              "web_search": "0.01",
+              "input_cache_read": "0",
+              "input_cache_write": "0",
+              "discount": 0
+            },
+            "returned_model": "openai/gpt-6-luna-decisions-20261006",
+            "returned_provider": "OpenAI",
+            "response_id": "gen-dec-1791487243-FDQDClXqSFm2sXLzJzrq",
+            "response": {
+              "model": "openai/gpt-6-luna-decisions-20261006",
+              "answers": {
+                "q0": {
+                  "type": "choice",
+                  "choice": "A",
+                  "probabilities": {
+                    "A": 0.64,
+                    "B": 0.2,
+                    "C": 0.16
+                  },
+                  "confidence": 0.46
+                }
+              },
+              "usage": {
+                "input_tokens": 200,
+                "output_tokens": 0,
+                "cost": 2e-05
+              },
+              "id": "gen-dec-1791487243-FDQDClXqSFm2sXLzJzrq",
+              "provider": "OpenAI"
+            },
+            "error": null,
+            "elapsed_ms": 393.1308969913516
+          }
+        ]
+      },
+      "receipts": [
+        {
+          "attempt": 1,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "openai/gpt-6-luna-decisions",
+          "requested_provider": "OpenAI",
+          "request": {
+            "model": "openai/gpt-6-luna-decisions",
+            "state": "20",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "OpenAI"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 200,
+            "output_tokens": 0,
+            "cost": 2e-05
+          },
+          "billed_cost_usd": 2e-05,
+          "estimated_cost_usd": 1.9999999999999998e-05,
+          "reservation_usd": 0.0001651,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0",
+            "web_search": "0.01",
+            "input_cache_read": "0",
+            "input_cache_write": "0",
+            "discount": 0
+          },
+          "returned_model": "openai/gpt-6-luna-decisions-20261006",
+          "returned_provider": "OpenAI",
+          "response_id": "gen-dec-1791487240-2EbWlhGau5gvE6DfXEC1",
+          "response": {
+            "model": "openai/gpt-6-luna-decisions-20261006",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "A",
+                "probabilities": {
+                  "A": 0.83,
+                  "B": 0.1,
+                  "C": 0.07
+                },
+                "confidence": 0.74
+              }
+            },
+            "usage": {
+              "input_tokens": 200,
+              "output_tokens": 0,
+              "cost": 2e-05
+            },
+            "id": "gen-dec-1791487240-2EbWlhGau5gvE6DfXEC1",
+            "provider": "OpenAI"
+          },
+          "error": null,
+          "elapsed_ms": 470.014671998797
+        },
+        {
+          "attempt": 2,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "openai/gpt-6-luna-decisions",
+          "requested_provider": "OpenAI",
+          "request": {
+            "model": "openai/gpt-6-luna-decisions",
+            "state": "89.9",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "OpenAI"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 202,
+            "output_tokens": 0,
+            "cost": 2.02e-05
+          },
+          "billed_cost_usd": 2.02e-05,
+          "estimated_cost_usd": 2.02e-05,
+          "reservation_usd": 0.00016529999999999998,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0",
+            "web_search": "0.01",
+            "input_cache_read": "0",
+            "input_cache_write": "0",
+            "discount": 0
+          },
+          "returned_model": "openai/gpt-6-luna-decisions-20261006",
+          "returned_provider": "OpenAI",
+          "response_id": "gen-dec-1791487240-aaWWrBXAqimkNH5W4BO0",
+          "response": {
+            "model": "openai/gpt-6-luna-decisions-20261006",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "A",
+                "probabilities": {
+                  "A": 0.93,
+                  "B": 0.05,
+                  "C": 0.02
+                },
+                "confidence": 0.89
+              }
+            },
+            "usage": {
+              "input_tokens": 202,
+              "output_tokens": 0,
+              "cost": 2.02e-05
+            },
+            "id": "gen-dec-1791487240-aaWWrBXAqimkNH5W4BO0",
+            "provider": "OpenAI"
+          },
+          "error": null,
+          "elapsed_ms": 852.754334002384
+        },
+        {
+          "attempt": 3,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "openai/gpt-6-luna-decisions",
+          "requested_provider": "OpenAI",
+          "request": {
+            "model": "openai/gpt-6-luna-decisions",
+            "state": "90",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "OpenAI"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 200,
+            "output_tokens": 0,
+            "cost": 2e-05
+          },
+          "billed_cost_usd": 2e-05,
+          "estimated_cost_usd": 1.9999999999999998e-05,
+          "reservation_usd": 0.0001651,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0",
+            "web_search": "0.01",
+            "input_cache_read": "0",
+            "input_cache_write": "0",
+            "discount": 0
+          },
+          "returned_model": "openai/gpt-6-luna-decisions-20261006",
+          "returned_provider": "OpenAI",
+          "response_id": "gen-dec-1791487241-4zhmwy9Ar2gM1JS4ALTu",
+          "response": {
+            "model": "openai/gpt-6-luna-decisions-20261006",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "A",
+                "probabilities": {
+                  "A": 0.64,
+                  "B": 0.22,
+                  "C": 0.14
+                },
+                "confidence": 0.46
+              }
+            },
+            "usage": {
+              "input_tokens": 200,
+              "output_tokens": 0,
+              "cost": 2e-05
+            },
+            "id": "gen-dec-1791487241-4zhmwy9Ar2gM1JS4ALTu",
+            "provider": "OpenAI"
+          },
+          "error": null,
+          "elapsed_ms": 376.8423529982101
+        },
+        {
+          "attempt": 4,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "openai/gpt-6-luna-decisions",
+          "requested_provider": "OpenAI",
+          "request": {
+            "model": "openai/gpt-6-luna-decisions",
+            "state": "90.1",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "OpenAI"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 202,
+            "output_tokens": 0,
+            "cost": 2.02e-05
+          },
+          "billed_cost_usd": 2.02e-05,
+          "estimated_cost_usd": 2.02e-05,
+          "reservation_usd": 0.00016529999999999998,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0",
+            "web_search": "0.01",
+            "input_cache_read": "0",
+            "input_cache_write": "0",
+            "discount": 0
+          },
+          "returned_model": "openai/gpt-6-luna-decisions-20261006",
+          "returned_provider": "OpenAI",
+          "response_id": "gen-dec-1791487241-nVvIn2GfkLS36nCwsiXi",
+          "response": {
+            "model": "openai/gpt-6-luna-decisions-20261006",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "A",
+                "probabilities": {
+                  "A": 0.76,
+                  "B": 0.12,
+                  "C": 0.12
+                },
+                "confidence": 0.64
+              }
+            },
+            "usage": {
+              "input_tokens": 202,
+              "output_tokens": 0,
+              "cost": 2.02e-05
+            },
+            "id": "gen-dec-1791487241-nVvIn2GfkLS36nCwsiXi",
+            "provider": "OpenAI"
+          },
+          "error": null,
+          "elapsed_ms": 366.9594739913009
+        },
+        {
+          "attempt": 5,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "openai/gpt-6-luna-decisions",
+          "requested_provider": "OpenAI",
+          "request": {
+            "model": "openai/gpt-6-luna-decisions",
+            "state": "119.9",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "OpenAI"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 202,
+            "output_tokens": 0,
+            "cost": 2.02e-05
+          },
+          "billed_cost_usd": 2.02e-05,
+          "estimated_cost_usd": 2.02e-05,
+          "reservation_usd": 0.00016539999999999998,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0",
+            "web_search": "0.01",
+            "input_cache_read": "0",
+            "input_cache_write": "0",
+            "discount": 0
+          },
+          "returned_model": "openai/gpt-6-luna-decisions-20261006",
+          "returned_provider": "OpenAI",
+          "response_id": "gen-dec-1791487242-a0ApAS3D45f3pYq1EHsM",
+          "response": {
+            "model": "openai/gpt-6-luna-decisions-20261006",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "B",
+                "probabilities": {
+                  "A": 0.06,
+                  "B": 0.88,
+                  "C": 0.06
+                },
+                "confidence": 0.82
+              }
+            },
+            "usage": {
+              "input_tokens": 202,
+              "output_tokens": 0,
+              "cost": 2.02e-05
+            },
+            "id": "gen-dec-1791487242-a0ApAS3D45f3pYq1EHsM",
+            "provider": "OpenAI"
+          },
+          "error": null,
+          "elapsed_ms": 379.4825229997514
+        },
+        {
+          "attempt": 6,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "openai/gpt-6-luna-decisions",
+          "requested_provider": "OpenAI",
+          "request": {
+            "model": "openai/gpt-6-luna-decisions",
+            "state": "120",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "OpenAI"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 200,
+            "output_tokens": 0,
+            "cost": 2e-05
+          },
+          "billed_cost_usd": 2e-05,
+          "estimated_cost_usd": 1.9999999999999998e-05,
+          "reservation_usd": 0.0001652,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0",
+            "web_search": "0.01",
+            "input_cache_read": "0",
+            "input_cache_write": "0",
+            "discount": 0
+          },
+          "returned_model": "openai/gpt-6-luna-decisions-20261006",
+          "returned_provider": "OpenAI",
+          "response_id": "gen-dec-1791487242-3es3PFgg9wvEmwFmjebL",
+          "response": {
+            "model": "openai/gpt-6-luna-decisions-20261006",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "A",
+                "probabilities": {
+                  "A": 0.74,
+                  "B": 0.15,
+                  "C": 0.11
+                },
+                "confidence": 0.61
+              }
+            },
+            "usage": {
+              "input_tokens": 200,
+              "output_tokens": 0,
+              "cost": 2e-05
+            },
+            "id": "gen-dec-1791487242-3es3PFgg9wvEmwFmjebL",
+            "provider": "OpenAI"
+          },
+          "error": null,
+          "elapsed_ms": 337.4679219996324
+        },
+        {
+          "attempt": 7,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "openai/gpt-6-luna-decisions",
+          "requested_provider": "OpenAI",
+          "request": {
+            "model": "openai/gpt-6-luna-decisions",
+            "state": "120.1",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "OpenAI"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 202,
+            "output_tokens": 0,
+            "cost": 2.02e-05
+          },
+          "billed_cost_usd": 2.02e-05,
+          "estimated_cost_usd": 2.02e-05,
+          "reservation_usd": 0.00016539999999999998,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0",
+            "web_search": "0.01",
+            "input_cache_read": "0",
+            "input_cache_write": "0",
+            "discount": 0
+          },
+          "returned_model": "openai/gpt-6-luna-decisions-20261006",
+          "returned_provider": "OpenAI",
+          "response_id": "gen-dec-1791487242-rEC3RWQ3pBWx8dlbmuKk",
+          "response": {
+            "model": "openai/gpt-6-luna-decisions-20261006",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "A",
+                "probabilities": {
+                  "A": 0.68,
+                  "B": 0.19,
+                  "C": 0.13
+                },
+                "confidence": 0.52
+              }
+            },
+            "usage": {
+              "input_tokens": 202,
+              "output_tokens": 0,
+              "cost": 2.02e-05
+            },
+            "id": "gen-dec-1791487242-rEC3RWQ3pBWx8dlbmuKk",
+            "provider": "OpenAI"
+          },
+          "error": null,
+          "elapsed_ms": 363.16934299247805
+        },
+        {
+          "attempt": 8,
+          "operation": {
+            "id": "temperature-rules",
+            "warmup": false
+          },
+          "endpoint": "https://openrouter.ai/api/v1/systemone",
+          "requested_model": "openai/gpt-6-luna-decisions",
+          "requested_provider": "OpenAI",
+          "request": {
+            "model": "openai/gpt-6-luna-decisions",
+            "state": "150",
+            "questions": {
+              "q0": {
+                "instructions": "Guidance:\n[guidance]\nUse the measured temperature in degrees Celsius. At or below 90 C: normal, no button. Above 90 C and at or below 120 C: press the red button. Above 120 C: press the purple button. These are the only rules; do not introduce additional safety rules.\n\nCriterion:\nWhich action does the supplied temperature policy require?",
+                "type": "choice",
+                "criteria": {
+                  "A": "normal; press no button",
+                  "B": "press the red button",
+                  "C": "press the purple button"
+                }
+              }
+            },
+            "provider": {
+              "only": [
+                "OpenAI"
+              ],
+              "allow_fallbacks": false
+            }
+          },
+          "dispatched": true,
+          "completion": "response",
+          "usage": {
+            "input_tokens": 200,
+            "output_tokens": 0,
+            "cost": 2e-05
+          },
+          "billed_cost_usd": 2e-05,
+          "estimated_cost_usd": 1.9999999999999998e-05,
+          "reservation_usd": 0.0001652,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0",
+            "web_search": "0.01",
+            "input_cache_read": "0",
+            "input_cache_write": "0",
+            "discount": 0
+          },
+          "returned_model": "openai/gpt-6-luna-decisions-20261006",
+          "returned_provider": "OpenAI",
+          "response_id": "gen-dec-1791487243-FDQDClXqSFm2sXLzJzrq",
+          "response": {
+            "model": "openai/gpt-6-luna-decisions-20261006",
+            "answers": {
+              "q0": {
+                "type": "choice",
+                "choice": "A",
+                "probabilities": {
+                  "A": 0.64,
+                  "B": 0.2,
+                  "C": 0.16
+                },
+                "confidence": 0.46
+              }
+            },
+            "usage": {
+              "input_tokens": 200,
+              "output_tokens": 0,
+              "cost": 2e-05
+            },
+            "id": "gen-dec-1791487243-FDQDClXqSFm2sXLzJzrq",
+            "provider": "OpenAI"
+          },
+          "error": null,
+          "elapsed_ms": 393.1308969913516
+        }
+      ]
+    }
+  }
+}

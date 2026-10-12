@@ -1,0 +1,1 @@
+{"fact": "routing", "input": {"message": "Someone changed my nameservers. Actually, just cancel my domain renewal."}, "prediction": {"key": "security", "kind": "value", "score": 0.8353632319433476, "value": "security"}, "status": "uncertain", "why": "uncertain"}

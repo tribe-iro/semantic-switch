@@ -1,0 +1,314 @@
+{
+  "schema": 2,
+  "boundary": "completed public ask; matched distinct cases; serial comparison",
+  "arms": [
+    {
+      "prefix_slots": 1,
+      "schema": 1,
+      "runtime": {
+        "identity": {
+          "file": "gemma-4-E2B-it-Q4_0.gguf",
+          "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+          "template": "chat@2:0a2c8073",
+          "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+          "lora_sha256": null
+        },
+        "requested_device": "auto",
+        "threads": null,
+        "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+        "loaded": true,
+        "observed_models": [],
+        "accelerated": true,
+        "batch_inputs": 8,
+        "max_slots": 20,
+        "capabilities": {
+          "shared": true,
+          "conformance": true,
+          "counters": {
+            "prefix_hits": 6,
+            "prefix_misses": 31,
+            "state_hits": 0,
+            "state_misses": 37,
+            "state_tokens": 920,
+            "suffix_tokens": 1291,
+            "submissions": 68,
+            "branch_groups": 37,
+            "failures": 0,
+            "prefix_tokens": 11668,
+            "prefix_evictions": 0,
+            "submitted_tokens": 13879
+          }
+        },
+        "requested_capacity": {
+          "n_ctx": 15360,
+          "n_batch": 512,
+          "n_seq_max": 41
+        },
+        "configuration": {
+          "max_input_tokens": 1024,
+          "prefix_slots": 1
+        },
+        "capacity": {
+          "n_ctx": 15360,
+          "n_batch": 512,
+          "n_seq_max": 41
+        }
+      },
+      "case_shape": "distinct ~20-token payment tickets",
+      "guidance_shape": "three bounded ~350-token policies",
+      "target": "alternating median within 1.5 times warm-prefix/new-case baseline; diagnostic, not a gate",
+      "shapes": [
+        {
+          "policies": 1,
+          "median_ms": 72.49073999992106,
+          "samples_ms": [
+            292.52355900098337,
+            83.57562300079735,
+            72.35979899996892,
+            72.65513199672569,
+            72.49073999992106,
+            72.41602500289446
+          ],
+          "native_work": {
+            "prefix_hits": 5,
+            "prefix_misses": 1,
+            "state_hits": 0,
+            "state_misses": 6,
+            "state_tokens": 150,
+            "suffix_tokens": 210,
+            "submissions": 7,
+            "branch_groups": 6,
+            "failures": 0,
+            "prefix_tokens": 388,
+            "prefix_evictions": 0,
+            "submitted_tokens": 748
+          }
+        },
+        {
+          "policies": 2,
+          "median_ms": 269.62940000157687,
+          "samples_ms": [
+            73.14925600076094,
+            273.8055589943542,
+            269.38716800214024,
+            270.0056219982798,
+            269.45522500318475,
+            269.44490999449044,
+            269.803574999969,
+            268.6528769991128,
+            270.0945940014208,
+            271.48399399447953,
+            271.56418599770404,
+            268.1738259998383
+          ],
+          "native_work": {
+            "prefix_hits": 1,
+            "prefix_misses": 11,
+            "state_hits": 0,
+            "state_misses": 12,
+            "state_tokens": 302,
+            "suffix_tokens": 420,
+            "submissions": 23,
+            "branch_groups": 12,
+            "failures": 0,
+            "prefix_tokens": 4262,
+            "prefix_evictions": 0,
+            "submitted_tokens": 4984
+          }
+        },
+        {
+          "policies": 3,
+          "median_ms": 293.10701900249114,
+          "samples_ms": [
+            268.665866999072,
+            267.17366599768866,
+            271.11742299894104,
+            278.7917949972325,
+            307.7138190055848,
+            294.0574300009757,
+            293.95371199643705,
+            293.10701900249114,
+            292.0355030000792,
+            291.7029660020489,
+            291.7474659989239,
+            295.84574699401855,
+            293.64017900661565,
+            292.3257980000926,
+            294.5958950003842,
+            291.78002199478215,
+            290.7838890023413,
+            293.5749600001145
+          ],
+          "native_work": {
+            "prefix_hits": 0,
+            "prefix_misses": 18,
+            "state_hits": 0,
+            "state_misses": 18,
+            "state_tokens": 458,
+            "suffix_tokens": 630,
+            "submissions": 36,
+            "branch_groups": 18,
+            "failures": 0,
+            "prefix_tokens": 6978,
+            "prefix_evictions": 0,
+            "submitted_tokens": 8066
+          }
+        }
+      ]
+    },
+    {
+      "prefix_slots": 4,
+      "schema": 1,
+      "runtime": {
+        "identity": {
+          "file": "gemma-4-E2B-it-Q4_0.gguf",
+          "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+          "template": "chat@2:0a2c8073",
+          "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+          "lora_sha256": null
+        },
+        "requested_device": "auto",
+        "threads": null,
+        "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+        "loaded": true,
+        "observed_models": [],
+        "accelerated": true,
+        "batch_inputs": 8,
+        "max_slots": 20,
+        "capabilities": {
+          "shared": true,
+          "conformance": true,
+          "counters": {
+            "prefix_hits": 33,
+            "prefix_misses": 4,
+            "state_hits": 0,
+            "state_misses": 37,
+            "state_tokens": 920,
+            "suffix_tokens": 1291,
+            "submissions": 41,
+            "branch_groups": 37,
+            "failures": 0,
+            "prefix_tokens": 1203,
+            "prefix_evictions": 0,
+            "submitted_tokens": 3414
+          }
+        },
+        "requested_capacity": {
+          "n_ctx": 15360,
+          "n_batch": 512,
+          "n_seq_max": 44
+        },
+        "configuration": {
+          "max_input_tokens": 1024,
+          "prefix_slots": 4
+        },
+        "capacity": {
+          "n_ctx": 15360,
+          "n_batch": 512,
+          "n_seq_max": 44
+        }
+      },
+      "case_shape": "distinct ~20-token payment tickets",
+      "guidance_shape": "three bounded ~350-token policies",
+      "target": "alternating median within 1.5 times warm-prefix/new-case baseline; diagnostic, not a gate",
+      "shapes": [
+        {
+          "policies": 1,
+          "median_ms": 79.5806989990524,
+          "samples_ms": [
+            444.86594799673185,
+            79.5806989990524,
+            79.57938600156922,
+            80.85570399998687,
+            81.02744200004963,
+            78.7622280040523
+          ],
+          "native_work": {
+            "prefix_hits": 5,
+            "prefix_misses": 1,
+            "state_hits": 0,
+            "state_misses": 6,
+            "state_tokens": 150,
+            "suffix_tokens": 210,
+            "submissions": 7,
+            "branch_groups": 6,
+            "failures": 0,
+            "prefix_tokens": 388,
+            "prefix_evictions": 0,
+            "submitted_tokens": 748
+          }
+        },
+        {
+          "policies": 2,
+          "median_ms": 85.95902749948436,
+          "samples_ms": [
+            80.31036899774335,
+            303.82424599520164,
+            89.25804200407583,
+            85.78229499835288,
+            90.49296600278467,
+            85.14010399812832,
+            89.35572399786906,
+            86.13576000061585,
+            87.7634999997099,
+            85.74628999485867,
+            81.56607200362487,
+            76.09978099935688
+          ],
+          "native_work": {
+            "prefix_hits": 11,
+            "prefix_misses": 1,
+            "state_hits": 0,
+            "state_misses": 12,
+            "state_tokens": 302,
+            "suffix_tokens": 420,
+            "submissions": 13,
+            "branch_groups": 12,
+            "failures": 0,
+            "prefix_tokens": 387,
+            "prefix_evictions": 0,
+            "submitted_tokens": 1109
+          }
+        },
+        {
+          "policies": 3,
+          "median_ms": 88.96780499344459,
+          "samples_ms": [
+            79.06865500262938,
+            75.60818800266134,
+            276.95155500259716,
+            89.49615600431571,
+            88.93314900342375,
+            86.36228900286369,
+            90.08068699768046,
+            90.6877989982604,
+            85.8665550040314,
+            88.96780499344459,
+            92.40162900096038,
+            87.1942880039569,
+            89.99855900037801,
+            90.86973699595546,
+            85.02239899826236,
+            91.94274800393032,
+            88.68903200345812,
+            87.71880999847781
+          ],
+          "native_work": {
+            "prefix_hits": 17,
+            "prefix_misses": 1,
+            "state_hits": 0,
+            "state_misses": 18,
+            "state_tokens": 458,
+            "suffix_tokens": 630,
+            "submissions": 19,
+            "branch_groups": 18,
+            "failures": 0,
+            "prefix_tokens": 388,
+            "prefix_evictions": 0,
+            "submitted_tokens": 1476
+          }
+        }
+      ]
+    }
+  ]
+}

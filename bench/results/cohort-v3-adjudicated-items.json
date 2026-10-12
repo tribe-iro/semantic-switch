@@ -1,0 +1,1322 @@
+{
+ "cohort": {
+  "cohort": "/home/tribeiro/Projects/semantic-select/tests/fixtures/small-context-cohort-v3.json",
+  "source_sha256": "51e372054826264d444c07b0ad3ef8dc164ea0d5659185f379d2928e7da7a519",
+  "assignment_sha256": "4f996dcf6738eba8242e2b5099f9501c1576ef7f77d59b5ad0ae8ae50a2fa3fb",
+  "dataset_id": "5a3ddadf3d58dfff49acc512148ee0304e369a4c1fa90edc060d7143ffcc6d35"
+ },
+ "arms": {
+  "gemma-4-31b@IoNet": {
+   "judge": "openrouter:google/gemma-4-31b-it",
+   "provider": "Io Net",
+   "returned_models": [
+    "google/gemma-4-31b-it@Io Net"
+   ],
+   "rows": [
+    {
+     "case_id": "invoice-01:base:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0,
+      "hold": 0.9999999998506905,
+      "reject": 1.493094660345409e-10,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:base:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0,
+      "hold": 0.9999999285613057,
+      "reject": 3.2612187115056037e-10,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:paraphrase:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0,
+      "hold": 0.9999999516676071,
+      "reject": 1.2116897505719353e-09,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:paraphrase:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0,
+      "hold": 0.9999999546353255,
+      "reject": 4.944451023140002e-09,
+      "clarify": 3.695445203935171e-10
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:boundary:en",
+     "expected": "approve",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9999998939148766,
+      "hold": 0.0,
+      "reject": 3.028843428087855e-08,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:boundary:pt",
+     "expected": "approve",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.999999884253693,
+      "hold": 1.2501531345839328e-09,
+      "reject": 5.658625162085237e-08,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:base:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0,
+      "hold": 0.999999999265073,
+      "reject": 7.349269476585644e-10,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:base:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0,
+      "hold": 0.9999999977362655,
+      "reject": 2.2637345539540757e-09,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:quoted:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0,
+      "hold": 0.9999999998308102,
+      "reject": 1.6918979046191033e-10,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:quoted:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0,
+      "hold": 0.9999999400979678,
+      "reject": 0.0,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:procedure:en",
+     "expected": "approve",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9999998765529519,
+      "hold": 0.0,
+      "reject": 4.691164360102034e-08,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:procedure:pt",
+     "expected": "approve",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9999998650309142,
+      "hold": 0.0,
+      "reject": 1.1142492020968378e-08,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:procedure:en",
+     "expected": "approve",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 2.998961278336092e-09,
+      "hold": 0.9999999678820861,
+      "reject": 1.725783059755044e-08,
+      "clarify": 1.1861121944887216e-08
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-09:procedure:pt",
+     "expected": "approve",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 7.658115586885083e-09,
+      "hold": 0.9999999769058394,
+      "reject": 8.677781830685783e-09,
+      "clarify": 6.758263285060897e-09
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-09:boundary:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0,
+      "hold": 1.0,
+      "reject": 0.0,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:boundary:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0,
+      "hold": 0.9999999997210531,
+      "reject": 2.7894680754540167e-10,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:base:en",
+     "expected": "reset",
+     "top": "reset",
+     "status": "ok",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.9999999476232213,
+      "monitor": 2.0408185237840883e-10,
+      "escalate": 0.0,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:base:pt",
+     "expected": "reset",
+     "top": "reset",
+     "status": "ok",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.9999999971002899,
+      "monitor": 2.3125503633328135e-10,
+      "escalate": 0.0,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:actor:en",
+     "expected": "monitor",
+     "top": "monitor",
+     "status": "ok",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 1.522998020544715e-08,
+      "monitor": 0.9999999837007074,
+      "escalate": 1.0693124450325216e-09,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:actor:pt",
+     "expected": "monitor",
+     "top": "monitor",
+     "status": "ok",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 4.099093572650473e-09,
+      "monitor": 0.9999999956039691,
+      "escalate": 2.969373424634621e-10,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:quoted:en",
+     "expected": "reset",
+     "top": "reset",
+     "status": "ok",
+     "scores": {
+      "isolate": 3.221886764874749e-08,
+      "reset": 0.9992871738125791,
+      "monitor": 2.258714847779439e-06,
+      "escalate": 0.0007096671094209233,
+      "clarify": 1.1970750141914162e-07
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:quoted:pt",
+     "expected": "reset",
+     "top": "reset",
+     "status": "ok",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.9998397292283734,
+      "monitor": 1.4591428445440204e-06,
+      "escalate": 0.0001584357535134901,
+      "clarify": 5.314927422735002e-08
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:contradictory:en",
+     "expected": "escalate",
+     "top": "escalate",
+     "status": "ok",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.0,
+      "monitor": 7.194135070061826e-09,
+      "escalate": 0.9999998939676645,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:contradictory:pt",
+     "expected": "escalate",
+     "top": "escalate",
+     "status": "ok",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.0,
+      "monitor": 3.732267445649674e-09,
+      "escalate": 0.9999999680451136,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    }
+   ]
+  },
+  "jev": {
+   "judge": "openrouter:typesafe/jev-1.13",
+   "provider": null,
+   "returned_models": [
+    "typesafe/jev-1.13-20260917@TypeSafe"
+   ],
+   "rows": [
+    {
+     "case_id": "invoice-01:base:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.29,
+      "hold": 0.7,
+      "reject": 0.0,
+      "clarify": 0.01
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:base:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.32,
+      "hold": 0.67,
+      "reject": 0.0,
+      "clarify": 0.01
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:paraphrase:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.35,
+      "hold": 0.65,
+      "reject": 0.0,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:paraphrase:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.27,
+      "hold": 0.72,
+      "reject": 0.0,
+      "clarify": 0.01
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:boundary:en",
+     "expected": "approve",
+     "top": "approve",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.87,
+      "hold": 0.12,
+      "reject": 0.0,
+      "clarify": 0.01
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:boundary:pt",
+     "expected": "approve",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.96,
+      "hold": 0.03,
+      "reject": 0.0,
+      "clarify": 0.01
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:base:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.22,
+      "hold": 0.77,
+      "reject": 0.0,
+      "clarify": 0.01
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:base:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.36,
+      "hold": 0.63,
+      "reject": 0.0,
+      "clarify": 0.01
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:quoted:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0,
+      "hold": 1.0,
+      "reject": 0.0,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:quoted:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0,
+      "hold": 1.0,
+      "reject": 0.0,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:procedure:en",
+     "expected": "approve",
+     "top": "approve",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.83,
+      "hold": 0.17,
+      "reject": 0.0,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:procedure:pt",
+     "expected": "approve",
+     "top": "approve",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.86,
+      "hold": 0.14,
+      "reject": 0.0,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:procedure:en",
+     "expected": "approve",
+     "top": "approve",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.54,
+      "hold": 0.45,
+      "reject": 0.0,
+      "clarify": 0.01
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:procedure:pt",
+     "expected": "approve",
+     "top": "approve",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.72,
+      "hold": 0.28,
+      "reject": 0.0,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:boundary:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.38,
+      "hold": 0.62,
+      "reject": 0.0,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:boundary:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.46,
+      "hold": 0.54,
+      "reject": 0.0,
+      "clarify": 0.0
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:base:en",
+     "expected": "reset",
+     "top": "reset",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.66,
+      "monitor": 0.14,
+      "escalate": 0.02,
+      "clarify": 0.18
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:base:pt",
+     "expected": "reset",
+     "top": "reset",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.61,
+      "monitor": 0.12,
+      "escalate": 0.03,
+      "clarify": 0.24
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:actor:en",
+     "expected": "monitor",
+     "top": "monitor",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.05,
+      "monitor": 0.89,
+      "escalate": 0.01,
+      "clarify": 0.05
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:actor:pt",
+     "expected": "monitor",
+     "top": "monitor",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.059999999999999984,
+      "monitor": 0.7999999999999998,
+      "escalate": 0.059999999999999984,
+      "clarify": 0.07999999999999999
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:quoted:en",
+     "expected": "reset",
+     "top": "reset",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.81,
+      "monitor": 0.01,
+      "escalate": 0.13,
+      "clarify": 0.05
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:quoted:pt",
+     "expected": "reset",
+     "top": "reset",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.6900000000000001,
+      "monitor": 0.020000000000000004,
+      "escalate": 0.21000000000000002,
+      "clarify": 0.08000000000000002
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:contradictory:en",
+     "expected": "escalate",
+     "top": "escalate",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.11,
+      "monitor": 0.0,
+      "escalate": 0.87,
+      "clarify": 0.02
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:contradictory:pt",
+     "expected": "escalate",
+     "top": "escalate",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.0,
+      "reset": 0.22,
+      "monitor": 0.0,
+      "escalate": 0.76,
+      "clarify": 0.02
+     },
+     "raw_correct": true
+    }
+   ]
+  },
+  "e4b": {
+   "judge": "google/gemma-4-E4B-it-qat-q4_0-gguf:gemma-4-E4B_q4_0-it.gguf",
+   "provider": null,
+   "returned_models": [],
+   "rows": [
+    {
+     "case_id": "invoice-01:base:en",
+     "expected": "hold",
+     "top": "approve",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.6645028119428027,
+      "hold": 0.3345883355053547,
+      "reject": 0.0006362757386589539,
+      "clarify": 0.0002725768131835578
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-01:base:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.4254276133829917,
+      "hold": 0.5714379615831926,
+      "reject": 0.0008852447372021378,
+      "clarify": 0.002249180296613563
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:paraphrase:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.45897988954635005,
+      "hold": 0.5399189517321143,
+      "reject": 0.000430684412119973,
+      "clarify": 0.0006704743094157611
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:paraphrase:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.4746201237637604,
+      "hold": 0.5239635995135113,
+      "reject": 0.0006200779006787664,
+      "clarify": 0.0007961988220495892
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:boundary:en",
+     "expected": "approve",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9700422069590406,
+      "hold": 0.029694555118492123,
+      "reject": 0.00015868650381695382,
+      "clarify": 0.00010455141865026655
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:boundary:pt",
+     "expected": "approve",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9388937054974372,
+      "hold": 0.06000418847978355,
+      "reject": 0.0006746739747034154,
+      "clarify": 0.00042743204807570433
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:base:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.08348167948475789,
+      "hold": 0.9111996012870456,
+      "reject": 0.0010479109410700476,
+      "clarify": 0.004270808287126551
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:base:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.09038342362232243,
+      "hold": 0.8971755988952825,
+      "reject": 0.0011217147342623829,
+      "clarify": 0.011319262748132681
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:quoted:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.007042185111153328,
+      "hold": 0.9884765332864333,
+      "reject": 0.0002999943889536339,
+      "clarify": 0.004181287213459719
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:quoted:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.04748685980990919,
+      "hold": 0.9326859090704092,
+      "reject": 0.0006178098054918366,
+      "clarify": 0.019209421314189838
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:procedure:en",
+     "expected": "approve",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0035439485901273067,
+      "hold": 0.9926129877106727,
+      "reject": 0.00036174999381594156,
+      "clarify": 0.0034813137053839103
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-01:procedure:pt",
+     "expected": "approve",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.005405162258940054,
+      "hold": 0.987615856034704,
+      "reject": 0.0005757956106767197,
+      "clarify": 0.006403186095679213
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-09:procedure:en",
+     "expected": "approve",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0025396282350930617,
+      "hold": 0.9942628404329936,
+      "reject": 0.00034320147938157134,
+      "clarify": 0.00285432985253162
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-09:procedure:pt",
+     "expected": "approve",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0030319995392051255,
+      "hold": 0.9910258918189442,
+      "reject": 0.00036281205429442405,
+      "clarify": 0.005579296587556296
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-09:boundary:en",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.002268680790022861,
+      "hold": 0.9948818873494927,
+      "reject": 0.0003281429085587785,
+      "clarify": 0.002521288951925547
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:boundary:pt",
+     "expected": "hold",
+     "top": "hold",
+     "status": "ok",
+     "scores": {
+      "approve": 0.0021834914459395063,
+      "hold": 0.9925385380248382,
+      "reject": 0.00033175521392962644,
+      "clarify": 0.004946215315292705
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:base:en",
+     "expected": "reset",
+     "top": "reset",
+     "status": "ok",
+     "scores": {
+      "isolate": 5.7484940891106564e-05,
+      "reset": 0.9929045542371392,
+      "monitor": 0.000718278155574725,
+      "escalate": 0.005927926168997211,
+      "clarify": 0.0003917564973977138
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:base:pt",
+     "expected": "reset",
+     "top": "reset",
+     "status": "ok",
+     "scores": {
+      "isolate": 6.83763422668804e-05,
+      "reset": 0.9911581055103187,
+      "monitor": 0.0017155664652996109,
+      "escalate": 0.0047982923584292065,
+      "clarify": 0.002259659323685723
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:actor:en",
+     "expected": "monitor",
+     "top": "monitor",
+     "status": "ok",
+     "scores": {
+      "isolate": 0.0004222559603381014,
+      "reset": 0.01828730299197743,
+      "monitor": 0.9774842980523797,
+      "escalate": 0.0003983346891649095,
+      "clarify": 0.0034078083061398214
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:actor:pt",
+     "expected": "monitor",
+     "top": "monitor",
+     "status": "ok",
+     "scores": {
+      "isolate": 0.0002811333291901374,
+      "reset": 0.05061048226064555,
+      "monitor": 0.9441842944493781,
+      "escalate": 0.0007255348454764149,
+      "clarify": 0.004198555115309704
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:quoted:en",
+     "expected": "reset",
+     "top": "reset",
+     "status": "ok",
+     "scores": {
+      "isolate": 0.00014730662863775761,
+      "reset": 0.9839537854049418,
+      "monitor": 0.0036852446947986664,
+      "escalate": 0.011547188979015233,
+      "clarify": 0.0006664742926067047
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:quoted:pt",
+     "expected": "reset",
+     "top": "reset",
+     "status": "ok",
+     "scores": {
+      "isolate": 0.00028471701187248507,
+      "reset": 0.9672610139894708,
+      "monitor": 0.009304247745940757,
+      "escalate": 0.018174838742885592,
+      "clarify": 0.004975182509830355
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:contradictory:en",
+     "expected": "escalate",
+     "top": "reset",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.001514239856123871,
+      "reset": 0.8617628212810835,
+      "monitor": 0.001724829593237236,
+      "escalate": 0.13228395545698435,
+      "clarify": 0.0027141538125710642
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "security-09:contradictory:pt",
+     "expected": "escalate",
+     "top": "reset",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.0019727913471438425,
+      "reset": 0.8130267758316633,
+      "monitor": 0.005124522775642123,
+      "escalate": 0.17126459916493117,
+      "clarify": 0.00861131088061953
+     },
+     "raw_correct": false
+    }
+   ]
+  },
+  "e2b": {
+   "judge": "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf",
+   "provider": null,
+   "returned_models": [],
+   "rows": [
+    {
+     "case_id": "invoice-01:base:en",
+     "expected": "hold",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.964009079429289,
+      "hold": 0.030175763389604357,
+      "reject": 0.0034022505417692223,
+      "clarify": 0.0024129066393372596
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-01:base:pt",
+     "expected": "hold",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9597673863966992,
+      "hold": 0.030040867469744766,
+      "reject": 0.005178924609841422,
+      "clarify": 0.005012821523714774
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-01:paraphrase:en",
+     "expected": "hold",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9845097131208863,
+      "hold": 0.013560548969666531,
+      "reject": 0.0011814119407752201,
+      "clarify": 0.0007483259686719766
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-01:paraphrase:pt",
+     "expected": "hold",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9789544912573108,
+      "hold": 0.017208879721745486,
+      "reject": 0.002097504517636319,
+      "clarify": 0.0017391245033072898
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-01:boundary:en",
+     "expected": "approve",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9735238382156672,
+      "hold": 0.022427642733043377,
+      "reject": 0.002381355743894655,
+      "clarify": 0.0016671633073947112
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:boundary:pt",
+     "expected": "approve",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.961210568221228,
+      "hold": 0.029020564544719192,
+      "reject": 0.004967201177223839,
+      "clarify": 0.004801666056828831
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:base:en",
+     "expected": "hold",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9765855127593042,
+      "hold": 0.019671149347127288,
+      "reject": 0.0022864186740173664,
+      "clarify": 0.0014569192195510307
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-09:base:pt",
+     "expected": "hold",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9690224220839045,
+      "hold": 0.022721343918556305,
+      "reject": 0.004330774101164875,
+      "clarify": 0.003925459896374243
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-09:quoted:en",
+     "expected": "hold",
+     "top": "approve",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.8253992109566909,
+      "hold": 0.15398699099928226,
+      "reject": 0.008857324646343447,
+      "clarify": 0.011756473397683325
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-09:quoted:pt",
+     "expected": "hold",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9034879661315972,
+      "hold": 0.08080585786447236,
+      "reject": 0.006915843318633503,
+      "clarify": 0.00879033268529685
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-01:procedure:en",
+     "expected": "approve",
+     "top": "approve",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.7686801243934355,
+      "hold": 0.20167287737512946,
+      "reject": 0.011640818350147032,
+      "clarify": 0.018006179881288026
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-01:procedure:pt",
+     "expected": "approve",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9236098371152307,
+      "hold": 0.05236983558211461,
+      "reject": 0.009949027027552087,
+      "clarify": 0.014071300275102465
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:procedure:en",
+     "expected": "approve",
+     "top": "approve",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.8745184229737616,
+      "hold": 0.10155641074341142,
+      "reject": 0.01080593850972655,
+      "clarify": 0.013119227773100298
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:procedure:pt",
+     "expected": "approve",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9033810061234431,
+      "hold": 0.06693293473358781,
+      "reject": 0.011170539490218016,
+      "clarify": 0.018515519652751184
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "invoice-09:boundary:en",
+     "expected": "hold",
+     "top": "approve",
+     "status": "uncertain",
+     "scores": {
+      "approve": 0.8697932039316515,
+      "hold": 0.1075530685150091,
+      "reject": 0.010797501985277416,
+      "clarify": 0.011856225568062042
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "invoice-09:boundary:pt",
+     "expected": "hold",
+     "top": "approve",
+     "status": "ok",
+     "scores": {
+      "approve": 0.9053669594416613,
+      "hold": 0.0670260990745508,
+      "reject": 0.0113759750129343,
+      "clarify": 0.016230966470853418
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "security-09:base:en",
+     "expected": "reset",
+     "top": "reset",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.004320283910588799,
+      "reset": 0.8772390245836085,
+      "monitor": 0.04394752582296122,
+      "escalate": 0.043833088689117075,
+      "clarify": 0.03066007699372461
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:base:pt",
+     "expected": "reset",
+     "top": "monitor",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.015000028226762663,
+      "reset": 0.020432883885702902,
+      "monitor": 0.6912169514777118,
+      "escalate": 0.1272757305364251,
+      "clarify": 0.14607440587339743
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "security-09:actor:en",
+     "expected": "monitor",
+     "top": "monitor",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.009924256065413667,
+      "reset": 0.03260997093816474,
+      "monitor": 0.8908252017025815,
+      "escalate": 0.02239633032858782,
+      "clarify": 0.04424424096525239
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:actor:pt",
+     "expected": "monitor",
+     "top": "monitor",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.014374677012342327,
+      "reset": 0.01966900137851212,
+      "monitor": 0.8552020381358455,
+      "escalate": 0.035157005157728266,
+      "clarify": 0.07559727831557186
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:quoted:en",
+     "expected": "reset",
+     "top": "reset",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.006458624856262306,
+      "reset": 0.7309442215687516,
+      "monitor": 0.17892571644063052,
+      "escalate": 0.04704711078500166,
+      "clarify": 0.0366243263493541
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:quoted:pt",
+     "expected": "reset",
+     "top": "monitor",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.01711111517139417,
+      "reset": 0.04972247741350536,
+      "monitor": 0.7965191070987331,
+      "escalate": 0.06837369188519124,
+      "clarify": 0.06827360843117615
+     },
+     "raw_correct": false
+    },
+    {
+     "case_id": "security-09:contradictory:en",
+     "expected": "escalate",
+     "top": "escalate",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.01021702166647052,
+      "reset": 0.014550038409177426,
+      "monitor": 0.31667743877649823,
+      "escalate": 0.597132233392522,
+      "clarify": 0.06142326775533187
+     },
+     "raw_correct": true
+    },
+    {
+     "case_id": "security-09:contradictory:pt",
+     "expected": "escalate",
+     "top": "monitor",
+     "status": "uncertain",
+     "scores": {
+      "isolate": 0.012743203718818626,
+      "reset": 0.007419149877256696,
+      "monitor": 0.6149669650552513,
+      "escalate": 0.24864197690034998,
+      "clarify": 0.11622870444832348
+     },
+     "raw_correct": false
+    }
+   ]
+  }
+ }
+}

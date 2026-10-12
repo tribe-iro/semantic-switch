@@ -4,14 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "semantic-switch"
-version = "0.21.0"
+version = "0.26.0"
 description = "Language-based judgments inside ordinary code: local, cheap, multilingual."
 requires-python = ">=3.12"
-dependencies = ["numpy", "pyyaml", "pydantic>=2", "typer", "jinja2", "llama-cpp-python>=0.3.30", "huggingface_hub"]
+dependencies = ["numpy", "pyyaml", "pydantic>=2", "typer", "jinja2"]
 
 [project.optional-dependencies]
-train = ["scikit-learn", "scipy"]
-dev = ["pytest", "scikit-learn", "scipy"]
+local = ["llama-cpp-python>=0.3.30", "huggingface_hub"]
+hosted = ["httpx", "anyio>=4.4"]
+dev = ["pytest"]
 
 [project.scripts]
 ss = "semantic_switch.cli:main"

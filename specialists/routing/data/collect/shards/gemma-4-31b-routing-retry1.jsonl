@@ -1,0 +1,2 @@
+{"group": "routing-0218", "input": {"message": "Customer: Someone changed my password; I will mention it.\nCustomer: My main need is to cancel immediately.\nAgent: Processing your request now."}, "pairs": ["routing-0218/p1"], "role": "fit", "tags": ["conversation", "priority", "short"]}
+{"group": "routing-0312", "input": {"message": "Meu aplicativo mostra o erro 404, mas preciso de uma fatura de $50."}, "pairs": ["routing-0312/p1/pt"], "role": "fit", "tags": ["plain", "pt", "short", "translation"]}

@@ -1,0 +1,1 @@
+{"fact": "routing", "input": {"message": "App crashes with Error 503. Brother said he logged in, but I don't think so."}, "prediction": {"key": "technical", "kind": "value", "score": 0.7055710719230623, "value": "technical"}, "status": "uncertain", "why": "uncertain"}

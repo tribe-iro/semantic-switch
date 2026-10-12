@@ -3,7 +3,7 @@ from __future__ import annotations
 import difflib
 
 
-class ConfigError(Exception):
+class ConfigError(ValueError):
     pass
 
 

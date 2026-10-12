@@ -1,0 +1,293 @@
+{
+ "schema": 1,
+ "fingerprint": "720b58b52d1733a358e5e8d3912ea3a82febaba07b5c030fe7acf0adff898ea8",
+ "buckets": [
+  {
+   "cache": "new",
+   "branches": 1,
+   "suffix_tokens": 511,
+   "total_suffix_tokens": 511,
+   "samples_ms": [
+    431.3367040012963,
+    394.36640600615647,
+    384.3941400045878
+   ],
+   "p50_ms": 412.8515550037264,
+   "p95_ms": 427.6396742017823,
+   "held_error_ms": 28.457414999138564,
+   "submissions": [
+    3,
+    3,
+    3
+   ],
+   "failures": 0
+  },
+  {
+   "cache": "new",
+   "branches": 1,
+   "suffix_tokens": 513,
+   "total_suffix_tokens": 513,
+   "samples_ms": [
+    387.12286800000584,
+    385.91972200083546,
+    385.05045700003393
+   ],
+   "p50_ms": 386.52129500042065,
+   "p95_ms": 387.0025534000888,
+   "held_error_ms": 1.4708380003867205,
+   "submissions": [
+    3,
+    3,
+    3
+   ],
+   "failures": 0
+  },
+  {
+   "cache": "new",
+   "branches": 8,
+   "suffix_tokens": 511,
+   "total_suffix_tokens": 4088,
+   "samples_ms": [
+    2330.2607640071074,
+    2323.6951110011432,
+    2319.779887999175
+   ],
+   "p50_ms": 2326.9779375041253,
+   "p95_ms": 2329.604198706511,
+   "held_error_ms": 7.198049504950177,
+   "submissions": [
+    10,
+    10,
+    10
+   ],
+   "failures": 0
+  },
+  {
+   "cache": "new",
+   "branches": 8,
+   "suffix_tokens": 513,
+   "total_suffix_tokens": 4104,
+   "samples_ms": [
+    2311.6136099997675,
+    2325.823842002137,
+    2319.4648049975513
+   ],
+   "p50_ms": 2318.7187260009523,
+   "p95_ms": 2325.1879383016785,
+   "held_error_ms": 0.7460789965989534,
+   "submissions": [
+    10,
+    10,
+    10
+   ],
+   "failures": 0
+  },
+  {
+   "cache": "new",
+   "branches": 32,
+   "suffix_tokens": 511,
+   "total_suffix_tokens": 16352,
+   "samples_ms": [
+    9223.69192000042,
+    9214.278374995047,
+    9216.767802005052
+   ],
+   "p50_ms": 9218.985147497733,
+   "p95_ms": 9222.999508200883,
+   "held_error_ms": 2.2173454926814884,
+   "submissions": [
+    33,
+    33,
+    33
+   ],
+   "failures": 0
+  },
+  {
+   "cache": "new",
+   "branches": 32,
+   "suffix_tokens": 513,
+   "total_suffix_tokens": 16416,
+   "samples_ms": [
+    9337.89486799651,
+    9334.457145996566,
+    9335.44965400506
+   ],
+   "p50_ms": 9336.176006996538,
+   "p95_ms": 9337.650346597366,
+   "held_error_ms": 0.726352991478052,
+   "submissions": [
+    35,
+    35,
+    35
+   ],
+   "failures": 0
+  },
+  {
+   "cache": "cached",
+   "branches": 1,
+   "suffix_tokens": 511,
+   "total_suffix_tokens": 511,
+   "samples_ms": [
+    270.2335399953881,
+    270.0805149943335,
+    270.28716699715005
+   ],
+   "p50_ms": 270.1570274948608,
+   "p95_ms": 270.28180429697386,
+   "held_error_ms": 0.13013950228923932,
+   "submissions": [
+    1,
+    1,
+    1
+   ],
+   "failures": 0
+  },
+  {
+   "cache": "cached",
+   "branches": 1,
+   "suffix_tokens": 513,
+   "total_suffix_tokens": 513,
+   "samples_ms": [
+    310.2594259980833,
+    285.62363699893467,
+    286.0878200008301
+   ],
+   "p50_ms": 297.941531498509,
+   "p95_ms": 307.842265398358,
+   "held_error_ms": 11.853711497678887,
+   "submissions": [
+    2,
+    2,
+    2
+   ],
+   "failures": 0
+  },
+  {
+   "cache": "cached",
+   "branches": 8,
+   "suffix_tokens": 511,
+   "total_suffix_tokens": 4088,
+   "samples_ms": [
+    2218.1459800049197,
+    2218.495127999631,
+    2219.260530997417
+   ],
+   "p50_ms": 2218.3205540022755,
+   "p95_ms": 2219.1839906976384,
+   "held_error_ms": 0.9399769951414783,
+   "submissions": [
+    8,
+    8,
+    8
+   ],
+   "failures": 0
+  },
+  {
+   "cache": "cached",
+   "branches": 8,
+   "suffix_tokens": 513,
+   "total_suffix_tokens": 4104,
+   "samples_ms": [
+    2272.966242999246,
+    2311.1489540024195,
+    2410.3890859987587
+   ],
+   "p50_ms": 2292.0575985008327,
+   "p95_ms": 2400.4650727991248,
+   "held_error_ms": 118.33148749792599,
+   "submissions": [
+    9,
+    9,
+    9
+   ],
+   "failures": 0
+  },
+  {
+   "cache": "cached",
+   "branches": 32,
+   "suffix_tokens": 511,
+   "total_suffix_tokens": 16352,
+   "samples_ms": [
+    9552.638757995737,
+    9581.724518000556,
+    9274.246604996733
+   ],
+   "p50_ms": 9567.181637998146,
+   "p95_ms": 9578.815942000074,
+   "held_error_ms": 292.9350330014131,
+   "submissions": [
+    32,
+    32,
+    32
+   ],
+   "failures": 0
+  },
+  {
+   "cache": "cached",
+   "branches": 32,
+   "suffix_tokens": 513,
+   "total_suffix_tokens": 16416,
+   "samples_ms": [
+    9312.899399999878,
+    9923.614113002259,
+    9605.947857999126
+   ],
+   "p50_ms": 9618.256756501069,
+   "p95_ms": 9891.847487501946,
+   "held_error_ms": 12.308898501942167,
+   "submissions": [
+    34,
+    34,
+    34
+   ],
+   "failures": 0
+  }
+ ],
+ "fit": "measured bucket medians; no out-of-range extrapolation",
+ "provenance": {
+  "schema": 1,
+  "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+  "dirty": true,
+  "working_tree": "e9e6f4a8a2c1e2cf86a19483ffa43a90e620e7380c19f2f212229dcbea5c945e",
+  "dataset": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "execution": {
+   "identity": {
+    "file": "gemma-4-E2B-it-Q4_0.gguf",
+    "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+    "template": "chat@2:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+    "lora_sha256": null
+   },
+   "requested_device": "gpu",
+   "threads": null,
+   "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+   "loaded": true,
+   "accelerated": true,
+   "batch_inputs": 8,
+   "max_slots": 20,
+   "capabilities": {
+    "shared": true,
+    "conformance": true,
+    "counters": {
+     "prefix_hits": 18,
+     "prefix_misses": 36,
+     "state_hits": 18,
+     "state_misses": 36,
+     "state_tokens": 1044,
+     "suffix_tokens": 252570,
+     "submissions": 576,
+     "branch_groups": 66,
+     "failures": 0
+    }
+   },
+   "capacity": {
+    "n_ctx": 15360,
+    "n_batch": 512,
+    "n_seq_max": 41
+   }
+  },
+  "boundary": "explicit backend diagnostic"
+ },
+ "production_installed": false,
+ "measurement_condition": "isolated from this task's tests and other benchmark processes"
+}

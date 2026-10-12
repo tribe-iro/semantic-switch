@@ -1,0 +1,147 @@
+{
+ "schema": 1,
+ "verified_at": "2026-10-08T15:09:42+00:00",
+ "source_sha256": {
+  "bench/outcomes.py": "cd21d9cc21b05b4505853fa7c4a868c8703a94ba74fdaab4f596b643633ec801",
+  "bench/reanalyze_fresh.py": "a83c5d81fd5d8515837103b3fc8dffb0b3c60afb4c2531f939f2d515bfad5141",
+  "bench/policy_workflow.py": "a94b0a86d3dd1d1fff22b50ab78ede9df1c310dfb1e56bc0c054654c27008124",
+  "bench/openrouter.py": "afa86415a779f3f396400be88dc4828c75cf8bd597a06f8e670e963ee51531a8",
+  "bench/policy_audit.py": "4518d9f7f797e89e565033a2b457f894d571b1f52fd38e11071c1cfddb9e3cae",
+  "bench/quality.py": "e576f6ae619105906d113abc91bd4b2147635397e5d6d7ac3a011e5a4f3d8a1b",
+  "bench/fresh.py": "b88a1b0bf03034ead047777d9096d09034717b3c80697f732ca015e8803e0d4a",
+  "bench/model_comparison.py": "bc688abd62e6224a6611190ddf5f4b258e8f0fcf692e9faa5061e2b0a6e47076",
+  "bench/guidance_latency.py": "8fa444df41829302180fc2cb540b0d79a9b95131c7b04f8a88c796f0a8eeeb04",
+  "bench/bounded_context.py": "4927f5ec44497acab875340ae41c3409822ae89d8979a8074d5dbac64cd892f3",
+  "bench/systemone_conformance.py": "dd1da0e3111d353b16c272eee3aaf0eb26d2cfb2e9eb6649fced00995a9c8e0a",
+  "bench/external_audit.py": "d140206a0153fe938b22ad3797ce9197f651e94458a66bddc02240efd874048c",
+  "bench/equipment.py": "0de805fb44cdc8765b18bd712a5a45e0595fd5d1ca2852b86407f491beac33b5",
+  "examples/quickstart.py": "f6076921920412b10d17979ed86bdbf306f68a8c1207bbc719e5456dde67f8e6",
+  "semantic_switch/cli.py": "b80b7b970635e3ff87ee4d96bb2ec8b277cc4b41f0c6a22a11d192fb6d8f6f27",
+  "tests/test_benchmark_contracts.py": "31144e60761dfb5105880a107631def8e376eb6ea269c163865b9984b68d1161"
+ },
+ "tests": {
+  "command": ".venv/bin/python -m pytest -q",
+  "passed": 414,
+  "intentional_drift_warnings": 2,
+  "seconds": 63.07
+ },
+ "cohort_sha256": "3ef5a298a016d5396407918d2b76d00859f391ef18ce32a23a6732b22e24bc28",
+ "native": {
+  "bounded-policy-e2b-v3.json": {
+   "submitted": 13,
+   "correct": 4,
+   "case_agreement": 6,
+   "operational_agreement": 4,
+   "accepted": 4,
+   "wrong_accepted": 0,
+   "wrong_accepted_cases": 0,
+   "coverage": 0.3076923076923077,
+   "accepted_precision": 1.0,
+   "statuses": {
+    "ok": 4,
+    "needs_input": 1,
+    "uncertain": 8,
+    "failed": 0,
+    "none": 0
+   }
+  },
+  "bounded-policy-e4b-v3.json": {
+   "submitted": 13,
+   "correct": 7,
+   "case_agreement": 7,
+   "operational_agreement": 6,
+   "accepted": 6,
+   "wrong_accepted": 0,
+   "wrong_accepted_cases": 1,
+   "coverage": 0.46153846153846156,
+   "accepted_precision": 1.0,
+   "statuses": {
+    "ok": 6,
+    "needs_input": 1,
+    "uncertain": 6,
+    "failed": 0,
+    "none": 0
+   }
+  }
+ },
+ "hosted": {
+  "typesafe/jev-1.13": {
+   "actions": {
+    "submitted": 13,
+    "correct": 11,
+    "case_agreement": 12,
+    "operational_agreement": 11,
+    "accepted": 10,
+    "wrong_accepted": 0,
+    "wrong_accepted_cases": 0,
+    "coverage": 0.7692307692307693,
+    "accepted_precision": 1.0,
+    "statuses": {
+     "ok": 10,
+     "needs_input": 1,
+     "uncertain": 2,
+     "failed": 0,
+     "none": 0
+    }
+   },
+   "billing": {
+    "requests": 56,
+    "billed_cost_usd": 0.001297842,
+    "complete": true
+   }
+  },
+  "openai/gpt-6-luna-decisions": {
+   "actions": {
+    "submitted": 13,
+    "correct": 10,
+    "case_agreement": 10,
+    "operational_agreement": 10,
+    "accepted": 8,
+    "wrong_accepted": 0,
+    "wrong_accepted_cases": 0,
+    "coverage": 0.6153846153846154,
+    "accepted_precision": 1.0,
+    "statuses": {
+     "ok": 8,
+     "needs_input": 2,
+     "uncertain": 3,
+     "failed": 0,
+     "none": 0
+    }
+   },
+   "billing": {
+    "requests": 55,
+    "billed_cost_usd": 0.0021108,
+    "complete": true
+   }
+  }
+ },
+ "artifacts": {
+  "fresh-corrected-gold-v2.json": {
+   "path": "bench/results/fresh-corrected-gold-v2.json",
+   "sha256": "099849312ea6681e13bb7038f9b5f94ce959790a84379bcf865de346b440713f"
+  },
+  "bounded-policy-e2b-v3.json": {
+   "path": "bench/results/bounded-policy-e2b-v3.json",
+   "sha256": "862df4409354ce32288ec99ebdbdf0a6e76089e2354b528934ca55b898602f99"
+  },
+  "bounded-policy-e4b-v3.json": {
+   "path": "bench/results/bounded-policy-e4b-v3.json",
+   "sha256": "dcfd2c41e67d053038755de3968d68a48a23fc258a790021e3311db2d1eeb9ac"
+  },
+  "model-comparison-e2b-v2.json": {
+   "path": "bench/results/model-comparison-e2b-v2.json",
+   "sha256": "7c201ab501659d61ff3fe8ba77a358070491483b057923fa49920ae408da2fb1"
+  },
+  "model-comparison-e4b-v2.json": {
+   "path": "bench/results/model-comparison-e4b-v2.json",
+   "sha256": "4dbf7e1f7d7ab97f91ad370adedd040a831e8965d540a34c140cba108e3c6a52"
+  },
+  "openrouter-policy-v4.json": {
+   "path": "bench/results/openrouter-policy-v4.json",
+   "sha256": "8f151c80d67caa661978ac0a678dd3606ddcf5b1f17cc612dbbffcdac91d779d"
+  }
+ },
+ "evidence": "authored regression contracts and retrospective gold correction; not independent domain accuracy",
+ "pending": "independent domain-owner policy and untouched labelled audit cohort"
+}

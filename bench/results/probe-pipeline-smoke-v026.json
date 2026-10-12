@@ -1,0 +1,380 @@
+{
+ "schema": 1,
+ "dataset_id": "b7b09feccc3ac8fd77c07275b95613ea7ea8bb111787fd72a073bcff6f2e0f33",
+ "training_id": "a141fb95b70bd669ac77aa63031c98b4282d691f40f8358b4b3e5957a3026911",
+ "population": "synthetic pipeline smoke; development execution verification only, no independent quality claim",
+ "representation": "full eligible question answer-position; distinct from focused logit routing",
+ "extraction": {
+  "0": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "1": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "2": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "3": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "4": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "5": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "6": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "7": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "8": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "9": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "10": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "11": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "12": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "13": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "14": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "15": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "16": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "17": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "18": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "19": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "20": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "21": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "22": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "23": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "24": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "25": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "26": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "27": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "28": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "29": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "30": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "31": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "32": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "33": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "34": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "35": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "36": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "37": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "38": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "39": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "40": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "41": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "42": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "43": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "44": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "45": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "46": {
+   "dimension": 1536,
+   "dtype": "float32"
+  },
+  "47": {
+   "dimension": 1536,
+   "dtype": "float32"
+  }
+ },
+ "identity": {
+  "file": "gemma-4-E2B-it-Q4_0.gguf",
+  "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+  "template": "chat@2:0a2c8073",
+  "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+  "lora_sha256": null
+ },
+ "lexical_bundle": "83b4c58e51fc5b171d11901e5c35b178c76a7577cde12d41903e86efe62c28fb",
+ "preprocessing": "standardization fitted within each supplied tune fold; no check fitting",
+ "fitting_ms": 29.278389003593475,
+ "probe_readout_ms_per_row": 0.004795312482504717,
+ "sample_curves": [
+  {
+   "rows": 8,
+   "families": 8,
+   "correct": 27,
+   "check": 27
+  },
+  {
+   "rows": 16,
+   "families": 16,
+   "correct": 27,
+   "check": 27
+  },
+  {
+   "rows": 21,
+   "families": 21,
+   "correct": 27,
+   "check": 27
+  }
+ ],
+ "sample_curves_population": "exploratory reused check families",
+ "development": {
+  "lexical": {
+   "submitted": 21,
+   "accepted": 0,
+   "correct_accepted": 0,
+   "wrong_accepted": 0,
+   "coverage": 0.0,
+   "precision": null,
+   "skipped": 0,
+   "policy": {
+    "true": null,
+    "false": null
+   }
+  },
+  "logit": {
+   "submitted": 21,
+   "accepted": 11,
+   "correct_accepted": 11,
+   "wrong_accepted": 0,
+   "coverage": 0.5238095238095238,
+   "precision": 1.0,
+   "skipped": 0,
+   "policy": {
+    "true": 0.9,
+    "false": 0.9
+   }
+  },
+  "probe": {
+   "submitted": 21,
+   "accepted": 0,
+   "correct_accepted": 0,
+   "wrong_accepted": 0,
+   "coverage": 0.0,
+   "precision": null,
+   "skipped": 0,
+   "policy": {
+    "true": null,
+    "false": null
+   }
+  }
+ },
+ "audit": {
+  "lexical": {
+   "submitted": 27,
+   "accepted": 0,
+   "correct_accepted": 0,
+   "wrong_accepted": 0,
+   "coverage": 0.0,
+   "precision": null,
+   "skipped": 0,
+   "policy": {
+    "true": null,
+    "false": null
+   }
+  },
+  "logit": {
+   "submitted": 27,
+   "accepted": 13,
+   "correct_accepted": 13,
+   "wrong_accepted": 0,
+   "coverage": 0.48148148148148145,
+   "precision": 1.0,
+   "skipped": 0,
+   "policy": {
+    "true": 0.9,
+    "false": 0.9
+   }
+  },
+  "probe": {
+   "submitted": 27,
+   "accepted": 0,
+   "correct_accepted": 0,
+   "wrong_accepted": 0,
+   "coverage": 0.0,
+   "precision": null,
+   "skipped": 0,
+   "policy": {
+    "true": null,
+    "false": null
+   }
+  }
+ },
+ "latency": {
+  "lexical": {
+   "samples": 48,
+   "p50_ms": 0.1324400000157766,
+   "p95_ms": 0.20117739550187252
+  },
+  "logit": {
+   "samples": 48,
+   "p50_ms": 53.28618750354508,
+   "p95_ms": 54.1333339013363
+  },
+  "feature_forward": {
+   "samples": 48,
+   "p50_ms": 58.94509800418746,
+   "p95_ms": 67.91495674660837
+  }
+ },
+ "latency_boundary": "interleaved warmed arms; feature forward includes transfer and diagnostic cache invalidation; probe readout reported separately",
+ "production_promoted": false,
+ "provenance": {
+  "schema": 1,
+  "revision": "bda62d2fe05eecd9a5b4fe8c45947067f40ab523",
+  "dirty": true,
+  "working_tree": "730b0777992ce5ebea86e935de85b1316f1ec69de3d03ff4d33a85bb8c18a427",
+  "dataset": "2c9767b6dbef7972f11d8621cc29fdfe0e03d29a3ba5e9a5135f3502c1dd9ddf",
+  "execution": {
+   "identity": {
+    "file": "gemma-4-E2B-it-Q4_0.gguf",
+    "sha256": "8e30dff3ac4c8434c49a7036fa15564bdbb6044e42bf04550bf1a096ad7e6a52",
+    "template": "chat@2:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+    "lora_sha256": null
+   },
+   "requested_device": "gpu",
+   "threads": null,
+   "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+   "loaded": true,
+   "observed_models": [],
+   "accelerated": true,
+   "batch_inputs": 8,
+   "max_slots": 20,
+   "capabilities": {
+    "shared": true,
+    "conformance": true,
+    "counters": {
+     "prefix_hits": 150,
+     "prefix_misses": 49,
+     "state_hits": 128,
+     "state_misses": 112,
+     "state_tokens": 1828,
+     "suffix_tokens": 7920,
+     "submissions": 248,
+     "branch_groups": 199,
+     "failures": 0
+    }
+   },
+   "capacity": {
+    "n_ctx": 15360,
+    "n_batch": 512,
+    "n_seq_max": 41
+   }
+  },
+  "boundary": "explicit backend diagnostic"
+ },
+ "verification_only": true
+}

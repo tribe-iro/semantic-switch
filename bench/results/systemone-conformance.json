@@ -1,0 +1,866 @@
+{
+  "schema": 1,
+  "model": "Laya-Q8_0",
+  "endpoint": "http://127.0.0.1:18743/v1/systemone",
+  "server_commit": "a4cb4c61fd9d9c2066c7c1747821d3d65b8943bd",
+  "boundary": "completed HTTP client operation; CPU Laya decision head",
+  "scope": [
+    {
+      "policy": "Store credit is a refund.",
+      "shape": "joint",
+      "delta": 0.00784655136968787,
+      "same_decision": true
+    },
+    {
+      "policy": "Store credit is a refund.",
+      "shape": "reordered",
+      "delta": 0.00784655136968787,
+      "same_decision": true
+    },
+    {
+      "policy": "Store credit is a refund.",
+      "shape": "batch",
+      "delta": 0.010088519586750028,
+      "same_decision": true
+    },
+    {
+      "policy": "Store credit is a refund.",
+      "shape": "adversarial_neighbor",
+      "delta": 0.009308649240154704,
+      "same_decision": true
+    },
+    {
+      "policy": "Store credit is not a refund.",
+      "shape": "joint",
+      "delta": 0.003721791840989988,
+      "same_decision": true
+    },
+    {
+      "policy": "Store credit is not a refund.",
+      "shape": "reordered",
+      "delta": 0.004562286773687321,
+      "same_decision": true
+    },
+    {
+      "policy": "Store credit is not a refund.",
+      "shape": "batch",
+      "delta": 0.004562286773687321,
+      "same_decision": true
+    },
+    {
+      "policy": "Store credit is not a refund.",
+      "shape": "adversarial_neighbor",
+      "delta": 0.004562286773687321,
+      "same_decision": true
+    }
+  ],
+  "observations": [
+    {
+      "policy": "Store credit is a refund.",
+      "shape": "alone",
+      "elapsed_ms": 614.319295003952,
+      "results": [
+        {
+          "refund": {
+            "status": "uncertain",
+            "value": null,
+            "p_true": 0.20160024844962382,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "policy": "Store credit is a refund.",
+      "shape": "joint",
+      "elapsed_ms": 1464.0903239996987,
+      "results": [
+        {
+          "refund": {
+            "status": "uncertain",
+            "value": null,
+            "p_true": 0.19375369707993595,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          },
+          "topic": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.8282218256298517,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "scores": {
+              "billing": 0.8282218256298517,
+              "other": 0.17177817437014842
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "billing",
+                "description": "payments and refunds"
+              },
+              {
+                "key": "other",
+                "description": "anything else"
+              }
+            ]
+          },
+          "urgency": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.575544612818107,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "expected": 0.4244553871818931,
+            "scores": {
+              "low": 0.575544612818107,
+              "high": 0.4244553871818931
+            },
+            "mass": null
+          }
+        }
+      ]
+    },
+    {
+      "policy": "Store credit is a refund.",
+      "shape": "reordered",
+      "elapsed_ms": 1472.56935799669,
+      "results": [
+        {
+          "urgency": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.575544612818107,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "expected": 0.4244553871818931,
+            "scores": {
+              "low": 0.575544612818107,
+              "high": 0.4244553871818931
+            },
+            "mass": null
+          },
+          "topic": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.8282218256298517,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "scores": {
+              "billing": 0.8282218256298517,
+              "other": 0.17177817437014842
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "billing",
+                "description": "payments and refunds"
+              },
+              {
+                "key": "other",
+                "description": "anything else"
+              }
+            ]
+          },
+          "refund": {
+            "status": "uncertain",
+            "value": null,
+            "p_true": 0.19375369707993595,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "policy": "Store credit is a refund.",
+      "shape": "batch",
+      "elapsed_ms": 3023.756469003274,
+      "results": [
+        {
+          "refund": {
+            "status": "uncertain",
+            "value": null,
+            "p_true": 0.1915117288628738,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          },
+          "topic": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.8321251687005422,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "scores": {
+              "billing": 0.8321251687005422,
+              "other": 0.16787483129945777
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "billing",
+                "description": "payments and refunds"
+              },
+              {
+                "key": "other",
+                "description": "anything else"
+              }
+            ]
+          },
+          "urgency": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.575544612818107,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "expected": 0.4244553871818931,
+            "scores": {
+              "low": 0.575544612818107,
+              "high": 0.4244553871818931
+            },
+            "mass": null
+          }
+        },
+        {
+          "refund": {
+            "status": "uncertain",
+            "value": null,
+            "p_true": 0.8734491912451857,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          },
+          "topic": {
+            "status": "ok",
+            "value": "billing",
+            "index": "billing",
+            "score": 0.9193467295784616,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "scores": {
+              "billing": 0.9193467295784616,
+              "other": 0.0806532704215384
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "billing",
+                "description": "payments and refunds"
+              },
+              {
+                "key": "other",
+                "description": "anything else"
+              }
+            ]
+          },
+          "urgency": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.6470193648481977,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "expected": 0.6470193648481977,
+            "scores": {
+              "low": 0.3529806351518024,
+              "high": 0.6470193648481977
+            },
+            "mass": null
+          }
+        }
+      ]
+    },
+    {
+      "policy": "Store credit is a refund.",
+      "shape": "adversarial_neighbor",
+      "elapsed_ms": 1114.4070369991823,
+      "results": [
+        {
+          "refund": {
+            "status": "uncertain",
+            "value": null,
+            "p_true": 0.19229159920946912,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          },
+          "attack": {
+            "status": "uncertain",
+            "value": null,
+            "p_true": 0.8019714689265581,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "d3240277ae38b117f948c4eefdbd96f163fca1fb845aef6182ab3d30b82f152b"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "policy": "Store credit is not a refund.",
+      "shape": "alone",
+      "elapsed_ms": 584.6842230021139,
+      "results": [
+        {
+          "refund": {
+            "status": "ok",
+            "value": false,
+            "p_true": 0.07876936107583768,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "policy": "Store credit is not a refund.",
+      "shape": "joint",
+      "elapsed_ms": 1496.1036889944808,
+      "results": [
+        {
+          "refund": {
+            "status": "ok",
+            "value": false,
+            "p_true": 0.07504756923484769,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          },
+          "topic": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.7821646112358376,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "scores": {
+              "billing": 0.7821646112358376,
+              "other": 0.21783538876416242
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "billing",
+                "description": "payments and refunds"
+              },
+              {
+                "key": "other",
+                "description": "anything else"
+              }
+            ]
+          },
+          "urgency": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.6092397973460185,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "expected": 0.39076020265398154,
+            "scores": {
+              "low": 0.6092397973460185,
+              "high": 0.39076020265398154
+            },
+            "mass": null
+          }
+        }
+      ]
+    },
+    {
+      "policy": "Store credit is not a refund.",
+      "shape": "reordered",
+      "elapsed_ms": 1506.5515130045242,
+      "results": [
+        {
+          "urgency": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.6186584093149087,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "expected": 0.3813415906850913,
+            "scores": {
+              "low": 0.6186584093149087,
+              "high": 0.3813415906850913
+            },
+            "mass": null
+          },
+          "topic": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.7877097529114142,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "scores": {
+              "billing": 0.7877097529114142,
+              "other": 0.21229024708858577
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "billing",
+                "description": "payments and refunds"
+              },
+              {
+                "key": "other",
+                "description": "anything else"
+              }
+            ]
+          },
+          "refund": {
+            "status": "ok",
+            "value": false,
+            "p_true": 0.07420707430215036,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "policy": "Store credit is not a refund.",
+      "shape": "batch",
+      "elapsed_ms": 3086.139334998734,
+      "results": [
+        {
+          "refund": {
+            "status": "ok",
+            "value": false,
+            "p_true": 0.07420707430215036,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          },
+          "topic": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.7877097529114142,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "scores": {
+              "billing": 0.7877097529114142,
+              "other": 0.21229024708858577
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "billing",
+                "description": "payments and refunds"
+              },
+              {
+                "key": "other",
+                "description": "anything else"
+              }
+            ]
+          },
+          "urgency": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.6186584093149087,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "expected": 0.3813415906850913,
+            "scores": {
+              "low": 0.6186584093149087,
+              "high": 0.3813415906850913
+            },
+            "mass": null
+          }
+        },
+        {
+          "refund": {
+            "status": "uncertain",
+            "value": null,
+            "p_true": 0.8751669782813702,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          },
+          "topic": {
+            "status": "ok",
+            "value": "billing",
+            "index": "billing",
+            "score": 0.9135738544783305,
+            "error": null,
+            "complete": true,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "scores": {
+              "billing": 0.9135738544783305,
+              "other": 0.0864261455216695
+            },
+            "removed": {
+              "ineligible": [],
+              "not_examined": []
+            },
+            "truncated": [],
+            "mass": null,
+            "focus": "full",
+            "presented_options": [
+              {
+                "key": "billing",
+                "description": "payments and refunds"
+              },
+              {
+                "key": "other",
+                "description": "anything else"
+              }
+            ]
+          },
+          "urgency": {
+            "status": "uncertain",
+            "value": null,
+            "index": null,
+            "score": 0.8029187021953816,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ],
+            "expected": 0.8029187021953816,
+            "scores": {
+              "low": 0.19708129780461842,
+              "high": 0.8029187021953816
+            },
+            "mass": null
+          }
+        }
+      ]
+    },
+    {
+      "policy": "Store credit is not a refund.",
+      "shape": "adversarial_neighbor",
+      "elapsed_ms": 1150.1280320007936,
+      "results": [
+        {
+          "refund": {
+            "status": "ok",
+            "value": false,
+            "p_true": 0.07420707430215036,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          },
+          "attack": {
+            "status": "uncertain",
+            "value": null,
+            "p_true": 0.8123286160821154,
+            "mass": null,
+            "error": null,
+            "guidance": [
+              [
+                "guidance",
+                "95be8e5de699256f9ef84b69992b5402924661b84599200bed1a8fe9c5511fd7"
+              ]
+            ],
+            "observed_models": [
+              "/home/tribeiro/.cache/huggingface/hub/models--ggml-org--Laya-GGUF/snapshots/22265007700297ba9e128297e82540cf28c5d7d4/Laya-Q8_0.gguf"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "guidance_verified": false,
+  "reference_server": {
+    "device": "cpu",
+    "threads": 4,
+    "n_ctx": 2048,
+    "checkpoint": "Laya-Q8_0"
+  },
+  "scope_conclusion": "No status change at the tested 0.90 threshold; score differences do not establish scope independence.",
+  "question_scope": "joint experimental binding; production optional adapter defaults to individual questions"
+}

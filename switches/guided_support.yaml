@@ -1,0 +1,19 @@
+name: guided_support
+guidance:
+  refunds:
+    text: >-
+      A refund returns money to the original payment method. Store credit and
+      replacement products are not refunds. Duplicate charges qualify for refunds.
+fields:
+  message: {type: text, required: true, author: customer}
+  duplicate_charge: {type: bool, required: true}
+reads: [message]
+facts:
+  refund:
+    check: The customer requests a refund under the supplied definition.
+    unstated: true
+cases:
+  - id: refund
+    when: duplicate_charge and refund
+    then: {action: return_money}
+otherwise: {action: support}

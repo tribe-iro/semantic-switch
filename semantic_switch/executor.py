@@ -1,23 +1,23 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from types import MappingProxyType
 
 import numpy as np
+import warnings
+import threading
 
-from .context import ContextError, canonical, project, render, truncated
-from .judge import scored
-from .judgment import accept, escaped, settle
-from .kernel import F, T, U, Card, Sem, atoms_of, evaluate, exact_state, mentioned, relevant, resolve
-from .protocols import Question
-from .results import Fact, SwitchResult, Trace
+from .context import ContextError, canonical, error_status, project, render, truncated
+from .heads import features
+from .judge import checkpoint, distinct, scored
+from .judgment import REASONS as WHY, accept, outcome, predict, reason_text, settle, unpresent
+from .kernel import NEEDS_INPUT, F, T, U, Card, Sem, SelectionState, atoms_of, budgeted, compose, evaluate, exact_state, ranked, relevant, resolve
+from .presentation import Presentation, focused, present
+from .results import thaw, Fact, SwitchResult, Trace
 from .snapshot import Snapshot
 
 SOURCES = ("example", "classifier", "judge")
 COUNTED = ("rule", "example", "classifier", "judge")
-ESCAPE = "another one, not listed above"
-WHY = {"low_answer_mass": "low answer mass", "not_stated": "not stated in the input", "uncertain": "uncertain",
-       "not_examined": "not examined (over max_claims)", "superseded": "may be superseded"}
 
 
 @dataclass(slots=True)
@@ -31,6 +31,11 @@ class FactState:
     unsure_fields: tuple = ()
     focus_done: bool = False
     examined: frozenset | None = None
+    observed_models: tuple = ()
+    requests: tuple = ()
+    scored: tuple | None = None
+    selection: SelectionState | None = None
+    presentations: tuple = ()
 
     @property
     def pending(self) -> frozenset:
@@ -46,23 +51,20 @@ class Call:
     reasons: dict = field(default_factory=dict)
     facts: list = field(default_factory=list)
     texts: dict = field(default_factory=dict)
+    features: dict = field(default_factory=dict)
     tokens: int = 0
     rounds: int = 0
-
-
-def reason_text(reason: tuple) -> str:
-    if reason[0] == "missing_input":
-        return f"missing: {', '.join(reason[1])}"
-    if reason[0] == "model_error":
-        return f"error: {reason[1]}"
-    if reason[0] == "not_stated" and len(reason) > 1 and reason[1]:
-        return f"not stated: {'; '.join(reason[1])}"
-    return WHY.get(reason[0], reason[0])
+    mentions: dict = field(default_factory=dict)
+    work: dict = field(default_factory=lambda: {"classifier": 0, "judge": 0})
+    batch_native_work: dict = field(default_factory=dict)
+    batch_inputs: int = 1
 
 
 class Executor:
     def __init__(self, runtime):
         self.rt = runtime
+        self._drift_lock = threading.Lock()
+        self._drift_warned = set()
 
     def text(self, snap: Snapshot, call: Call, reads: tuple) -> str:
         if reads not in call.texts:
@@ -96,34 +98,37 @@ class Executor:
         self._derive(snap, call)
         return call
 
-    def decide(self, snap: Snapshot, calls: list[Call]):
+    @staticmethod
+    def _batch(calls: list[Call]):
+        work = {}
+        for c in calls:
+            c.batch_native_work, c.batch_inputs = work, len(calls)
+
+    def decide(self, snap: Snapshot, calls: list[Call], sources: tuple = SOURCES, outputs: frozenset | None = None, extra: frozenset = frozenset()):
+        self._batch(calls)
         stages = (True, False) if snap.plan.first and snap.plan.cases else (False,)
-        for c in calls:
-            if c.error is not None:
-                continue
-            asked: set = set()
-            for first_only in stages:
-                while (want := [f for f in self._wanted(snap, c, first_only) if f not in asked]):
-                    asked |= set(want)
-                    c.rounds += 1
-                    self._round(snap, c, want)
-                    if first_only:
-                        break
+        live = [c for c in calls if c.error is None]
+        asked = {id(c): set() for c in live}
+        for first_only in stages:
+            todo = live
+            while todo:
+                checkpoint()
+                work = []
+                for c in todo:
+                    want = [f for f in self._wanted(snap, c, first_only, outputs, extra) if f not in asked[id(c)]]
+                    if want:
+                        asked[id(c)] |= set(want)
+                        c.rounds += 1
+                        work.append((c, want))
+                self._rounds(snap, work, sources, outputs, extra)
+                todo = [] if first_only else [c for c, _ in work]
 
-    def score(self, snap: Snapshot, calls: list[Call], facts: list[int], sources: tuple = SOURCES):
-        for c in calls:
-            if c.error is None:
-                self._round(snap, c, [f for f in facts if not c.facts[f].missing], sources, recheck=False)
-
-    def _claims(self, snap: Snapshot, call: Call, i: int) -> set[int]:
+    def _claims(self, snap: Snapshot, call: Call, f: int, cards) -> set[int]:
         plan = snap.plan
-        sem = plan.atoms[i]
-        fact = plan.facts[sem.fact]
-        cards = [sem.card] if sem.card is not None and not fact.exclusive else range(len(fact.cards))
-        return {plan.atom_fact[j] for k in cards for j in relevant(fact.cards[k].has, call.st)
+        return {plan.atom_fact[j] for k in cards for j in relevant(plan.facts[f].cards[k].has, call.st)
                 if plan.atom_fact[j] >= 0}
 
-    def _needs(self, snap: Snapshot, call: Call, first_only: bool, fresh: bool) -> tuple[set, set]:
+    def _needs(self, snap: Snapshot, call: Call, first_only: bool, fresh: bool, outputs: frozenset | None, extra: frozenset = frozenset()) -> tuple[set, set]:
         plan = snap.plan
         keep = lambda f: not call.facts[f].missing and (not fresh or call.facts[f].source is None)
 
@@ -132,17 +137,22 @@ class Executor:
             for i in atoms:
                 if plan.atom_fact[i] < 0:
                     continue
-                if isinstance(plan.atoms[i], Card):
-                    via.update(self._claims(snap, call, i))
+                atom = plan.atoms[i]
+                if isinstance(atom, Card):
+                    fact = plan.facts[atom.fact]
+                    via.update(self._claims(snap, call, atom.fact, [atom.card] if atom.card is not None and not fact.exclusive else range(len(fact.cards))))
                 else:
                     direct.add(plan.atom_fact[i])
             return {f for f in direct if keep(f)}, {f for f in via if keep(f)}
 
-        if not plan.cases:
-            direct, via = split(i for i, s in enumerate(call.st) if s == U and isinstance(plan.atoms[i], Card))
-            direct |= {f for f, fact in enumerate(plan.facts) if not fact.hidden and not fact.cards and keep(f)}
-            return direct, via - direct
-        direct, via = set(), set()
+        def targeted(targets) -> tuple[set, set]:
+            direct = {f for f in targets if not plan.facts[f].cards and keep(f)}
+            via = {x for f in targets for x in self._claims(snap, call, f, range(len(plan.facts[f].cards)))}
+            return direct, {f for f in via - direct if keep(f)}
+
+        if outputs is not None or not plan.cases:
+            return targeted(outputs if outputs is not None else {f for f, fact in enumerate(plan.facts) if not fact.hidden})
+        direct, via = targeted(extra) if extra and not first_only else (set(), set())
         for case in plan.cases:
             v = evaluate(case.expr, call.st)
             if v == F:
@@ -156,8 +166,8 @@ class Executor:
                 break
         return direct, via - direct
 
-    def _wanted(self, snap: Snapshot, call: Call, first_only: bool) -> list[int]:
-        direct, via = self._needs(snap, call, first_only, fresh=True)
+    def _wanted(self, snap: Snapshot, call: Call, first_only: bool, outputs: frozenset | None, extra: frozenset) -> list[int]:
+        direct, via = self._needs(snap, call, first_only, True, outputs, extra)
         return sorted(direct | via)
 
     def _examined(self, snap: Snapshot, call: Call, f: int) -> frozenset:
@@ -166,44 +176,45 @@ class Executor:
             plan = snap.plan
             fact = plan.facts[f]
             open_ = [k for k, c in enumerate(fact.cards) if evaluate(c.base, call.st) == U]
-            text = self.text(snap, call, fact.reads)
-            named = [k for k in open_ if any(mentioned(text, a) for a in fact.cards[k].aliases)]
-            rest = [k for k in open_ if k not in named]
-            ranked = named + fact.ranking.rank(f"{fact.text} {text}", rest)
-            spent: set = set()
-            examined = set(range(len(fact.cards))) - set(open_)
-            for k in ranked:
-                new = {x for x in fact.cards[k].claims if call.facts[x].source is None} - spent
-                if len(spent) + len(new) <= fact.max_claims:
-                    spent |= new
-                    examined.add(k)
-            state.examined = frozenset(examined)
+            order = open_ if fact.max_claims is None else ranked(self.text(snap, call, fact.reads), fact.text, open_,
+                                                                 [c.aliases for c in fact.cards], fact.ranking, call.mentions)
+            known = {x for c in fact.cards for x in c.claims if call.facts[x].source is not None}
+            state.examined = frozenset(set(range(len(fact.cards))) - set(open_) |
+                                       budgeted(order, [c.claims for c in fact.cards], known, fact.max_claims))
         return state.examined
 
     def _allowed(self, snap: Snapshot, call: Call, f: int, direct: set) -> bool:
         plan = snap.plan
         if f in direct:
             return True
-        return any(f in plan.facts[s].cards[k].claims for s in plan.claim_of.get(f, ())
-                   for k in self._examined(snap, call, s))
+        return any(bool(set(plan.facts[s].claim_cards.get(f, ())) & self._examined(snap, call, s))
+                   for s in plan.claim_of.get(f, ()))
 
     def _unsettled(self, snap: Snapshot, call: Call, f: int) -> bool:
         atoms = snap.plan.fact_atoms[f]
         if atoms:
             return any(call.st[i] == U for i, _ in atoms)
-        return self._own(snap, call, f)[0] is None
+        return self.own(snap, call, f)[0] is None
 
-    def _round(self, snap: Snapshot, call: Call, facts: list[int], sources: tuple = SOURCES, recheck: bool = True):
+    def _rounds(self, snap: Snapshot, work: list, sources: tuple, outputs: frozenset | None, extra: frozenset):
+        pending = [(c, self._prepare(snap, c, facts, sources, outputs, extra)) for c, facts in work]
+        if "judge" in sources:
+            self._judge(snap, pending)
+            for c, _ in pending:
+                self._derive(snap, c)
+
+    def _prepare(self, snap: Snapshot, call: Call, facts: list[int], sources: tuple, outputs: frozenset | None, extra: frozenset) -> list[int]:
         plan = snap.plan
         facts = self._rules(snap, call, facts)
+        facts = [f for f in facts if call.facts[f].source is None]
         if "example" in sources:
             facts = self._overrides(snap, call, facts)
         if "classifier" in sources:
             self._heads(snap, call, [f for f in facts if plan.facts[f].name in snap.heads])
         self._derive(snap, call)
         if "judge" not in sources:
-            return
-        direct, via = self._needs(snap, call, False, fresh=False) if recheck else (set(facts), set())
+            return []
+        direct, via = self._needs(snap, call, False, False, outputs, extra)
         judge = []
         for f in facts:
             if f not in direct | via or not self._allowed(snap, call, f, direct):
@@ -212,8 +223,7 @@ class Executor:
                 self._clear(snap, call, f)
             if call.facts[f].source is None:
                 judge.append(f)
-        self._judge(snap, call, judge)
-        self._derive(snap, call)
+        return judge
 
     def _set(self, snap: Snapshot, call: Call, f: int, dist, source: str, mass=None, error=None):
         plan = snap.plan
@@ -229,19 +239,16 @@ class Executor:
             return
         state.dist = dist
         policy = snap.policy(source, fact)
-        label = fact.text if fact.hidden else f"fact:{fact.name}"
+        label = fact.shown if fact.hidden else f"fact:{fact.name}"
         for i, sem in items:
-            call.st[i], why = settle(dist, sem.truth, policy, mass, fact.judgment.silence, state.pending)
+            call.st[i], why = settle(fact.judgment, dist, sem.truth, policy, mass, state.pending)
             if why is None:
                 call.reasons.pop(i, None)
             else:
                 call.reasons[i] = ("missing_input", state.unsure_fields) if why == "missing_input" else \
                     ("not_stated", (label,)) if why == "not_stated" else (why,)
 
-    def _card_reason(self, snap: Snapshot, call: Call, f: int, k: int) -> tuple:
-        card = snap.plan.facts[f].cards[k]
-        if evaluate(card.base, call.st) == T:
-            return ("superseded",)
+    def _base_reason(self, call: Call, card) -> tuple:
         reasons = [call.reasons.get(i, ("uncertain",)) for i in relevant(card.base, call.st)]
         missing = tuple(sorted({x for r in reasons if r[0] == "missing_input" for x in r[1]}))
         if missing:
@@ -251,30 +258,28 @@ class Executor:
         stated = tuple(f"{card.id}: {x}" for r in reasons if r[0] == "not_stated" for x in r[1])
         if stated:
             return ("not_stated", stated)
-        return next((r for r in reasons if r[0] in ("model_error", "low_answer_mass")), ("uncertain",))
+        return next((r for r in reasons if r[0] in NEEDS_INPUT | {"model_error", "low_answer_mass"}), ("uncertain",))
 
     def _derive(self, snap: Snapshot, call: Call):
         plan = snap.plan
         for f, fact in enumerate(plan.facts):
             if not fact.cards:
                 continue
-            has = [evaluate(c.has, call.st) for c in fact.cards]
-            why = {k: self._card_reason(snap, call, f, k) for k, s in enumerate(has) if s == U}
-            if fact.exclusive and T in has and (has.count(T) > 1 or U in has):
-                for k, s in enumerate(has):
-                    if s == T:
-                        has[k], why[k] = U, ("uncertain",)
-            empty = F if T in has else U if U in has else T
+            bases = [evaluate(card.base, call.st) for card in fact.cards]
+            state = compose([T if c.requires is None else evaluate(c.requires, call.st) for c in fact.cards], bases,
+                            fact.incoming, fact.exclusive, [b == U and self._unjudged(call, c) for c, b in zip(fact.cards, bases)],
+                            [self._base_reason(call, c) if b == U else None for c, b in zip(fact.cards, bases)])
+            first = next((r for r in state.reasons if r is not None), None)
             for i, sem in plan.fact_atoms[f]:
-                call.st[i] = has[sem.card] if sem.card is not None else empty
-                reason = why.get(sem.card) if sem.card is not None else next(iter(why.values()), None)
+                call.st[i] = state.values[sem.card] if sem.card is not None else state.empty
                 if call.st[i] == U:
-                    call.reasons[i] = reason or ("uncertain",)
+                    call.reasons[i] = (state.reasons[sem.card] if sem.card is not None else first) or ("uncertain",)
                 else:
                     call.reasons.pop(i, None)
             sources = {call.facts[x].source for c in fact.cards for x in c.claims}
+            call.facts[f].selection = state
             call.facts[f].source = next((s for s in ("judge", "classifier", "example", "rule")
-                                         if s in sources), None if U in has else "rule")
+                                         if s in sources), None if not state.settled else "rule")
 
     def _clear(self, snap: Snapshot, call: Call, f: int):
         for i, _ in snap.plan.fact_atoms[f]:
@@ -287,10 +292,10 @@ class Executor:
     def _rules(self, snap: Snapshot, call: Call, facts: list[int]) -> list[int]:
         rest = []
         for f in facts:
-            elig = call.facts[f].eligible
-            if elig is not None and all(e == F for e in elig):
-                self._set(snap, call, f, [0.0] * len(elig), "rule")
-                for i, sem in snap.plan.fact_atoms[f]:
+            fact, elig = snap.plan.facts[f], call.facts[f].eligible
+            if elig is not None and all(e == F for e in elig[:len(elig) - fact.allow_none]):
+                self._set(snap, call, f, [0.0] * (len(elig) - fact.allow_none) + [1.0] * fact.allow_none, "rule")
+                for i, sem in () if fact.allow_none else snap.plan.fact_atoms[f]:
                     call.st[i] = sem.truth[-1]
                     call.reasons.pop(i, None)
             else:
@@ -303,7 +308,7 @@ class Executor:
         for f in facts:
             fact = plan.facts[f]
             table = snap.overrides.get(fact.name) if plan.exact_override else None
-            hit = table.get(canonical(call.values, fact.reads)) if table else None
+            hit = table.get(canonical(call.values, fact.context_reads or fact.reads)) if table else None
             idx = None if hit is None else fact.index(hit)
             elig = call.facts[f].eligible
             if idx is None or (elig is not None and elig[idx] == F):
@@ -327,58 +332,71 @@ class Executor:
         plan = snap.plan
         for f in facts:
             fact = plan.facts[f]
-            dist = snap.heads[fact.name].probs(self.text(snap, call, fact.reads))
+            if fact.reads not in call.features:
+                call.features[fact.reads] = features(self.text(snap, call, fact.reads))
+            dist = snap.heads[fact.name].probs_features(call.features[fact.reads])
+            call.work["classifier"] += 1
             self._set(snap, call, f, self._eligible_dist(call, f, dist), "classifier")
 
-    def _questions(self, snap: Snapshot, call: Call, f: int) -> tuple[Question, list]:
-        fact = snap.plan.facts[f]
-        state = call.facts[f]
-        if fact.kind == "check":
-            return fact.judgment.question(), list(range(len(fact.keys)))
-        elig = state.eligible
-        slot_map = [i for i in range(len(fact.keys)) if elig is None or elig[i] != F]
+    def presentation(self, snap: Snapshot, call: Call, f: int) -> Presentation:
+        fact, state, judge = snap.plan.facts[f], call.facts[f], self.rt.judge()
+        shown = [i for i in range(len(fact.keys)) if state.eligible is None or state.eligible[i] != F]
         if fact.focus and not state.focus_done:
-            text = self.text(snap, call, fact.reads)
-            named = [i for i in slot_map if i < len(fact.aliases) and any(mentioned(text, a) for a in fact.aliases[i])]
-            if named and len(named) < len([i for i in slot_map if i < len(fact.aliases)]):
-                focused = named + [i for i in slot_map if i >= len(fact.aliases)]
-                options = tuple(fact.descriptions[i] for i in focused) + (ESCAPE,)
-                return fact.judgment.question(options), focused + [-1]
-        return fact.judgment.question(tuple(fact.descriptions[i] for i in slot_map)), slot_map
+            named = focused(self.text(snap, call, fact.reads), fact.aliases,
+                            [i for i in shown if i < len(fact.aliases)], call.mentions)
+            if named:
+                return present(judge, fact.judgment, named, escape=True, stage="mentions", framing=snap.framing)
+        return present(judge, fact.judgment, shown, stage="fallback" if state.focus_done else "full",
+                       framing=snap.framing)
 
-    def _apply(self, snap: Snapshot, call: Call, f: int, slot_map: list, sc) -> bool:
-        fact = snap.plan.facts[f]
-        if sc.error:
-            self._set(snap, call, f, None, "judge", error=sc.error)
-            return False
-        probs = sc.probs
-        if slot_map and slot_map[-1] == -1:
-            if escaped(probs, snap.policy("judge", fact), sc.mass):
-                call.facts[f].focus_done = True
-                return True
-            slot_map, probs = slot_map[:-1], probs[:-1] / probs[:-1].sum()
-        dist = [0.0] * len(fact.keys)
-        for s, i in enumerate(slot_map):
-            dist[i] = float(probs[s])
-        self._set(snap, call, f, dist, "judge", sc.mass)
-        return False
-
-    def _judge(self, snap: Snapshot, call: Call, pending: list[int]):
+    def _judge(self, snap: Snapshot, pending: list):
         plan = snap.plan
-        groups: dict = {}
-        for f in pending:
-            groups.setdefault(plan.facts[f].reads, []).append(f)
-        if not groups:
+        asks = []
+        for call, fs in pending:
+            groups: dict = {}
+            for f in fs:
+                groups.setdefault(plan.facts[f].reads, []).append(f)
+            asks += [(call, reads, [(f, self.presentation(snap, call, f)) for f in gfs]) for reads, gfs in groups.items()]
+        if not asks:
             return
-        asks = [(reads, [(f, *self._questions(snap, call, f)) for f in fs]) for reads, fs in groups.items()]
-        results = scored(self.rt.judge(), [(self.text(snap, call, reads), [q for _, q, _ in qs]) for reads, qs in asks])
-        retry = []
-        for (_, qs), result in zip(asks, results):
+        results = scored(self.rt.judge(), [(self.text(snap, call, reads), [p.question for _, p in qs])
+                                           for call, reads, qs in asks])
+        with self._drift_lock:
+            models = sorted({model for result in results for model in
+                             (result.model, *(score.model for score in result.scores)) if model is not None})
+            for model in models:
+                if snap.locked and snap.returned_models and model not in snap.returned_models:
+                    pair = (snap.returned_models, model)
+                    if pair not in self._drift_warned:
+                        warnings.warn(f"hosted returned-model drift: lock {snap.returned_models}, response {model!r}", stacklevel=3)
+                        self._drift_warned.add(pair)
+        batch = asks[0][0].batch_native_work
+        for name, value in results[0].native_work:
+            batch[name] = batch.get(name, 0) + value
+        retry: dict = {}
+        for (call, _, qs), result in zip(asks, results):
             call.tokens += result.tokens
-            for (f, _, slot_map), sc in zip(qs, result.scores):
-                if self._apply(snap, call, f, slot_map, sc):
-                    retry.append(f)
-        self._judge(snap, call, retry)
+            for (f, p), sc in zip(qs, result.scores):
+                fact, state = plan.facts[f], call.facts[f]
+                call.work["judge"] += 1
+                state.presentations += (p.record(),)
+                if sc.model is not None:
+                    state.observed_models += (sc.model,)
+                state.requests = distinct((*state.requests, sc.request))
+                if snap.locked and snap.returned_models and sc.model not in snap.returned_models:
+                    self._set(snap, call, f, None, "judge", error="predictor_identity_unverified" if sc.model is None else "predictor_identity_changed")
+                    continue
+                if sc.error:
+                    self._set(snap, call, f, None, "judge", error=sc.error)
+                    continue
+                dist = unpresent(p.slots, sc, len(fact.keys))
+                if dist is None:
+                    state.focus_done = True
+                    retry.setdefault(id(call), (call, []))[1].append(f)
+                else:
+                    state.scored = tuple(sorted(s for s in p.slots if s >= 0))
+                    self._set(snap, call, f, list(dist), "judge", sc.mass)
+        self._judge(snap, list(retry.values()))
 
     def _fact_reason(self, snap: Snapshot, call: Call, f: int) -> tuple:
         plan = snap.plan
@@ -393,19 +411,22 @@ class Executor:
             return _merge(reasons)
         if state.dist is None:
             return ("uncertain",)
-        why = self._own(snap, call, f)[1] or "uncertain"
+        why = self.own(snap, call, f)[1] or "uncertain"
         return ("missing_input", state.unsure_fields) if why == "missing_input" else \
             ("not_stated", (f"fact:{fact.name}",)) if why == "not_stated" else (why,)
 
-    def result(self, snap: Snapshot, call: Call, ms: float) -> SwitchResult:
+    def result(self, snap: Snapshot, call: Call, requested: frozenset = frozenset()) -> SwitchResult:
         plan = snap.plan
         if call.error is not None:
             key = "invalid" if call.error.kind == "invalid_context" else "missing"
-            return SwitchResult("failed", **{key: (call.error.field,)}, errors={call.error.field: str(call.error)})
+            return SwitchResult(error_status(call.error), **{key: (call.error.field,)}, errors={call.error.field: str(call.error)},
+                                facts={plan.facts[f].name: self.public_fact(snap, call, f) for f in sorted(requested)})
         sources = [s.source for f, s in zip(plan.facts, call.facts) if not f.cards]
-        cost = {"rules": len(plan.exact_atoms), **{s: sources.count(s) for s in COUNTED},
-                "rounds": call.rounds, "tokens": call.tokens, "ms": round(ms, 2)}
-        errors = {f.name if not f.hidden else f.text: s.error for f, s in zip(plan.facts, call.facts) if s.error}
+        cost = {"rules": len(plan.exact_atoms), **call.work, "settled_by": {s: sources.count(s) for s in COUNTED},
+                "rounds": call.rounds, "logical_tokens": call.tokens, "batch_native_work": call.batch_native_work,
+                "batch_inputs": call.batch_inputs,
+                "requests": [request.as_dict() for request in distinct(r for s in call.facts for r in s.requests)]}
+        errors = {f.shown: s.error for f, s in zip(plan.facts, call.facts) if s.error}
         trace = Trace(plan, tuple(call.st), MappingProxyType(dict(call.reasons)))
         read = {r for f, s in zip(plan.facts, call.facts) if s.source not in (None, "rule", "example") for r in f.reads}
         cut = truncated(plan.fields, call.values, [n for n in plan.fields if n in read])
@@ -420,12 +441,12 @@ class Executor:
                 return SwitchResult("none" if empty else "ok", facts=facts, **common)
             return _blocked(open_, None, (), facts, common)
         res = resolve(plan.cases, plan.otherwise, call.st, plan.first)
-        facts = self.public_facts(snap, call, {plan.atom_fact[i] for i in res.blocking})
+        facts = self.public_facts(snap, call, {plan.atom_fact[i] for i in res.blocking} | requested)
         if res.status == "accepted":
             answer, case = res.answer, res.case
             if not plan.first and case == "otherwise":
                 answer, case = (answer,), ("otherwise",)
-            return SwitchResult("ok", answer, case, facts=facts, **common)
+            return SwitchResult("ok", tuple(thaw(value) for value in answer) if not plan.first and isinstance(answer, tuple) else thaw(answer), case, facts=facts, **common)
         open_ = {}
         for i in res.blocking:
             f = plan.atom_fact[i]
@@ -434,7 +455,7 @@ class Executor:
             open_[name] = _merge([open_[name], reason]) if name in open_ else reason
         return _blocked(open_, res.blocked_by, res.partial, facts, common)
 
-    def _own(self, snap: Snapshot, call: Call, f: int) -> tuple[int | None, str | None]:
+    def own(self, snap: Snapshot, call: Call, f: int) -> tuple[int | None, str | None]:
         fact = snap.plan.facts[f]
         state = call.facts[f]
         if state.dist is None:
@@ -443,80 +464,82 @@ class Executor:
 
     def public_facts(self, snap: Snapshot, call: Call, blocking: set = frozenset()) -> dict:
         plan = snap.plan
-        out = {}
-        for f, state in enumerate(call.facts):
-            fact = plan.facts[f]
-            if fact.hidden:
-                continue
-            if state.missing and f in blocking:
-                out[fact.name] = Fact(None, None, False, None, f"missing: {', '.join(state.missing)}")
-            elif state.error:
-                out[fact.name] = Fact(None, None, False, state.source, f"error: {state.error}")
-            elif fact.cards:
-                if state.source is not None or f in blocking:
-                    out[fact.name] = self._select_fact(snap, call, f)
-            elif state.dist is not None:
-                top = int(np.argmax(state.dist))
-                own, why = self._own(snap, call, f)
-                if state.source == "rule":
-                    own, why = None, "no eligible option"
-                elif why == "missing_input":
-                    why = f"missing: {', '.join(state.unsure_fields)}"
-                elif why is not None:
-                    why = WHY.get(why, why)
-                scores = MappingProxyType({k: float(p) for k, p in zip(fact.keys, state.dist)})
-                value = None if own is None else fact.value(own)
-                out[fact.name] = Fact(value, float(state.dist[top]), own is not None, state.source, why, scores)
-            elif f in blocking:
-                out[fact.name] = Fact(None, None, False, None, "uncertain")
-        return out
+        return {fact.name: self.public_fact(snap, call, f) for f, (fact, state) in enumerate(zip(plan.facts, call.facts))
+                if not fact.hidden and (f in blocking or state.error or
+                                        (state.source is not None if fact.cards else state.dist is not None))}
+
+    def public_fact(self, snap: Snapshot, call: Call, f: int) -> Fact:
+        if call.error:
+            return Fact(None, None, False, None, str(call.error), status=error_status(call.error))
+        fact, state = snap.plan.facts[f], call.facts[f]
+        if state.missing:
+            out = Fact(None, None, False, None, f"missing: {', '.join(state.missing)}")
+        elif state.error:
+            out = Fact(None, None, False, state.source, f"error: {state.error}", observed_models=state.observed_models, requests=state.requests)
+        elif fact.cards:
+            out = self._select_fact(snap, call, f)
+        elif state.dist is not None:
+            top = int(np.argmax(state.dist))
+            own, why = self.own(snap, call, f)
+            if state.source == "rule":
+                why = "no eligible option"
+            elif why == "missing_input":
+                why = f"missing: {', '.join(state.unsure_fields)}"
+            elif why is not None:
+                why = WHY.get(why, why)
+            none = len(fact.keys) - 1 if fact.allow_none else None
+            shown = state.scored if state.scored is not None else \
+                [k for k in range(len(fact.keys)) if state.eligible is None or state.eligible[k] != F]
+            scores = MappingProxyType({fact.keys[k]: float(state.dist[k]) for k in shown})
+            value = None if own is None or own == none else fact.value(own)
+            out = Fact(value, float(state.dist[top]), own is not None or state.source == "rule", state.source,
+                       why, scores, mass=state.mass, observed_models=state.observed_models, requests=state.requests,
+                       prediction=predict(fact.judgment, state.dist, none))
+        else:
+            out = Fact(None, None, False, None, "uncertain")
+        return replace(out, guidance=fact.judgment.guidance.references, status=self.fact_status(snap, call, f),
+                       presentations=state.presentations)
+
+    def fact_status(self, snap, call, f):
+        if call.error:
+            return "failed"
+        state, fact = call.facts[f], snap.plan.facts[f]
+        if state.error:
+            return "failed"
+        if state.missing:
+            return "needs_input"
+        if fact.cards:
+            return state.selection.status
+        if state.source == "rule":
+            return "none"
+        if state.dist is None:
+            return "uncertain"
+        return outcome(fact.judgment, state.dist, snap.policy(state.source, fact), state.mass, state.pending,
+                       none=len(fact.keys) - 1 if fact.allow_none else None)[0]
 
     @staticmethod
     def _unjudged(call: Call, card) -> bool:
         return any(call.facts[x].source is None and not call.facts[x].missing for x in card.claims)
 
-    def card_states(self, snap: Snapshot, call: Call, f: int) -> dict:
-        fact = snap.plan.facts[f]
-        out = {}
-        for c in fact.cards:
-            base, has = evaluate(c.base, call.st), evaluate(c.has, call.st)
-            req = T if c.requires is None else evaluate(c.requires, call.st)
-            if req == F:
-                out[c.id] = "ineligible"
-            elif base == F:
-                out[c.id] = "rejected"
-            elif base == T:
-                out[c.id] = "applicable" if has == T else "superseded" if has == F else "may_be_superseded"
-            else:
-                out[c.id] = "unexamined" if req == T and self._unjudged(call, c) else "unresolved"
-        return out
-
     def _select_fact(self, snap: Snapshot, call: Call, f: int) -> Fact:
-        plan = snap.plan
-        fact = plan.facts[f]
-        states = self.card_states(snap, call, f)
-        has = {plan.atoms[i].card: call.st[i] for i, sem in plan.fact_atoms[f] if sem.card is not None}
-        has = [has.get(k, evaluate(c.has, call.st)) for k, c in enumerate(fact.cards)]
-        final = tuple(c.id for c, s in zip(fact.cards, has) if s == T)
-        unresolved = {c.id: reason_text(self._card_reason(snap, call, f, k))
-                      for k, (c, s) in enumerate(zip(fact.cards, has)) if s == U}
-        settled = not unresolved
-        superseded = {c.id: next(fact.cards[j].id for j, o in enumerate(fact.cards)
-                                 if k in o.supersedes and evaluate(o.base, call.st) == T)
-                      for k, c in enumerate(fact.cards) if states[c.id] == "superseded"}
-        value = (final[0] if final else None) if fact.exclusive else final
-        if not settled and fact.exclusive:
-            value = None
+        fact, sel = snap.plan.facts[f], call.facts[f].selection
+        ids = [c.id for c in fact.cards]
+        chosen = tuple(ids[k] for k in sel.selected)
+        unresolved = {ids[k]: reason_text(r) for k, r in enumerate(sel.reasons) if r is not None}
+        superseded = {ids[k]: ids[j] for k, j in enumerate(sel.superseding) if j is not None}
+        value = ((chosen[0] if chosen else None) if sel.settled else None) if fact.exclusive else chosen
         skipped = [k for k, v in unresolved.items() if v == WHY["not_examined"]]
         rest = {k: v for k, v in unresolved.items() if k not in skipped}
         why = "; ".join(([f"incomplete search: {', '.join(skipped)} not examined"] if skipped else []) +
                         (["unresolved: " + ", ".join(f"{k} ({v})" for k, v in rest.items())] if rest else [])) or None
-        complete = all(s != "unexamined" for s in states.values())
-        return Fact(value, None, settled, call.facts[f].source, why, MappingProxyType({}),
+        members = {c.id: self.public_fact(snap, call, c.claims[0]) for c in fact.cards
+                   if fact.labels and (call.facts[c.claims[0]].source is not None or call.facts[c.claims[0]].error)}
+        return Fact(value, None, sel.settled, call.facts[f].source, why, MappingProxyType({}),
                     MappingProxyType(unresolved), MappingProxyType(superseded),
-                    tuple({"id": c.id, "source": c.raw.get("source", {}), "payload": c.raw.get("payload")}
-                          for c, s in zip(fact.cards, has) if s == T),
-                    complete, MappingProxyType(states))
+                    () if fact.labels else tuple(MappingProxyType({"id": c.id, "source": c.raw.get("source", {}),
+                                                                   "payload": c.raw.get("payload")})
+                                                 for c in (fact.cards[k] for k in sel.selected)),
+                    sel.complete, MappingProxyType(dict(zip(ids, sel.states))), members=MappingProxyType(members))
 
 
 def _merge(reasons: list[tuple]) -> tuple:
@@ -533,7 +556,7 @@ def _blocked(open_: dict, blocked_by, partial, facts: dict, common: dict) -> Swi
     missing = tuple(sorted({x for r in open_.values() if r[0] in ("missing_input", "not_stated") for x in r[1]}))
     unsure = tuple(sorted(n for n, r in open_.items() if r[0] not in ("missing_input", "not_stated")))
     kw = dict(uncertain=unsure, blocked_by=blocked_by, partial=partial, facts=facts, **common)
-    if missing:
+    if any(r[0] in NEEDS_INPUT for r in open_.values()):
         return SwitchResult("needs_input", missing=missing, **kw)
     if any(r[0] == "model_error" for r in open_.values()):
         return SwitchResult("failed", **kw)

@@ -1,0 +1,430 @@
+{
+ "schema": 1,
+ "population": "frozen authored regression, not independent domain accuracy",
+ "models": {
+  "e2b": {
+   "artifact": "bench/results/semantic-decisions-e2b-v5.json",
+   "sha256": "031408f25cfb7fddb4e4f2d772cb8731184ee56a5d2aa9d9bbec8b9929895c70",
+   "cohort_sha256": "528308ed0980dc66738b9717b320d9ea6f4cffb879e6c07bb1090786d0d94028",
+   "direct": {
+    "submitted": 17,
+    "normalized_action_correct": 3,
+    "accepted": 4,
+    "accepted_correct": 3,
+    "wrong_accepted": 1,
+    "coverage": 0.23529411764705882,
+    "accepted_precision": 0.75,
+    "accepted_clarifications": 0,
+    "statuses": {
+     "ok": 4,
+     "uncertain": 13,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    },
+    "raw_scored": 17,
+    "raw_action_correct": 10
+   },
+   "composed": {
+    "submitted": 17,
+    "normalized_action_correct": 4,
+    "accepted": 4,
+    "accepted_correct": 4,
+    "wrong_accepted": 0,
+    "coverage": 0.23529411764705882,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 1,
+    "statuses": {
+     "ok": 4,
+     "uncertain": 13,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    }
+   },
+   "direct_p50_ms": 264.7143169888295,
+   "composed_p50_ms": 114.90513700118754,
+   "agent_direct": {
+    "submitted": 7,
+    "normalized_action_correct": 1,
+    "accepted": 1,
+    "accepted_correct": 1,
+    "wrong_accepted": 0,
+    "coverage": 0.14285714285714285,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 0,
+    "statuses": {
+     "ok": 1,
+     "uncertain": 6,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    },
+    "raw_scored": 7,
+    "raw_action_correct": 4
+   },
+   "agent_composed": {
+    "submitted": 7,
+    "normalized_action_correct": 2,
+    "accepted": 2,
+    "accepted_correct": 2,
+    "wrong_accepted": 0,
+    "coverage": 0.2857142857142857,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 1,
+    "statuses": {
+     "ok": 2,
+     "uncertain": 5,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    }
+   },
+   "late_criteria": {
+    "submitted": 2,
+    "normalized_action_correct": 2,
+    "accepted": 2,
+    "accepted_correct": 2,
+    "wrong_accepted": 0,
+    "coverage": 1.0,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 0,
+    "statuses": {
+     "ok": 2,
+     "uncertain": 0,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    },
+    "raw_scored": 2,
+    "raw_action_correct": 2
+   },
+   "billing_usd": null,
+   "verification": {
+    "summary_recomputed": true,
+    "contrasts_recomputed": true,
+    "complete_criteria": true,
+    "same_evidence": true,
+    "cli_outcomes_match": true
+   }
+  },
+  "e4b": {
+   "artifact": "bench/results/semantic-decisions-e4b-v5.json",
+   "sha256": "ffb2774a1cfe26fecfcf5e370233aeff3134ac874df2531fdb3739da2010aadd",
+   "cohort_sha256": "528308ed0980dc66738b9717b320d9ea6f4cffb879e6c07bb1090786d0d94028",
+   "direct": {
+    "submitted": 17,
+    "normalized_action_correct": 6,
+    "accepted": 9,
+    "accepted_correct": 6,
+    "wrong_accepted": 3,
+    "coverage": 0.5294117647058824,
+    "accepted_precision": 0.6666666666666666,
+    "accepted_clarifications": 1,
+    "statuses": {
+     "ok": 9,
+     "uncertain": 8,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    },
+    "raw_scored": 17,
+    "raw_action_correct": 10
+   },
+   "composed": {
+    "submitted": 17,
+    "normalized_action_correct": 8,
+    "accepted": 5,
+    "accepted_correct": 5,
+    "wrong_accepted": 0,
+    "coverage": 0.29411764705882354,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 1,
+    "statuses": {
+     "ok": 5,
+     "uncertain": 8,
+     "needs_input": 4,
+     "failed": 0,
+     "none": 0
+    }
+   },
+   "direct_p50_ms": 373.63341300806496,
+   "composed_p50_ms": 163.69253300945275,
+   "agent_direct": {
+    "submitted": 7,
+    "normalized_action_correct": 2,
+    "accepted": 3,
+    "accepted_correct": 2,
+    "wrong_accepted": 1,
+    "coverage": 0.42857142857142855,
+    "accepted_precision": 0.6666666666666666,
+    "accepted_clarifications": 0,
+    "statuses": {
+     "ok": 3,
+     "uncertain": 4,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    },
+    "raw_scored": 7,
+    "raw_action_correct": 2
+   },
+   "agent_composed": {
+    "submitted": 7,
+    "normalized_action_correct": 3,
+    "accepted": 3,
+    "accepted_correct": 3,
+    "wrong_accepted": 0,
+    "coverage": 0.42857142857142855,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 1,
+    "statuses": {
+     "ok": 3,
+     "uncertain": 4,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    }
+   },
+   "late_criteria": {
+    "submitted": 2,
+    "normalized_action_correct": 1,
+    "accepted": 1,
+    "accepted_correct": 1,
+    "wrong_accepted": 0,
+    "coverage": 0.5,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 0,
+    "statuses": {
+     "ok": 1,
+     "uncertain": 1,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    },
+    "raw_scored": 2,
+    "raw_action_correct": 2
+   },
+   "billing_usd": null,
+   "verification": {
+    "summary_recomputed": true,
+    "contrasts_recomputed": true,
+    "complete_criteria": true,
+    "same_evidence": true,
+    "cli_outcomes_match": true
+   }
+  },
+  "jev": {
+   "artifact": "bench/results/semantic-decisions-jev-v5.json",
+   "sha256": "9e1a9a042951a34476c3cf1aaaae2a4b76826a5dda4befc5a052c42f737cacbd",
+   "cohort_sha256": "528308ed0980dc66738b9717b320d9ea6f4cffb879e6c07bb1090786d0d94028",
+   "direct": {
+    "submitted": 17,
+    "normalized_action_correct": 10,
+    "accepted": 11,
+    "accepted_correct": 10,
+    "wrong_accepted": 1,
+    "coverage": 0.6470588235294118,
+    "accepted_precision": 0.9090909090909091,
+    "accepted_clarifications": 1,
+    "statuses": {
+     "ok": 11,
+     "uncertain": 5,
+     "needs_input": 0,
+     "failed": 1,
+     "none": 0
+    },
+    "raw_scored": 16,
+    "raw_action_correct": 15
+   },
+   "composed": {
+    "submitted": 17,
+    "normalized_action_correct": 12,
+    "accepted": 10,
+    "accepted_correct": 10,
+    "wrong_accepted": 0,
+    "coverage": 0.5882352941176471,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 1,
+    "statuses": {
+     "ok": 10,
+     "uncertain": 5,
+     "needs_input": 2,
+     "failed": 0,
+     "none": 0
+    }
+   },
+   "direct_p50_ms": 440.375281003071,
+   "composed_p50_ms": 854.3433129962068,
+   "agent_direct": {
+    "submitted": 7,
+    "normalized_action_correct": 3,
+    "accepted": 3,
+    "accepted_correct": 3,
+    "wrong_accepted": 0,
+    "coverage": 0.42857142857142855,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 0,
+    "statuses": {
+     "ok": 3,
+     "uncertain": 4,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    },
+    "raw_scored": 7,
+    "raw_action_correct": 6
+   },
+   "agent_composed": {
+    "submitted": 7,
+    "normalized_action_correct": 4,
+    "accepted": 4,
+    "accepted_correct": 4,
+    "wrong_accepted": 0,
+    "coverage": 0.5714285714285714,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 1,
+    "statuses": {
+     "ok": 4,
+     "uncertain": 3,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    }
+   },
+   "late_criteria": {
+    "submitted": 2,
+    "normalized_action_correct": 2,
+    "accepted": 2,
+    "accepted_correct": 2,
+    "wrong_accepted": 0,
+    "coverage": 1.0,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 0,
+    "statuses": {
+     "ok": 2,
+     "uncertain": 0,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    },
+    "raw_scored": 2,
+    "raw_action_correct": 2
+   },
+   "billing_usd": 0.00197736,
+   "verification": {
+    "summary_recomputed": true,
+    "contrasts_recomputed": true,
+    "complete_criteria": true,
+    "same_evidence": true,
+    "cli_outcomes_match": false
+   }
+  },
+  "luna": {
+   "artifact": "bench/results/semantic-decisions-luna-v5.json",
+   "sha256": "387eafa8d783fa8ae30cd0953363b9c9dad79d96747f920333582bd06f813b8c",
+   "cohort_sha256": "528308ed0980dc66738b9717b320d9ea6f4cffb879e6c07bb1090786d0d94028",
+   "direct": {
+    "submitted": 17,
+    "normalized_action_correct": 3,
+    "accepted": 3,
+    "accepted_correct": 3,
+    "wrong_accepted": 0,
+    "coverage": 0.17647058823529413,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 2,
+    "statuses": {
+     "ok": 3,
+     "uncertain": 14,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    },
+    "raw_scored": 17,
+    "raw_action_correct": 14
+   },
+   "composed": {
+    "submitted": 17,
+    "normalized_action_correct": 3,
+    "accepted": 3,
+    "accepted_correct": 3,
+    "wrong_accepted": 0,
+    "coverage": 0.17647058823529413,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 1,
+    "statuses": {
+     "ok": 3,
+     "uncertain": 14,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    }
+   },
+   "direct_p50_ms": 391.7767060047481,
+   "composed_p50_ms": 396.0744549985975,
+   "agent_direct": {
+    "submitted": 7,
+    "normalized_action_correct": 1,
+    "accepted": 1,
+    "accepted_correct": 1,
+    "wrong_accepted": 0,
+    "coverage": 0.14285714285714285,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 0,
+    "statuses": {
+     "ok": 1,
+     "uncertain": 6,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    },
+    "raw_scored": 7,
+    "raw_action_correct": 6
+   },
+   "agent_composed": {
+    "submitted": 7,
+    "normalized_action_correct": 2,
+    "accepted": 2,
+    "accepted_correct": 2,
+    "wrong_accepted": 0,
+    "coverage": 0.2857142857142857,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 1,
+    "statuses": {
+     "ok": 2,
+     "uncertain": 5,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    }
+   },
+   "late_criteria": {
+    "submitted": 2,
+    "normalized_action_correct": 2,
+    "accepted": 2,
+    "accepted_correct": 2,
+    "wrong_accepted": 0,
+    "coverage": 1.0,
+    "accepted_precision": 1.0,
+    "accepted_clarifications": 0,
+    "statuses": {
+     "ok": 2,
+     "uncertain": 0,
+     "needs_input": 0,
+     "failed": 0,
+     "none": 0
+    },
+    "raw_scored": 2,
+    "raw_action_correct": 2
+   },
+   "billing_usd": 0.0028121,
+   "verification": {
+    "summary_recomputed": true,
+    "contrasts_recomputed": true,
+    "complete_criteria": true,
+    "same_evidence": true,
+    "cli_outcomes_match": false
+   }
+  }
+ }
+}

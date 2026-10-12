@@ -1,0 +1,697 @@
+{
+ "schema": 1,
+ "date": "2026-10-10",
+ "model": "openai/gpt-6-luna-decisions",
+ "endpoint": "https://openrouter.ai/api/v1/systemone",
+ "protocol": "systemone",
+ "boundary": "public Check/Check(unstated)/Pick/Rate run() through judge_from(openrouter:MODEL) with the model added to the verified structured table in a scratch process; one HTTP exchange per question, recorded without credentials",
+ "verdict": "every exchange HTTP 200; every answer parsed; check returns noul as 0/1, unstated check and pick return choice probabilities, rate returns score probabilities with a legend; all expected values or abstentions",
+ "returned_models": [
+  "openai/gpt-6-luna-decisions-20261006@OpenAI"
+ ],
+ "exchanges_count": 10,
+ "failures": 0,
+ "elapsed_ms": {
+  "min": 376.6335750115104,
+  "median": 417.7699119900353,
+  "max": 1252.2707019816153
+ },
+ "results": {
+  "check": [
+   {
+    "input": "I want my money back for the broken kettle.",
+    "result": {
+     "status": "ok",
+     "value": true,
+     "prediction": {
+      "kind": "value",
+      "key": "true",
+      "value": true,
+      "score": 1.0
+     },
+     "score": null,
+     "scores": {
+      "true": 1.0,
+      "false": 0.0
+     },
+     "error": null,
+     "observed_models": [
+      "openai/gpt-6-luna-decisions-20261006@OpenAI"
+     ]
+    }
+   },
+   {
+    "input": "Can you change my delivery address?",
+    "result": {
+     "status": "ok",
+     "value": false,
+     "prediction": {
+      "kind": "value",
+      "key": "false",
+      "value": false,
+      "score": 1.0
+     },
+     "score": null,
+     "scores": {
+      "true": 0.0,
+      "false": 1.0
+     },
+     "error": null,
+     "observed_models": [
+      "openai/gpt-6-luna-decisions-20261006@OpenAI"
+     ]
+    }
+   }
+  ],
+  "check_unstated": [
+   {
+    "input": "I want my money back for the broken kettle.",
+    "result": {
+     "status": "ok",
+     "value": true,
+     "prediction": {
+      "kind": "value",
+      "key": "true",
+      "value": true,
+      "score": 0.99
+     },
+     "score": null,
+     "scores": {
+      "true": 0.99,
+      "false": 0.01,
+      "unstated": 0.0
+     },
+     "error": null,
+     "observed_models": [
+      "openai/gpt-6-luna-decisions-20261006@OpenAI"
+     ]
+    }
+   },
+   {
+    "input": "Can you change my delivery address?",
+    "result": {
+     "status": "uncertain",
+     "value": null,
+     "prediction": {
+      "kind": "unstated",
+      "key": null,
+      "value": null,
+      "score": 0.75
+     },
+     "score": null,
+     "scores": {
+      "true": 0.03,
+      "false": 0.22,
+      "unstated": 0.75
+     },
+     "error": null,
+     "observed_models": [
+      "openai/gpt-6-luna-decisions-20261006@OpenAI"
+     ]
+    }
+   },
+   {
+    "input": "The order number is 1182.",
+    "result": {
+     "status": "uncertain",
+     "value": null,
+     "prediction": {
+      "kind": "unstated",
+      "key": null,
+      "value": null,
+      "score": 0.89
+     },
+     "score": null,
+     "scores": {
+      "true": 0.05,
+      "false": 0.06,
+      "unstated": 0.89
+     },
+     "error": null,
+     "observed_models": [
+      "openai/gpt-6-luna-decisions-20261006@OpenAI"
+     ]
+    }
+   }
+  ],
+  "pick": [
+   {
+    "input": "I was charged twice this month.",
+    "result": {
+     "status": "ok",
+     "value": "billing",
+     "prediction": {
+      "kind": "value",
+      "key": "billing",
+      "value": "billing",
+      "score": 1.0
+     },
+     "score": 1.0,
+     "scores": {
+      "billing": 1.0,
+      "technical": 0.0,
+      "security": 0.0
+     },
+     "error": null,
+     "observed_models": [
+      "openai/gpt-6-luna-decisions-20261006@OpenAI"
+     ]
+    }
+   },
+   {
+    "input": "The app crashes when I open settings.",
+    "result": {
+     "status": "ok",
+     "value": "technical",
+     "prediction": {
+      "kind": "value",
+      "key": "technical",
+      "value": "technical",
+      "score": 1.0
+     },
+     "score": 1.0,
+     "scores": {
+      "billing": 0.0,
+      "technical": 1.0,
+      "security": 0.0
+     },
+     "error": null,
+     "observed_models": [
+      "openai/gpt-6-luna-decisions-20261006@OpenAI"
+     ]
+    }
+   },
+   {
+    "input": "Someone logged into my account from another country.",
+    "result": {
+     "status": "ok",
+     "value": "security",
+     "prediction": {
+      "kind": "value",
+      "key": "security",
+      "value": "security",
+      "score": 1.0
+     },
+     "score": 1.0,
+     "scores": {
+      "billing": 0.0,
+      "technical": 0.0,
+      "security": 1.0
+     },
+     "error": null,
+     "observed_models": [
+      "openai/gpt-6-luna-decisions-20261006@OpenAI"
+     ]
+    }
+   }
+  ],
+  "rate": [
+   {
+    "input": "Whenever you have time, the font looks small.",
+    "result": {
+     "status": "uncertain",
+     "value": null,
+     "prediction": {
+      "kind": "value",
+      "key": "low",
+      "value": "low",
+      "score": 0.69
+     },
+     "score": 0.69,
+     "scores": {
+      "low": 0.69,
+      "medium": 0.29,
+      "high": 0.02
+     },
+     "error": null,
+     "observed_models": [
+      "openai/gpt-6-luna-decisions-20261006@OpenAI"
+     ]
+    }
+   },
+   {
+    "input": "Our whole production site is down and customers cannot pay.",
+    "result": {
+     "status": "ok",
+     "value": "high",
+     "prediction": {
+      "kind": "value",
+      "key": "high",
+      "value": "high",
+      "score": 1.0
+     },
+     "score": 1.0,
+     "scores": {
+      "low": 0.0,
+      "medium": 0.0,
+      "high": 1.0
+     },
+     "error": null,
+     "observed_models": [
+      "openai/gpt-6-luna-decisions-20261006@OpenAI"
+     ]
+    }
+   }
+  ]
+ },
+ "exchanges": [
+  {
+   "url": "https://openrouter.ai/api/v1/systemone",
+   "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": "Can you change my delivery address?",
+    "questions": {
+     "q0": {
+      "instructions": "The customer asks for a refund.",
+      "type": "noul"
+     }
+    },
+    "provider": {
+     "allow_fallbacks": false
+    }
+   },
+   "status": 200,
+   "response": {
+    "model": "openai/gpt-6-luna-decisions-20261006",
+    "answers": {
+     "q0": {
+      "type": "noul",
+      "noul": 0
+     }
+    },
+    "usage": {
+     "input_tokens": 162,
+     "output_tokens": 0,
+     "cost": 1.62e-05
+    },
+    "id": "gen-dec-1791674343-PUaxfsMiHmQrEpUwJt7B",
+    "provider": "OpenAI"
+   },
+   "elapsed_ms": 478.56446099467576
+  },
+  {
+   "url": "https://openrouter.ai/api/v1/systemone",
+   "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": "I want my money back for the broken kettle.",
+    "questions": {
+     "q0": {
+      "instructions": "The customer asks for a refund.",
+      "type": "noul"
+     }
+    },
+    "provider": {
+     "allow_fallbacks": false
+    }
+   },
+   "status": 200,
+   "response": {
+    "model": "openai/gpt-6-luna-decisions-20261006",
+    "answers": {
+     "q0": {
+      "type": "noul",
+      "noul": 1
+     }
+    },
+    "usage": {
+     "input_tokens": 165,
+     "output_tokens": 0,
+     "cost": 1.65e-05
+    },
+    "id": "gen-dec-1791674343-8romq0kYWpvVcFyLIpJa",
+    "provider": "OpenAI"
+   },
+   "elapsed_ms": 498.1981010059826
+  },
+  {
+   "url": "https://openrouter.ai/api/v1/systemone",
+   "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": "I want my money back for the broken kettle.",
+    "questions": {
+     "q0": {
+      "instructions": "Claim: The customer asks for a refund. What does the input say about this claim?",
+      "type": "choice",
+      "criteria": {
+       "A": "the input states it is true",
+       "B": "the input states it is false",
+       "C": "the input does not say"
+      }
+     }
+    },
+    "provider": {
+     "allow_fallbacks": false
+    }
+   },
+   "status": 200,
+   "response": {
+    "model": "openai/gpt-6-luna-decisions-20261006",
+    "answers": {
+     "q0": {
+      "type": "choice",
+      "choice": "A",
+      "probabilities": {
+       "A": 0.99,
+       "B": 0.01,
+       "C": 0
+      },
+      "confidence": 0.99
+     }
+    },
+    "usage": {
+     "input_tokens": 153,
+     "output_tokens": 0,
+     "cost": 1.53e-05
+    },
+    "id": "gen-dec-1791674344-SZwlDuoHVq1jDtHGc2I5",
+    "provider": "OpenAI"
+   },
+   "elapsed_ms": 388.0540980026126
+  },
+  {
+   "url": "https://openrouter.ai/api/v1/systemone",
+   "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": "The order number is 1182.",
+    "questions": {
+     "q0": {
+      "instructions": "Claim: The customer asks for a refund. What does the input say about this claim?",
+      "type": "choice",
+      "criteria": {
+       "A": "the input states it is true",
+       "B": "the input states it is false",
+       "C": "the input does not say"
+      }
+     }
+    },
+    "provider": {
+     "allow_fallbacks": false
+    }
+   },
+   "status": 200,
+   "response": {
+    "model": "openai/gpt-6-luna-decisions-20261006",
+    "answers": {
+     "q0": {
+      "type": "choice",
+      "choice": "C",
+      "probabilities": {
+       "A": 0.05,
+       "B": 0.06,
+       "C": 0.89
+      },
+      "confidence": 0.83
+     }
+    },
+    "usage": {
+     "input_tokens": 151,
+     "output_tokens": 0,
+     "cost": 1.51e-05
+    },
+    "id": "gen-dec-1791674344-j4uRLTmVG8oO3AusVP43",
+    "provider": "OpenAI"
+   },
+   "elapsed_ms": 414.8866850300692
+  },
+  {
+   "url": "https://openrouter.ai/api/v1/systemone",
+   "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": "Can you change my delivery address?",
+    "questions": {
+     "q0": {
+      "instructions": "Claim: The customer asks for a refund. What does the input say about this claim?",
+      "type": "choice",
+      "criteria": {
+       "A": "the input states it is true",
+       "B": "the input states it is false",
+       "C": "the input does not say"
+      }
+     }
+    },
+    "provider": {
+     "allow_fallbacks": false
+    }
+   },
+   "status": 200,
+   "response": {
+    "model": "openai/gpt-6-luna-decisions-20261006",
+    "answers": {
+     "q0": {
+      "type": "choice",
+      "choice": "C",
+      "probabilities": {
+       "A": 0.03,
+       "B": 0.22,
+       "C": 0.75
+      },
+      "confidence": 0.63
+     }
+    },
+    "usage": {
+     "input_tokens": 150,
+     "output_tokens": 0,
+     "cost": 1.5e-05
+    },
+    "id": "gen-dec-1791674344-BCInTrW4wGRg7gYRidMi",
+    "provider": "OpenAI"
+   },
+   "elapsed_ms": 475.32166994642466
+  },
+  {
+   "url": "https://openrouter.ai/api/v1/systemone",
+   "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": "Someone logged into my account from another country.",
+    "questions": {
+     "q0": {
+      "instructions": "Which team should handle this message?",
+      "type": "choice",
+      "criteria": {
+       "A": "Billing: charges, refunds and invoices",
+       "B": "Technical support: faults and errors",
+       "C": "Account security: unauthorized access"
+      }
+     }
+    },
+    "provider": {
+     "allow_fallbacks": false
+    }
+   },
+   "status": 200,
+   "response": {
+    "model": "openai/gpt-6-luna-decisions-20261006",
+    "answers": {
+     "q0": {
+      "type": "choice",
+      "choice": "C",
+      "probabilities": {
+       "A": 0,
+       "B": 0,
+       "C": 1
+      },
+      "confidence": 1
+     }
+    },
+    "usage": {
+     "input_tokens": 142,
+     "output_tokens": 0,
+     "cost": 1.42e-05
+    },
+    "id": "gen-dec-1791674344-7RYX04ilz6aZ96sGwyPg",
+    "provider": "OpenAI"
+   },
+   "elapsed_ms": 376.6335750115104
+  },
+  {
+   "url": "https://openrouter.ai/api/v1/systemone",
+   "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": "I was charged twice this month.",
+    "questions": {
+     "q0": {
+      "instructions": "Which team should handle this message?",
+      "type": "choice",
+      "criteria": {
+       "A": "Billing: charges, refunds and invoices",
+       "B": "Technical support: faults and errors",
+       "C": "Account security: unauthorized access"
+      }
+     }
+    },
+    "provider": {
+     "allow_fallbacks": false
+    }
+   },
+   "status": 200,
+   "response": {
+    "model": "openai/gpt-6-luna-decisions-20261006",
+    "answers": {
+     "q0": {
+      "type": "choice",
+      "choice": "A",
+      "probabilities": {
+       "A": 1,
+       "B": 0,
+       "C": 0
+      },
+      "confidence": 1
+     }
+    },
+    "usage": {
+     "input_tokens": 140,
+     "output_tokens": 0,
+     "cost": 1.4e-05
+    },
+    "id": "gen-dec-1791674344-GgwEbwfUSTD1k654FN4j",
+    "provider": "OpenAI"
+   },
+   "elapsed_ms": 417.7699119900353
+  },
+  {
+   "url": "https://openrouter.ai/api/v1/systemone",
+   "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": "The app crashes when I open settings.",
+    "questions": {
+     "q0": {
+      "instructions": "Which team should handle this message?",
+      "type": "choice",
+      "criteria": {
+       "A": "Billing: charges, refunds and invoices",
+       "B": "Technical support: faults and errors",
+       "C": "Account security: unauthorized access"
+      }
+     }
+    },
+    "provider": {
+     "allow_fallbacks": false
+    }
+   },
+   "status": 200,
+   "response": {
+    "model": "openai/gpt-6-luna-decisions-20261006",
+    "answers": {
+     "q0": {
+      "type": "choice",
+      "choice": "B",
+      "probabilities": {
+       "A": 0,
+       "B": 1,
+       "C": 0
+      },
+      "confidence": 1
+     }
+    },
+    "usage": {
+     "input_tokens": 141,
+     "output_tokens": 0,
+     "cost": 1.41e-05
+    },
+    "id": "gen-dec-1791674345-WElBDaOU2pTCCwP2mb1r",
+    "provider": "OpenAI"
+   },
+   "elapsed_ms": 1252.2707019816153
+  },
+  {
+   "url": "https://openrouter.ai/api/v1/systemone",
+   "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": "Whenever you have time, the font looks small.",
+    "questions": {
+     "q0": {
+      "instructions": "How urgent is this support request?",
+      "type": "score",
+      "criteria": [
+       "low",
+       "medium",
+       "high"
+      ]
+     }
+    },
+    "provider": {
+     "allow_fallbacks": false
+    }
+   },
+   "status": 200,
+   "response": {
+    "model": "openai/gpt-6-luna-decisions-20261006",
+    "answers": {
+     "q0": {
+      "type": "score",
+      "score": 0.33,
+      "legend": {
+       "0": "low",
+       "1": "medium",
+       "2": "high"
+      },
+      "probabilities": {
+       "0": 0.69,
+       "1": 0.29,
+       "2": 0.02
+      },
+      "confidence": 0.51
+     }
+    },
+    "usage": {
+     "input_tokens": 122,
+     "output_tokens": 0,
+     "cost": 1.22e-05
+    },
+    "id": "gen-dec-1791674345-jWLR8EV9QouorPgtGMWK",
+    "provider": "OpenAI"
+   },
+   "elapsed_ms": 378.93574696499854
+  },
+  {
+   "url": "https://openrouter.ai/api/v1/systemone",
+   "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": "Our whole production site is down and customers cannot pay.",
+    "questions": {
+     "q0": {
+      "instructions": "How urgent is this support request?",
+      "type": "score",
+      "criteria": [
+       "low",
+       "medium",
+       "high"
+      ]
+     }
+    },
+    "provider": {
+     "allow_fallbacks": false
+    }
+   },
+   "status": 200,
+   "response": {
+    "model": "openai/gpt-6-luna-decisions-20261006",
+    "answers": {
+     "q0": {
+      "type": "score",
+      "score": 2,
+      "legend": {
+       "0": "low",
+       "1": "medium",
+       "2": "high"
+      },
+      "probabilities": {
+       "0": 0,
+       "1": 0,
+       "2": 1
+      },
+      "confidence": 1
+     }
+    },
+    "usage": {
+     "input_tokens": 123,
+     "output_tokens": 0,
+     "cost": 1.23e-05
+    },
+    "id": "gen-dec-1791674345-13aKHwplPXD9flsJLtRc",
+    "provider": "OpenAI"
+   },
+   "elapsed_ms": 398.4073579777032
+  }
+ ]
+}

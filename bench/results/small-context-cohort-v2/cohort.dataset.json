@@ -1,0 +1,5999 @@
+{
+ "schema": 4,
+ "key_version": 2,
+ "sources": {
+  "definition": "b5b061adb5c9eb51c204c81624d049a5e269741bbcc246c4273a1cd49d55f3aa",
+  "examples": null,
+  "labels": "a6da9391a635af54d8526e5875dd59f61a90de572b65c53c03d1873e39cf695f"
+ },
+ "families": {
+  "group:small-context:invoice-01": {
+   "split": "check",
+   "fold": 0,
+   "seeds": [
+    [
+     "group",
+     "small-context:invoice-01"
+    ],
+    [
+     "key",
+     "506a94bfb504a9c1608fc87a4fa38d6eda5d53dba6229115598f3cc9e09e5546"
+    ],
+    [
+     "key",
+     "65826ed7225cc3c776ff37a349c631be0b9e19d3ddcf1912bdaa81d98fbc353b"
+    ],
+    [
+     "key",
+     "8592641519d5e62838d252bea0fdf2eb4b44c6cdc5dacd6916926340fb3f4782"
+    ],
+    [
+     "key",
+     "8e4c79de95e354a62ea63e5a6844e9c28d43451b03c7d4a87e9b3a940bce3c1b"
+    ],
+    [
+     "key",
+     "ae89c03909917b76937fafabc535327464de7e4248e804e77abbc3472953fe91"
+    ],
+    [
+     "key",
+     "b952744a2bc7e2f88e8b7a2b05e3ab4a0d6e298f94d5e6724357f4d5bcac4517"
+    ],
+    [
+     "pair",
+     "invoice-01:base"
+    ],
+    [
+     "pair",
+     "invoice-01:boundary"
+    ],
+    [
+     "pair",
+     "invoice-01:paraphrase"
+    ],
+    [
+     "pair",
+     "invoice-01:procedure"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:invoice-01"
+   ]
+  },
+  "group:small-context:invoice-02": {
+   "split": "check",
+   "fold": 4,
+   "seeds": [
+    [
+     "group",
+     "small-context:invoice-02"
+    ],
+    [
+     "key",
+     "1d7dce8a20fc9fa523b171efbe561a2b3c32cb8948cf165c5c0950be11482d56"
+    ],
+    [
+     "key",
+     "44219f2d56b266c314f736d25d73863e20b38f03fbc244b203fb47dc1cbb9f4b"
+    ],
+    [
+     "key",
+     "6c7628c035a4ae13a674ea833bf08827c4df764db64d8ec6cb9f4d1ae781c65e"
+    ],
+    [
+     "key",
+     "a1d9f971e0812ef901035052944629e34692e18141f29ea9b349aaf62c1155d2"
+    ],
+    [
+     "key",
+     "bd1db60d98c1d810045237e68435746138acee14e42b9ec294f75fd699492d47"
+    ],
+    [
+     "key",
+     "d6c20fc0e7d922ba846eb833ac37e692cb4472a2fcce598c785fdcbdf7bc115b"
+    ],
+    [
+     "key",
+     "edfcb960ff085cb1d90ad7e8662521f095cc95aaf868fbf78264753ead3578d6"
+    ],
+    [
+     "key",
+     "fdb538cf5d37438f76d69c01b58d9e436ade10efcefd0111fd3539246d712f02"
+    ],
+    [
+     "pair",
+     "invoice-02:actor"
+    ],
+    [
+     "pair",
+     "invoice-02:base"
+    ],
+    [
+     "pair",
+     "invoice-02:exception"
+    ],
+    [
+     "pair",
+     "invoice-02:quoted"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:invoice-02"
+   ]
+  },
+  "group:small-context:invoice-03": {
+   "split": "check",
+   "fold": 1,
+   "seeds": [
+    [
+     "group",
+     "small-context:invoice-03"
+    ],
+    [
+     "key",
+     "0b60fe4abb5f104fa7c0688eb81dc45ab0bff66e5d7034687ce006f6dc758a82"
+    ],
+    [
+     "key",
+     "34ee3af4d80c55e143c11b07ea3e0804546dc953a0e5bb74e8f21bb720ee644d"
+    ],
+    [
+     "key",
+     "5eec0b1a9e234d4668f8215bc3be12ac089bc6583d3b834d1a082d812ec28d2b"
+    ],
+    [
+     "key",
+     "6c7937dfc6901ecca44a059b0abb81891cb62b8ad17ea4a5b66bfb749aec56d2"
+    ],
+    [
+     "key",
+     "9f1b95870a3110633aef95cd693c98abe95eb8d2797ec089752d5cacb039443f"
+    ],
+    [
+     "key",
+     "c70d2f6bfa1db120cf4ba5248ebbc71bc7a84a592823d5b58ecfb17bac1c0e86"
+    ],
+    [
+     "key",
+     "d36d1d2e10f6a57dad544a3d7071bcaabaac5a564178dd3990dcd9a752158479"
+    ],
+    [
+     "key",
+     "e4553ec9965c567a13f37e401f8e95c96f139e356a6b98bad9350d457054d3bc"
+    ],
+    [
+     "pair",
+     "invoice-03:base"
+    ],
+    [
+     "pair",
+     "invoice-03:contradictory"
+    ],
+    [
+     "pair",
+     "invoice-03:resolution"
+    ],
+    [
+     "pair",
+     "invoice-03:unstated"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:invoice-03"
+   ]
+  },
+  "group:small-context:invoice-04": {
+   "split": "check",
+   "fold": 3,
+   "seeds": [
+    [
+     "group",
+     "small-context:invoice-04"
+    ],
+    [
+     "key",
+     "1e199a1299056d93812da1d776a58773feff61c6646350569e4ff5d3fc9cbd5d"
+    ],
+    [
+     "key",
+     "2a6ea4b9ef0027e9f7cfc254d4cbaa3c850b508b8895fc840a2921d524764392"
+    ],
+    [
+     "key",
+     "403d30ba7261d4a3ce773993930fe146df4ce00a6590492a88a31a7831421775"
+    ],
+    [
+     "key",
+     "65e091e198e54d20b633e3322af8ddb8accbe83e619feb322f777169b325eee9"
+    ],
+    [
+     "key",
+     "7aa43533ca58144646520d9daabc9e35787895dbf14bef87561374f02e42ed42"
+    ],
+    [
+     "key",
+     "8a82fd56afb196ef1ea55d0b88e66e09139c0e5f8658ea4a035a93c3d67dd4d7"
+    ],
+    [
+     "key",
+     "9762f5f9cfc251f581d86cd4ebe1cbe1e8ff7613939768495d24dc7859a153b0"
+    ],
+    [
+     "key",
+     "a3360caaab257c9b9ee2b405910e0864c7d2c130dff2911fae9eb25c6b0d6dcd"
+    ],
+    [
+     "pair",
+     "invoice-04:base"
+    ],
+    [
+     "pair",
+     "invoice-04:reference"
+    ],
+    [
+     "pair",
+     "invoice-04:reference_instruction"
+    ],
+    [
+     "pair",
+     "invoice-04:unstated"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:invoice-04"
+   ]
+  },
+  "group:small-context:invoice-05": {
+   "split": "check",
+   "fold": 1,
+   "seeds": [
+    [
+     "group",
+     "small-context:invoice-05"
+    ],
+    [
+     "key",
+     "4582b6ed2ab517f12f2666df35996415ca89eec389fec66a0a47f7b0346389d9"
+    ],
+    [
+     "key",
+     "5ced240d851fce6bd9f7b20f120cd2aa417e991c7f280e8f325cf6e2031bb459"
+    ],
+    [
+     "key",
+     "7cf8ecb866baf1f8038c1abbaf35a3f43e7d0ff61235a144b439944ddb863707"
+    ],
+    [
+     "key",
+     "8ea795795d12dc6d1b562f6ce56760d66eccfd1b06a1cde3d3996e2d56a9e711"
+    ],
+    [
+     "key",
+     "9f00188659cb7c372edacaeba686095100095e6b7b639bcb0d01529b180d2814"
+    ],
+    [
+     "key",
+     "c152b9bf71c3652aa820b84125555a6e4f6b6f38d649bca7e8aa1f618c951184"
+    ],
+    [
+     "key",
+     "f2dc150e788c1f4871a303001e9b610fa8a7900732f428b0d7a516536438f919"
+    ],
+    [
+     "key",
+     "f679d02ff4a5d3830b6d8288b2ad8ae6e5d3c4cfd2eba95452028627608f29b3"
+    ],
+    [
+     "pair",
+     "invoice-05:actor"
+    ],
+    [
+     "pair",
+     "invoice-05:base"
+    ],
+    [
+     "pair",
+     "invoice-05:resolution"
+    ],
+    [
+     "pair",
+     "invoice-05:time"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:invoice-05"
+   ]
+  },
+  "group:small-context:invoice-06": {
+   "split": "tune",
+   "fold": 4,
+   "seeds": [
+    [
+     "group",
+     "small-context:invoice-06"
+    ],
+    [
+     "key",
+     "42da2065e8c6778a80aefff32e58d61cd38c8a2481a87ff5021b9d07982cace3"
+    ],
+    [
+     "key",
+     "55a8f8f275941154ff606263941ca76d323804cca3828d90afe336b7eeba0696"
+    ],
+    [
+     "key",
+     "568a71e2ede4dc325251de5dd21d9d73b8006c169a6edb5d5f17052b22583b9d"
+    ],
+    [
+     "key",
+     "968fa0e46a8f4e44f0ce0020b53bcb01c0c3b614069fa1068b0fa52f9acd6bda"
+    ],
+    [
+     "key",
+     "ac51c54a732c56a1efb03e61ee9a0c23cd72d9cbd7e74bddfd9c9628bd10228a"
+    ],
+    [
+     "key",
+     "df3a2a554eb1333391a43bf99b75d72253f2fe705235e1d3431e2bfe2b725835"
+    ],
+    [
+     "pair",
+     "invoice-06:base"
+    ],
+    [
+     "pair",
+     "invoice-06:boundary"
+    ],
+    [
+     "pair",
+     "invoice-06:procedure"
+    ],
+    [
+     "pair",
+     "invoice-06:quoted"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:invoice-06"
+   ]
+  },
+  "group:small-context:invoice-07": {
+   "split": "tune",
+   "fold": 4,
+   "seeds": [
+    [
+     "group",
+     "small-context:invoice-07"
+    ],
+    [
+     "key",
+     "019a992e1948598124a73a284a1bd20c9554684d88144b1cb28b60f9d63d5c22"
+    ],
+    [
+     "key",
+     "044e6906d753bf851c81cfd991e17e4aeae69ce66c8ec9a3a6219b12f3967d7d"
+    ],
+    [
+     "key",
+     "4dae642e93c61185998f604c30de56ade3f164001ef79acf193ccf4cce52f1d6"
+    ],
+    [
+     "key",
+     "6a89b75f7f4ebfa4a322228feecd98628542973d8b7f562a852f4352a5a8740a"
+    ],
+    [
+     "key",
+     "98508737031b8ebe050c5c1887a4e0a8ade98b8730d123457819b327fb8defae"
+    ],
+    [
+     "key",
+     "b7cab4b9e0f65d6a08148f4a6ffe19ae1505f7418b101e8745cdbdc584862f10"
+    ],
+    [
+     "key",
+     "d77d716354e28cebe5e5992d25caed35ee5058dfcd8b166357736660f543418e"
+    ],
+    [
+     "key",
+     "e15281acdf32127cb134523bd5c7a5bc935ccf34ae6802df1c6c3aee326dcf88"
+    ],
+    [
+     "pair",
+     "invoice-07:actor"
+    ],
+    [
+     "pair",
+     "invoice-07:base"
+    ],
+    [
+     "pair",
+     "invoice-07:quoted"
+    ],
+    [
+     "pair",
+     "invoice-07:unstated"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:invoice-07"
+   ]
+  },
+  "group:small-context:invoice-08": {
+   "split": "check",
+   "fold": 1,
+   "seeds": [
+    [
+     "group",
+     "small-context:invoice-08"
+    ],
+    [
+     "key",
+     "029989e8d38c0c84e1d75ab6aa07e66066f8efcddcc294cb9beef1958f0b7bcb"
+    ],
+    [
+     "key",
+     "1ed9f369ef5c12da1c05fca94d08f4fcc857e610427746d7284034ff447dc922"
+    ],
+    [
+     "key",
+     "3903d0f0d867cb6c3782a91e92a3583ac0acb69c07b116e6cf479b4ab2e5535c"
+    ],
+    [
+     "key",
+     "643681eebedb996d055ebe6975984eea8aca9179468ff867aad6d2d557eef50d"
+    ],
+    [
+     "key",
+     "75e1717986732a76a716acdf5e661c73c5379933f093710113783e8b76167a11"
+    ],
+    [
+     "key",
+     "998ec98edf6f557ced56a092f70c2dedd8be4008217ce930774c5c41c888abcb"
+    ],
+    [
+     "key",
+     "a8460a07688553183ab30f6f4f24a54e25245c2b0ccc8cd3153a5c56b05423a4"
+    ],
+    [
+     "key",
+     "d3e10576012bbba8f7e079669fac4e4fc8c282427e0d58b60d6777d90b8d2630"
+    ],
+    [
+     "pair",
+     "invoice-08:actor"
+    ],
+    [
+     "pair",
+     "invoice-08:base"
+    ],
+    [
+     "pair",
+     "invoice-08:contradictory"
+    ],
+    [
+     "pair",
+     "invoice-08:indirect"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:invoice-08"
+   ]
+  },
+  "group:small-context:invoice-09": {
+   "split": "tune",
+   "fold": 0,
+   "seeds": [
+    [
+     "group",
+     "small-context:invoice-09"
+    ],
+    [
+     "key",
+     "0bb3b0243b7f8a40e0353783421c1faf872d6395de2be7bc6ddba10225ab9831"
+    ],
+    [
+     "key",
+     "2cd3d6750c6a4c02af9589a6f017e1bc9c9bee1a7f8e6d126f64029af57ca9ff"
+    ],
+    [
+     "key",
+     "505df5ad9dad9300805c175eddade6f579afdf18773cb19e15c5577d1425d8ba"
+    ],
+    [
+     "key",
+     "8a05a6799ebfca851867e58febac68e8b79e7c61a0e5d4cccbea6a4cbf20f2f6"
+    ],
+    [
+     "key",
+     "a79f20d2c28f04166b7c4e641798c13ce2605e1782ead79f7e7c5a18d0649c38"
+    ],
+    [
+     "key",
+     "a99fb753b2e5aa0285c79ad1e40d12bef941ec4f5f255f982f3c81e4eeb1b16b"
+    ],
+    [
+     "pair",
+     "invoice-09:base"
+    ],
+    [
+     "pair",
+     "invoice-09:boundary"
+    ],
+    [
+     "pair",
+     "invoice-09:procedure"
+    ],
+    [
+     "pair",
+     "invoice-09:quoted"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:invoice-09"
+   ]
+  },
+  "group:small-context:invoice-10": {
+   "split": "tune",
+   "fold": 2,
+   "seeds": [
+    [
+     "group",
+     "small-context:invoice-10"
+    ],
+    [
+     "key",
+     "1bda8640c43d79b39869a398976e4f4543e087e82b4ffad0e7ebc5dfa3d3792c"
+    ],
+    [
+     "key",
+     "3a2b7ee4da1857a7ade97d76724bc03f434fb2cbc8b52bcee66f56a23514c716"
+    ],
+    [
+     "key",
+     "5e8536035fde4ac9d62343b89f3e0a4aaab01017ab3e85c5ecc5245cca773469"
+    ],
+    [
+     "key",
+     "5fbe9813be9b980daf3c60c4a6c70289527ed6374b8e71262102eb9a7029658f"
+    ],
+    [
+     "key",
+     "6c25ff6066da4648abdbc0cd3f5213905f29e95e077fca7ceb5f6dfd32009ef8"
+    ],
+    [
+     "key",
+     "8f123f5714e8aa51371a4b3ce5d37a5290bb47dda59fe0e6793cb11abf8386c7"
+    ],
+    [
+     "key",
+     "b41e615e0a114f2d034f8d4431c26714a0fe4100d66382e5726141435afa9d29"
+    ],
+    [
+     "key",
+     "cc21c08b583811267a368ffe8e202388dadc193690e1fadb0183e9589e78f232"
+    ],
+    [
+     "pair",
+     "invoice-10:base"
+    ],
+    [
+     "pair",
+     "invoice-10:reference"
+    ],
+    [
+     "pair",
+     "invoice-10:reference_instruction"
+    ],
+    [
+     "pair",
+     "invoice-10:unstated"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:invoice-10"
+   ]
+  },
+  "group:small-context:routing-01": {
+   "split": "check",
+   "fold": 0,
+   "seeds": [
+    [
+     "group",
+     "small-context:routing-01"
+    ],
+    [
+     "key",
+     "2d7ec2ca61baf252e154277f106b9f83c208eddbef1af7447e16da8d622a2ef2"
+    ],
+    [
+     "key",
+     "4418e04af9e682f0279de975bf1470796ab0e7ef366c3d15ff832909203b2d59"
+    ],
+    [
+     "key",
+     "8324860740471db76bd0eae9fbf59de1daa167b0e02a8255570bd0ebb4fc74ad"
+    ],
+    [
+     "key",
+     "a482fe4dbe2b9eb08f4929f6ece204d2829bc3af4dbc77c59586476186dcd368"
+    ],
+    [
+     "key",
+     "be88d5893272b8a4111fbfd2d079847207a78a7f05f7397449cd4e095308ca3e"
+    ],
+    [
+     "key",
+     "e3272567da8be53e343d357d9acfb70ab55faec5ce32aad580e3d06b5c2aaadf"
+    ],
+    [
+     "pair",
+     "routing-01:base"
+    ],
+    [
+     "pair",
+     "routing-01:indirect"
+    ],
+    [
+     "pair",
+     "routing-01:paraphrase"
+    ],
+    [
+     "pair",
+     "routing-01:procedure"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:routing-01"
+   ]
+  },
+  "group:small-context:routing-02": {
+   "split": "tune",
+   "fold": 0,
+   "seeds": [
+    [
+     "group",
+     "small-context:routing-02"
+    ],
+    [
+     "key",
+     "100f0dbc7c90e6473e1017a85e79ad4db3e2d7ac29a161beb2ad6e630309ba73"
+    ],
+    [
+     "key",
+     "6bb2ed336e0f03292fc9c1237d6e69beec3c70fe86aa00a06b30d89c9313e27e"
+    ],
+    [
+     "key",
+     "711722b6ceaf5e7b254e849b67538b3cb6683b6bb99328bb208394935d40dbc1"
+    ],
+    [
+     "key",
+     "79882427ef1b4195c81b8971aa2089b3c554b94c3d5654ef78febde19be86a1e"
+    ],
+    [
+     "key",
+     "b73b88a19a174c877cc7680652b03ea326ec910b525394d3c89872f414c8e99d"
+    ],
+    [
+     "key",
+     "d7e74b8a1c05cc83716ff663fcc810a3b6f36bfbdd2a25af07aa5d0c970916cf"
+    ],
+    [
+     "key",
+     "e2e375970dbc504844b6c5995778cb2a6898967ef3a52eb1a8e0be41135a24c9"
+    ],
+    [
+     "key",
+     "e56750e8e1d10459d189cc134abca49e3efb5a45fb421ccecfde8c742534033d"
+    ],
+    [
+     "pair",
+     "routing-02:actor"
+    ],
+    [
+     "pair",
+     "routing-02:base"
+    ],
+    [
+     "pair",
+     "routing-02:quoted"
+    ],
+    [
+     "pair",
+     "routing-02:reference"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:routing-02"
+   ]
+  },
+  "group:small-context:routing-03": {
+   "split": "tune",
+   "fold": 3,
+   "seeds": [
+    [
+     "group",
+     "small-context:routing-03"
+    ],
+    [
+     "key",
+     "01565236f0c03deafe1f7ba1d2de976dcded7d4ed348af26faa9d5f7b5ce3c9c"
+    ],
+    [
+     "key",
+     "263deed0105421a5f07c5a5f3cc1d59c5bf0239b32d84f9c12706652c000ca21"
+    ],
+    [
+     "key",
+     "2ca4a5cdfa6d38effb5ba196552d1e9f73131e2157c01c8ad7bbfeb8accd2cdf"
+    ],
+    [
+     "key",
+     "42fef2a6d3daeab29f47b2a97ccdc5de7323056795879e5f536d5c6de0ec804f"
+    ],
+    [
+     "key",
+     "66f55edbe3d30bceae3e600e69dc1dbff478764fe790156cda9d201bb4013262"
+    ],
+    [
+     "key",
+     "755ee79ceb63a86fc026e306e8a8832d947a7bd521b344f30c38f8e087036b88"
+    ],
+    [
+     "key",
+     "a7707436ec8cc46b3bc8f8bcdb338a8e01838f6c65b9306f2ef65dc22f6eb84b"
+    ],
+    [
+     "key",
+     "eba5d0f7cf6d848a22c624a48610fd504043b45d0c0e941a06cb079e2859b2c0"
+    ],
+    [
+     "pair",
+     "routing-03:base"
+    ],
+    [
+     "pair",
+     "routing-03:resolution"
+    ],
+    [
+     "pair",
+     "routing-03:time"
+    ],
+    [
+     "pair",
+     "routing-03:unstated"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:routing-03"
+   ]
+  },
+  "group:small-context:routing-04": {
+   "split": "check",
+   "fold": 1,
+   "seeds": [
+    [
+     "group",
+     "small-context:routing-04"
+    ],
+    [
+     "key",
+     "05416de09c3b9a62b291b4fe3eb2b149b5578882adb3a46544db5db923b566a5"
+    ],
+    [
+     "key",
+     "1df532ce0abd8b3ec3c837b5d420aa0d7ad19b08a4a6b6ee9b1b6aab062f3818"
+    ],
+    [
+     "key",
+     "376d8c0e06b02c392304c60451c2b8fda12ed9edbf1a9c10a200ff13d19d3d5b"
+    ],
+    [
+     "key",
+     "5287b9ff0a09d8a99bdc04c4632ebca7dab43c90be529272c59e351838a94a5c"
+    ],
+    [
+     "key",
+     "74a08d8c6e5339e6bbf142ea1a4f98b911f826a53432e3119ebce9b985723352"
+    ],
+    [
+     "key",
+     "ed3bdc4468019b616a3c5d7ab3d9307c56debaec7619f7a50c9820c9bf3d61c2"
+    ],
+    [
+     "pair",
+     "routing-04:base"
+    ],
+    [
+     "pair",
+     "routing-04:indirect"
+    ],
+    [
+     "pair",
+     "routing-04:negation"
+    ],
+    [
+     "pair",
+     "routing-04:procedure"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:routing-04"
+   ]
+  },
+  "group:small-context:routing-05": {
+   "split": "check",
+   "fold": 1,
+   "seeds": [
+    [
+     "group",
+     "small-context:routing-05"
+    ],
+    [
+     "key",
+     "4bb62730cedd10d46b591df76f505103c4bfceda13d16cdfe52f01f8158e18ed"
+    ],
+    [
+     "key",
+     "573e6acaafb2fca088dffff32ab02ae7d501ff3ba017de12bc5ae7bed431af1d"
+    ],
+    [
+     "key",
+     "825c87ad1d18cbec769a612b215dc173d05be24daa32602c73a85a4d9eefd82b"
+    ],
+    [
+     "key",
+     "84853337ce2b5d2e3c3cc146e8e4ec84bc0a4cbc08717082fa3d0763e7c01301"
+    ],
+    [
+     "key",
+     "bfbd989ceaebe41ffc7e6cbe13c312ca42c1934712f9e5cfa7af4fc349fefbd2"
+    ],
+    [
+     "key",
+     "c373da7a10fe3abba073cb4f1591de5d2dbe39785e6673a0a40bae99ee256836"
+    ],
+    [
+     "key",
+     "e6b5ff256a2125068a18ff9792f9080ad414d3b3f9373feb56e090ded586d77a"
+    ],
+    [
+     "key",
+     "f245af1800e0091d8fba8045a92f1b7281181c5d58622b5e39e7e193e85c4b60"
+    ],
+    [
+     "pair",
+     "routing-05:actor"
+    ],
+    [
+     "pair",
+     "routing-05:base"
+    ],
+    [
+     "pair",
+     "routing-05:contradictory"
+    ],
+    [
+     "pair",
+     "routing-05:quoted"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:routing-05"
+   ]
+  },
+  "group:small-context:routing-06": {
+   "split": "tune",
+   "fold": 4,
+   "seeds": [
+    [
+     "group",
+     "small-context:routing-06"
+    ],
+    [
+     "key",
+     "152fe4cb0342b2f5d7734b743ed3516df58346646fe74821196d462d3d5db9eb"
+    ],
+    [
+     "key",
+     "243c12dbfa6d6e30a692f2dcd0f2da69f6e2aec10ee49e11f50cb684f7c34484"
+    ],
+    [
+     "key",
+     "3e326504aa96215c31711e6b751751cc9a81e52fef86de4babefd494e020144b"
+    ],
+    [
+     "key",
+     "613eca9ae4cb49aa527e1b3b3d6a71db64b1eaa7f1750238b12d97a493017bda"
+    ],
+    [
+     "key",
+     "ae0759a2255f2dcf9d6f4c1a53f6ae466fd7ae0c2a26b4fc883d4442600c28da"
+    ],
+    [
+     "key",
+     "d89b0591c43640cb6994a06281608b2b8b9e3c8fc608b2b0f0f6ae22e45c6f8c"
+    ],
+    [
+     "key",
+     "e130b55a4f2aa56a7ae9a58c429abc98d33b20f03fbd20c3c573f9aeafb9ea06"
+    ],
+    [
+     "key",
+     "e84acc1faf38aabfc5b4d75681ae2ecaface3b546f9eeebb0739207bbd096cd4"
+    ],
+    [
+     "pair",
+     "routing-06:base"
+    ],
+    [
+     "pair",
+     "routing-06:reference_instruction"
+    ],
+    [
+     "pair",
+     "routing-06:resolution"
+    ],
+    [
+     "pair",
+     "routing-06:unstated"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:routing-06"
+   ]
+  },
+  "group:small-context:routing-07": {
+   "split": "tune",
+   "fold": 3,
+   "seeds": [
+    [
+     "group",
+     "small-context:routing-07"
+    ],
+    [
+     "key",
+     "43454ec6671e643534a97b8297085cf10a84d53607e2fb5a4cd50f8569605158"
+    ],
+    [
+     "key",
+     "7159f4e5ad06ce0bed9ab72cefab25b7d6c0dd51b14a1b5ac7d3119104f16a73"
+    ],
+    [
+     "key",
+     "b45699eb120b1e81d57f79c115effd0110225d0a8389eba12d572ce5a4829a47"
+    ],
+    [
+     "key",
+     "c10b23910714de234b9bffea79051c3b3d1c6cda93ae3929691ce375a3d587dd"
+    ],
+    [
+     "key",
+     "d1437cb70e55e01cd072cfe7f727dbd531624b9fb6e2b3e96c67ecf1d27ecd27"
+    ],
+    [
+     "key",
+     "d4b9567df2f7a7cac04c94c242f7f304da109d8b2028b3a392d62bbabc98009d"
+    ],
+    [
+     "key",
+     "e661a34db9c814d8a87e9a97fc2efb5e73ea4865299a0b9822907501cbcff0b2"
+    ],
+    [
+     "key",
+     "ff7182d94497fc4485320f629d564309a3b302e8e4fb6ed27c3a3aeea98408cb"
+    ],
+    [
+     "pair",
+     "routing-07:base"
+    ],
+    [
+     "pair",
+     "routing-07:indirect"
+    ],
+    [
+     "pair",
+     "routing-07:quoted"
+    ],
+    [
+     "pair",
+     "routing-07:time"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:routing-07"
+   ]
+  },
+  "group:small-context:routing-08": {
+   "split": "check",
+   "fold": 0,
+   "seeds": [
+    [
+     "group",
+     "small-context:routing-08"
+    ],
+    [
+     "key",
+     "5ed79c07d095c056716596a3a7ae6728e7c025c7624d99f0bb9084695ce7e9b3"
+    ],
+    [
+     "key",
+     "605ca97779d45edfe9257e8675b0783e31e73f9465eceed63a8a99b16dfe846e"
+    ],
+    [
+     "key",
+     "af336774c7870282806c0d134403f350ffe68d1e5a04e77569ae8c3c164121f0"
+    ],
+    [
+     "key",
+     "eaec987e72abb1964a0648b34362bb8dc9d920ca252e1b3765bb69534046167a"
+    ],
+    [
+     "key",
+     "eda6b0c296e9373063367d58f3acc6460c9f10e040b8ff65478e041a878f5d39"
+    ],
+    [
+     "key",
+     "fb455dd14079c7f99785f17dadaec4492b21eec4a24318ee836deb034c6cbdca"
+    ],
+    [
+     "key",
+     "fea0acfed3afaf9611cd6deabe5eb513135841205531c374f787dcaa7a6a35ca"
+    ],
+    [
+     "key",
+     "ff6bba294311ae93b191cada4692b2245700d70bcf5d06705cc6767ab5234c57"
+    ],
+    [
+     "pair",
+     "routing-08:actor"
+    ],
+    [
+     "pair",
+     "routing-08:base"
+    ],
+    [
+     "pair",
+     "routing-08:paraphrase"
+    ],
+    [
+     "pair",
+     "routing-08:time"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:routing-08"
+   ]
+  },
+  "group:small-context:routing-09": {
+   "split": "check",
+   "fold": 0,
+   "seeds": [
+    [
+     "group",
+     "small-context:routing-09"
+    ],
+    [
+     "key",
+     "1885a51a05dbcf7aab625cee04b163c19b2e71f13ff05054123795d2c6137580"
+    ],
+    [
+     "key",
+     "3167bf44a70cb229d3aaa27bb84521916bd50e206e9bc57f6df830478fe5a46d"
+    ],
+    [
+     "key",
+     "3327a433a1fea80a34a3951303348e37f2ae1a44ff4ec6a2a109bbf82405cecc"
+    ],
+    [
+     "key",
+     "7da192370332e40ea9eebbea0e53cf36cb9fb1214a4ebf7df917081eb8eb0a81"
+    ],
+    [
+     "key",
+     "8dbe33f94fbf6ac58c39af475e87952a4a7dba12ec03a716a7f1f177b160b10e"
+    ],
+    [
+     "key",
+     "b28da3ea5375305767d777a52f71fc6ed6ea44b7a2f9929a352e9c7db1e9f89d"
+    ],
+    [
+     "key",
+     "c6b03616dced1519b1391ed528316930eab9768871a89c97565a78a5109cc356"
+    ],
+    [
+     "key",
+     "e84763bc56c486a0d3885f82fcce6fce0693b386fe1acd01ba2e2a51277f51eb"
+    ],
+    [
+     "pair",
+     "routing-09:actor"
+    ],
+    [
+     "pair",
+     "routing-09:base"
+    ],
+    [
+     "pair",
+     "routing-09:contradictory"
+    ],
+    [
+     "pair",
+     "routing-09:quoted"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:routing-09"
+   ]
+  },
+  "group:small-context:routing-10": {
+   "split": "check",
+   "fold": 2,
+   "seeds": [
+    [
+     "group",
+     "small-context:routing-10"
+    ],
+    [
+     "key",
+     "165e19f6fc6a3263a117658c103383d80b455606851e5f6bb3c669b4cdc1c475"
+    ],
+    [
+     "key",
+     "462d71d9ef15fcc4218741d34b4ceff652da1d493760cb1eea7a95b6c5f21c19"
+    ],
+    [
+     "key",
+     "4d0f52959a3764a8854917d38b4b3750bfe52ca30693459b98e39a7714c0029e"
+    ],
+    [
+     "key",
+     "5ee1dbdc84d5ca8b4bc2bf113d40d8fe6a5ade359b2a85cce208b39b2b704867"
+    ],
+    [
+     "key",
+     "858000c0c33fe2ea6ea145a8205c0626df01a8bfcb37144114aae49253588d78"
+    ],
+    [
+     "key",
+     "997ee6fecd171f3f698ee42a991d812e9d06b93332390556939109e2f250648c"
+    ],
+    [
+     "key",
+     "b9a0df3d291275183bb48244a234e0fdd46dae672ff3194cef6cdd98e6ccb9d8"
+    ],
+    [
+     "key",
+     "d95e960fef996b26a6f57da3e9f14c7df367b5c3fd0193dc224054946a8a6bd6"
+    ],
+    [
+     "pair",
+     "routing-10:base"
+    ],
+    [
+     "pair",
+     "routing-10:reference"
+    ],
+    [
+     "pair",
+     "routing-10:reference_instruction"
+    ],
+    [
+     "pair",
+     "routing-10:unstated"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:routing-10"
+   ]
+  },
+  "group:small-context:routing-11": {
+   "split": "tune",
+   "fold": 1,
+   "seeds": [
+    [
+     "group",
+     "small-context:routing-11"
+    ],
+    [
+     "key",
+     "4f2341fb0c343be887f0a1d73a6982daa737e94f365012754154470a9c03ce24"
+    ],
+    [
+     "key",
+     "605f8a179bb0c15bf19dc82617a23f884c572caf02f104de9254c7269e092ad5"
+    ],
+    [
+     "key",
+     "75e59edc72074aa2434cc16989fcd9646de8165eb93cb01318fb12630e93132c"
+    ],
+    [
+     "key",
+     "95194f6b92c1985dbdedd82131d62640b5665f68820cabe173817096911a514d"
+    ],
+    [
+     "key",
+     "9df767b7842e620a733302d526c655d27d72d8ad1ce3ab8591f3f8a330eece01"
+    ],
+    [
+     "key",
+     "e5edd92e9d7ad37c2060af785575ed0626746d7d5663f516ed3e7144788604f1"
+    ],
+    [
+     "key",
+     "f79fc716b8258ee28fa85597d7e3e1bbfa9ea458fa381cf6bda3a67c89b21f77"
+    ],
+    [
+     "key",
+     "fef81915c8fa6859a942efb4cee460ecff0eebbff0d758633ba9aeef2fb0c8c9"
+    ],
+    [
+     "pair",
+     "routing-11:base"
+    ],
+    [
+     "pair",
+     "routing-11:priority"
+    ],
+    [
+     "pair",
+     "routing-11:relay"
+    ],
+    [
+     "pair",
+     "routing-11:reversed"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:routing-11"
+   ]
+  },
+  "group:small-context:security-01": {
+   "split": "tune",
+   "fold": 1,
+   "seeds": [
+    [
+     "group",
+     "small-context:security-01"
+    ],
+    [
+     "key",
+     "01be8d0765820ef0a1d5c9811fe2367ca0936430f5a0d6dbc70741088a186081"
+    ],
+    [
+     "key",
+     "2ee285ac549204b5e20ba12985450a6c5f955a8dac60fcd2af3eac2231fbebe9"
+    ],
+    [
+     "key",
+     "5e244750746117a0ce803ecabf83e3841cfd26c8f1643ea61af29a1a95083e47"
+    ],
+    [
+     "key",
+     "93ec4196dc0a186a56b970296ded735de693474c3383cdfc184176e39a751619"
+    ],
+    [
+     "key",
+     "bef533d6431d7fd5d9d8b31b5905712659b4c517ce6fba74ebccf89595dc44fb"
+    ],
+    [
+     "key",
+     "fa31357b75df0327ab1ad5de8e7ff307a063bf939f962a5e7cb10c297b30df3c"
+    ],
+    [
+     "pair",
+     "security-01:base"
+    ],
+    [
+     "pair",
+     "security-01:procedure"
+    ],
+    [
+     "pair",
+     "security-01:quoted"
+    ],
+    [
+     "pair",
+     "security-01:resolution"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:security-01"
+   ]
+  },
+  "group:small-context:security-02": {
+   "split": "tune",
+   "fold": 3,
+   "seeds": [
+    [
+     "group",
+     "small-context:security-02"
+    ],
+    [
+     "key",
+     "18e0b76987013ef626107c90ccd87222de2893920d0c3f7b459c21156f522933"
+    ],
+    [
+     "key",
+     "20e71dda3239577f4cc85fe4252f266002101732aa89e8fffc9e92e3cbf53503"
+    ],
+    [
+     "key",
+     "9ce3f31608ec1d8ba72a77d390cd3908994e1a9cf3bce0eb1c2937559086b95c"
+    ],
+    [
+     "key",
+     "c2f59674018173a4c9e09308906566034ec8ba1c2ea4aee030ab17812d5a9077"
+    ],
+    [
+     "key",
+     "c8edf4637ab8ba06214c2439d3d56679d164118994b025cdc24d32a76b2510c9"
+    ],
+    [
+     "key",
+     "d9013da4937512ca93d1fe9546e9d1b1644bada2d8b93b173d7b2cc28dbfeeaa"
+    ],
+    [
+     "pair",
+     "security-02:actor"
+    ],
+    [
+     "pair",
+     "security-02:base"
+    ],
+    [
+     "pair",
+     "security-02:procedure"
+    ],
+    [
+     "pair",
+     "security-02:suspected"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:security-02"
+   ]
+  },
+  "group:small-context:security-03": {
+   "split": "check",
+   "fold": 3,
+   "seeds": [
+    [
+     "group",
+     "small-context:security-03"
+    ],
+    [
+     "key",
+     "0fd949120dfb0516ae4896ab21a19739e6245227afefbf353bd15b466b0c6aa2"
+    ],
+    [
+     "key",
+     "5adb1d048dcdfe2a7e27b5ef8c664379bd3cbcced262895b00f4167026eb840a"
+    ],
+    [
+     "key",
+     "66a1fd38a6956eea82ce7b7b0bdc01e66760fc05ee19aedb1a3bc793df7c545d"
+    ],
+    [
+     "key",
+     "7320b03ab038a304c563c0f6bf2bf1374eab175259194e22d2e88bfe2d25044e"
+    ],
+    [
+     "key",
+     "75350bb4cebcd958fd36f655d738ae32e8a1c7389523f98c26ed693bd9efe081"
+    ],
+    [
+     "key",
+     "c4c8086f45e164a8ca3cf1b138bb34ed53665ae23a7d1eb5b9673a8a7b1304ab"
+    ],
+    [
+     "key",
+     "caad645f080499e0156210a6a20a00c6954b8f102c1102a7645037075bf92082"
+    ],
+    [
+     "key",
+     "f84ce59c0c245e00b09a8475857a9fcb17eef7cf39f1945e3eda76f010f3daa6"
+    ],
+    [
+     "pair",
+     "security-03:actor"
+    ],
+    [
+     "pair",
+     "security-03:base"
+    ],
+    [
+     "pair",
+     "security-03:quoted"
+    ],
+    [
+     "pair",
+     "security-03:test"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:security-03"
+   ]
+  },
+  "group:small-context:security-04": {
+   "split": "check",
+   "fold": 4,
+   "seeds": [
+    [
+     "group",
+     "small-context:security-04"
+    ],
+    [
+     "key",
+     "070ad389d118e634737ba4d0ea1f2307603ef2705471010ea9c561a37c201242"
+    ],
+    [
+     "key",
+     "0c3272d73ae49bf32d7333e0ab58e341fb1152c9c7a322b64f5b3925fd3a2c63"
+    ],
+    [
+     "key",
+     "4ed4988cb6c3d1daeadea433b84b430bb692af8eab0d7705c8a68cdded379a2d"
+    ],
+    [
+     "key",
+     "57d671f124d74f1f1ba5a66da9467bf73b383f67354310946b137229ba69fe38"
+    ],
+    [
+     "key",
+     "8d1a4723eeaae514228856a9cc56ea21714fd02ea5ca0f9f1c91e38a56395b02"
+    ],
+    [
+     "key",
+     "ac41072df41fb2ba1ae113f1a192c4fbde3b1b2056bc384506a2f375181d4f95"
+    ],
+    [
+     "key",
+     "d5bceb007271cf1f59ced11ea5105bb7479bdeecfd44c27de6cc4ab178a1fd0f"
+    ],
+    [
+     "key",
+     "f0d72bdf8254ac197031b0285993bff5c376de496fa6ea44ae74bc616f09e8bb"
+    ],
+    [
+     "pair",
+     "security-04:base"
+    ],
+    [
+     "pair",
+     "security-04:contradictory"
+    ],
+    [
+     "pair",
+     "security-04:time"
+    ],
+    [
+     "pair",
+     "security-04:unstated"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:security-04"
+   ]
+  },
+  "group:small-context:security-05": {
+   "split": "check",
+   "fold": 2,
+   "seeds": [
+    [
+     "group",
+     "small-context:security-05"
+    ],
+    [
+     "key",
+     "188c48a0a9b8b6ec661f4e5558dc091741bb8fb4c0fdeddc0420af994bbbb1ee"
+    ],
+    [
+     "key",
+     "2c02dc0d61f6cc03d9078df31d5961ac3755fbd12238d6a4e44a83e311fd5284"
+    ],
+    [
+     "key",
+     "5afd07b048271183e14329d7da5f7936a74600cbc280b6cc68d4c8a458692c00"
+    ],
+    [
+     "key",
+     "6449bfd3c809beb30288ba981c9062a80f835860b57449151b5a5c3579aedc94"
+    ],
+    [
+     "key",
+     "90199edb6aab7e33665bc9a78c7bd6ca45c8fbde2976f264bb082e945584b162"
+    ],
+    [
+     "key",
+     "a616e96515ad73ba203edebae26c84962a35ead032e9fc25f071cf3f3d3f621b"
+    ],
+    [
+     "key",
+     "a6d11e9dce9c612f61966a233f141a56a629d463de1dc666a5c8739e3088cd54"
+    ],
+    [
+     "key",
+     "c135057fdaff8f4fa77b4badf2b0a0778275446958dd652cb6fdf4b4101586e6"
+    ],
+    [
+     "pair",
+     "security-05:actor"
+    ],
+    [
+     "pair",
+     "security-05:base"
+    ],
+    [
+     "pair",
+     "security-05:quoted"
+    ],
+    [
+     "pair",
+     "security-05:resolution"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:security-05"
+   ]
+  },
+  "group:small-context:security-06": {
+   "split": "tune",
+   "fold": 3,
+   "seeds": [
+    [
+     "group",
+     "small-context:security-06"
+    ],
+    [
+     "key",
+     "1c1b99201a28660f409e5842d0367bd41e0042ef8428f8654d0094639c2c2850"
+    ],
+    [
+     "key",
+     "336e17ce41c58f3c233e432e7f02eb700eb2d70470a273463212624eec24b9e4"
+    ],
+    [
+     "key",
+     "61fd40663185ee23ca15b2632d0a633ddf32b8ed207c0d5fe856f0130269d6e7"
+    ],
+    [
+     "key",
+     "6f45a706038c3308ecb191be9a143fdae651fde1f6cd9240da6d724a636c32be"
+    ],
+    [
+     "key",
+     "724cf6b4b38e3e306df0aa45e445db510486140a0b9887322ac4fe9dd1e90d82"
+    ],
+    [
+     "key",
+     "ba9898d0dfbe40d99524d6132d6c0b8947036ad8ab0191553035253bf369a36e"
+    ],
+    [
+     "key",
+     "e298db889af12c13e4133fdfb2bc81600c2b71c2852cfa08affb4396368d803f"
+    ],
+    [
+     "key",
+     "e72014e597081677c5b980c067f1f258c6ccdb727afb68ac68b4919da9d6a57b"
+    ],
+    [
+     "pair",
+     "security-06:actor"
+    ],
+    [
+     "pair",
+     "security-06:base"
+    ],
+    [
+     "pair",
+     "security-06:reference"
+    ],
+    [
+     "pair",
+     "security-06:reference_instruction"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:security-06"
+   ]
+  },
+  "group:small-context:security-07": {
+   "split": "check",
+   "fold": 4,
+   "seeds": [
+    [
+     "group",
+     "small-context:security-07"
+    ],
+    [
+     "key",
+     "095831c05ecbb712e4c23c7308a43551c0e16fc5eb6171c0ad3b5b4ecef31c44"
+    ],
+    [
+     "key",
+     "0e6737ebd6c386a31bb19f6f1441a4b37efa36ec604e3e79e3f560cca1493993"
+    ],
+    [
+     "key",
+     "45e942767a3b3a5069850dc852570c6ffce2972e09e678340207f75d5cb18d42"
+    ],
+    [
+     "key",
+     "82373b13e79caa31358188ca9c86229933b4b0e59bf3712c4acb6951c0e708d1"
+    ],
+    [
+     "key",
+     "8f706c0b50538fd5b484cea472b55fd02bbabcabc88c08bcfdf5701534ce7021"
+    ],
+    [
+     "key",
+     "912138112da36e90c5191527f016710d47acd4556b503271cf780eec3916d5fe"
+    ],
+    [
+     "key",
+     "985eefc651ed38c361033f73703297db56fb51930f1ef5ffc96b968a3edb09a7"
+    ],
+    [
+     "key",
+     "cc6cb998d88f2a02e9368485128faafba8b56c62481d6bd5d16a648f3611042c"
+    ],
+    [
+     "pair",
+     "security-07:base"
+    ],
+    [
+     "pair",
+     "security-07:indirect"
+    ],
+    [
+     "pair",
+     "security-07:time"
+    ],
+    [
+     "pair",
+     "security-07:unstated"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:security-07"
+   ]
+  },
+  "group:small-context:security-08": {
+   "split": "tune",
+   "fold": 1,
+   "seeds": [
+    [
+     "group",
+     "small-context:security-08"
+    ],
+    [
+     "key",
+     "1901606bff98f3bab648dcc6dd6c5928303b5afdb3c8e65087e29aada104cfab"
+    ],
+    [
+     "key",
+     "2efef54566217f90e1a2343de1df602b0d92aab9f2231656f39a449e74faef6d"
+    ],
+    [
+     "key",
+     "8933e6d68be6d7ceb595e862444a1ead75ccab15da08d4468918032bf7be84ab"
+    ],
+    [
+     "key",
+     "b8a983d77c2178d84ab14cd689223b1f247e5070d86559a604a24734aece5147"
+    ],
+    [
+     "key",
+     "bc3effd06425dd34fd72c408a005a7f761988e54a20573b86f4f1c001dfd0322"
+    ],
+    [
+     "key",
+     "fc2043b259c9b866de9b8798cac8860ea62130d813978c021d67d73088983532"
+    ],
+    [
+     "pair",
+     "security-08:base"
+    ],
+    [
+     "pair",
+     "security-08:critical"
+    ],
+    [
+     "pair",
+     "security-08:procedure"
+    ],
+    [
+     "pair",
+     "security-08:reference"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:security-08"
+   ]
+  },
+  "group:small-context:security-09": {
+   "split": "check",
+   "fold": 4,
+   "seeds": [
+    [
+     "group",
+     "small-context:security-09"
+    ],
+    [
+     "key",
+     "238ceeb0575c4250c7e56acb8d758beed76c85beee6a1eb8cf029dd9a67424f5"
+    ],
+    [
+     "key",
+     "3aed26507b6b2bef8ef81c45e5fee215f05d3e8239755ea94cd58df5f22415c7"
+    ],
+    [
+     "key",
+     "462d1977f649a05da753f4d030217160781fefd80f09f610778b54bf5a24531e"
+    ],
+    [
+     "key",
+     "5cca254d510431e8717d1c364622e95c6241c145ded0fd8689a01dc3e948d805"
+    ],
+    [
+     "key",
+     "61e246eb54ca23e86479c5c293b06e95d39872e9c18abf0a5f33089b189da879"
+    ],
+    [
+     "key",
+     "815aa913751aa6acd86a009e5df4aa0eb68a4aef6bfef520805f7663000609df"
+    ],
+    [
+     "key",
+     "a7bf04d607ec16f5557368d3fb5b1bff6770bdb7ab1c10135dcb314e0dd7e6d2"
+    ],
+    [
+     "key",
+     "dfc004a36c5918f7f854e0e83302b002e4d52a495b510b32cd271f74921b807f"
+    ],
+    [
+     "pair",
+     "security-09:actor"
+    ],
+    [
+     "pair",
+     "security-09:base"
+    ],
+    [
+     "pair",
+     "security-09:contradictory"
+    ],
+    [
+     "pair",
+     "security-09:quoted"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:security-09"
+   ]
+  },
+  "group:small-context:security-10": {
+   "split": "tune",
+   "fold": 0,
+   "seeds": [
+    [
+     "group",
+     "small-context:security-10"
+    ],
+    [
+     "key",
+     "63d1111b8dbee9b593e5cb27a34e0bc16bdcf0358197d7bc0504cd813f4b25a5"
+    ],
+    [
+     "key",
+     "8d40370e945264b42546aec384518b20c36a8769d6b300f9e0553e8dc1f7d323"
+    ],
+    [
+     "key",
+     "9204ceec9eba16f1bdfffe1719cec56f89de2ef574a08408982c968e2e090339"
+    ],
+    [
+     "key",
+     "920e225ebbbcda99f0e84649937bcb854a3c2947e7fcbf5d638513e843f604e9"
+    ],
+    [
+     "key",
+     "c39a3b968bbd5df85597d664d3d4ea9bc3c23654a8a459c157bfe134f996eb26"
+    ],
+    [
+     "key",
+     "cfd98449375614815e721dde0761cd7bdf1a7ddddef04b9db3747e9d7265091e"
+    ],
+    [
+     "key",
+     "ef4e64d86d54dc864550130fc73c3e62d1cecf2eb75fa9ebb774cdd4105e12fb"
+    ],
+    [
+     "key",
+     "f7ac0e06747310032317c2d622d21eb9ba6ee89ed56eb6d7806cf0e91f12de33"
+    ],
+    [
+     "pair",
+     "security-10:actor"
+    ],
+    [
+     "pair",
+     "security-10:base"
+    ],
+    [
+     "pair",
+     "security-10:quoted"
+    ],
+    [
+     "pair",
+     "security-10:time"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:security-10"
+   ]
+  },
+  "group:small-context:security-11": {
+   "split": "tune",
+   "fold": 0,
+   "seeds": [
+    [
+     "group",
+     "small-context:security-11"
+    ],
+    [
+     "key",
+     "1d4eae11f671556921c6e7919f3aef58f3cf988cdf844b8ee141d6faba3a5e20"
+    ],
+    [
+     "key",
+     "2af12f2d539a6403f0d51278e4bd1c5d52cd603573e05489cf89b37329796b29"
+    ],
+    [
+     "key",
+     "34511a4451e739a7abf4ec9c8a6c7071fbb3897d76d99c795728113ac66cba1d"
+    ],
+    [
+     "key",
+     "5d35998d51ceec4e5f6b7ab888bc9be85b904b9d8433d418c77720be487e127a"
+    ],
+    [
+     "key",
+     "78000a6cae03b864cc81858766afa86871280e198a9e5e7d0b7846fe44c6ff49"
+    ],
+    [
+     "key",
+     "e74b72c69d31090dce345a287421665ce08d72adba9e70596f4b9d7725e32124"
+    ],
+    [
+     "key",
+     "e9cc4205a0c0a0c99b2a5ece5a2e281e8962af8dc3a02be31f2f386ba6296c91"
+    ],
+    [
+     "key",
+     "feede8285550a7ae9112cc55985902c615b689d5eb2188a06200ede395f223c3"
+    ],
+    [
+     "pair",
+     "security-11:base"
+    ],
+    [
+     "pair",
+     "security-11:grant_expired"
+    ],
+    [
+     "pair",
+     "security-11:grant_other"
+    ],
+    [
+     "pair",
+     "security-11:grant_trigger"
+    ]
+   ],
+   "aliases": [
+    "group:small-context:security-11"
+   ]
+  }
+ },
+ "observations": [
+  {
+   "id": "003b83a51f461a7148dc8b164069302349f50117f0b6ff362e556bc0d033242e",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "00defdae213c7d25b6148b99662078eb1aebaa1b3382720810c6e58887a3a024",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-03",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "00f4a4ae424396d40c7b0c7c83e290735e157ce5e8adee5840b744513568c263",
+   "fact": "routing_v2",
+   "meaning_rev": "d61e706f",
+   "family": "group:small-context:routing-01",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "026284ee4c67e1bed18a17eb753ba7044b2ce570446455aef0762611da894b83",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-02",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "02a159e2f634434f0f6a6063c8474e35ce1c8cd7f8ee7631ecd63c14cefd82c7",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-11",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "02f8c528641d30e0460c8dc3415896f52728a537a1c7152cff3220d06cf62f4f",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-08",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "03450321c10c6330c88be1e9f6d94ed051db18c4fbe394397609328b0a60eaad",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-08",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "035e5e8be83e08ea994caea639ab1dc5472b44c6aabed82689d66125c763652d",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-04",
+   "label": 4,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "0389658ed4cc6169e1f247e7a3719d514c471ad30e960ef7e0e0c3bec31e09cb",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-08",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "0480bb4db534d73fd29c5c3a7f9ca34e3332543b0d6cc6d15dd447dcf0092add",
+   "fact": "severity",
+   "meaning_rev": "44ad3fd0",
+   "family": "group:small-context:security-06",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "061685536be1dfda9cc2d2de66a6be1ae399f3c14b4561d4ce54ea7b0f740ed7",
+   "fact": "routing_v1_reference",
+   "meaning_rev": "b8277f2d",
+   "family": "group:small-context:routing-06",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "088d8348141f74b7a34a1b665b46048d24ae46e7d20c6400616fab1c9f4880a0",
+   "fact": "invoice_v2",
+   "meaning_rev": "4903fe70",
+   "family": "group:small-context:invoice-09",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "0a60f352e7b63ec01bc3b08fdedd875814c2a3aaf7e4ad49585a883379976639",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-08",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "0b7adf19f8569b2347107f1130c89b2c0e6680af5829f787128310c0e3d66373",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-06",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "0b8cb2ca21fc25945e47b85e9da62d545b7f33cfde5e6e0105c8254209481e42",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "0c99d77c758c1719ef52eac2730dba8ebc48ae3cd33e0aca8d1af392eacc5d3f",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-08",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "0dcb307c633c13f0f24f96033140964f44a3cbd8c68d250dc3151962948985b6",
+   "fact": "invoice_v2",
+   "meaning_rev": "4903fe70",
+   "family": "group:small-context:invoice-09",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "0dd41a0e7cc6908da71fc3baddaa0e9db7e398d6a1908830a2f8f15a723ea48b",
+   "fact": "security_v2",
+   "meaning_rev": "c474b0ab",
+   "family": "group:small-context:security-08",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "111c49c4a2196bb7f872eaffedca837bbf81f29a871d668746d7a29cd3347504",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-09",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "13b0bf92f8cdb3b991ffc909394cf22dcab1f026b66f3b0efc3779050d8d7a23",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-01",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "161ac62784359d01a0d841892b8b309638ff662c5c9b59abfb33553a1b787930",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-08",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "169da225eea806cc657000f6f3209ad38d35ec44f4387f52c3977233db20b6f4",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-09",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "17180758ab6d700e574b5698ac5188848555497598d4865baf349018f0b30986",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-11",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "1734d94e83ab65ff6587b138b4c6d354c2e8cf8f912384a50fb3b9e0ca44c261",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-09",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "1a813a65085e04b0278118b515d666a54f5cb7e46be19b60b19711807c0122f2",
+   "fact": "routing_v2",
+   "meaning_rev": "d61e706f",
+   "family": "group:small-context:routing-01",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "1c38db6d690e309513f7a5485bdfbb126d56c5b1de4475c1a84032cc20cf3f14",
+   "fact": "severity",
+   "meaning_rev": "44ad3fd0",
+   "family": "group:small-context:security-06",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "1f83783dd13d289e75c05a5117827a353a0a5a1549ec99d3a7b00157bf4377b7",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-07",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "258c9e890cab3d7881c54fb5720da197d41e72f75cc82403dfb9014fc69e4e59",
+   "fact": "duplicate_reference",
+   "meaning_rev": "7388b616",
+   "family": "group:small-context:invoice-10",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "275fe8146fd3fe29a0b58a73798175dc8f803790f03cd36c405747c90ddeec69",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-04",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "2840dda0a6e97859f1a47cd137ab73a3a49747aaec52305e65cc26ed1eaf4e45",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-03",
+   "label": 4,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "2926d94099bbdc2d785fa9475c296100591cb218ab1d0e1aa553cd47e271d076",
+   "fact": "security_v2",
+   "meaning_rev": "c474b0ab",
+   "family": "group:small-context:security-08",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "29587a2f5740b40a2bee1b5c372616dc28ec6fc0ec1e5de629941c38a6f7e924",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-11",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "298948b805c7ebc27ae7db9b3e2de8e36f99542a85b2f6e63adcfebfada2cb09",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-04",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "29d9b18a7c2a91675b44e50c592f120274be265c399f5781b6d031b198be7ac9",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-08",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "2b2e5c10be6cbd822aa8ff874315ff776719ab43a5154c69177aa97738dd6d84",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-05",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "2c33a713d83eecce53c11e3200a8d63a8ff7167dc68d39f2c8fea0e339a58501",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-08",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "2f184e5db6acf3a20afe3b87ea19b4f60312d2e61e4dcc9b096554bafb2a5df6",
+   "fact": "severity",
+   "meaning_rev": "44ad3fd0",
+   "family": "group:small-context:security-05",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "2f52759ed276f8d55f769b73148b56ac623c1fcf5e015ef76f16b014c80b70d6",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-04",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "2fd48d85ce6c212c05f857d56f0709dc27981bd934ddb86a1fb4d60b48e0d621",
+   "fact": "severity_reference",
+   "meaning_rev": "5bf799b8",
+   "family": "group:small-context:security-06",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "30b6e41cb1028fdf0906a31adab9570a6a0e83eeb3d02a92d7ea943d01c7f656",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-10",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "3431f8e41c7917822b19b6671913c51a2626565c02e0f73bc7cc314d2b73ae13",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-07",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "34356c5c9ebaf380120b68d2eaf149c70d5cef46a2043e17ea8e3a86e50a3330",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-07",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "34e75138a21011ad389bac22e3c3fd377ab56a55110d8eba0637b5352eba4251",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-03",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "362adc895f093e78a2008345e7c885387c3db311a02ebebd56635308eabc91da",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-03",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "36fbadf31bc8d4d4715825ad3caad20803b00ee63cbaa962db068885086d9c49",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-04",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "372cd708020e3a2fb4df6d53512ad6e2dd41c5bfb23eaca1775042e4b9378bfa",
+   "fact": "duplicate_reference",
+   "meaning_rev": "7388b616",
+   "family": "group:small-context:invoice-10",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "384a0fa2ec916b4a910ab22636a5efa023c2c3c4c13005cdad9b027aaa981012",
+   "fact": "routing_v2",
+   "meaning_rev": "d61e706f",
+   "family": "group:small-context:routing-04",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "3c1707c752401c16832fd1fffe49890efed590cab9867e8964b1437d0fc9e5d7",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-09",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "3dcdbfa54fbc95771f9d432c4d709d097e1e6e543c289280f311da9adb59e90f",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-02",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "3f5a871e9de4eea99842db84e8483603385b3afd1dbc6ed68f63b6a19d7ab8c6",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-09",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "43d16e5ef98e457f2786b16355c59065a9563f3fe85c1b1b65d9c16901e30781",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-09",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "43f8a266944cc26aec158da6da37a27bc8df60a3664632e607a5be5e589e2bb0",
+   "fact": "invoice_v1_reference",
+   "meaning_rev": "5d4a63c8",
+   "family": "group:small-context:invoice-04",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "447d8e59121249675ed50be071a85f0df7358e7490cc3ce93883e366b59bb32f",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-03",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "44d5a61291a59116f65774545da1f0632d5e589d5973c18d0897faa1c024abaa",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-02",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "451c0ce6e0d58c03392a70273421b56da5795bda367b542bd6b09e44475a444c",
+   "fact": "security_v2",
+   "meaning_rev": "c474b0ab",
+   "family": "group:small-context:security-08",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "4651bebecc3c58243a3633da5bf6b8a702ff579e79fd0202485fe5fc7f0b03e3",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-10",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "466c4de352d40e993c287eb23e7f89201d69a6f02159146e5c5997fd93502eef",
+   "fact": "severity",
+   "meaning_rev": "44ad3fd0",
+   "family": "group:small-context:security-05",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "47867423b210cd2754be73283a8fce160f730412925522800576b9e55adf590b",
+   "fact": "severity",
+   "meaning_rev": "44ad3fd0",
+   "family": "group:small-context:security-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "47ba6f5613d547c06a104c8743da7edbd91e83778e21ba2a9d9e08601996a314",
+   "fact": "duplicate_reference",
+   "meaning_rev": "7388b616",
+   "family": "group:small-context:invoice-10",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "4972f3bce535f3ec64fe0d4972f3fccc76c7b02de23528dee1edfafe54c035da",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-09",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "49f2e412bd12161b2d0c534bc9a2604aa651da08fda22dcf3aaa489c78829e11",
+   "fact": "duplicate_reference",
+   "meaning_rev": "7388b616",
+   "family": "group:small-context:invoice-10",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "4a644924ac7cebd619a9f804c10fc3010e5226030ceb6b7eaf2e6b74b9c25d05",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-09",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "4aa7edea1b40242d2662612ea28d964db5f9922a569e8e0adff066fd7ca93938",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-10",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "4b156887dc38e0eadeb86046b6f5a5d97eba44de96768930a861b1fda838650c",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-07",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "4b498eb07d2560f9654e0ad4330824b9e04447b300ab8f54bccce6fe85b3cd7d",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-07",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "4bb60a40f9969c9a3e668b644d5f5e2a84eff2e1bda7a47621737f77bc326c12",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-07",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "4d3ac40707780b75bff40b4df625ec85271ae4bfec4c5bb120334af37af8196d",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-02",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "4eb7838aa98494bdec13bf09da426bcd5ec8ed38433a2bccb81b797f1b209ef7",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-07",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "4fb94f8d554e16a21d8e66b8ff3d84830aeb7e2fa53e256126262df2334e1a6b",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-06",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "4fe1cb0aa303b777bfbaa5e0d1ce084c17dad9689a020104b51a07a997a7a780",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-02",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "50c7aa4d82c2168edc606076ead0daa8bd753398769efaf62bff0bf573855c23",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-01",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "517ad9c81a32ce8e0c4a5ee05f2dcf1ff7bb7b20dce86b2c371466f033f51169",
+   "fact": "routing_v2",
+   "meaning_rev": "d61e706f",
+   "family": "group:small-context:routing-01",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "5268d3d4b4404fd2b4c489c3bed750ee1ee3b3b95dc727a94ba7c83baabc6808",
+   "fact": "invoice_v2",
+   "meaning_rev": "4903fe70",
+   "family": "group:small-context:invoice-09",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "541a0baef2f0c6a9a96f2876d51c1af5aa369744b62238c625d788e060dee9a5",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-03",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "543a845fa906f92493f05e305426354b90e008991410ac947eff2c89cdc10b5d",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-06",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "5631fc91bd3300b1d9049c9d7c8e41c014118b1f6af1ae437dfa24327c3ec43f",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-07",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "5654d954d7285a6197ab27c195fc3434539268e3f85f814ca21126f269036671",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-04",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "568afa87aa4ea44f4609a871eb1c4c7b389652662760d753240148b4ad231187",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "56e1a0cd89cb3c31aea75b09c5c6194b6edc6a4b86b585421cc7185443f7a86b",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-01",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "57e2071e9534cb1f08ea6f2ff9fc3969ec376d0cfd1de27473373dae4e8d34c1",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-04",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "57eb6cde8cd4bc85cb13362d938dc416fbcc6a83ddaed386ffece7f97244f329",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-07",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "57ede1928ef9a7f270dddefed0bffd4161f1603a958edd53d727700eaadd95c5",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-08",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "5823b98a153105c7e19399e1054a3e88f75ad248624c19bcddbd4a8d4afee7f4",
+   "fact": "security_v1_reference",
+   "meaning_rev": "5ed4b4ad",
+   "family": "group:small-context:security-08",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "58cae36b45894f21f0d73db697aea6b405abe148e2573d171c08ff9b090365dd",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-05",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "5903619c944590577f94faec76b6c44abf531535fae0e992f68239f2a1cda1ae",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-07",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "59f62253d825796c049508fcc9ac019ce0d8d85a62861f8c4fc30724a9bcee96",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-03",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "59fde46d41cdc191e74c4ae4d4f6f4ffe64c15067d899e4ec4fa536fc0248bda",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-07",
+   "label": 4,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "5acc3b83fa13f671f0d55c88325ff589d12154b1adfb15718a513b5b0f31e5c8",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-02",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "5af71b5965104b6133bc6faa68a8b7112f60ba43d2b9874d39f505054fc8539b",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-07",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "5b01fb11658e56f87f2f06da0ffe35d46efa4fc0c4377107088fe52531487f8b",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-02",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "5b5450c38530e42251cdaf4f77e5a69ff7885111935f67a6fe4907f544eb4f48",
+   "fact": "invoice_v2",
+   "meaning_rev": "4903fe70",
+   "family": "group:small-context:invoice-06",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "5b91d96e94cdd3bd578c2ef179aa3fc707bd6272f0c9a6585075df1ba4be14c8",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-11",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "5cc59221df4a720737079f52f01019dcd117be7486c25666c353572852ac5866",
+   "fact": "security_v2",
+   "meaning_rev": "c474b0ab",
+   "family": "group:small-context:security-01",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "5ee091c5851cbe9f57f87c24bc4974674b3eaf171ecbe3ff765ff027eb62f0d0",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-07",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "60111a34efa28c0b520d492d4c2dff752f3ddf9612a9e35f70037c6ebed11c57",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-11",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "61057e57e7dcf1f58eb3dd912aeeaab140768319c333e523394c8065f0041477",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-04",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "617584ceec8e10e0407875a5e9bd464240ec5d9cff6909df2f5303a2cd2e76c5",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-06",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "6271c91cea44ce30cf1f0f028ff2ba3c4b6f3feb4394a0ab8f7c0dae59a61e82",
+   "fact": "routing_v2",
+   "meaning_rev": "d61e706f",
+   "family": "group:small-context:routing-01",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "65c12444a0f9ffe499a326a598380252ae8ef7d10244fd5fa812100ff3c57df0",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-11",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "65e7c643c913fad8c058cc54f84fa0844199007e6906c04ec2b2488d5b98e4a8",
+   "fact": "duplicate_reference",
+   "meaning_rev": "7388b616",
+   "family": "group:small-context:invoice-10",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "679c22d2f35715b3f194d17da658013d46ef738bc309896dac07d6458bc6d063",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-03",
+   "label": 4,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "68ecc631e1282d6245479ea777f8bf97cd4a56305a115c976d62d343b1dd5ef4",
+   "fact": "routing_v1_reference",
+   "meaning_rev": "b8277f2d",
+   "family": "group:small-context:routing-06",
+   "label": 4,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "6adacc3eecfb58eed06436f89d5e198f510d95737dc2dc6e4ab750408e08b3cc",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-05",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "6af8d8ea7892616f36a745c490fa7cd04bbbf1b67226269ab384d1c999956ddb",
+   "fact": "security_v2",
+   "meaning_rev": "c474b0ab",
+   "family": "group:small-context:security-01",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "6af96a64d2db737862c9d08235943e5602e47643bc1d511061b3fd58f15e728c",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-11",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "6b18ea009284e5b16577c3f663d7259c9616304174aad23cf886a744d80ba1de",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-07",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "6c0f9eb187da1758d11ee71bc0f9cedba0119adbe8e97ce1b4ec27faccfd99f4",
+   "fact": "invoice_v1_reference",
+   "meaning_rev": "5d4a63c8",
+   "family": "group:small-context:invoice-04",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "6cf1d092b255b18db4204d23a20cc455b1cd372ed520ddd4da7f5f5ba092ad91",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-09",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "71b63af9c27efa5cb9a1d0ce5219bede051226c9b17a6f841794a2bd2ddb8d76",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-08",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "743a6583194305a479e23c33870d07316b88ebcd364047ee7b59302cc8ac868a",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-08",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "74f8c3bd9256e9af10b8480667f2940f1c5a47b8f317b0dc39a7d71efc8b9e7b",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-01",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "75bb9497e2dc4d65aa0b0aa43d17f1f1c9cdbd727b1c87c4846af9cb6429a557",
+   "fact": "severity",
+   "meaning_rev": "44ad3fd0",
+   "family": "group:small-context:security-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "7634c4fd48fdabce404799a3424adb0b8110f52dc2f1aaba4b820d8aa88fd3c6",
+   "fact": "severity",
+   "meaning_rev": "44ad3fd0",
+   "family": "group:small-context:security-06",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "765eb47b486b52092709af71c57a8252771f88db66bfab41b517af6b327f602d",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-02",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "769b6b394168914383afaeb6df95d5e2bd5c234da4e9ad6947e60d6491305e8d",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-04",
+   "label": 4,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "7914a8a7644d429176b00903e0c13576613f92a3179e33f4ff42b8a14ecc80f9",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-08",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "7a5e8ad04865af7522d580576b5ec849508f421ef45cda48e37c10dd669fe21b",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-10",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "7b80c227c7051eddd8749b047be0c4a41a6f3278d609615ee665921c68538438",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-11",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "7c02face072a75a3f1662cb6eaccbbd9f2cd289c3cec72229a1a533d2d65f770",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-07",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "7cd77f07647bfaf1f5a1af44bd3eac29b446e82bd72157277cc26cf088f9f51e",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-01",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "7d0fb485011be7bba4f581e5be77414a57f9aa461274e3a6e406318f533790f5",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-04",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "803b601d06be6c90b1f7bf8abf7e36047ef1b604c325c4b13f84387433770038",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-06",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "8079ed2e5b4a3368c0e07c576d86920113863cdf97a1c7763163a981313757bc",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-02",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "814c582ccb18278b41babf4f5c3897ede0ce4e5131fcd1d9f39e959849f8b36e",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-09",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "815c6cee2a6bcf53e9082609213e874dd6579e2c770af8ff34e150c110aff33d",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-02",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "81a4d728e8c3056f586d2bd80f368c0fa14f0ba6399bf995990b7ac9119c8acf",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-10",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "84156aaf1f76368f4ef1e384563196430a788ead5cd930049f2d00d242879a49",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-11",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "8437fa7ebe0cf308837eecba5cd39c1cdce4fdb081908e1a77f9b8d5798f40b6",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-02",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "84b23c988393c99c61f76a796bbf00f3273bfd04876a314255fd6902bfdcbff2",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-04",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "851bba25ba17c5a1d0aa2fc1008275bf6b4de3f319bfe24b27bf85f93c0bf8ca",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-01",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "852bb80c6f2aad5e0a8668526d3c93e489829cf780267299df35a89d2c08faa2",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-01",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "8694618e84eb7358be87159f5a0bf0daa873cedc4321de7ead901355c40c3ac3",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "87b5fe5c8ced99782f00c5e9a129cad60bf53615fce29e5e219d84e3a78e0c4e",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-11",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "87d892fead5c41d77f61472f8e55c6b00fca76ff5b1f11c6f5e9d1efc853d75a",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-03",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "8943b8f773e31909c7dd8f473fbfe2942848fa4268644a37740f85df655deee7",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-08",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "8993860ea9e596ef513aa261cc504bbc9436958b632a059f303cae4e5742c06d",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-03",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "8be9252b5570b85524ae3143cc9a4e1c85f5460bba69375811e5f69f27518eb1",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-03",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "8d5145ee94a529246d32b7d231422de2e8e370a8920e3c3909eaacc9546d3c60",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-01",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "8d950474503fd957bec6fd9e8dc2495df33ced4b5a069fabe1bf324c89e79608",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-04",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "8ddbb23949ed43ea7d94508b81c12eebafb057913af54a0279b408a4a7e7a961",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-02",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "8f32b5baedeb18bc8bec2675d130bf4becdd064c81e699cfc5bcb09752b128fb",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-02",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "905d72aaafd1ea1160eb7c6b9fe5248f193df8fee8a18d06173c7b1a96eafe6f",
+   "fact": "invoice_v2",
+   "meaning_rev": "4903fe70",
+   "family": "group:small-context:invoice-06",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "925f156001c424fef9c9634bd42272e0b082be959cb50c139a9f42c6d53baabc",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-03",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "92f9e0e1127f450c65bcee303708c227c7a28d32ea883ba8005437b9cab1feef",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-07",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "94ea5a99c093ea5c34529f44cb69c125d3e792945bc2b8364d84c595650335bb",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-04",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "95299add6a5f6025d540ceb331f976696e4252e8b4685a712175336485c9d25c",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-09",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "963bd017c5dc3dade7020055d4af193baf4a7bfe9c06ddb3357f0cdf196c47d8",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-08",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "97340750061f5be0b19b6fdda62b0cd6c827b9b365e9f5cb55ca2b78a19b816b",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-03",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "9836490f6dbc132ec730354597a78dfdb85e3fbf4d9509949b417f18d9fab28a",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "99923450f98a0b42151e142493e4a480679fd150deff760c25bf5b1bc549eb76",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-11",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "99bba89d7b069e89c38326ba1b5998f81360b8cda086b6646d9ae9795c4c7e16",
+   "fact": "invoice_v2",
+   "meaning_rev": "4903fe70",
+   "family": "group:small-context:invoice-01",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "9a30132acb07b58378016c8122910b793b17f6909960018e7794abb3f8f7eac3",
+   "fact": "security_v2",
+   "meaning_rev": "c474b0ab",
+   "family": "group:small-context:security-08",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "9d76a484ddf6c82b30a01afc10b8b167b57f84a6fd719ae14b16036f57c7b813",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-09",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "9e74cf520af80ee5da924775bc3980350f927cec34b70ba7a16a6ee947155513",
+   "fact": "severity",
+   "meaning_rev": "44ad3fd0",
+   "family": "group:small-context:security-05",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "9f1da8205830c2412109a235aa6c9d4090ea7d96eb2f04c143d37ca16d4ecea8",
+   "fact": "severity_reference",
+   "meaning_rev": "5bf799b8",
+   "family": "group:small-context:security-06",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "9f232e599f9d868abc4313bed0c1bbe952bcef82355f4900e58d455eff3c898c",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-11",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "9f736a2fb3ed5001d35efdfae095a799d9e300aded3f89679e8c92e02eb021b7",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-09",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a07006fd3913844b4fc91b19c63e409484ed15ab9a44a30a8755eca8f9d47053",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-10",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a0737dee5f9e0c68e8be131c3c8fc971da6d3b8411531fbd82a78a6bf46d9f1e",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-07",
+   "label": 4,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a0e4f525d542bd189fde5308d97b07d59d1fbaf4d70b153d94cb72ca24f1f71a",
+   "fact": "routing_v1_reference",
+   "meaning_rev": "b8277f2d",
+   "family": "group:small-context:routing-10",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a14c748b5dd8cf3740ccce579dd59fd43e4bdae59911c0ee5ee3148ddd534c2a",
+   "fact": "invoice_v2",
+   "meaning_rev": "4903fe70",
+   "family": "group:small-context:invoice-06",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a26b780d8170275d881c75c462e64433b63389dc6ed48a7597c86d4d244ef9fd",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-11",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a2c7c39a796d316f12fbbd797cd92cccb72de85a12ca771f3f2a52683573dc67",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-08",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a2fc2792677883c8c637f78d34c95a487cef8944f2fbe675870b07f36ecd2bee",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a325e771487cde7dd46aaf2de559a3af81274eec086f28570b3c45f8560622e1",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-09",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a4190e0280552fc219815517bf24eac9c3f39e0f2eb74a956a0b133da7e0cfab",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-03",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a45c0cccb7a476f3e9f513af8919a4f077796cf623d99620bb70134dc3fc51be",
+   "fact": "invoice_v1_reference",
+   "meaning_rev": "5d4a63c8",
+   "family": "group:small-context:invoice-04",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a4ad6e41461936ff2010f30a96a659a8cbd9cb571245523c23db97551e4fd979",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-09",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a633ce23d48350b10ad0cef703fa82ce926db64a290426e1c1d6757701019e26",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-02",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a7e83198b4bd1274cca2f4c88b31da770d20c5e26b13f4709f66eccf2e1f01d7",
+   "fact": "invoice_v1_reference",
+   "meaning_rev": "5d4a63c8",
+   "family": "group:small-context:invoice-04",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a84eab161469e59e4c8a2c3dbf2cc11d5b6cc773360ffd201aee7ccfa4a59db4",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-05",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "a92f20d3a4bb5753cb70e97a2835fa6cab5b5b002405a0333c787afd4bb5c8b9",
+   "fact": "invoice_v2",
+   "meaning_rev": "4903fe70",
+   "family": "group:small-context:invoice-06",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "aa5c1c928d4092ab3dde7561c7f411cc569d4fdbb3c99ca6d80fa7d34d5bf23a",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-03",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "aacc262edbcc24101c8df0e477de43695a8e31b4bf6265f1f88001cf21410386",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-10",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "add1f52712cea5c6d0b5870c48f1756e0a1d1ce99b52f470e447c2ecb2a9df60",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-04",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "adf49fcd09bd287276fdc300144a96bdc9aa84481d06f220d46b7cf0618c95b5",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-01",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "ae4cd08e3b2b22cb99c764ece24333e6a983c6b0139d07953a8870274995ed85",
+   "fact": "routing_v1_reference",
+   "meaning_rev": "b8277f2d",
+   "family": "group:small-context:routing-06",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "aed08aa687e47616f68884abecba7d755102a0b28fdb6413d34c7ff5cd183b7f",
+   "fact": "routing_v2",
+   "meaning_rev": "d61e706f",
+   "family": "group:small-context:routing-04",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "aefea888f44a3699655d96ad6e539a28c2afe4807262fcc614e6205f4ae91553",
+   "fact": "severity_reference",
+   "meaning_rev": "5bf799b8",
+   "family": "group:small-context:security-06",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "b0b6b0e375e9030acc9c00afc6517160006ae2d5e78856f1478f99b0a3a49d39",
+   "fact": "routing_v1_reference",
+   "meaning_rev": "b8277f2d",
+   "family": "group:small-context:routing-06",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "b1a5b2830420df8be9ac5638b8347a713e5066684cbd8edcdf0c903bcb5b3add",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-04",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "b2658ed7fe71216f7a5c842e58da0cf050cbc6600fcd985e775bd8a2f3f568f6",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-10",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "b405ab89376b85d4d1e47e1c4d20ac977a1d874c0e43e6187dc2fc43eda04164",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-01",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "b57a48440bb269ade1ace195f90933cdab9ce9794e7901da82a7a1d6b93f0fa0",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-10",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "b6dfc7cb778e3374c092028667acef070cb9b40ccce391ef0f236c1bc1d36c10",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-10",
+   "label": 4,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "b7390dcd5ae0de77b1f8539095c7271bb263d4f9d98412a643785dbcc2dbcdde",
+   "fact": "routing_v1_reference",
+   "meaning_rev": "b8277f2d",
+   "family": "group:small-context:routing-10",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "b868450f168bcaaae12b5b9c2874fc28467cbb5982f781f154c4987c1f2697a9",
+   "fact": "routing_v1_reference",
+   "meaning_rev": "b8277f2d",
+   "family": "group:small-context:routing-06",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "b8698bd696358899d298a633130332ebdaf7b6d943265151e2d86226b4ba37f5",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-07",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "b9f4d7c5fe5139962f0524e7cb7640161abea5a862cbe70a758a4477b23aa012",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-03",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "bc3d4419c4ee4efd350684c9cae0c2d9f056ca58f059fed2381243c8d4795df8",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-02",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "bc57de348f130d33019bd07d80646ca07756f8faada644364eaba70bb3fa8d5b",
+   "fact": "duplicate_reference",
+   "meaning_rev": "7388b616",
+   "family": "group:small-context:invoice-10",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "bc9d66b8f0ec5a360c09a40c4d610ea2916750ab4f2f44c3db258071f15b8c4f",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-08",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "bfa05bbb532eb781f4a1d9401d518e83e95fbaf2581582690d4184ce3e534abf",
+   "fact": "routing_v1_reference",
+   "meaning_rev": "b8277f2d",
+   "family": "group:small-context:routing-06",
+   "label": 4,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "bffce2ad9b3484afc2ca9cb318fddf95cc361df70f0fa59194656fd85c1e73db",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-09",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "c0ac8bcfd1dcd1ff4f7b009f92846a4d6f3938fd2b4504fc71dcacb1f8c0399b",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-01",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "c271d6a98819e4801fb2e3b64a37fb19e69e8faf9a41ba09b8ec4c6ab51f44c0",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-01",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "c291ebc9d66a30e8075a7f437b9dcac78ef40e04a431025ada8e375306b94e95",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-08",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "c2bcd6a39f7aa61dd6068b88631f9a8db9db7df64007df1a5c28fce99425ea55",
+   "fact": "routing_v1_reference",
+   "meaning_rev": "b8277f2d",
+   "family": "group:small-context:routing-10",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "c3142083516a9e16bc7589c156576aeac8fe7733e004624b82b486f21018a6b7",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-09",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "c360ab709d3c9dd94600dfa080c456554e6609e3b9272c068cca471c1c399def",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-02",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "c4d533e2c3d9eb5736a611ceb1bb1d14c5e530400ddb107b7de083b8d2463bce",
+   "fact": "severity",
+   "meaning_rev": "44ad3fd0",
+   "family": "group:small-context:security-05",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "c4eb50835f6560000c9c28e67c6f37cf201111e7aee70f81d0e8a46673fabbbd",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-06",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "c75c0ed866bcb8db833115761fea44d08a2582d42e4a3f81888c2c33cf7cb678",
+   "fact": "invoice_v2",
+   "meaning_rev": "4903fe70",
+   "family": "group:small-context:invoice-09",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "c9a38d7f5dbc962a422160daba2febbbbe3fbb1fe84e270acd386803a5506691",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-10",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "c9bc87fb2ce8efa0279d243cc65018f653f6cdb8a62bdbc4d77cf8a15d9f88a7",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "c9e46c25976d51615b4aa0b8d554779dea7cadf0fd0aa133f7f3f574073f24d4",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-07",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "ca8fbbadc91f4fb7718088cd403456b200289f37e12c10774bdae191ff50d4e9",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-07",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "cb5f1473eaf83ffd27de6ccbd6c563c2077d2b456e90b9a048487387f620324c",
+   "fact": "routing_v1_reference",
+   "meaning_rev": "b8277f2d",
+   "family": "group:small-context:routing-10",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "cba502b07400bba72b8a1d594539b7266851988304ea66ea6f27d1e3f39f41f7",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-03",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "cbd4157ff3eb2a4a512ed0b93c4fbca446ce876df17d541aa4a55e121f8ee190",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-10",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "cc27dd630d4b8503ab86388e727b971349385caf7a4236148a429042e955856f",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "cc82591533368e6a0276b2bdafa43d87fb193031b70d6d0f6fd784d5390db24d",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-09",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "cd97de2cba156cf4938ec034eaa67d94f48c024abab39e18e921a2e0b52d8148",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-01",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "ce24485b23ce997e9b542b829c29ea2f48b1e872d7ac4b143fb7633d6c7a6560",
+   "fact": "severity",
+   "meaning_rev": "44ad3fd0",
+   "family": "group:small-context:security-06",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "d0a0dd636e3a2adc81fe4e4974640d47e53e724944cb90a6b26b05b3d56c4442",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-03",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "d187baa8d0b1a430881db35f55cdc36c1ad58768bf995c35556625102541d252",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-02",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "d2df0aa6915ac554145ca5937af5490bce40ae9c2d9c5ab77795bdbcf6a3c8ba",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-05",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "d34c49490b444c8c56a26f6a32e7938e1390b62ef715f7544bfdbb0b701af1a7",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-09",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "d3658bd35d1275b090b764127ab614484020d005fe77ac5a2d02a29aa1dbb7b9",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-01",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "d3b8100c65e585b6dc45463410c8bfbdd3447dc6fb4630f7eed727c22f320f11",
+   "fact": "security_v2",
+   "meaning_rev": "c474b0ab",
+   "family": "group:small-context:security-02",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "d41b5057ca92c864531b0a6ba5b24774f394ab8a8cc134b88ac1522f3018d6a4",
+   "fact": "severity_reference",
+   "meaning_rev": "5bf799b8",
+   "family": "group:small-context:security-06",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "d50855a902f12172622a33e6d94f462c8cfe7896722c53ab72f542b24d7ba5ca",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-07",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "d539a38402388551871d8db71ff366a15649e50355cbc571a123ef305d4ad3c3",
+   "fact": "routing_v1_reference",
+   "meaning_rev": "b8277f2d",
+   "family": "group:small-context:routing-02",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "d588ca12a6db99b245e314a36c488cbe93329202c7cabc79bf3eb9ab8b97ac31",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-01",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "d5be5c494d771f88fa1ecd88f13d0e6db573936b94e1fdeab66684fb4bc322d4",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-11",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "d95cdffe3fe80cbb737bae971a01295776809a717ecc64aa9bf3a0d03dce1b2f",
+   "fact": "invoice_v2",
+   "meaning_rev": "4903fe70",
+   "family": "group:small-context:invoice-01",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "da473cdccb17a766a7f25561fdf08af633d7efb264bfa3b5a08c02ddade150e8",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "dc1251a94f2230ef7255aa5e3e38169122f0781bca907c984f67565e537e6444",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-03",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "dc34de58cc2441723457f53151e1844220773f913c0314d6e0044f0962ce524d",
+   "fact": "security_v1_reference",
+   "meaning_rev": "5ed4b4ad",
+   "family": "group:small-context:security-08",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "dd43130bd9a4387c853bc649ecc7db3b8abe8eac4c5e16a40a4894693a6f8920",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-08",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "de51d12da5a0a639081fca43ac40876f982ae79d1312d0cc33257c5fc44786d1",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-11",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "dffe592d0819a912b87a3cd1c49305cb6c13e59213d345ad82dda8683bf3e40f",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-02",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "e057d41a94b146cffb32021633a9ef21eba3deb990e4e5f96c348f229be5c708",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-07",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "e0b3b2d8740be9197b6634a1dc93be1fd783f62ff821848465c9b2eec3c89db6",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-07",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "e0d3e0093933de509cbfc782e978360cf0dfa681625a53e2297cf03823030f73",
+   "fact": "security_v2",
+   "meaning_rev": "c474b0ab",
+   "family": "group:small-context:security-02",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "e12f4d3bcc9f868c144d5ab6318d1b78b9e13e5bb086892fcd289daeb4c11096",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-03",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "e17ab66ba72131f9d4901f9cefaa52c9011d694514e48432e814486e2f3e6563",
+   "fact": "severity",
+   "meaning_rev": "44ad3fd0",
+   "family": "group:small-context:security-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "e44c213076b53cccaaad6147511045cc03d9a2ebde91df957b71b9e67e8dc8fb",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-04",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "e4bd7b0ba5462e83578112de5f3fbfdcc6f77350ff6d73df92792225a9e11d28",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-07",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "e89b8b68aecfd9827d1c2e2760fe895d614d6e7fe2c98ef7c8ee94c4cd70c63a",
+   "fact": "duplicate",
+   "meaning_rev": "65d0b319",
+   "family": "group:small-context:invoice-03",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "e924a824e4288635e2ef84ffb64e99cb4bf828c4269cc9f465b4b8e7dc316b6b",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-09",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "e9d7e8c6071cd52bb897a7be81676da51a0a2161cfdccf6fe20286d579d50e30",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-02",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "eacc979eedcea6878fd1bf8e01f1aaefa38f150dac783b68806ae0def6ee76f5",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-03",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "ebdc011c9b03f8901fdc0a6e14bf6b0f2b1b0a9508b3afb815c234b2afc2cdca",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "ec08442346ba97b6f873d36b5af872786081251a4edb06dba2f6300f9d221136",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-11",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "ec4eebedc2e0a7b15943d5f15ac5a8c485e5390cd7fb2fa2c61bbe2858287c58",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-10",
+   "label": 4,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "ec87a4b0f259689a9bdc3a5cb23d004f4ceda26a6dad5741a5a8870b8efa926e",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-05",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "ed7bbef1a2ad9fc7bbffd91b390b23a73364a54fdcb82ddc74f3b2fedbbdfd65",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-03",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "ed9759c57f48b29ab1dbcf7ef843ffaa3d6717f6544dd717baad9d0abc7a82b3",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-03",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "ee03d35b06cb1af210e628e6320c821c55fd2d8c8b617a9641189619ddbc9b13",
+   "fact": "routing_v1_reference",
+   "meaning_rev": "b8277f2d",
+   "family": "group:small-context:routing-02",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "ef5c04228c8cf2dda5add4579e8e525ec70f0a8c9c0366bfd470a51885e57ce4",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-04",
+   "label": 2,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "f7a8ac3e4ec2597ba73c2dd62bd3642948d6f95595af3aefe81a5be225d390d7",
+   "fact": "routing_v1",
+   "meaning_rev": "757ab6d6",
+   "family": "group:small-context:routing-10",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "fbdfdae5ef6503485a553e625681dff4388870a4654e037e43fe60e6f03cf7db",
+   "fact": "invoice_v1",
+   "meaning_rev": "61353207",
+   "family": "group:small-context:invoice-01",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "fcf0d4f0ba1142fb039bfbcec3afc8f0863ac7521a67c46e9024426343b3e6c4",
+   "fact": "severity",
+   "meaning_rev": "44ad3fd0",
+   "family": "group:small-context:security-05",
+   "label": 0,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "fd6bc246f7bde6aeaf5f4b27d3b291a4517f4b57baa777035ed8600f756a73f1",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-04",
+   "label": 3,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  },
+  {
+   "id": "fdecb4b50813e4a95c092c5c3819676afcbd1fe827cf1249b18b600b058dd041",
+   "fact": "security_v1",
+   "meaning_rev": "6038a903",
+   "family": "group:small-context:security-02",
+   "label": 1,
+   "taught": false,
+   "selections": [
+    {
+     "selected_by": "manual",
+     "unit": "observation",
+     "independent": false
+    }
+   ],
+   "label_origin": "synthetic"
+  }
+ ],
+ "training_id": "958a2d900757ae894219c1aa3654dad465c3bc9791053da8751106c70a430d08",
+ "id": "a2fb579c9cfc4b4c7fc475c2a27eaaca86cf4195ac2aa0ecfa97038651e8028b"
+}

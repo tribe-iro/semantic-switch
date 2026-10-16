@@ -95,7 +95,7 @@ def test_writable_cache_reuses_and_invalidates_on_change(tmp_path, monkeypatch):
 
 
 def test_receipt_validation_with_read_only_cache_storage_still_rejects_changes(tmp_path, monkeypatch):
-    from semantic_switch import Model
+    from semantic_switch.training import fitted
     monkeypatch.setenv('SEMANTIC_SWITCH_CACHE', str(tmp_path / 'build-cache'))
     gguf, path = specialist(tmp_path, [receipt_row()])
     root = tmp_path / 'readonly-cache'
@@ -105,11 +105,11 @@ def test_receipt_validation_with_read_only_cache_storage_still_rejects_changes(t
     try:
         with warnings.catch_warnings():
             warnings.simplefilter('ignore')
-            model = Model.from_specialization(path)
+            model = fitted(path)
             assert model.provenance.gguf_sha256 == digest(gguf)
             gguf.write_bytes(b'changed')
             with pytest.raises(ConfigError, match='changed since selection'):
-                Model.from_specialization(path)
+                fitted(path)
         assert list(root.iterdir()) == []
     finally:
         root.chmod(stat.S_IRWXU)

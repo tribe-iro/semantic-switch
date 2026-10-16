@@ -13,14 +13,18 @@ import anyio
 import numpy as np
 import pytest
 
-from semantic_switch import Check, ConfigError, Pick, Rate, Runtime, Select, files, judge_from, tools
-from semantic_switch import hosted
+import semantic_switch as ss
+from semantic_switch import Check, ConfigError, Pick, Rate, Runtime, Select, files, tools
 from semantic_switch.adapters.qwen3 import Qwen3Adapter
 from semantic_switch.guidance import normalize
-from semantic_switch.hosted import ATTEMPTS, IN_FLIGHT, OpenRouterJudge, Reply, TransportError
+from semantic_switch.drivers import openrouter
+from semantic_switch.drivers.codecs import distribution
+from semantic_switch.drivers.profiles import CHAT, JEV as JEV_PROFILE
+from semantic_switch.hosted import ATTEMPTS, IN_FLIGHT, HostedJudge, Reply, TransportError
 from semantic_switch.judgment import Judgment
 from semantic_switch.protocols import Question
-from tests.conftest import FakeScorer, transport
+from semantic_testkit.scoring import FakeScorer
+from tests.conftest import transport
 from tests.test_remaining_contracts import definition
 
 EXAMPLE = Path(__file__).parents[1] / "examples" / "quickstart.py"
@@ -52,6 +56,7 @@ class Provider:
         self.rows, self.extra, self.bodies, self.urls, self.closed = rows, extra, [], [], False
 
     async def __call__(self, url, body, timeout):
+        body = json.loads(body)
         self.urls.append(url)
         self.bodies.append(body)
         return Reply(200, response(self.rows(body), **self.extra))
@@ -62,6 +67,7 @@ class Provider:
 
 class Structured(Provider):
     async def __call__(self, url, body, timeout):
+        body = json.loads(body)
         self.urls.append(url)
         self.bodies.append(body)
         answers = {}
@@ -104,7 +110,7 @@ def scripted(*replies, clock=None, cost=0.0):
 
 
 def judge(send, clock, **settings):
-    return OpenRouterJudge("m", provider="p", transport=send, clock=clock, sleep=clock.sleep, **settings)
+    return HostedJudge(openrouter.OpenRouter("p"), "m", CHAT, transport=send, clock=clock, sleep=clock.sleep, **settings)
 
 
 def one(judge_):
@@ -121,11 +127,11 @@ def test_public_configuration_selects_local_or_openrouter_without_bench():
     assert not any(name.split(".")[0] == "bench" for name in imported)
     script = ("import importlib.util, sys; spec = importlib.util.spec_from_file_location('quickstart', sys.argv[1]); "
               "module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module); "
-              "local = module.judge({}); hosted = module.judge({'OPENROUTER_MODEL': 'm', 'OPENROUTER_PROVIDER': 'p'}); "
-              "print(type(local).__name__, type(hosted).__name__, hosted.provider, any(m.split('.')[0] == 'bench' for m in sys.modules)); hosted.close()")
+              "local = module.judge({}); hosted = module.judge({'OPENROUTER_MODEL': 'm', 'OPENROUTER_PROVIDER': 'p', 'OPENROUTER_CODEC': 'chat'}); "
+              "print(type(local).__name__, type(hosted).__name__, hosted.provider.route, any(m.split('.')[0] == 'bench' for m in sys.modules)); hosted.close()")
     out = subprocess.run([sys.executable, "-c", script, str(EXAMPLE)], capture_output=True, text=True, check=True,
                          env={**os.environ, "OPENROUTER_API_KEY": "k"}).stdout.split()
-    assert out == ["Model", "OpenRouterJudge", "p", "False"]
+    assert out == ["Model", "HostedJudge", "p", "False"]
 
 
 @pytest.mark.parametrize("question", QUESTIONS)
@@ -134,17 +140,26 @@ def test_rendered_question_matches_native_adapter(question):
     request = adapter.request(adapter.state("I was charged twice."), [question])
     native = adapter.scorer.detokenize(request.prefix + request.state + request.suffixes[0])
     provider = Provider()
-    judge_from("openrouter:m", transport=provider).score_many([("I was charged twice.", [question])])
+    ss.judge("openrouter:m", codec="chat", transport=provider).score_many([("I was charged twice.", [question])])
     system, user = (message["content"] for message in provider.bodies[0]["messages"])
     assert native == f"<|im_start|>system\n{system}<|im_end|>\n<|im_start|>user\n{user}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
 
 
-def test_answer_tokens_group_by_normalized_text_with_lower_bound_mass():
+def test_answer_tokens_match_declared_spellings_with_lower_bound_mass():
     rows = {"true": math.log(.5), " True": math.log(.2), "TRUE ": math.log(.05), "false": math.log(.1), "maybe": math.log(.1)}
-    scores = judge_from("openrouter:m", transport=Provider(lambda _: rows)).score_many([("x", [QUESTIONS[0]])])[0].scores[0]
-    assert scores.error is None and scores.mass == pytest.approx(.85) and np.allclose(scores.probs, [.75 / .9, .1 / .9])
-    three = judge_from("openrouter:m", transport=Provider(lambda _: {" a": math.log(.6), "C": math.log(.3)})).score_many([("x", [QUESTIONS[2]])])[0].scores[0]
-    assert three.mass == pytest.approx(.9) and np.allclose(three.probs, [.6, 0, .3])
+    scores = ss.judge("openrouter:m", codec="chat", transport=Provider(lambda _: rows)).score_many([("x", [QUESTIONS[0]])])[0].scores[0]
+    assert scores.error is None and scores.mass == pytest.approx(.8) and np.allclose(scores.probs, [.7 / .85, .1 / .85])
+    three = ss.judge("openrouter:m", codec="chat", transport=Provider(lambda _: {" a": math.log(.6), "C": math.log(.3)})).score_many([("x", [QUESTIONS[2]])])[0].scores[0]
+    assert three.mass == pytest.approx(.3) and np.allclose(three.probs, [0, 0, .75])
+
+
+def test_lowercase_letters_are_not_option_letters():
+    nine = Question("pick", "Which one?", tuple(f"option {k}" for k in range(9)))
+    rows = {" I": math.log(.6), "i": math.log(.2), "a": math.log(.1), " a": math.log(.05)}
+    judge_ = ss.judge("openrouter:m", codec="chat", transport=Provider(lambda _: rows))
+    score = judge_.score_many([("x", [nine])])[0].scores[0]
+    assert score.mass == pytest.approx(.6) and score.probs[8] == pytest.approx(.6 / .65) and score.probs[:8].sum() == 0
+    assert judge_.identity["codec"] == "chat@2" and judge_.identity["answers"] == "declared-exact-spellings@1"
 
 
 @pytest.mark.parametrize("provider,error", [
@@ -155,27 +170,29 @@ def test_answer_tokens_group_by_normalized_text_with_lower_bound_mass():
     (transport(lambda url, body, timeout: Reply(200, {"provider": "p"})), "returned model"),
 ])
 def test_incomplete_or_unsupported_scores_are_explicit_errors(provider, error):
-    scores = judge_from("openrouter:m", provider="p", transport=provider).score_many([("x", [QUESTIONS[0]])])[0].scores[0]
+    scores = ss.judge("openrouter:m", codec="chat", provider="p", transport=provider).score_many([("x", [QUESTIONS[0]])])[0].scores[0]
     assert scores.probs is None and scores.mass is None and error in scores.error
 
 
 def test_chat_request_pins_provider_and_records_protocol_and_returned_identity():
     provider = Provider()
-    judge_ = judge_from("openrouter:m", provider="p", transport=provider)
+    judge_ = ss.judge("openrouter:m", codec="chat", provider="p", transport=provider)
     scored = judge_.score_many([("x", QUESTIONS[:2])])[0]
     body = provider.bodies[0]
     assert len(provider.bodies) == 2 and scored.tokens == 14 and set(provider.urls) == {"https://openrouter.ai/api/v1/chat/completions"}
     assert body["provider"] == {"only": ["p"], "allow_fallbacks": False, "require_parameters": True}
     assert (body["max_tokens"], body["logprobs"], body["top_logprobs"], body["reasoning"]) == (1, True, 20, {"enabled": False})
-    assert {key: judge_.identity[key] for key in ("source", "model", "provider", "protocol", "question_scope")} == {
-        "source": "openrouter", "model": "m", "provider": "p", "protocol": "chat-logprobs", "question_scope": "individual"}
+    assert {key: judge_.identity[key] for key in ("source", "model", "remote", "protocol", "question_scope", "codec", "score_semantics")} == {
+        "source": "openrouter", "model": "m", "remote": {"route": "p", "observed": "per-response", "weights": None, "guarantee": "observed-identity"},
+        "protocol": "chat-logprobs", "question_scope": "individual", "codec": "chat@2",
+        "score_semantics": "answer-token-lower-bound@2:top20"}
     assert scored.model == judge_.returned == "m@p" and {s.model for s in scored.scores} == {"m@p"}
     assert [(s.request.attempts, s.request.status, s.request.usage) for s in scored.scores] == [(1, 200, {"prompt_tokens": 7})] * 2 and scored.scores[0].request is not scored.scores[1].request
 
 
-def test_structured_protocol_is_resolved_from_the_verified_table():
+def test_structured_protocol_is_resolved_from_profile_data():
     provider = Structured()
-    judge_ = judge_from(f"openrouter:{JEV}", provider="TypeSafe", transport=provider)
+    judge_ = ss.judge(f"openrouter:{JEV}", provider="TypeSafe", transport=provider)
     questions = [QUESTIONS[0], QUESTIONS[2], QUESTIONS[3], Question("rate", "How urgent?", ("low", "mid", "high"))]
     scored = judge_.score_many([("case", questions)])[0]
     body, = provider.bodies
@@ -188,12 +205,19 @@ def test_structured_protocol_is_resolved_from_the_verified_table():
     assert all(score.error is None for score in scored.scores) and np.allclose(scored.scores[3].probs, [.05, .05, .9])
     assert scored.model == f"{JEV}@TypeSafe" and scored.tokens == 9 and len({s.request.id for s in scored.scores}) == 1
     assert (judge_.identity["protocol"], judge_.identity["question_scope"]) == ("systemone", "joint")
-    assert judge_from("openrouter:typesafe/jev-1.13-preview", transport=Provider()).identity["protocol"] == "chat-logprobs"
+    assert judge_.identity["profile"]["name"] == JEV_PROFILE.name and judge_.identity["precision"]["decimals"] == 2
+    with pytest.raises(ConfigError, match="no built-in profile"):
+        ss.judge("openrouter:typesafe/jev-1.13-preview", transport=Provider())
+    with pytest.raises(ConfigError, match="needs a declared profile"):
+        ss.judge("openrouter:typesafe/jev-1.13-preview", codec="systemone", transport=Provider())
+    with pytest.raises(ConfigError, match="uses codec 'systemone', not 'chat'"):
+        ss.judge(f"openrouter:{JEV}", codec="chat", transport=Provider())
+    assert ss.judge("openrouter:typesafe/jev-1.13-preview", codec="chat", transport=Provider()).identity["protocol"] == "chat-logprobs"
 
 
 @pytest.mark.parametrize("model,send", [("m", Provider()), (JEV, Structured())])
 def test_every_primitive_runs_on_both_protocols(model, send):
-    with Runtime({"judge": judge_from(f"openrouter:{model}", provider="p" if model == "m" else "TypeSafe", transport=send)}, own_judges=True) as rt:
+    with Runtime(ss.judge(f"openrouter:{model}", provider="p" if model == "m" else "TypeSafe", transport=send, codec="chat" if model == "m" else None), own_judges=True) as rt:
         results = rt.ask("Refund the duplicate charge today.", {
             "claim": Check("The customer asks for a refund."),
             "silent": Check("The customer mentions a leak.", unstated=True),
@@ -209,13 +233,14 @@ def test_luna_decisions_answers_through_system_one_with_recorded_shapes():
     luna, bodies = "openai/gpt-6-luna-decisions", []
 
     async def send(url, body, timeout):
+        body = json.loads(body)
         bodies.append((url, body))
         q = body["questions"]["q0"]
         answer = {"noul": {"type": "noul", "noul": 1},
                   "choice": {"type": "choice", "choice": "A", "probabilities": dict(zip(q.get("criteria", ()), (.99, .01, 0))), "confidence": .99},
                   "score": {"type": "score", "score": 2, "legend": {"0": "low", "1": "mid", "2": "high"}, "probabilities": {"0": 0, "1": 0, "2": 1}, "confidence": 1}}[q["type"]]
         return Reply(200, {"model": f"{luna}-20261006", "answers": {"q0": answer}, "usage": {"input_tokens": 150, "output_tokens": 0}, "provider": "OpenAI"})
-    with Runtime({"judge": judge_from(f"openrouter:{luna}", transport=send)}, own_judges=True) as rt:
+    with Runtime(ss.judge(f"openrouter:{luna}", transport=send), own_judges=True) as rt:
         assert rt.judge().identity["protocol"] == "systemone"
         claim, silent, team, urgency = (item.run(["Refund my kettle."], rt)[0] for item in (
             Check("The customer asks for a refund."), Check("The customer asks for a refund.", unstated=True),
@@ -228,21 +253,23 @@ def test_luna_decisions_answers_through_system_one_with_recorded_shapes():
 
 def test_structured_limits_are_validated_before_sending():
     provider = Structured()
-    with Runtime({"judge": judge_from(f"openrouter:{JEV}", transport=provider)}, own_judges=True) as rt:
+    with Runtime(ss.judge(f"openrouter:{JEV}", transport=provider), own_judges=True) as rt:
         with pytest.raises(ConfigError, match="2 to 10 levels"):
             rt.rate("case", "How urgent?", [f"level {i}" for i in range(11)])
     assert provider.bodies == []
 
 
 @pytest.mark.parametrize("answers,error", [
-    ({"q0": {"probabilities": {"A": .9, "B": .2}}, "q1": {"noul": .99}}, "sum to one"),
-    ({"q0": {"probabilities": {"AA": .9, "B": .1}}, "q1": {"noul": .99}}, "answer letters"),
-    ({"q0": {"type": "noul", "noul": .9}, "q1": {"noul": .99}}, "answer type differs"),
-    ({"q0": {"refusal": "policy"}, "q1": {"noul": .99}}, "hosted refusal"),
+    ({"q0": {"type": "choice", "probabilities": {"A": .9, "B": .2}}, "q1": {"type": "noul", "noul": .99}}, "differs from one by more than"),
+    ({"q0": {"type": "choice", "probabilities": {"AA": .9, "B": .1}}, "q1": {"type": "noul", "noul": .99}}, "option ids A, B"),
+    ({"q0": {"type": "noul", "noul": .9}, "q1": {"type": "noul", "noul": .99}}, "differs from the requested 'choice'"),
+    ({"q0": {"probabilities": {"A": .9, "B": .1}}, "q1": {"type": "noul", "noul": .99}}, "answer type None"),
+    ({"q1": {"type": "noul", "noul": .99}}, "no answer"),
+    ({"q0": {"refusal": "policy"}, "q1": {"type": "noul", "noul": .99}}, "hosted refusal"),
 ])
 def test_structured_malformed_answers_fail_alone(answers, error):
     send = transport(lambda url, body, timeout: Reply(200, {"model": JEV, "provider": "TypeSafe", "answers": answers}))
-    scores = judge_from(f"openrouter:{JEV}", transport=send).score_many([("x", [QUESTIONS[3], QUESTIONS[0]])])[0].scores
+    scores = ss.judge(f"openrouter:{JEV}", transport=send).score_many([("x", [QUESTIONS[3], QUESTIONS[0]])])[0].scores
     assert error in scores[0].error and scores[1].error is None
 
 
@@ -251,7 +278,7 @@ def test_structured_malformed_answers_fail_alone(answers, error):
                                            ({"model": JEV, "provider": "Other", "answers": {}}, "provider route changed")])
 def test_structured_envelopes_and_drift_fail_the_request(payload, error):
     send = transport(lambda url, body, timeout: Reply(200, payload))
-    scores = judge_from(f"openrouter:{JEV}", provider="TypeSafe", transport=send).score_many([("x", QUESTIONS[:2])])[0].scores
+    scores = ss.judge(f"openrouter:{JEV}", provider="TypeSafe", transport=send).score_many([("x", QUESTIONS[:2])])[0].scores
     assert all(error in score.error for score in scores)
 
 
@@ -330,6 +357,7 @@ def test_admission_is_global_ordered_and_released():
     lock, live, peak, release = threading.Lock(), [0], [0], threading.Event()
 
     async def send(url, body, timeout):
+        body = json.loads(body)
         with lock:
             live[0] += 1
             peak[0] = max(peak[0], live[0])
@@ -338,7 +366,7 @@ def test_admission_is_global_ordered_and_released():
             live[0] -= 1
         return Reply(200, response(default_rows(body), prompt_tokens=int(body["messages"][1]["content"].split("\n")[1])))
 
-    judge_ = judge_from("openrouter:m", transport=send, batch_inputs=2)
+    judge_ = ss.judge("openrouter:m", codec="chat", transport=send, batch_inputs=2)
     capacity = IN_FLIGHT * judge_.batch_inputs
     outputs = {}
     callers = [threading.Thread(target=lambda n=n: outputs.__setitem__(n, judge_.score_many(
@@ -365,7 +393,7 @@ def blocked(timeout):
         entered.set()
         await held(release)
         return OK
-    judge_ = judge_from("openrouter:m", provider="p", transport=send, batch_inputs=1, timeout=timeout)
+    judge_ = ss.judge("openrouter:m", codec="chat", provider="p", transport=send, batch_inputs=1, timeout=timeout)
     outcome = []
 
     def run():
@@ -413,14 +441,14 @@ def test_close_wakes_waiters_and_refuses_new_work():
 
 def test_owns_created_transports_and_borrows_supplied(monkeypatch):
     supplied = Provider()
-    used = judge_from("openrouter:m", transport=supplied)
+    used = ss.judge("openrouter:m", codec="chat", transport=supplied)
     one(used)
     used.close()
     assert not supplied.closed
     created, transferred = Provider(), Provider()
-    monkeypatch.setattr(hosted, "http", lambda *args: created)
-    judge_from("openrouter:m", key="k").close()
-    owned = judge_from("openrouter:m", transport=transferred, own_transport=True)
+    monkeypatch.setattr(openrouter.OpenRouter, "wire", lambda *args: created)
+    ss.judge("openrouter:m", codec="chat", key="k").close()
+    owned = ss.judge("openrouter:m", codec="chat", transport=transferred, own_transport=True)
     one(owned)
     owned.close()
     owned.close()
@@ -430,23 +458,23 @@ def test_owns_created_transports_and_borrows_supplied(monkeypatch):
 def test_missing_key_is_actionable(monkeypatch):
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
     with pytest.raises(ConfigError, match="OPENROUTER_API_KEY"):
-        judge_from("openrouter:m")
+        ss.judge("openrouter:m", codec="chat")
 
 
 def test_lock_requires_pinned_provider_and_relock(tmp_path):
     path = definition(tmp_path, guidance={}, facts={"refund": {"check": "Refund requested."}})
-    with Runtime({"judge": FakeScorer(lambda *args: [.99, .01])}) as rt:
+    with Runtime(FakeScorer(lambda *args: [.99, .01])) as rt:
         tools.lock(rt, path)
     local = files.read_json(path.with_suffix(".lock.json"))
-    with Runtime({"judge": judge_from("openrouter:m", transport=Provider())}, own_judges=True) as rt:
+    with Runtime(ss.judge("openrouter:m", codec="chat", transport=Provider()), own_judges=True) as rt:
         with pytest.raises(ConfigError, match="pinned provider"):
             tools.lock(rt, path)
-    with Runtime({"judge": judge_from("openrouter:m", provider="p", transport=Provider())}, own_judges=True) as rt:
+    with Runtime(ss.judge("openrouter:m", codec="chat", provider="p", transport=Provider()), own_judges=True) as rt:
         with pytest.raises(ConfigError, match="re-run `ss lock`"):
-            rt.load(path)
+            rt.load(path).snapshot
         tools.lock(rt, path)
         sw = rt.load(path)
-        assert sw.snapshot.returned_models == ("m@p",) and sw("case").status == "ok"
+        assert sw.snapshot.returned_models == {"judge": ("m@p",)} and sw("case").status == "ok"
     assert files.read_json(path.with_suffix(".lock.json"))["models"]["judge"] != local["models"]["judge"]
 
 
@@ -454,15 +482,15 @@ def test_bench_judge_spec_records_every_attempt(tmp_path, monkeypatch):
     from bench import quality
     from bench.outcomes import judged
     provider = Provider()
-    monkeypatch.setattr("bench.receipts.http", lambda *args: provider)
+    monkeypatch.setattr("semantic_switch.drivers.openrouter.OpenRouter.wire", lambda *args: provider)
     (tmp_path / "key").write_text("OPENROUTER_API_KEY=k\n")
-    with judged("openrouter:m", provider="p", key_file=tmp_path / "key", device="cpu") as (rt, recording):
-        assert rt.judge().provider == "p"
+    with judged("openrouter:google/gemma-4-31b-it", provider="p", key_file=tmp_path / "key", device="cpu") as (rt, recording):
+        assert rt.judge().provider.route == "p"
         result = quality.run(rt, checks_spec={"refund": quality.CHECKS["refund"]}, picks_spec=[])
         summary = recording.summary()
     assert result["checks"] and all(row["p"] is not None for row in result["checks"])
     assert summary["requests"] == len(provider.bodies) and summary["usage"]["prompt_tokens"] == 7 * summary["requests"]
-    assert {(row["requested_provider"], row["status"], row["completion"]) for row in summary["receipts"]} == {("p", 200, "response")}
+    assert {row["status"] for row in summary["receipts"]} == {200}
     assert provider.closed
 
 
@@ -490,12 +518,12 @@ def test_hosted_connection_reuse_against_a_local_server():
     server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
-    wire = hosted.http("local-test-key")
+    wire = openrouter.OpenRouter(key="local-test-key").wire(8, 1 << 20)
     url = f"http://127.0.0.1:{server.server_port}"
 
     async def exchange():
         try:
-            return [await wire(url, {}, 5) for _ in range(3)]
+            return [await wire(url, b"{}", 5) for _ in range(3)]
         finally:
             await wire.close()
     try:
@@ -509,11 +537,11 @@ def test_hosted_connection_reuse_against_a_local_server():
 
 
 def test_request_records_reach_public_results_and_switch_cost(tmp_path):
-    with Runtime({"judge": judge(Provider(), Clock())}, own_judges=True) as rt:
+    with Runtime(judge(Provider(), Clock()), own_judges=True) as rt:
         shared = rt.ask("Refund me", {"refund": Check("Is the customer asking for a refund?"), "team": Pick("Which team?", {"billing": "charges", "support": "faults"})})
         path = tmp_path / "route.yaml"
         files.publish(path, {"name": "route", "fields": {"message": {"type": "text", "required": True}}, "reads": ["message"],
-                             "facts": {"refund": {"check": "Is the customer asking for a refund?"}}, "cases": [{"id": "r", "when": "refund", "then": "refund"}],
+                             "facts": {"refund": {"check": "Is the customer asking for a refund?"}}, "rules": [{"id": "r", "when": "refund", "then": "refund"}],
                              "otherwise": "other"})
         routed = rt.load(path)({"message": "Refund me"})
     for result in shared.values():
@@ -523,9 +551,10 @@ def test_request_records_reach_public_results_and_switch_cost(tmp_path):
     assert [request["attempts"] for request in routed.cost["requests"]] == [1] and routed.facts["refund"].requests
 
 
-def test_structured_probabilities_tolerate_two_decimal_rounding():
-    question = Question("pick", "Which?", ("a", "b", "c", "d", "e"))
-    assert hosted.distribution(question, {0: .21, 1: .21, 2: .21, 3: .21, 4: .17}).sum() == pytest.approx(1)
-    assert hosted.distribution(question, {0: .2, 1: .2, 2: .2, 3: .2, 4: .19}).sum() == pytest.approx(1)
-    with pytest.raises(ValueError, match="sum to one"):
-        hosted.distribution(question, {0: .3, 1: .3, 2: .2, 3: .2, 4: .1})
+def test_jev_profile_tolerates_its_declared_two_decimal_rounding():
+    keys, precision = ("A", "B", "C", "D", "E"), JEV_PROFILE.precision
+    assert distribution(dict(zip(keys, (.21, .21, .21, .21, .17))), keys, precision)[1].sum() == pytest.approx(1)
+    raw, probs = distribution(dict(zip(keys, (.2, .2, .2, .2, .19))), keys, precision)
+    assert raw.sum() == pytest.approx(.99) and probs.sum() == pytest.approx(1) and probs[0] == pytest.approx(.2 / .99)
+    with pytest.raises(ValueError, match="differs from one"):
+        distribution(dict(zip(keys, (.3, .3, .2, .2, .1))), keys, precision)

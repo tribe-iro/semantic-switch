@@ -1,0 +1,59 @@
+name: support_snapshot
+
+fields:
+  order: { type: text, required: true }
+  delivered_days_ago: { type: number, source: account }
+  amount: { type: number, source: account }
+  refund_blocked: { type: bool, source: account }
+  message: { type: text, required: true, author: customer }
+
+reads: [order, message]
+
+facts:
+  issues:
+    select: Which problems does the customer currently report about this order?
+    labels:
+      size_mismatch: The delivered item is the wrong size or does not fit as ordered.
+      color_mismatch: The delivered item is a different color from the one ordered.
+      stain_damage: The delivered item arrived stained, torn or otherwise damaged.
+      missing_delivery: The order or part of it has not arrived.
+      disputed_charge: The customer disputes a charge for this order.
+  requests:
+    select: Which operations does the customer currently request for this order?
+    labels:
+      refund_initiate: Start a refund of money for this order.
+      refund_status: Report the status of an existing refund.
+      refund_update: Change the amount, method or details of an existing refund.
+      return_item: Arrange a return of the item.
+      replacement: Send a replacement item.
+      delivery_change: Change the delivery address, date or method.
+      order_change: Change or cancel items of an order not yet shipped.
+  hazard:
+    check: The customer reports a safety hazard from the delivered item, such as a chemical leak, burn or injury.
+  impact:
+    rate: How severe is the service impact on the customer?
+    levels: [low, moderate, high]
+
+rules:
+  - id: refund_blocked
+    when: 'requests has "refund_initiate" and refund_blocked'
+    then: refund_ineligible
+  - id: refund_window
+    when: 'requests has "refund_initiate" and not issues has "missing_delivery" and delivered_days_ago > 30'
+    then: refund_ineligible
+  - id: refund_limit
+    when: 'requests has "refund_initiate" and amount > 500'
+    then: refund_ineligible
+  - id: refund
+    when: 'requests has "refund_initiate" and not issues is empty'
+    then: initiate_refund
+  - id: status
+    when: 'requests has "refund_status" or requests has "refund_update"'
+    then: refund_desk
+  - id: exchange
+    when: 'requests has "return_item" or requests has "replacement"'
+    then: return_or_replace
+  - id: change
+    when: 'requests has "delivery_change" or requests has "order_change"'
+    then: change_order
+otherwise: no_action

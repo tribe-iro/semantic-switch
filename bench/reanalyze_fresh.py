@@ -7,6 +7,7 @@ from pathlib import Path
 from semantic_switch import files
 from semantic_switch.compiler import digest
 from bench.quality import SUITE_VERSION
+from bench.outcomes import output_argument, report
 
 
 REVERSED_PAIRS = {'decline:4', 'decline:9'}
@@ -42,10 +43,7 @@ def reanalyze(source):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--source', type=Path, default=Path('bench/results/fresh_rows.json'))
-    parser.add_argument('--output', type=Path, default=Path('bench/results/fresh-corrected-gold-v2.json'))
+    parser.add_argument('--source', type=Path, required=True)
+    output_argument(parser)
     args = parser.parse_args()
-    if args.source.resolve() == args.output.resolve():
-        parser.error('reanalysis must preserve the source artifact')
-    result = reanalyze(args.source)
-    files.publish(args.output, result)
+    report(args.output, reanalyze(args.source))

@@ -11,13 +11,14 @@ import time
 import pytest
 
 from semantic_switch import Check, ConfigError, Runtime, files, tools
-from semantic_switch.examples import label_record
+from semantic_switch.examples import LABEL_FIELDS
 from semantic_switch.results import thaw
 from bench.fresh import FRESH
 from bench.quality import check_items, render
 from bench.outcomes import classification_metrics, finish, measure, resumable, task, work_key
-from tests.conftest import FakeScorer, transport
-from tests.test_remaining_contracts import definition
+from semantic_testkit.labels import presentation
+from semantic_testkit.scoring import FakeScorer
+from tests.conftest import transport
 
 
 def test_fresh_decline_gold_orientation():
@@ -98,24 +99,6 @@ def test_audit_rejects_inconsistent_raw_correctness():
     assert summarize(rows)['fact:refund']['raw_correct'] == 0
 
 
-def test_audit_duplicate_ids_fail_before_predictor(tmp_path):
-    from bench.policy_audit import run
-    scorer = FakeScorer()
-    with Runtime({'judge': scorer}) as runtime:
-        path = definition(tmp_path)
-        tools.lock(runtime, path)
-        sw = runtime.load(path)
-        rows = [label_record(sw.plan, {'message': f'case {n}'}, {'refund': True}, sources={'refund': [{'origin': 'human', 'producer': 'fixture'}]}, groups=[f'family{n}']) for n in range(2)]
-        for row in rows:
-            row['id'] = 'duplicate'
-        audit = tmp_path / 'audit.jsonl'
-        files.publish(audit, ''.join([json.dumps(row) + '\n' for row in rows]))
-        before = len(scorer.requests)
-        with pytest.raises(ConfigError, match='IDs'):
-            run(runtime, path, audit)
-        assert len(scorer.requests) == before
-
-
 def test_benchmark_latency_includes_json_materialization(monkeypatch):
     from bench import outcomes
     original = outcomes.json.dumps
@@ -185,8 +168,8 @@ def test_failed_snapshot_rows_retain_elapsed_work_and_unknown_counters():
 
 
 def test_raised_scorer_operations_become_failed_submitted_rows(capsys):
-    from contextlib import nullcontext
     from bench import equipment, openrouter
+    from bench.outcomes import Receipts
 
     class Failing(Counted):
         def pick(self, *args):
@@ -194,22 +177,18 @@ def test_raised_scorer_operations_become_failed_submitted_rows(capsys):
             raise RuntimeError('backend down')
         ask = check = ask_many = pick
 
+        def preview(self, *args, **kwargs):
+            from semantic_switch.results import Preview
+            return Preview(None, (), ())
+
         def identity(self):
             return {}
 
-    class Recording:
-        records = []
-
-        def recording(self, name):
-            return nullcontext()
-
-        def summary(self):
-            return {}
     rows = [{'input': {'report': 'r'}, 'expected': equipment.NONE, 'trap': 't'}]
     got, progress = equipment.run_direct(Failing(), rows)
     assert got[0]['outcome'] == 'failed' and got[0]['error'] == {'type': 'RuntimeError', 'stage': 'execute'} and got[0]['ms'] > 0
     assert got[0]['native_work'] == {'decodes': 3} and equipment.summarize(got)['failed'] == 1 and progress['failed'] == progress['submitted'] == 1
-    report = openrouter.run_preflight(Failing(), Recording())
+    report = openrouter.run_preflight(Failing(), Receipts())
     assert report['progress']['submitted'] == report['progress']['failed'] == report['progress']['total'] and not report['progress']['accepted']
     assert all(row['outcome'] == 'failed' and row['ms'] > 0 and row['result']['status'] == 'failed' for row in report['observations'])
     assert report['metrics']['protocol_failures'] == report['submitted'] and report['binary']['error']['stage'] == 'execute'
@@ -218,16 +197,16 @@ def test_raised_scorer_operations_become_failed_submitted_rows(capsys):
 
 def test_regression_template_copies_share_family(tmp_path):
     from bench.openrouter import regression_binding
-    with Runtime({'judge': FakeScorer(lambda *args: [.99, .005, .005])}) as runtime:
+    with Runtime(FakeScorer(lambda *args: [.99, .005, .005])) as runtime:
         path = regression_binding(runtime, tmp_path / 'regression', tmp_path / 'audit.jsonl')
     rows = files.read_jsonl(path.with_suffix('.test.jsonl'))
     assert len({row['groups'][0] for row in rows}) == 2
-    assert all('two templates' in row['provenance']['purpose'] for row in rows)
+    assert all(row['tags'] == ['lock-plumbing'] and set(row) <= set(LABEL_FIELDS) for row in rows)
 
 
 def test_development_family_does_not_cross_partitions(tmp_path):
     from bench.openrouter import regression_binding
-    with Runtime({'judge': FakeScorer(lambda *args: [.99, .005, .005])}) as runtime:
+    with Runtime(FakeScorer(lambda *args: [.99, .005, .005])) as runtime:
         path = regression_binding(runtime, tmp_path / 'regression', tmp_path / 'audit.jsonl')
         sw = runtime.load(path)
         from semantic_switch.tools.data import Labels
@@ -238,21 +217,26 @@ def test_development_family_does_not_cross_partitions(tmp_path):
 
 
 def test_generic_and_joint_request_counts():
-    from bench.receipts import RecordingTransport
-    from semantic_switch import judge_from
+    from semantic_switch import judge
     from semantic_switch.hosted import Reply
+    from bench.outcomes import Receipts
     token = {'model': 'test', 'choices': [{'finish_reason': 'length', 'logprobs': {'content': [{'token': 'true', 'logprob': -.01,
               'top_logprobs': [{'token': 'false', 'logprob': -5}]}]}}], 'usage': {'prompt_tokens': 4}}
-    recording = RecordingTransport(send=transport(lambda url, body, timeout: Reply(200, token)))
-    with Runtime({'judge': judge_from('openrouter:test', transport=recording)}, own_judges=True) as runtime:
+    receipts = Receipts()
+    with Runtime(judge('openrouter:test', codec='chat', transport=transport(lambda url, body, remaining: Reply(200, token))), own_judges=True,
+                 on_decision=receipts) as runtime:
+        with receipts.operation('generic'):
+            runtime.ask('case', {'a': Check('A claim.'), 'b': Check('B claim.')})
+    summary = receipts.summary()
+    assert summary['requests'] == 2 and summary['usage']['prompt_tokens'] == 8 and set(summary['by_operation']) == {'generic'}
+    assert all(set(row['targets']) <= {'a', 'b'} and row['models'] == ['test'] for row in summary['receipts'])
+
+    def joint(url, body, remaining):
+        return Reply(200, {'model': 'test', 'answers': {key: {'type': 'noul', 'noul': .99} for key in body['questions']}})
+    receipts = Receipts()
+    with Runtime(judge('openrouter:typesafe/jev-1.13', transport=transport(joint)), own_judges=True, on_decision=receipts) as runtime:
         runtime.ask('case', {'a': Check('A claim.'), 'b': Check('B claim.')})
-    assert len(recording.records) == 2
-    def joint(url, body, timeout):
-        return Reply(200, {'model': 'test', 'answers': {key: {'noul': .99} for key in body['questions']}})
-    recording = RecordingTransport(send=transport(joint))
-    with Runtime({'judge': judge_from('openrouter:typesafe/jev-1.13', transport=recording)}, own_judges=True) as runtime:
-        runtime.ask('case', {'a': Check('A claim.'), 'b': Check('B claim.')})
-    assert len(recording.records) == 1
+    assert len(receipts) == 1 and sorted(receipts.rows[0]['targets']) == ['a', 'b']
 
 
 def test_heterogeneous_workload_questions_have_gold():
@@ -260,10 +244,11 @@ def test_heterogeneous_workload_questions_have_gold():
     case, guidance, items, gold = heterogeneous_workload()
     assert len(items) == len(gold) == 8 and set(items) == set(gold)
     assert len({type(item) for item in items.values()}) == 3
-    with Runtime({'judge': FakeScorer()}) as runtime:
+    with Runtime(FakeScorer()) as runtime:
         for item in items.values():
             description = task(runtime, item, case, guidance)
-            assert description['definition'] == thaw(item.describe()) and description['guidance_digest']
+            assert description['definition'] == thaw(item.describe()) and description['error'] is None
+            assert description['stages'] and all(request['representation'] == 'local' and request['digest'] for request in description['requests'])
 
 
 def test_bounded_policy_expected_actions_are_literal():
@@ -281,7 +266,7 @@ def test_policy_fixture_exact_and_semantic_boundaries(tmp_path):
     path = tmp_path / 'returns.yaml'
     files.publish(path, definition(POLICY))
     scorer = FakeScorer(lambda *args: [.99, .005, .005])
-    with Runtime({'judge': scorer}) as runtime:
+    with Runtime(scorer) as runtime:
         result = runtime.load(path)({'message': 'strong semantic approval', 'purchase_days': 45, 'account_hold': True})
     assert result.answer == {'action': 'deny_refund'} and not scorer.requests
 
@@ -289,7 +274,7 @@ def test_policy_fixture_exact_and_semantic_boundaries(tmp_path):
 @pytest.mark.slow
 def test_policy_fixture_sdk_cli_task_parity(tmp_path):
     from bench.policy_workflow import definition, POLICY, CASES
-    from bench.workflows import cli
+    from bench.outcomes import cli
     path = tmp_path / 'returns.yaml'
     files.publish(path, definition(POLICY))
     with Runtime() as runtime:
@@ -297,7 +282,7 @@ def test_policy_fixture_sdk_cli_task_parity(tmp_path):
         case = next(row['input'] for row in CASES if row['id'] == 'held_leak')
         sdk = runtime.load(path)(case).as_dict(True)
         process = cli(['--json', 'run', str(path)], case)
-    for key in ('case', 'answer', 'status', 'facts'):
+    for key in ('rule', 'answer', 'status', 'facts'):
         assert process['result'][key] == sdk[key]
     assert sdk['answer'] == {'action': 'deny_refund'}
 
@@ -323,29 +308,54 @@ def test_cli_model_and_capacity_options_are_invocation_local(monkeypatch):
 
 def test_action_and_case_errors_remain_distinct():
     from bench.policy_workflow import summarize_actions
-    row = {'correct': False, 'expected': {'case': 'expired', 'answer': {'action': 'deny'}, 'status': 'ok'},
-           'result': {'case': 'not_cash', 'answer': {'action': 'deny'}, 'status': 'ok'}}
+    row = {'correct': False, 'expected': {'rule': 'expired', 'answer': {'action': 'deny'}, 'status': 'ok'},
+           'result': {'rule': 'not_cash', 'answer': {'action': 'deny'}, 'status': 'ok'}}
     metrics = summarize_actions([row])
     assert metrics['correct'] == 1 and metrics['operational_agreement'] == 0
     assert metrics['wrong_accepted'] == 0 and metrics['wrong_accepted_cases'] == 1
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WHITE_BOX = {'diagnostics', 'continuations', 'native_segmentation', 'execution_shape', 'execution_reproduction', 'backend_diagnostics'}
+WHITE_BOX = {'diagnostics', 'native_segmentation', 'backend_diagnostics', 'adapter_profile'}
 
 
 def test_bench_modules_import_without_side_effects():
     results = ROOT / 'bench' / 'results'
     before = {path: path.stat().st_mtime_ns for path in results.rglob('*')}
-    modules = sorted(path.stem for path in (ROOT / 'bench').glob('*.py') if path.stem != '__init__')
+    modules = sorted(f'{package}.{path.stem}' for package in ('bench', 'experiments')
+                     for path in (ROOT / package).glob('*.py') if path.stem != '__init__')
     code = ("import importlib, sys\nfrom semantic_switch import api\n"
             "def trap(*args, **kwargs):\n    raise SystemExit('Runtime constructed')\n"
             "api.Runtime.__init__ = trap\nsys.argv = ['x', 'model.gguf']\n"
-            f"for name in {modules!r}:\n    importlib.import_module('bench.' + name)\n")
+            f"for name in {modules!r}:\n    importlib.import_module(name)\n")
     result = subprocess.run([sys.executable, '-c', code], cwd=ROOT, capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
     assert result.stdout == ''
     assert {path: path.stat().st_mtime_ns for path in results.rglob('*')} == before
+
+
+def test_maintained_bench_does_not_depend_on_archived_experiments():
+    for path in [*(ROOT / 'bench').glob('*.py'), *(ROOT / 'semantic_switch').rglob('*.py')]:
+        for node in ast.walk(ast.parse(path.read_text())):
+            names = [alias.name for alias in node.names] if isinstance(node, ast.Import) else [node.module or ''] if isinstance(node, ast.ImportFrom) else []
+            assert not any(name.split('.')[0] == 'experiments' for name in names), f'{path}:{node.lineno}'
+
+
+COPIES = ('np.percentile', 'np.nanpercentile', 'np.quantile', 'np.median', 'statistics.median', 'urlretrieve', "bench/results", "'/tmp", '"/tmp',
+          'RecordingTransport', 'inline import rendered', 'context import render')
+
+
+def test_benchmark_helpers_have_one_owner():
+    scripts = [*(ROOT / 'bench').glob('*.py'), *(ROOT / 'experiments').glob('*.py'), *(ROOT / 'examples').glob('*.py')]
+    for path in scripts:
+        text = path.read_text()
+        assert not [copy for copy in COPIES if copy in text], path
+        if path.stem not in ('outcomes', 'evidence'):
+            assert 'subprocess.run' not in text and 'urllib.request.Request' not in text, path
+    for path in (ROOT / 'examples').glob('*.py'):
+        text = path.read_text()
+        assert not any(name in text for name in ('from bench', 'import bench', '"bench"', 'semantic_switch.errors')), path
+    assert not (ROOT / 'bench' / 'workflows.py').exists() and not (ROOT / 'bench' / 'receipts.py').exists() and not (ROOT / 'bench' / 's1mb_matched.py').exists()
 
 
 def test_benchmark_resume_uses_the_shared_journal(tmp_path):
@@ -385,7 +395,7 @@ def test_native_model_and_requests_shared(tmp_path):
     assert 'source' not in resolved['native'] and 'provenance' not in resolved['native']
     assert artifacts.native_model(resolved) == Model(str(gguf), device='cpu', threads=4)
     assert artifacts.native_model(resolved, merged) == Model(str(merged), device='cpu', threads=4)
-    rows = [{'native': {'presentations': [{'prefix': [1], 'input': [2], 'question': [3], 'answer_slots': [[4], [5, 6]]}]}}]
+    rows = [{'presentations': (presentation(prefix=[1], input=[2], question=[3], answer_slots=[[4], [5, 6]]),)}]
     assert artifacts.native_score_requests(rows) == [ScoreRequest((1,), (2,), ((3,),), (((4,), (5, 6)),))]
 
 

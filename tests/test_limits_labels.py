@@ -3,8 +3,9 @@ import shutil
 
 import pytest
 
-from semantic_switch import Check, ConfigError, files, tools
-from semantic_switch.judge import BATCH_QUESTIONS, MAX_STATE_TOKENS
+from semantic_switch import Actor, Check, ConfigError, files, tools
+from semantic_switch.judge import BATCH_QUESTIONS
+from semantic_switch.protocols import MAX_INPUT_TOKENS
 
 from .test_switch import ROOT, edit, t
 from .test_tools import write_test_file
@@ -18,13 +19,13 @@ def path(tmp_path):
 
 
 def test_oversized_input_fails_with_limit(rt):
-    r = rt.check("word " * MAX_STATE_TOKENS, "The text is about food.")
+    r = rt.check("word " * MAX_INPUT_TOKENS, "The text is about food.")
     assert r.status == "failed" and r.error.startswith("limit: input is")
 
 
 def test_oversized_input_fails_the_switch_not_the_process(rt, path):
     edit(path, lambda s: s["fields"]["body"].pop("max_chars"))
-    r = rt.load(path)(t("refund " * MAX_STATE_TOKENS))
+    r = rt.load(path)(t("refund " * MAX_INPUT_TOKENS))
     assert r.status == "failed" and any(m.startswith("limit") for m in r.errors.values())
 
 
@@ -46,25 +47,26 @@ def test_fact_and_candidate_limits(rt, path):
     assert r.status == "failed" and "1000" in r.error
 
 
-def test_answer_labels_go_stale_when_cases_change(rt, path):
+def test_answer_labels_go_stale_when_rules_change(rt, path):
     sw = rt.load(path)
-    sw.correct(t("my lawyer will file a lawsuit"), case="legal")
+    sw.correct(t("my lawyer will file a lawsuit"), rule="legal", actor=Actor('human'))
     assert tools.run_test(rt, path)["fresh"]["items"] + tools.run_test(rt, path)["taught"]["items"] == 1
     edit(path, lambda s: s.update(otherwise="other"))
     report = tools.run_test(rt, path)
     assert report["fresh"]["items"] + report["taught"]["items"] == 0
-    assert "stale answer labels" in report["warnings"][0]
+    assert "stale answer labels" in report["warnings"][0] and sum("stale" in w for w in report["warnings"]) == 1
 
 
 def test_fact_labels_go_stale_when_meaning_changes(rt, path, tmp_path):
     inputs = tmp_path / "in.jsonl"
-    files.append(inputs, [{"schema": 2, "input": t("refund please")}])
+    files.append(inputs, files.jsonl([{"schema": 3, "input": t("refund please")}]))
     answers = iter(["y", "", "", "", "", ""])
-    tools.label(rt, path, str(inputs), to="test", ask=lambda _: next(answers), show=lambda _: None)
+    tools.label(rt, path, str(inputs), to="test", ask=lambda _: next(answers), show=lambda _: None, actor=Actor('human'))
     assert tools.run_test(rt, path)["facts"]["legal_threat"]["labelled"] == 1
     edit(path, lambda s: s["facts"]["legal_threat"].update(check="The customer explicitly threatens legal action."))
     report = tools.run_test(rt, path)
     assert "legal_threat" not in report["facts"] and report["warnings"][0].startswith("legal_threat: 1 stale")
+    assert sum("stale" in w for w in report["warnings"]) == 1
     assert any("stale" in w for w in tools.lock(rt, path)["warnings"])
 
 
@@ -74,7 +76,7 @@ def test_test_report_reads_as_sentences_with_intervals(rt, path):
     for row in records:
         row["selections"] = [{"selected_by": "random", "frame_id": "test-frame", "independent": True, "inclusion_probability": .1}]
     files.publish(path.with_suffix(".test.jsonl"), ''.join([json.dumps(r) + "\n" for r in records]))
-    report = tools.run_test(rt, path, intervals=True)
+    report = tools.run_test(rt, path)
     lo, hi = report["facts"]["legal_threat"]["precision_95"]
     assert 0 < lo < hi == 1.0
     text = tools.explain_test(report)

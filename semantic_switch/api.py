@@ -5,15 +5,13 @@ import functools
 import json
 import os
 import threading
-import time
 import warnings
 from dataclasses import dataclass, field
 from functools import cache
-from contextlib import ExitStack, contextmanager, nullcontext
-from collections.abc import Sequence
+from contextlib import ExitStack, contextmanager
+from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING
 from types import MappingProxyType
-import math
 import hashlib
 import asyncio
 import shlex
@@ -21,11 +19,14 @@ import sys
 import tempfile
 from pathlib import Path
 
+import numpy as np
+
 from . import files
 from .errors import ConfigError, suggest
-from .inline import Check, Pick, Rate, Select, ask, ask_many
-from .judge import CONFORMANCE_PROBES, CONFORMANCE_QUESTIONS, LlamaJudge, validate_requests
-from .protocols import ScoreBlock, ScoreLedger, ScoreRequest
+from .inline import Check, Pick, Rate, Select
+from .judge import CONFORMANCE_PROBES, CONFORMANCE_QUESTIONS, LlamaJudge
+from .protocols import MAX_INPUT_TOKENS, MAX_PREFIX_TOKENS
+from .resident import Resources
 from .switch import Switch
 
 if TYPE_CHECKING:
@@ -50,10 +51,14 @@ class Model:
     n_ctx: int | None = None
     n_batch: int = 512
     threads: int | None = None
-    max_input_tokens: int = 1024
+    max_input_tokens: int = MAX_INPUT_TOKENS
+    max_prefix_tokens: int = MAX_PREFIX_TOKENS
     prefix_slots: int = 4
     quality_profile: str | None = None
     repack: bool = True
+    lora: str | None = None
+    max_adapters: int = 4
+    representation: str | None = None
     provenance: Provenance | None = field(default=None, repr=False)
 
     def __post_init__(self):
@@ -63,13 +68,22 @@ class Model:
                 raise ConfigError(f"unknown {name} {value!r}{suggest(value, allowed)}")
         if not isinstance(self.repack, bool):
             raise ConfigError("repack must be boolean")
-        for name in ("n_ctx", "n_batch", "threads", "max_input_tokens", "prefix_slots"):
+        if self.lora is not None and (not isinstance(self.lora, str) or not self.lora.strip()):
+            raise ConfigError("lora must name an adapter GGUF path or repo:file")
+        specialized = getattr(self.provenance, "kind", None) == "specialization"
+        derived = "runtime-adapter" if self.lora else "merged" if specialized else "base"
+        if self.representation is None:
+            object.__setattr__(self, "representation", derived)
+        elif self.representation != derived and not (self.representation == "merged" and self.provenance is None and not self.lora):
+            raise ConfigError(f"representation {self.representation!r} contradicts this model: it is {derived}; "
+                              "a runtime adapter needs lora, and merged weights carry no runtime adapter")
+        for name in ("n_ctx", "n_batch", "threads", "max_input_tokens", "max_prefix_tokens", "prefix_slots", "max_adapters"):
             try:
                 validate_native_integer(name, getattr(self, name), optional=name in ("n_ctx", "threads"))
             except ValueError as error:
                 raise ConfigError(str(error)) from None
         try:
-            self.capacity()
+            object.__setattr__(self, "n_ctx", self.capacity().n_ctx)
         except ValueError as error:
             raise ConfigError(str(error)) from None
         if self.quality_profile:
@@ -77,18 +91,25 @@ class Model:
             load_quality_profile(self.quality_profile)
         from .artifacts import Provenance
         if self.provenance is not None and not isinstance(self.provenance, Provenance):
-            raise ConfigError("provenance must come from Model.from_specialization or a verified pipeline-built base")
-
-    @classmethod
-    def from_specialization(cls, receipt, **settings) -> Model:
-        from .artifacts import load_receipt
-        loaded = load_receipt(receipt)
-        return native_spec(loaded.gguf, {**loaded.native, **settings}, loaded.provenance)
+            raise ConfigError("provenance must come from a verified fitted lock (ss.judge(LOCK)) or a verified pipeline-built base")
 
     def path(self) -> str:
         from .backend import require_local
         require_local("llama_cpp", "huggingface_hub")
         return _resolve(self.source)
+
+    def lora_path(self) -> str | None:
+        return None if self.lora is None else _resolve(self.lora)
+
+    def resident_key(self) -> tuple:
+        return (os.path.realpath(self.path()), self.gpu_layers, self.n_ctx, self.n_batch, self.threads, self.prefix_slots, self.repack)
+
+    def adapter_content(self):
+        from .resident import Adapter
+        if self.lora is None:
+            return None
+        expected = self.provenance.adapter_sha256 if self.provenance is not None else None
+        return Adapter.verified(self.lora_path(), self.path(), expected)
 
     @property
     def gpu_layers(self) -> int:
@@ -96,76 +117,52 @@ class Model:
 
     def capacity(self):
         from .backend import capacity
-        return capacity(self.n_ctx, self.n_batch, 1, self.prefix_slots)
+        return capacity(self.n_ctx, self.n_batch, self.prefix_slots, max_input_tokens=self.max_input_tokens, max_prefix_tokens=self.max_prefix_tokens)
 
-    def _host_bytes(self) -> dict:
-        from .backend import gguf_metadata
-        path = self.path()
-        meta = gguf_metadata(path)
-        arch = meta["general.architecture"]
-        layout = self.capacity()
-        n_ctx = layout.n_ctx
-        layers = meta[f"{arch}.block_count"] - meta.get(f"{arch}.attention.shared_kv_layers", 0)
+    def descriptor(self):
+        from .backend import gguf
+        return gguf(self.path())
+
+    def placement(self):
+        from .backend import Placement
+        return Placement.of(self.descriptor(), self.gpu_layers)
+
+    def resources(self) -> dict[str, Resources]:
+        from .backend import Placement
+        model = self.descriptor()
+        meta, arch, layout = model.meta, model.architecture, self.capacity()
+        place = Placement.of(model, self.gpu_layers)
+        value = lambda key, default=None: int(meta[key]) if key in meta else default
+        layers = value(f"{arch}.block_count") - value(f"{arch}.attention.shared_kv_layers", 0)
         heads = meta[f"{arch}.attention.head_count_kv"]
-        heads = heads if isinstance(heads, list) else [heads] * layers
-        dim = meta.get(f"{arch}.attention.key_length", meta[f"{arch}.embedding_length"] // meta[f"{arch}.attention.head_count"])
-        full = dim + meta.get(f"{arch}.attention.value_length", dim)
-        swa = meta.get(f"{arch}.attention.key_length_swa", dim) + meta.get(f"{arch}.attention.value_length_swa", dim)
-        pattern = meta.get(f"{arch}.attention.sliding_window_pattern", [False] * layers)
-        return {"weights": os.path.getsize(path),
-                "kv": n_ctx * sum(heads[i] * (swa if pattern[i] else full) * 2 for i in range(layers)),
-                "output": len(meta["tokenizer.ggml.tokens"]) * layout.n_outputs_max * 4 * 2}
-
-    def estimated_host_bytes(self) -> int:
-        return sum(self._host_bytes().values())
+        heads = [int(h) for h in heads] if isinstance(heads, (tuple, np.ndarray)) else [int(heads)] * layers
+        dim = value(f"{arch}.attention.key_length", value(f"{arch}.embedding_length") // value(f"{arch}.attention.head_count"))
+        full = dim + value(f"{arch}.attention.value_length", dim)
+        swa = value(f"{arch}.attention.key_length_swa", dim) + value(f"{arch}.attention.value_length_swa", dim)
+        pattern = meta.get(f"{arch}.attention.sliding_window_pattern", (False,) * layers)
+        return {"weights": place.weights(model.size, model.tensors),
+                "kv": place.kv(layout.total_ctx * sum(heads[i] * (swa if pattern[i] else full) * 2 for i in range(layers))),
+                "output": Resources(model.vocab * layout.n_outputs_max * 4 * 2),
+                **({"adapter": place.lora(self.adapter_content()).resources} if self.lora else {})}
 
 
-NATIVE_SETTINGS = ("adapter", "device", "n_ctx", "n_batch", "threads", "max_input_tokens", "prefix_slots", "quality_profile", "repack")
+NATIVE_SETTINGS = ("adapter", "device", "n_ctx", "n_batch", "threads", "max_input_tokens", "max_prefix_tokens", "prefix_slots", "quality_profile", "repack")
 
 
 def native_settings(model: Model) -> dict:
     return {name: getattr(model, name) for name in NATIVE_SETTINGS}
 
 
-def native_spec(source, settings, provenance: Provenance | None = None) -> Model:
+def native_spec(source, settings, provenance: Provenance | None = None, lora=None) -> Model:
     if not isinstance(settings, dict) or set(settings) - set(NATIVE_SETTINGS):
         unknown = sorted(set(settings) - set(NATIVE_SETTINGS)) if isinstance(settings, dict) else settings
         raise ConfigError(f"unknown native settings {unknown}; supported: {', '.join(NATIVE_SETTINGS)}")
-    return Model(str(source), **settings, provenance=provenance)
+    return Model(str(source), **settings, lora=None if lora is None else str(lora), provenance=provenance)
 
 
-def judge_from(source, *, provider=None, key=None, transport=None, own_transport=False, timeout=60, batch_inputs=8, **native_settings):
-    if not isinstance(source, str) or not source.strip():
-        raise ConfigError("judge source must be nonempty text: a GGUF path, repo:file or openrouter:MODEL")
-    for name, value in (("provider", provider), ("key", key)):
-        if value is not None and (not isinstance(value, str) or not value.strip()):
-            raise ConfigError(f"{name} must be nonempty text")
-    if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or not 0 < timeout < math.inf:
-        raise ConfigError("timeout must be a positive number of seconds")
-    if isinstance(batch_inputs, bool) or not isinstance(batch_inputs, int) or batch_inputs < 1:
-        raise ConfigError("batch_inputs must be a positive integer")
-    if not source.startswith("openrouter:"):
-        hosted = [name for name, value in (("provider", provider), ("key", key), ("transport", transport)) if value is not None]
-        hosted += ["own_transport"] if own_transport else []
-        hosted += [name for name, value, default in (("timeout", timeout, 60), ("batch_inputs", batch_inputs, 8)) if value != default]
-        if hosted:
-            raise ConfigError(f"{', '.join(hosted)} apply only to hosted judges (openrouter:MODEL); {source} is a local GGUF judge")
-        for name in native_settings:
-            if name not in NATIVE_SETTINGS:
-                raise ConfigError(f"unknown native setting {name!r}{suggest(name, NATIVE_SETTINGS)}")
-        return Model(source, **native_settings)
-    if native_settings:
-        raise ConfigError(f"{', '.join(sorted(native_settings))} apply only to local GGUF judges; {source} is hosted")
-    if key is not None and transport is not None:
-        raise ConfigError("key applies only to the built-in transport; a supplied transport carries its own credentials")
-    if own_transport and transport is None:
-        raise ConfigError("own_transport transfers a supplied transport; the built-in transport is always owned")
-    model = source.removeprefix("openrouter:")
-    if not model.strip() or "@" in model:
-        raise ConfigError("use openrouter:MODEL and pass the provider separately (--provider PROVIDER or provider=...)")
-    from .hosted import OpenRouterJudge
-    return OpenRouterJudge(model, provider=provider, key=key, transport=transport, own_transport=own_transport, timeout=timeout,
-                           batch_inputs=batch_inputs)
+def judge(source, **settings):
+    from .drivers import build
+    return build(source, settings)
 
 
 def _model_lock() -> Path:
@@ -203,15 +200,15 @@ def available_host_bytes() -> int:
 
 
 class ModelJob:
-    def __init__(self, lease: files.Lease, estimates: dict, available: int, device_bytes: int):
+    def __init__(self, lease: files.Lease, estimates: dict[str, Resources], available: int):
         self._lease, self.owner, self.pid = lease, lease.owner, lease.pid
         self.estimates = MappingProxyType(dict(estimates))
-        self.host_bytes = sum(self.estimates.values())
-        self.device_bytes = device_bytes
+        self.envelope = sum(self.estimates.values(), Resources())
+        self.host_bytes = self.envelope.host
         self.available_bytes = available
         self.state = "open"
         self._resident: dict = {}
-        self._peak = (0, 0)
+        self._peak = Resources()
         self._condition = threading.Condition()
 
     def _open(self):
@@ -221,16 +218,19 @@ class ModelJob:
             raise ConfigError(f"model job {self.owner} is {self.state}; acquire a new job")
 
     @contextmanager
-    def join(self, host_bytes: int, device_bytes: int = 0, *, use: str = "participant"):
-        token = object()
+    def join(self, host_bytes: int, devices: Mapping[str, int] | None = None, *, use: str = "participant"):
+        token, need = object(), Resources(host_bytes, devices or {})
         with self._condition:
             self._open()
-            host, device = (sum(values) for values in zip((0, 0), *self._resident.values()))
-            if host + host_bytes > self.host_bytes or device + device_bytes > self.device_bytes:
-                raise ConfigError(f"model job {self.owner}: {use} needs {host_bytes} host and {device_bytes} device bytes beside {host}/{device} resident; "
-                                  f"the declared envelope is {self.host_bytes}/{self.device_bytes}. Declare the peak before acquiring the job")
-            self._resident[token] = (host_bytes, device_bytes)
-            self._peak = (max(self._peak[0], host + host_bytes), max(self._peak[1], device + device_bytes))
+            resident = sum(self._resident.values(), Resources())
+            if not self.envelope.covers(resident + need):
+                raise ConfigError(f"model job {self.owner}: {use} needs {need.record()} beside {resident.record()} resident; "
+                                  f"the declared envelope is {self.envelope.record()} (host bytes are physical; unified-memory device bytes are "
+                                  "included in them). Declare the peak before acquiring the job")
+            self._resident[token] = need
+            total = resident + need
+            self._peak = Resources(max(self._peak.host, total.host), {name: max(self._peak.devices.get(name, 0), total.devices.get(name, 0))
+                                                                     for name in {*self._peak.devices, *total.devices}})
         try:
             yield self
         finally:
@@ -252,42 +252,59 @@ class ModelJob:
         import resource
         with self._condition:
             return {"owner": self.owner, "pid": self.pid, "state": self.state, "lock": str(self._lease.path), "participants": len(self._resident),
-                    "estimated_bytes": dict(self.estimates), "estimated_device_bytes": self.device_bytes,
+                    "estimated_bytes": {use: value.record() for use, value in self.estimates.items()}, "envelope": self.envelope.record(),
                     "admitted_bytes": self.host_bytes + HOST_RESERVE, "available_bytes": self.available_bytes,
-                    "resident_peak_bytes": {"host": self._peak[0], "device": self._peak[1]},
+                    "resident_peak_bytes": self._peak.record(),
                     "observed_host_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
-                    "uncertainty": "estimates cover weights, buffers and declared working sets; activations are not bounded, so admission is no OOM guarantee",
+                    "uncertainty": "estimates cover weights, adapters, buffers and declared working sets under the pinned placement profile; "
+                                   "compute scratch and activations are not bounded, so admission is no OOM guarantee",
                     "scope": "cooperating processes of this user sharing this lock path; not a machine-wide scheduler"}
 
 
-def _estimates(models, extra) -> dict:
-    out = {}
+def estimate(*models: Model, extra: dict | None = None) -> dict[str, Resources]:
+    out, resident = {}, set()
     for model in models:
-        for use, value in model._host_bytes().items():
-            out[f"{model.source}:{use}"] = out.get(f"{model.source}:{use}", 0) + value
+        for use, value in model.resources().items():
+            key = (os.path.realpath(model.lora_path()) if use == "adapter" else model.resident_key(), use)
+            if key not in resident:
+                resident.add(key)
+                name = f"{model.lora}:adapter" if use == "adapter" else f"{model.source}:{use}"
+                out[name] = out.get(name, Resources()) + value
     for use, value in (extra or {}).items():
-        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
-            raise ConfigError(f"model job estimate {use!r} must be a nonnegative byte count")
-        out[use] = value
+        if not isinstance(value, Resources) and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
+            raise ConfigError(f"model job estimate {use!r} must be a nonnegative host byte count or Resources")
+        out[use] = value if isinstance(value, Resources) else Resources(value)
     return out
 
 
+def peak(*stages: dict) -> dict[str, Resources]:
+    totals = [sum(estimate(extra=stage).values(), Resources()) for stage in stages]
+    chosen = max(range(len(stages)), key=lambda i: totals[i].host)
+    devices = {}
+    for total in totals:
+        for name, value in total.devices.items():
+            devices[name] = max(devices.get(name, 0), value)
+    shortfall = Resources(0, {name: value - totals[chosen].devices.get(name, 0) for name, value in devices.items()})
+    return {**stages[chosen], **({"stages:devices": shortfall} if shortfall.devices else {})}
+
+
 @contextmanager
-def model_job(*models: Model, extra: dict | None = None, device_bytes: int = 0, job: ModelJob | None = None):
+def model_job(*models: Model, extra: dict | None = None, job: ModelJob | None = None):
+    estimates = estimate(*models, extra=extra)
     if job is not None:
-        with job.join(sum(_estimates(models, extra).values()), device_bytes, use=", ".join(m.source for m in models) or ", ".join(extra or ())):
+        need = sum(estimates.values(), Resources())
+        with job.join(need.host, need.devices, use=", ".join(m.source for m in models) or ", ".join(extra or ())):
             yield job
         return
-    estimates = _estimates(models, extra)
     lease = files.Lease(_model_lock())
     try:
-        required = sum(estimates.values()) + HOST_RESERVE
+        required = sum(estimates.values(), Resources()).host + HOST_RESERVE
         available = available_host_bytes()
         if required > available:
             raise ConfigError(f"model job requires {required} bytes of host memory including the {HOST_RESERVE}-byte reserve; "
                               f"{available} bytes are available. Run one model job per host under a memory limit: "
                               f"systemd-run --user --scope -q -p MemoryMax={-(-required // (1 << 30))}G -p MemorySwapMax=0 {shlex.join(sys.orig_argv)}")
-        handle = ModelJob(lease, estimates, available, device_bytes)
+        handle = ModelJob(lease, estimates, available)
     except BaseException:
         lease.release()
         raise
@@ -313,6 +330,14 @@ def _resolve(source: str) -> str:
         found = ", ".join(names) or "nothing"
         raise ConfigError(f"model source {source!r} must name exactly one GGUF file; it matches {found}")
     return hf_hub_download(repo, names[0])
+
+
+def located(name) -> Path:
+    path = Path(name)
+    if path.suffix in (".yaml", ".yml", ".json") or path.exists():
+        return path
+    local = Path("switches") / f"{path}.yaml"
+    return local if local.exists() else path.with_name(f"{path.name}.yaml")
 
 
 def _gpu() -> bool:
@@ -343,13 +368,20 @@ class _Role:
     batching: object
 
 
+def _role(value) -> _Role:
+    if isinstance(value, Model):
+        return _Role(value, "model", lambda: value.device != "cpu" and _gpu(), lambda: 1)
+    kind = "judge" if callable(getattr(value, "score_many", None)) else "scorer"
+    return _Role(value, kind, lambda: bool(getattr(value, "accelerated", False)), lambda: int(getattr(value, "batch_inputs", 1)))
+
+
 def behavior_identity(identity):
     return {key: value for key, value in identity.items() if key != "file"}
 
 
-MODE = ("shared", "grouping", "serial")
+MODE = ("shared",)
 EXECUTION = ("device", "tensor_types", "flash_attn", "type_k", "type_v", "use_extra_bufts", "repacked", "n_ctx", "n_batch", "n_ubatch",
-             "n_seq_max", "n_outputs_max", "swa_full", "kv_unified", "prefix_slots", "scheduling") + MODE
+             "n_ctx_seq", "sequence_limit", "n_seq_max", "n_outputs_max", "swa_full", "kv_unified", "prefix_slots", "scheduling") + MODE
 
 
 def execution_identity(realized: dict) -> dict | None:
@@ -357,62 +389,85 @@ def execution_identity(realized: dict) -> dict | None:
 
 
 class Runtime:
-    @classmethod
-    def from_specialization(cls, receipt, *, on_decision=None, job: ModelJob | None = None) -> Runtime:
-        from .artifacts import load_receipt
-        loaded = load_receipt(receipt)
-        runtime = cls({"judge": native_spec(loaded.gguf, dict(loaded.native), loaded.provenance)}, on_decision=on_decision, job=job)
-        runtime._deployment = loaded
-        return runtime
-
-    def __init__(self, models: dict | None = None, *, on_decision=None, own_judges=False, job: ModelJob | None = None):
+    def __init__(self, judge=None, *, bindings: Mapping | None = None, on_decision=None, decision_input=False, own_judges=False,
+                 job: ModelJob | None = None):
         if on_decision is not None and not callable(on_decision):
             raise ConfigError("on_decision must be callable")
+        if not isinstance(decision_input, bool) or decision_input and on_decision is None:
+            raise ConfigError("decision_input is a boolean request for the evaluated input in on_decision events")
         if not isinstance(own_judges, bool):
             raise ConfigError("own_judges must be boolean")
         if job is not None and not isinstance(job, ModelJob):
             raise ConfigError("job must be a ModelJob from model_job(...)")
+        if bindings is not None and (not isinstance(bindings, Mapping) or not all(isinstance(name, str) and name for name in bindings)):
+            raise ConfigError("bindings maps model role names to a judge source, Model or judge")
+        if judge is not None and "judge" in (bindings or {}):
+            raise ConfigError("bind the judge role once: pass judge=... or bindings={'judge': ...}, not both")
+        supplied = {**({"judge": judge} if judge is not None else {}), **(bindings or {})}
+        self._implicit = frozenset() if supplied else frozenset({"judge"})
+        supplied = supplied or {"judge": DEFAULT_JUDGE}
         self._own_judges = own_judges
         self._job = job
         self._jobs = ExitStack()
-        self._deployment = None
         self._on_decision = on_decision
+        self._decision_input = decision_input
         self._event_warning = False
-        bindings = dict(models or {})
-        bindings.setdefault("judge", Model(DEFAULT_JUDGE))
-        self._bindings = MappingProxyType(bindings)
-        self._roles = {}
-        for name, value in bindings.items():
-            if isinstance(value, Model):
-                acceleration = lambda value=value: value.device != "cpu" and _gpu()
-                batching = lambda: 1
-                kind = "model"
-            else:
-                acceleration = lambda value=value: bool(getattr(value, "accelerated", False))
-                batching = lambda value=value: int(getattr(value, "batch_inputs", 1))
-                kind = "judge" if callable(getattr(value, "score_many", None)) else "scorer"
-            self._roles[name] = _Role(value, kind, acceleration, batching)
+        self._constructed = frozenset(name for name, value in supplied.items() if isinstance(value, str))
+        from .drivers import build
+        self._roles = {name: _role(build(value, {}) if isinstance(value, str) else value) for name, value in supplied.items()}
+        self._bindings = MappingProxyType({name: role.value for name, role in self._roles.items()})
+        from .adapters.chat import RenderContext
+        self._render = RenderContext.now()
         self._loaded: dict = {}
+        self._executor = None
+        self._residents: dict = {}
         self._identities = {}
         self._identity_fingerprints = {}
         self._lock = threading.RLock()
         self._closed = False
         self._active = 0
+        self._handles: set = set()
         self._operations = threading.local()
         self._idle = threading.Condition(self._lock)
 
+    def _install(self, role: str, model: Model, source) -> None:
+        with self._lock:
+            present = self._roles.get(role)
+            if present is not None and role not in self._implicit:
+                if present.value == model:
+                    return
+                raise ConfigError(f"{source}: binding {role!r} is this fitted lock's model, but the runtime binds {getattr(present.value, 'source', present.value)!r} "
+                                  "to it; load the lock in a runtime that leaves that role to the lock")
+            if role in self._loaded:
+                raise ConfigError(f"{source}: this runtime already loaded its default judge for {role!r}; load the fitted lock in a new Runtime()")
+            self._roles[role] = _role(model)
+            self._implicit -= {role}
+            self._constructed -= {role}
+            self._bindings = MappingProxyType({name: descriptor.value for name, descriptor in self._roles.items()})
+
     @contextmanager
     def operation(self):
+        from .judge import OPERATION, Cancellation
         with self._idle:
             depth = getattr(self._operations, "depth", 0)
             if self._closed and not depth:
                 raise RuntimeError("runtime is closed")
             self._operations.depth = depth + 1
             self._active += 1
+            handle, token = OPERATION.get(), None
+            if not depth:
+                if handle is None:
+                    handle = Cancellation()
+                    token = OPERATION.set(handle)
+                self._handles.add(handle)
         try:
             yield
         finally:
             with self._idle:
+                if token is not None:
+                    OPERATION.reset(token)
+                if not depth:
+                    self._handles.discard(handle)
                 self._operations.depth -= 1
                 self._active -= 1
                 self._idle.notify_all()
@@ -429,12 +484,12 @@ class Runtime:
     def _spec(self, role: str):
         return self._role(role).value
 
-    def cache_key(self, role: str = "judge") -> str:
+    def cache_key(self, role: str = "judge", capacity: dict | None = None) -> str:
         spec = self._spec(role)
-        settings = {name: getattr(spec, name, None) for name in ("n_ctx", "n_batch", "threads", "max_input_tokens", "prefix_slots")}
-        execution = execution_identity(self._capacity(role))
+        settings = {name: getattr(spec, name, None) for name in ("n_ctx", "n_batch", "threads", "max_input_tokens", "max_prefix_tokens", "prefix_slots")}
+        execution = execution_identity(self._capacity(role) if capacity is None else capacity)
         return json.dumps({**behavior_identity(self.identity(role)), "execution": execution and {key: value for key, value in execution.items() if key not in MODE},
-                           "settings": settings, "inputs": self.batch_inputs(role), "conformance": 4}, sort_keys=True)
+                           "settings": settings, "inputs": self.batch_inputs(role), "conformance": 8}, sort_keys=True)
 
     def execution(self, role: str = "judge") -> dict | None:
         if self._role(role).kind == "judge":
@@ -459,73 +514,82 @@ class Runtime:
                 else:
                     from .adapters import adapter_for
 
-                    adapter = adapter_for(getattr(spec, "adapter", "qwen3"), spec)
-                    self._loaded[role] = LlamaJudge(spec, adapter, self.identity(role), self.accelerated(role),
-                                                    max_input_tokens=getattr(spec, "max_input_tokens", 1024))
+                    adapter = adapter_for(getattr(spec, "adapter", "qwen3"), spec, self._render)
+                    self._loaded[role] = LlamaJudge(self._view(role, spec), adapter, self.identity(role), self.accelerated(role),
+                                                    max_input_tokens=getattr(spec, "max_input_tokens", MAX_INPUT_TOKENS))
             return self._loaded[role]
 
     def _load_judge(self, role: str, spec: Model) -> LlamaJudge:
         from .adapters import adapter_for
         from .artifacts import load_quality_profile
-        from .backend import LlamaScorer, shared_ok
+        from .backend import LlamaScorer
+        from .resident import ResidentBase, binding_identity
 
         if spec.device == "gpu" and not _gpu():
             raise ConfigError("device='gpu' was requested, but this llama.cpp build has no GPU offload; "
                               "rebuild with GPU support or use device='auto' or 'cpu'")
-        job, owned = ExitStack(), self._job is None
-
-        def release():
-            job.close()
-            if owned:
-                self._job = None
         try:
-            if owned:
-                self._job = job.enter_context(model_job(*(d.value for d in self._roles.values() if d.kind == "model")))
-            job.enter_context(model_job(spec, job=self._job))
-            scorer = LlamaScorer(spec.path(), n_ctx=spec.n_ctx, n_batch=spec.n_batch, threads=spec.threads,
-                                 n_gpu_layers=spec.gpu_layers, prefix_slots=spec.prefix_slots, repack=spec.repack)
+            place = spec.resident_key()
         except (RuntimeError, ValueError) as e:
-            release()
             raise ConfigError(f"cannot load model {spec.source}: {e}") from None
-        except BaseException:
-            release()
-            raise
+        resident = self._residents.get(place)
+        if resident is not None and resident.pool.max_adapters != spec.max_adapters:
+            raise ConfigError(f"model role {role!r} shares a resident base with max_adapters {resident.pool.max_adapters}; declare one adapter bound per base")
+        charge = ExitStack()
+        if resident is None:
+            try:
+                if self._job is not None:
+                    charge.enter_context(model_job(extra={f"{spec.source}:{use}": value for use, value in spec.resources().items() if use != "adapter"},
+                                                   job=self._job))
+                scorer = LlamaScorer(spec.path(), n_ctx=spec.n_ctx, n_batch=spec.n_batch, threads=spec.threads, n_gpu_layers=spec.gpu_layers,
+                                     prefix_slots=spec.prefix_slots, repack=spec.repack, max_input_tokens=spec.max_input_tokens,
+                                     max_prefix_tokens=spec.max_prefix_tokens)
+            except (RuntimeError, ValueError) as e:
+                charge.close()
+                raise ConfigError(f"cannot load model {spec.source}: {e}") from None
+            except BaseException:
+                charge.close()
+                raise
+            fresh = ResidentBase(scorer, max_adapters=spec.max_adapters, job=self._job, placement=spec.placement)
+        else:
+            fresh, scorer = None, resident.scorer
         try:
             try:
-                adapter = adapter_for(spec.adapter, scorer)
+                adapter = adapter_for(spec.adapter, scorer, self._render)
             except ValueError as e:
                 raise ConfigError(f"model {spec.source}: {e}") from None
-            identity = _local_identity(spec, scorer, adapter)
+            lora = spec.adapter_content()
+            identity = _local_identity(spec, self._render, lora, scorer.chat)
             if spec.provenance is not None and identity["sha256"] != spec.provenance.gguf_sha256:
                 raise ConfigError(f"{spec.source}: weights changed since their provenance was verified ({spec.provenance.gguf_sha256}); "
                                   "reload the deployment or re-run semantic-trainer select")
             self._identities[role] = identity
             self._identity_fingerprints[role] = _file_fingerprint(spec)
-            bound = LlamaJudge(scorer, adapter, self.identity(role), self.accelerated(role), self.batch_inputs(role), max_input_tokens=spec.max_input_tokens,
+            capacity = getattr(scorer, "capacity", dict)
+            key = self.cache_key(role, capacity())
+            known = files.read_cached("doctor", key)
+            if not known and scorer.weights.hybrid:
+                try:
+                    checks = (fresh or resident).view(lora).selftest(adapter, CONFORMANCE_PROBES, CONFORMANCE_QUESTIONS)
+                except RuntimeError as error:
+                    scorer.invalidate()
+                    checks = {"D1 shared = reference": {"ok": False, "error": str(error)}}
+                files.write_cached("doctor", key, {"ok": all(c["ok"] for c in checks.values()), "checks": checks, "at": files.now()})
+            view = (fresh or resident).view(lora, binding_identity(identity, execution_identity(capacity())))
+            bound = LlamaJudge(self._view(role, view), adapter, self.identity(role), self.accelerated(role), self.batch_inputs(role),
+                               max_input_tokens=spec.max_input_tokens, max_prefix_tokens=spec.max_prefix_tokens,
                                quality_profile=load_quality_profile(spec.quality_profile) if spec.quality_profile else None)
         except BaseException:
-            scorer.close()
-            release()
+            if fresh is not None:
+                fresh.close()
+                charge.close()
             self._identities.pop(role, None)
             self._identity_fingerprints.pop(role, None)
             raise
-        self._jobs.enter_context(job)
+        if fresh is not None:
+            self._residents[place] = fresh
+            self._jobs.enter_context(charge)
         self._loaded[role] = bound
-        if scorer.weights.hybrid:
-            scorer.shared = True
-        key = self.cache_key(role)
-        known = files.read_cached("doctor", key)
-        if known:
-            scorer.shared = shared_ok(known.get("checks", {}))
-        elif scorer.weights.hybrid:
-            scorer.shared = True
-            try:
-                checks = scorer.selftest(adapter, CONFORMANCE_PROBES, CONFORMANCE_QUESTIONS)
-            except RuntimeError as error:
-                scorer.shared = False
-                scorer.invalidate()
-                checks = {"D1 shared = reference": {"ok": False, "error": str(error)}}
-            files.write_cached("doctor", key, {"ok": all(c["ok"] for c in checks.values()), "checks": checks, "at": files.now()})
         return bound
 
     @property
@@ -547,13 +611,24 @@ class Runtime:
             if role in self._identities and self._identity_fingerprints.get(role) == fingerprint:
                 return dict(self._identities[role])
             if descriptor.kind == "scorer":
+                from .adapters import adapter_name
                 from .presentation import identity as presentation_identity
                 return {"source": getattr(spec, "name", type(spec).__name__),
-                        "template": _template(getattr(spec, "adapter", "qwen3")), "presentation": presentation_identity()}
-            identity = _local_identity(spec)
+                        "template": adapter_name(getattr(spec, "adapter", "qwen3"), getattr(spec, "chat", None)), "presentation": presentation_identity()}
+            identity = _local_identity(spec, self._render)
             self._identities[role] = identity
             self._identity_fingerprints[role] = fingerprint
             return dict(identity)
+
+    def representation(self, role: str = "judge") -> str:
+        descriptor = self._role(role)
+        if descriptor.kind == "model":
+            return descriptor.value.representation
+        return "base" if descriptor.kind == "scorer" or hasattr(descriptor.value, "adapter") else "hosted"
+
+    def binding(self, role: str = "judge", scope=()):
+        from .resident import Binding
+        return Binding(role, self.representation(role), self.identity(role), self.execution(role), tuple(scope))
 
     def accelerated(self, role: str) -> bool:
         return self._role(role).acceleration()
@@ -569,30 +644,71 @@ class Runtime:
                 self._event_warning = True
                 warnings.warn('decision callback failed; completed result preserved', RuntimeWarning, stacklevel=3)
 
-    def ask(self, state, items: dict, *, fields=None, guidance=None) -> dict:
-        with self.operation():
-            started = time.perf_counter() if self._on_decision is not None else None
-            result = ask(self.judge, state, items, fields, guidance)
-            if self._on_decision is not None:
-                from .events import inline_event
-                cost = {'elapsed_ms': (time.perf_counter() - started) * 1000, 'inputs': 1}
-                self._emit_decision(inline_event(self, result, items, cost))
-            return result
+    @property
+    def executor(self):
+        with self._lock:
+            if self._executor is None:
+                from .executor import Executor
+                self._executor = Executor(self)
+            return self._executor
 
-    def ask_many(self, states, items: dict, *, fields=None, guidance=None) -> list[dict]:
+    def _asked(self, inputs, items: dict, fields, guidance, binding: str) -> list[dict]:
+        from .inline import Asking, lower
+        lowered, ex = lower(items, guidance), self.executor
+        operation = ex.operation(ex.window((binding,)), lambda live: (live.work.result(), operation.elapsed(live)))
+        rows = [None] * len(inputs)
+        for index, row in operation.drive(inputs, lambda state: Asking(ex, lowered, binding, state, fields), ordered=False):
+            rows[index] = row
+        if self._on_decision is not None:
+            from .events import InlineContext, call_id
+            context, call = InlineContext(self, items, guidance, binding), call_id()
+            for item, ((row, elapsed), data) in enumerate(zip(rows, inputs)):
+                self._emit_decision(context.event(row, {'elapsed_ms': elapsed, 'operation': operation.receipt}, call, item,
+                                                  data if self._decision_input else None))
+        return [row for row, _ in rows]
+
+    def _asked_stream(self, inputs, items, fields, guidance, binding, window):
+        from collections import deque
+        from .inline import Asking, lower
+        from .events import InlineContext, call_id
+        if type(window) is not int or window < 1:
+            raise ConfigError('window must be a positive integer')
+        ex, lowered, admitted = self.executor, lower(items, guidance), deque()
+        context = InlineContext(self, items, guidance, binding) if self._on_decision is not None else None
+        call = call_id()
+        operation = ex.operation(window, lambda live: (live.work.result(), operation.elapsed(live)), receipt=False)
+        def start(data):
+            admitted.append(data)
+            return Asking(ex, lowered, binding, data, fields)
+        stream = operation.drive(inputs, start, ordered=True)
+        try:
+            while True:
+                with self.operation():
+                    try:
+                        index, (row, elapsed) = next(stream)
+                    except StopIteration:
+                        return
+                data = admitted.popleft()
+                if context is not None:
+                    self._emit_decision(context.event(row, {'elapsed_ms': elapsed}, call, index, data if self._decision_input else None))
+                yield row
+        finally:
+            stream.close()
+
+    def preview(self, input, items: dict, *, fields=None, guidance=None, binding: str = "judge"):
+        from .inline import Asking, lower, preview
         with self.operation():
-            started = time.perf_counter() if self._on_decision is not None else None
-            if isinstance(states, (str, bytes, dict)) or not isinstance(states, Sequence):
+            return preview(Asking(self.executor, lower(items, guidance), binding, input, fields))
+
+    def ask(self, input, items: dict, *, fields=None, guidance=None, binding: str = "judge") -> dict:
+        with self.operation():
+            return self._asked([input], items, fields, guidance, binding)[0]
+
+    def ask_many(self, inputs, items: dict, *, fields=None, guidance=None, binding: str = "judge") -> list[dict]:
+        with self.operation():
+            if isinstance(inputs, (str, bytes, dict)) or not isinstance(inputs, Sequence):
                 raise ConfigError("ask_many requires a finite list or tuple; use many for streaming")
-            size = self.batch_inputs()
-            results = [row for start in range(0, len(states), size)
-                       for row in ask_many(self.judge, states[start:start + size], items, fields, guidance)]
-            if self._on_decision is not None:
-                from .events import inline_event
-                cost = {'batch_elapsed_ms': (time.perf_counter() - started) * 1000, 'inputs': len(results)}
-                for row in results:
-                    self._emit_decision(inline_event(self, row, items, cost))
-            return results
+            return self._asked(inputs, items, fields, guidance, binding)
 
     async def _offload(self, call, *args, **kwargs):
         from .judge import OPERATION, Cancellation
@@ -608,62 +724,30 @@ class Runtime:
                 worker.exception()
             raise
 
-    async def aask(self, state, items: dict, *, fields=None, guidance=None):
-        return await self._offload(self.ask, state, items, fields=fields, guidance=guidance)
+    async def aask(self, input, items: dict, *, fields=None, guidance=None):
+        return await self._offload(self.ask, input, items, fields=fields, guidance=guidance)
 
-    async def acheck(self, state, statement: str, **kwargs):
-        return await self._offload(self.check, state, statement, **kwargs)
+    async def acheck(self, input, statement: str, **kwargs):
+        return await self._offload(self.check, input, statement, **kwargs)
 
-    async def apick(self, state, question: str, options, **kwargs):
-        return await self._offload(self.pick, state, question, options, **kwargs)
+    async def apick(self, input, question: str, options, **kwargs):
+        return await self._offload(self.pick, input, question, options, **kwargs)
 
-    async def arate(self, state, question: str, levels, **kwargs):
-        return await self._offload(self.rate, state, question, levels, **kwargs)
+    async def arate(self, input, question: str, levels, **kwargs):
+        return await self._offload(self.rate, input, question, levels, **kwargs)
 
-    async def aselect(self, state, question: str, labels, **kwargs):
-        return await self._offload(self.select, state, question, labels, **kwargs)
+    async def aselect(self, input, question: str, labels, **kwargs):
+        return await self._offload(self.select, input, question, labels, **kwargs)
 
-    def _scorer(self, role):
-        scorer = getattr(self.judge(role), "scorer", None)
-        if scorer is None:
-            raise ConfigError(f"model role {role!r} has no native scorer")
+    def _view(self, role, scorer):
         return scorer
-
-    def score_native(self, requests: Sequence[ScoreRequest], *, role: str = "judge", reference: bool = False) -> ScoreBlock:
-        with self.operation():
-            requests = validate_requests(requests)
-            scorer = self._scorer(role)
-            with scorer.operation() if hasattr(scorer, "operation") else nullcontext():
-                block = scorer.score(requests, reference=True) if reference else scorer.score(requests)
-            rows = sum(len(r.suffixes) for r in requests)
-            if block.logp.shape[0] != rows or len(block.log_mass) != rows or len(block.error) != rows:
-                raise ConfigError("native scorer returned incomplete ordered scores")
-            return block
-
-    @contextmanager
-    def recording(self, role: str = "judge"):
-        judge, scorer = self.judge(role), self._scorer(role)
-        ledger = ScoreLedger(scorer)
-        judge.scorer = ledger
-        try:
-            yield ledger
-        finally:
-            judge.scorer = scorer
-
-    def invalidate(self, role: str = "judge") -> None:
-        with self.operation():
-            self._scorer(role).invalidate()
-
-    def detokenize(self, tokens: Sequence[int], *, role: str = "judge") -> str:
-        with self.operation():
-            return self._scorer(role).detokenize(tokens)
 
     def info(self, role="judge") -> dict:
         with self._lock:
             descriptor = self._role(role)
             spec, judge = descriptor.value, self._loaded.get(role)
             scorer = getattr(judge, "scorer", None)
-            context = getattr(scorer, "ctx", None)
+            context, resident = getattr(scorer, "ctx", None), getattr(scorer, "resident", None)
             return {"identity": self.identity(role) if judge is not None or descriptor.kind != "model" else
                                 {"source": spec.source, "template": spec.adapter},
                     "requested_device": spec.device if descriptor.kind == "model" else "provider",
@@ -673,38 +757,56 @@ class Runtime:
                     "accelerated": self.accelerated(role), "batch_inputs": self.batch_inputs(role),
                     "max_slots": getattr(judge, "max_slots", None),
                     "capabilities": {"shared": getattr(scorer, "shared", None),
-                                     "fused": getattr(scorer, "fused", None),
                                      "conformance": hasattr(judge, "selftest"),
                                      "counters": {**getattr(scorer, "stats", {}), "submissions": getattr(context, "submissions", 0), "submitted_tokens": getattr(context, "submitted_tokens", 0)}},
                     "requested_capacity": getattr(context, "requested", {}),
                     "configuration": {"max_input_tokens": getattr(judge, "max_input_tokens", None),
+                                      "max_prefix_tokens": getattr(judge, "max_prefix_tokens", None),
                                       "prefix_slots": getattr(scorer, "prefix_slots", None)},
-                    "capacity": self._capacity(role)}
+                    "capacity": self._capacity(role),
+                    "binding": {"representation": self.representation(role),
+                                **({"adapter": getattr(scorer, "namespace", None), "pool": {**resident.pool.stats, "max_adapters": resident.pool.max_adapters,
+                                                                                         "resident": resident.pool.placement()}}
+                                   if resident is not None else {})}}
 
-    def check(self, state, statement: str, *, excludes=(), fields=None, min_score=None, unstated: bool = False, guidance=None):
-        return Check(statement, excludes, min_score, unstated, guidance)(state, self, fields)
+    def check(self, input, statement: str, *, excludes=(), fields=None, min_score=None, unstated: bool = False, guidance=None):
+        return Check(statement, excludes, min_score, unstated, guidance)(input, self, fields)
 
-    def pick(self, state, question: str, options, *, definition=None, eligible=None, allow_none=False, shortlist=None,
+    def pick(self, input, question: str, options, *, definition=None, eligible=None, allow_none=False, shortlist=None,
              fields=None, min_score=None, ids=None, focus=None, guidance=None, excludes=()):
         return Pick(question, options, definition, eligible, allow_none, shortlist, min_score, ids, focus, guidance,
-                    excludes)(state, self, fields)
+                    excludes)(input, self, fields)
 
-    def rate(self, state, question: str, levels, *, fields=None, min_score=None, guidance=None, excludes=()):
-        return Rate(question, levels, min_score, guidance, excludes)(state, self, fields)
+    def rate(self, input, question: str, levels, *, fields=None, min_score=None, guidance=None, excludes=()):
+        return Rate(question, levels, min_score, guidance, excludes)(input, self, fields)
 
-    def select(self, state, question: str, labels, *, excludes=(), unstated=False, min_score=None, guidance=None, eligible=None,
+    def select(self, input, question: str, labels, *, excludes=(), unstated=False, min_score=None, guidance=None, eligible=None,
                max_claims=None, fields=None):
         return Select(question, labels, excludes=excludes, unstated=unstated, min_score=min_score, guidance=guidance,
-                      eligible=eligible, max_claims=max_claims)(state, self, fields)
+                      eligible=eligible, max_claims=max_claims)(input, self, fields)
 
-    def load(self, path=None, draft: bool = False, allow_model_change: bool = False) -> Switch:
-        if path is not None:
+    def load(self, path, draft: bool = False, allow_model_change: bool = False) -> Switch:
+        from .tools.deployment import frozen
+        path = located(path)
+        entry = frozen(path)
+        if entry is None:
             return Switch(self, path, draft, allow_model_change)
-        if self._deployment is None:
-            raise ConfigError("load() without a path needs Runtime.from_specialization(receipt); pass the switch path otherwise")
         if draft or allow_model_change:
-            raise ConfigError("a specialization deployment loads its frozen task, policies and execution exactly; draft and allow_model_change do not apply")
-        return Switch(self, self._deployment.verified_task(), False, False)
+            raise ConfigError(f"{path}: a frozen lock loads its task, policies and execution exactly; draft and allow_model_change apply to authored definitions")
+        if entry.receipt is not None:
+            role = entry.receipt.data["scope"]["binding"]
+            if entry.receipt.data["publication"] != "application":
+                raise ConfigError(f"{path}: scoped support for targets {list(entry.receipt.data['scope']['targets'])} under binding {role!r}, not a runnable "
+                                  f"application; install it by explicit target binding, Runtime(bindings={{{role!r}: ss.judge({str(path)!r}), ...}}).load(APPLICATION), "
+                                  "or publish a complete application with bindings for the remaining targets")
+            self._install(role, entry.receipt.model(), path)
+        return Switch(self, entry.lock, frozen=True)
+
+    def cancel(self) -> None:
+        with self._idle:
+            handles = list(self._handles)
+        for handle in handles:
+            handle.cancel()
 
     def close(self):
         with self._lock:
@@ -715,10 +817,11 @@ class Runtime:
             self._closed = True
             while self._active:
                 self._idle.wait()
-            loaded, self._loaded = self._loaded, {}
-            owned = [loaded.get(role) if descriptor.kind == "model" else descriptor.value if self._own_judges else None
-                     for role, descriptor in self._roles.items()]
-            resources = {id(resource): resource for resource in (getattr(item, "scorer", item) for item in owned if item is not None)}
+            self._loaded = {}
+            owned = [*self._residents.values(), *(descriptor.value for role, descriptor in self._roles.items()
+                                                   if descriptor.kind != "model" and (self._own_judges or role in self._constructed))]
+            resources = {id(resource): resource for resource in owned}
+            self._residents = {}
         errors = []
         for resource in resources.values():
             close = getattr(resource, "close", None)
@@ -736,7 +839,9 @@ class Runtime:
     def __enter__(self):
         return self
 
-    def __exit__(self, *exc):
+    def __exit__(self, kind, error, traceback):
+        if kind is not None:
+            self.cancel()
         self.close()
 
 
@@ -745,46 +850,22 @@ def _file_fingerprint(spec):
     return stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns, stat.st_ino
 
 
-def _local_identity(spec, scorer=None, adapter=None):
-    path = scorer.path if scorer is not None else spec.path()
+def _local_identity(spec, context, lora=None, chat=None):
+    from .presentation import LETTERS, SYSTEM, identity as presentation_identity, text
+    path = spec.path()
     if spec.adapter == "qwen3":
         from .adapters.qwen3 import Qwen3Adapter
-        from .presentation import LETTERS, SYSTEM
         name = Qwen3Adapter.name
         prompt = (Qwen3Adapter.prefix_text, Qwen3Adapter.tail_text, SYSTEM, LETTERS, "true/True/false/False")
     else:
-        from .adapters.chat import name_of, render
-        if scorer is not None:
-            metadata = scorer.chat()
-        else:
-            from .backend import Weights
-            weights = Weights(path, vocab_only=True)
-            try:
-                metadata = weights.chat()
-            finally:
-                weights.close()
-        name = name_of(metadata)
-        prompt = ((adapter.prefix_text, adapter.tail_text) if adapter is not None else render(metadata), metadata["add_bos"], "ABCDEFGHIJKLMNOPQRST", "true/True/false/False")
-    from .presentation import identity as presentation_identity, text
+        from .adapters.chat import Template
+        template = Template.of((chat or spec.descriptor().chat)())
+        name = template.name
+        prompt = (template.render(context), template.add_bos, LETTERS, "true/True/false/False")
     prompt = (prompt, "<input>\n{rendered}\n</input>\n\n", tuple(text(question) for question in CONFORMANCE_QUESTIONS))
+    lora = lora or spec.adapter_content()
     return {"presentation": presentation_identity(), "file": os.path.basename(path), "sha256": files.sha256_file(path), "template": name,
-            "prompt": hashlib.sha256(repr(prompt).encode()).hexdigest()}
-
-
-@cache
-def _template(adapter: str, path: str | None = None) -> str:
-    from .adapters.chat import name_of
-    from .adapters.qwen3 import Qwen3Adapter
-
-    if adapter == "chat" and path:
-        from .backend import Weights
-
-        vocab = Weights(path, vocab_only=True)
-        try:
-            return name_of(vocab.chat())
-        finally:
-            vocab.close()
-    return {"qwen3": Qwen3Adapter.name, "chat": "chat@2"}[adapter]
+            "prompt": hashlib.sha256(repr(prompt).encode()).hexdigest(), **({"lora": lora.record()} if lora else {})}
 
 
 _default: Runtime | None = None
@@ -799,24 +880,24 @@ def default() -> Runtime:
     return _default
 
 
-def check(state, statement, **kw):
-    return default().check(state, statement, **kw)
+def check(input, statement, **kw):
+    return default().check(input, statement, **kw)
 
 
-def pick(state, question, options, **kw):
-    return default().pick(state, question, options, **kw)
+def pick(input, question, options, **kw):
+    return default().pick(input, question, options, **kw)
 
 
-def rate(state, question, levels, **kw):
-    return default().rate(state, question, levels, **kw)
+def rate(input, question, levels, **kw):
+    return default().rate(input, question, levels, **kw)
 
 
-def select(state, question, labels, **kw):
-    return default().select(state, question, labels, **kw)
+def select(input, question, labels, **kw):
+    return default().select(input, question, labels, **kw)
 
 
-def ask_(state, items, **kw):
-    return default().ask(state, items, **kw)
+def ask_(input, items, **kw):
+    return default().ask(input, items, **kw)
 
 
 def load(path, draft: bool = False, allow_model_change: bool = False) -> Switch:

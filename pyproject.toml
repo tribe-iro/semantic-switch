@@ -21,5 +21,5 @@ ss = "semantic_switch.cli:main"
 include = ["semantic_switch*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "experiments/tests", "specialists/routing/tests"]
 markers = ["slow: needs the real llama.cpp models"]

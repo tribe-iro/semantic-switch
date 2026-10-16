@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import json
+import os
 from numbers import Real
 from pathlib import Path
+from typing import NamedTuple
 
-from semantic_switch import files
-from semantic_switch.artifacts import artifact_digest
-from semantic_switch.errors import ConfigError
+from semantic_switch import ConfigError
+from semantic_switch.training import artifact_digest, files
 
 WEIGHTS, CONFIG = 'adapter_model.safetensors', 'adapter_config.json'
 EMPTY = (None, False, '', (), [], {})
@@ -16,6 +17,7 @@ IDENTITY = ('peft_type', 'task_type', 'r', 'lora_alpha', 'use_rslora', 'lora_dro
 VARIANTS = ('exclude_modules', 'layers_to_transform', 'layers_pattern', 'megatron_config', 'trainable_token_indices', 'loftq_config', 'eva_config', 'corda_config',
             'lora_ga_config', 'use_dora', 'velora_config', 'alora_invocation_tokens', 'use_qalora', 'monteclora_config', 'layer_replication', 'lora_bias',
             'target_parameters', 'use_bdlora', 'arrow_config', 'kasa_config', 'ensure_weight_tying')
+COMPLETE = (*IDENTITY, *VARIANTS)
 PROVENANCE = ('auto_mapping', 'peft_version', 'base_model_name_or_path', 'revision', 'inference_mode', 'megatron_core', 'qalora_group_size')
 INITIALIZERS = (True, False, 'gaussian')
 
@@ -27,35 +29,90 @@ PROFILES = {'0.21': {'task_type': None, 'peft_type': 'LORA', 'r': 8, 'lora_alpha
                      'target_parameters': None, 'use_bdlora': None, 'arrow_config': None, 'kasa_config': None, 'ensure_weight_tying': False}}
 
 
-def tensor_shapes(path) -> dict:
-    path = Path(path)
+class Tensor(NamedTuple):
+    dtype: str
+    shape: tuple
+    offset: int
+    size: int
+
+
+class Descriptor(NamedTuple):
+    path: Path
+    identity: tuple
+    tensors: dict
+
+    def shapes(self) -> dict:
+        return {name: list(tensor.shape) for name, tensor in self.tensors.items()}
+
+    def view(self, name, dtype):
+        import numpy as np
+        tensor = self.tensors[name]
+        return np.memmap(self.path, dtype=dtype, mode='c', offset=tensor.offset, shape=tensor.shape)
+
+
+DESCRIPTORS = {}
+
+
+def descriptor(path) -> Descriptor:
+    path = Path(path).resolve()
+    try:
+        stat = os.stat(path)
+    except OSError as error:
+        raise ConfigError(f'{path}: not a readable safetensors file ({error})') from None
+    identity = (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns)
+    known = DESCRIPTORS.get(path)
+    if known is not None and known.identity == identity:
+        return known
     try:
         with path.open('rb') as stream:
             size = int.from_bytes(stream.read(8), 'little')
-            if not 0 < size <= min(path.stat().st_size - 8, 100 << 20):
+            if not 0 < size <= min(stat.st_size - 8, 100 << 20):
                 raise ValueError(f'header length {size}')
             header = json.loads(stream.read(size))
-        return {name: list(tensor['shape']) for name, tensor in header.items() if name != '__metadata__'}
-    except (ValueError, KeyError, TypeError, UnicodeError) as error:
+        tensors = {name: Tensor(entry['dtype'], tuple(int(n) for n in entry['shape']), 8 + size + int(entry['data_offsets'][0]),
+                                int(entry['data_offsets'][1]) - int(entry['data_offsets'][0]))
+                   for name, entry in header.items() if name != '__metadata__'}
+    except (ValueError, KeyError, TypeError, UnicodeError, IndexError) as error:
         raise ConfigError(f'{path}: not a readable safetensors file ({error})') from None
+    DESCRIPTORS[path] = found = Descriptor(path, identity, tensors)
+    return found
 
 
-def profile(recorded, declared):
-    if recorded is not None and declared is not None and recorded != declared:
-        raise ConfigError(f'adapter configuration drift: {CONFIG} declares PEFT {declared}, but the run recorded fitting with PEFT {recorded}')
-    found = recorded or declared
-    return found, PROFILES.get('.'.join(str(found).split('.')[:2])) if found else None
+def tensor_shapes(path) -> dict:
+    return descriptor(path).shapes()
 
 
-def completed(config, version, defaults):
-    unknown = sorted(set(config) - {*IDENTITY, *VARIANTS, *PROVENANCE})
+ZERO_BITS = {'F32': ('<u4', 0x7fffffff), 'F16': ('<u2', 0x7fff), 'BF16': ('<u2', 0x7fff)}
+
+
+def zero_delta(peft) -> bool:
+    import numpy as np
+    found = descriptor(Path(peft) / WEIGHTS)
+    factors = [name for name in found.tensors if name.endswith('.lora_B.weight')]
+    if not factors or any(found.tensors[name].dtype not in ZERO_BITS for name in factors):
+        raise ConfigError(f'{peft}: adapter has no supported lora_B factors to prove a zero delta')
+    for name in factors:
+        dtype, magnitude = ZERO_BITS[found.tensors[name].dtype]
+        if np.any(found.view(name, dtype) & np.array(magnitude, dtype=dtype)):
+            return False
+    return True
+
+
+def supported(config):
+    unknown = sorted(set(config) - {*COMPLETE, *PROVENANCE})
     if unknown:
         raise ConfigError(f'unsupported adapter settings {unknown}: their effect on the fitted adapter cannot be established; refit with vanilla LoRA')
-    missing = [key for key in (*IDENTITY, *VARIANTS) if key not in config]
+
+
+def effective(config, version) -> dict:
+    config = json.loads(json.dumps(config, default=sorted))
+    supported(config)
+    missing = [key for key in COMPLETE if key not in config]
+    defaults = PROFILES.get('.'.join(str(version).split('.')[:2]))
     if missing and defaults is None:
-        raise ConfigError(f'insufficient historical evidence: {CONFIG} omits {missing} and PEFT {version or "(unrecorded)"} has no documented default profile '
-                          f'(supported: {sorted(PROFILES)}); the installed library defaults are not evidence of the fitted configuration')
-    return {**{key: defaults[key] for key in missing}, **config}
+        raise ConfigError(f'PEFT {version} omits adapter settings {missing} and has no documented default profile (supported: {sorted(PROFILES)}); '
+                          'fit with a supported PEFT version')
+    return {key: config[key] if key in config else defaults[key] for key in COMPLETE}
 
 
 def patterned(pattern, value, key):
@@ -114,17 +171,25 @@ def identify(fitted, peft) -> dict:
     config = files.read_json(peft / CONFIG)
     if not isinstance(config, dict):
         raise ConfigError(f'{peft / CONFIG}: adapter configuration must be a JSON object')
-    version, defaults = profile(fitted.get('dependencies', {}).get('peft'), config.get('peft_version'))
-    adapter = normalized(completed(config, version, defaults), fitted)
+    recorded, version = fitted.get('adapter'), fitted.get('dependencies', {}).get('peft')
+    if not version or not isinstance(recorded, dict) or sorted(recorded) != sorted(COMPLETE):
+        raise ConfigError('the fitted record lacks the complete effective adapter configuration and PEFT version recorded at fitting publication; '
+                          'refit with semantic-trainer lora')
+    supported(config)
+    if config.get('peft_version', version) != version:
+        raise ConfigError(f"adapter configuration drift: {CONFIG} declares PEFT {config['peft_version']}, but the run recorded fitting with PEFT {version}")
+    adapter = normalized({**recorded, **config}, fitted)
+    if normalized(recorded, fitted) != adapter:
+        raise ConfigError(f'adapter configuration drift: {CONFIG} differs from the effective configuration recorded at fitting publication')
     weights(peft / WEIGHTS, fitted, adapter['r'])
     return {'peft_sha256': files.sha256_file(peft / WEIGHTS), 'config_sha256': files.sha256_file(peft / CONFIG), 'config_digest': artifact_digest(adapter)}
 
 
-def verified(fitted, peft, recorded, configuration=('config_sha256', 'config_digest')) -> dict:
+def verified(fitted, peft, recorded) -> dict:
     found = identify(fitted, peft)
     if found['peft_sha256'] != recorded['peft_sha256']:
         raise ConfigError(f'{peft}: adapter weight drift since fitting; the recorded candidate is unavailable')
-    drifted = [key for key in configuration if found[key] != recorded[key]]
+    drifted = [key for key in ('config_sha256', 'config_digest') if found[key] != recorded[key]]
     if drifted:
         raise ConfigError(f'{peft}: adapter configuration drift since fitting ({", ".join(drifted)}); the recorded candidate is unavailable')
     return found

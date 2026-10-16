@@ -1,0 +1,745 @@
+{
+ "command": [
+  ".artifacts/ga-implementation/profile-updates.py",
+  "eager"
+ ],
+ "source": {
+  "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+  "sources": "49459cb55239ae1a3ff9030469be73641c52dce3d058b70b8ad94d580c544916"
+ },
+ "source_unchanged": true,
+ "job": {
+  "schema": 8,
+  "loss": {
+   "name": "full_vocabulary_group_nll",
+   "version": 2,
+   "reduction": "float32"
+  },
+  "objective": "specialization",
+  "tasks": {
+   "1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6": {
+    "source": "/home/tribeiro/Projects/semantic-select/.artifacts/ga-completion/printer-stages/66d3ae00a9ac53d9/printer.yaml",
+    "bundle": "/home/tribeiro/Projects/semantic-select/.artifacts/ga-completion/printer-population/tasks/1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6",
+    "weight": 1
+   }
+  },
+  "initialization": "fresh",
+  "assets": {
+   "manifest": "f6bdeb193f522a844500e42b1a4963f15a8e19e3722fa63f36e0db2d9a568f9e",
+   "quant": "Q8_0"
+  },
+  "fitting": {
+   "device": "xpu:0",
+   "attention": "eager",
+   "fused_optimizer": false
+  },
+  "exports": [
+   {
+    "path": "/home/tribeiro/Projects/semantic-select/bench/results/ga-printer-tune.export.jsonl.manifest.json",
+    "export_id": "0b05d3bdb54933e6e43bc0ca76756e5ddda57e3edf745c919344db1d8a444924",
+    "task": "1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6",
+    "roles": {
+     "fit": [
+      "group:scenario:zt-detection-0-15",
+      "group:scenario:zt-detection-0-5",
+      "group:scenario:zt-detection-0-6",
+      "group:scenario:zt-method_mismatch-0-23"
+     ],
+     "model_select": [
+      "group:scenario:zt-detection-0-0",
+      "group:scenario:zt-detection-0-19",
+      "group:scenario:zt-detection-0-21",
+      "group:scenario:zt-detection-0-4",
+      "group:scenario:zt-method_mismatch-0-10"
+     ]
+    }
+   }
+  ],
+  "selection": {
+   "fit_situations": null,
+   "families": [
+    "4e961db0a9f2fe4389dad028834d0bd978962c9fd409b68954cc669a0ff3e6ad",
+    "748ce199834dbe2d1e69b1fc03e1e8eccbd5dfb7c8cba79ccbc74fc30d768c72",
+    "d24e67bc6afcbba2de3929eb3b3c18f149f4c585bba5b9d75b989b1fcf4f5336",
+    "ea545358716b826d94874b2d7076020e9a80edd195cc61091db1bfe237b6d63c"
+   ],
+   "situation_ids": [
+    "1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6:0aa1b073f7a70b36a01b9da0479814bff529cd0094807ed590ce4e5051d2a8b5",
+    "1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6:1e7180528ecbbe9c94cc0742636c0bd88134d9477ea08886d43af5bd34b87f28",
+    "1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6:8ee56653b8b6762deff48c37f292f41fa132b3a3d35c70597f361b25403bd50c",
+    "1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6:968e4bc1203e82467ae4ee7ec760d42c6659eab0b3b7fa060d17f5594fb8b419"
+   ]
+  },
+  "budget": {
+   "max_tokens": 200000,
+   "max_monitor_tokens": 200000,
+   "max_sequence_tokens": 1024,
+   "max_seconds": 1200
+  },
+  "recipe": {
+   "epochs": 12,
+   "min_epochs": 1,
+   "batch_size": 2,
+   "microbatch": 1,
+   "max_padded_tokens": 1024,
+   "rank": 2,
+   "alpha": 4,
+   "target_modules": [
+    "q_proj",
+    "v_proj"
+   ],
+   "learning_rate": 1e-05
+  },
+  "native": {
+   "device": "auto"
+  },
+  "scope": [
+   "detection_symptom"
+  ]
+ },
+ "profile": {
+  "schema": 2,
+  "kind": "fitting-profile",
+  "population_id": "135ccc0feba76308b2de5435d53dcdcc1f12ab560c5a0ef5dc4a1b579ac78ae6",
+  "fit_id": "240d04e1a6968794ef81b2527a180f1303ff3f13b05f0864e74585705cedcecd",
+  "configuration": {
+   "assets": {
+    "manifest": "f6bdeb193f522a844500e42b1a4963f15a8e19e3722fa63f36e0db2d9a568f9e",
+    "quant": "Q8_0"
+   },
+   "fitting": {
+    "device": "xpu:0",
+    "precision": "bfloat16",
+    "threads": 16,
+    "attention": "eager",
+    "gradient_checkpointing": false,
+    "fused_optimizer": false
+   },
+   "loss": {
+    "name": "full_vocabulary_group_nll",
+    "version": 2,
+    "reduction": "float32"
+   },
+   "implementation": 2,
+   "adapter": {
+    "rank": 2,
+    "alpha": 4,
+    "dropout": 0.0,
+    "target_modules": [
+     "q_proj",
+     "v_proj"
+    ]
+   },
+   "batching": {
+    "batch_size": 2,
+    "microbatch": 1,
+    "max_padded_tokens": 1024
+   },
+   "max_sequence_tokens": 1024
+  },
+  "workload": {
+   "point_tokens": 2269,
+   "fit_tokens_per_observation": 252.0,
+   "fit_observations": 4
+  },
+  "device": "xpu:0",
+  "placement": {
+   "": "xpu:0",
+   "model.language_model.embed_tokens_per_layer": "cpu:file-mapped"
+  },
+  "synchronized": true,
+  "loss": {
+   "name": "full_vocabulary_group_nll",
+   "version": 2,
+   "reduction": "float32"
+  },
+  "dependencies": {
+   "python": "3.14.7",
+   "torch": "2.14.1+xpu",
+   "transformers": "5.19.0",
+   "peft": "0.21.2",
+   "semantic-trainer": "0.1.0"
+  },
+  "allocations": {
+   "resident_device_bytes_after_loading": 5528825856,
+   "prepared_inputs": {
+    "rows": 9,
+    "presentations": 9,
+    "bytes": 5748,
+    "seconds": 8.860499656293541e-05,
+    "device": "cpu"
+   },
+   "peak_device_bytes": 6744324096,
+   "peak_reserved_device_bytes": 6840909824,
+   "peak_host_bytes": 6434086912
+  },
+  "warmup_excluded": 2,
+  "updates": [
+   {
+    "seconds": 0.5864144429942826,
+    "phases": {
+     "slot_packing": 0.0001462969958083704,
+     "transfer": 0.0004258049884811044,
+     "collate": 0.00023960601538419724,
+     "host_embedding": 0.022707760988851078,
+     "forward": 0.25070013900403865,
+     "reduction": 0.0052459550206549466,
+     "backward": 0.3006816830020398,
+     "clip_optimizer": 0.0036916980025125667
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6744324096,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 5.3687221225118265e-05,
+    "gradient_norm": 0.002938522957265377,
+    "padded_tokens": 515,
+    "tokens": 515,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5900940599967726,
+    "phases": {
+     "slot_packing": 0.0001601249969098717,
+     "transfer": 0.00043049000669270754,
+     "collate": 0.00024568301159888506,
+     "host_embedding": 0.020112186000915244,
+     "forward": 0.2647460680018412,
+     "reduction": 0.005492796975886449,
+     "backward": 0.2937644710036693,
+     "clip_optimizer": 0.0026236239937134087
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6732925952,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 9.262605260573764e-08,
+    "gradient_norm": 3.057079538848484e-06,
+    "padded_tokens": 493,
+    "tokens": 493,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5547523270070087,
+    "phases": {
+     "slot_packing": 0.00014442100655287504,
+     "transfer": 0.00038055899494793266,
+     "collate": 0.00023016100749373436,
+     "host_embedding": 0.012957245999132283,
+     "forward": 0.23459158599143848,
+     "reduction": 0.00488150300225243,
+     "backward": 0.2966562819929095,
+     "clip_optimizer": 0.002635313998325728
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6744324096,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 8.056734077399597e-05,
+    "gradient_norm": 0.0043570976704359055,
+    "padded_tokens": 515,
+    "tokens": 515,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5625779380061431,
+    "phases": {
+     "slot_packing": 0.00015896500553935766,
+     "transfer": 0.000403768994146958,
+     "collate": 0.00023498399241361767,
+     "host_embedding": 0.013660379991051741,
+     "forward": 0.26433985198673327,
+     "reduction": 0.005042054981458932,
+     "backward": 0.2737403610080946,
+     "clip_optimizer": 0.0026062789984280244
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6732925952,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 9.154799585076034e-08,
+    "gradient_norm": 3.0349206099344883e-06,
+    "padded_tokens": 493,
+    "tokens": 493,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5370305490068858,
+    "phases": {
+     "slot_packing": 0.00014968198956921697,
+     "transfer": 0.00038120499812066555,
+     "collate": 0.0002297200117027387,
+     "host_embedding": 0.01943680200201925,
+     "forward": 0.22496949599008076,
+     "reduction": 0.004696044983575121,
+     "backward": 0.28237344400258735,
+     "clip_optimizer": 0.002529040997615084
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6744324096,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 5.7165587350027636e-05,
+    "gradient_norm": 0.003106083022430539,
+    "padded_tokens": 496,
+    "tokens": 496,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5313588339922717,
+    "phases": {
+     "slot_packing": 0.00015049600915517658,
+     "transfer": 0.0003769359755096957,
+     "collate": 0.00022440499742515385,
+     "host_embedding": 0.013742358991294168,
+     "forward": 0.2419931830081623,
+     "reduction": 0.004460864016436972,
+     "backward": 0.2657723640004406,
+     "clip_optimizer": 0.0022811929957242683
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6732925952,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 6.232309601728048e-08,
+    "gradient_norm": 3.1032818696985487e-06,
+    "padded_tokens": 512,
+    "tokens": 512,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5237342429900309,
+    "phases": {
+     "slot_packing": 0.00013527600094676018,
+     "transfer": 0.0003482990141492337,
+     "collate": 0.00021693400049116462,
+     "host_embedding": 0.013631133988383226,
+     "forward": 0.2389890789927449,
+     "reduction": 0.004468170998734422,
+     "backward": 0.26144041000225116,
+     "clip_optimizer": 0.002272687997901812
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6732925952,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 9.273799150832929e-08,
+    "gradient_norm": 3.146291646771715e-06,
+    "padded_tokens": 493,
+    "tokens": 493,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5286564190028002,
+    "phases": {
+     "slot_packing": 0.00013993300672154874,
+     "transfer": 0.0003470570081844926,
+     "collate": 0.0002122389996657148,
+     "host_embedding": 0.014188203000230715,
+     "forward": 0.22568902699276805,
+     "reduction": 0.004509247999521904,
+     "backward": 0.27897991401550826,
+     "clip_optimizer": 0.0024572249967604876
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6744324096,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 6.681088416371495e-05,
+    "gradient_norm": 0.003772137453779578,
+    "padded_tokens": 515,
+    "tokens": 515,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5740833330055466,
+    "phases": {
+     "slot_packing": 0.00014335599553305656,
+     "transfer": 0.0017838420171756297,
+     "collate": 0.00022845499916002154,
+     "host_embedding": 0.013355301998672076,
+     "forward": 0.2574676260119304,
+     "reduction": 0.004676512005971745,
+     "backward": 0.2907308559952071,
+     "clip_optimizer": 0.0029313900013221428
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6732925952,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 5.8948394610069954e-08,
+    "gradient_norm": 2.0445495465537533e-06,
+    "padded_tokens": 493,
+    "tokens": 493,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.6783632639999269,
+    "phases": {
+     "slot_packing": 0.000168423997820355,
+     "transfer": 0.00046369100164156407,
+     "collate": 0.0002568850031821057,
+     "host_embedding": 0.035969680990092456,
+     "forward": 0.2892263499816181,
+     "reduction": 0.023774549015797675,
+     "backward": 0.32284765399526805,
+     "clip_optimizer": 0.002971453999634832
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6744324096,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 7.569837907794863e-05,
+    "gradient_norm": 0.004252634476870298,
+    "padded_tokens": 515,
+    "tokens": 515,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5877165800047806,
+    "phases": {
+     "slot_packing": 0.000176064990228042,
+     "transfer": 0.0004942359955748543,
+     "collate": 0.00026510799943935126,
+     "host_embedding": 0.03289837500778958,
+     "forward": 0.25963147201400716,
+     "reduction": 0.0055917309946380556,
+     "backward": 0.28297727298922837,
+     "clip_optimizer": 0.0030590460082748905
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6732925952,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 7.725844852757291e-08,
+    "gradient_norm": 2.844647724487004e-06,
+    "padded_tokens": 493,
+    "tokens": 493,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5956195229955483,
+    "phases": {
+     "slot_packing": 0.00016985500406008214,
+     "transfer": 0.0004540550144156441,
+     "collate": 0.000257932988461107,
+     "host_embedding": 0.025019327003974468,
+     "forward": 0.2559663160063792,
+     "reduction": 0.005740214008255862,
+     "backward": 0.3022426520183217,
+     "clip_optimizer": 0.0030537639977410436
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6744324096,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 4.053013617522083e-05,
+    "gradient_norm": 0.0022465845104306936,
+    "padded_tokens": 515,
+    "tokens": 515,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5953454739938024,
+    "phases": {
+     "slot_packing": 0.00017598200065549463,
+     "transfer": 0.0004334110126364976,
+     "collate": 0.00025437300791963935,
+     "host_embedding": 0.028000708989566192,
+     "forward": 0.25534597698424477,
+     "reduction": 0.00574409200635273,
+     "backward": 0.29964221600675955,
+     "clip_optimizer": 0.0030834990029688925
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6744324096,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 5.806367698824033e-05,
+    "gradient_norm": 0.003276013070717454,
+    "padded_tokens": 515,
+    "tokens": 515,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.6016381060035201,
+    "phases": {
+     "slot_packing": 0.00018362801347393543,
+     "transfer": 0.0005284380167722702,
+     "collate": 0.00025662800180725753,
+     "host_embedding": 0.03792106101172976,
+     "forward": 0.2674789519951446,
+     "reduction": 0.005718831016565673,
+     "backward": 0.2836371790035628,
+     "clip_optimizer": 0.0031053340062499046
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6732925952,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 9.366539188704337e-08,
+    "gradient_norm": 3.4031893392239e-06,
+    "padded_tokens": 493,
+    "tokens": 493,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5910178480116883,
+    "phases": {
+     "slot_packing": 0.0001723549939924851,
+     "transfer": 0.0005165350157767534,
+     "collate": 0.0002587910130387172,
+     "host_embedding": 0.022963732000789605,
+     "forward": 0.2672492240089923,
+     "reduction": 0.0057527330063749105,
+     "backward": 0.2882803039974533,
+     "clip_optimizer": 0.0031441800092579797
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6732925952,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 4.38354064158375e-08,
+    "gradient_norm": 2.212362915088306e-06,
+    "padded_tokens": 512,
+    "tokens": 512,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.6104605169966817,
+    "phases": {
+     "slot_packing": 0.00017828799900598824,
+     "transfer": 0.0005034360074205324,
+     "collate": 0.00026998098473995924,
+     "host_embedding": 0.02154139699996449,
+     "forward": 0.26986665501317475,
+     "reduction": 0.0058415480016265064,
+     "backward": 0.3061117840115912,
+     "clip_optimizer": 0.0032998320093611255
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6744324096,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 2.8367727281874977e-05,
+    "gradient_norm": 0.0016504079103469849,
+    "padded_tokens": 496,
+    "tokens": 496,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5927707530063344,
+    "phases": {
+     "slot_packing": 0.00018465801258571446,
+     "transfer": 0.0005990089848637581,
+     "collate": 0.00026820501079782844,
+     "host_embedding": 0.01664401100424584,
+     "forward": 0.2759768049872946,
+     "reduction": 0.005740295004216023,
+     "backward": 0.2872474699979648,
+     "clip_optimizer": 0.0032108960003824905
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6732925952,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 8.676431662024697e-08,
+    "gradient_norm": 3.6444280340219848e-06,
+    "padded_tokens": 493,
+    "tokens": 493,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.6055100060038967,
+    "phases": {
+     "slot_packing": 0.00018779200036078691,
+     "transfer": 0.000498624998726882,
+     "collate": 0.0002863440022338182,
+     "host_embedding": 0.020039534007082693,
+     "forward": 0.26723007900000084,
+     "reduction": 0.005899885974940844,
+     "backward": 0.30548306299897376,
+     "clip_optimizer": 0.0031101909989956766
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6744324096,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 6.084019332774915e-05,
+    "gradient_norm": 0.0035373270511627197,
+    "padded_tokens": 515,
+    "tokens": 515,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5933641790034017,
+    "phases": {
+     "slot_packing": 0.00017324900545645505,
+     "transfer": 0.00043552997522056103,
+     "collate": 0.00025651899341028184,
+     "host_embedding": 0.014962539993575774,
+     "forward": 0.2778661139891483,
+     "reduction": 0.005585142993368208,
+     "backward": 0.2884185949951643,
+     "clip_optimizer": 0.003070068996748887
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6732925952,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 4.5693219874465285e-08,
+    "gradient_norm": 2.39054952544393e-06,
+    "padded_tokens": 512,
+    "tokens": 512,
+    "presentations": 2,
+    "observations": 2
+   },
+   {
+    "seconds": 0.5827394020016072,
+    "phases": {
+     "slot_packing": 0.0001659279951127246,
+     "transfer": 0.00045723700895905495,
+     "collate": 0.00025282599381171167,
+     "host_embedding": 0.016629095989628695,
+     "forward": 0.2563998739933595,
+     "reduction": 0.005521090017282404,
+     "backward": 0.2978199219942326,
+     "clip_optimizer": 0.003049160004593432
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 6744324096,
+    "peak_reserved_device_bytes": 6840909824,
+    "loss": 3.3175536373164505e-05,
+    "gradient_norm": 0.0019103955710306764,
+    "padded_tokens": 496,
+    "tokens": 496,
+    "presentations": 2,
+    "observations": 2
+   }
+  ],
+  "points": [
+   {
+    "state": "cold",
+    "seconds": 1.2906757860037033,
+    "phases": {
+     "checkpoint": 0.059285729003022425,
+     "slot_packing": 0.0007667109894100577,
+     "transfer": 0.002395323957898654,
+     "collate": 0.0011316400195937604,
+     "host_embedding": 0.10930071301118005,
+     "forward": 1.0146325090026949,
+     "reduction": 0.06148448803287465,
+     "readout": 0.008863064009347,
+     "monitor:model_select": 0.7166808210022282,
+     "monitor:probe": 0.512500707001891,
+     "progress_io": 0.0010959380015265197
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 5567044608,
+    "peak_reserved_device_bytes": 6840909824,
+    "tokens": 2269,
+    "observations": 9,
+    "presentations": 9
+   },
+   {
+    "state": "steady",
+    "seconds": 1.1991349360032473,
+    "phases": {
+     "checkpoint": 0.04439768700103741,
+     "slot_packing": 0.0007210120093077421,
+     "transfer": 0.0025421880127396435,
+     "collate": 0.0010625790164340287,
+     "host_embedding": 0.08679866198508535,
+     "forward": 1.0136647779727355,
+     "reduction": 0.01890641200589016,
+     "readout": 0.0002509620098862797,
+     "monitor:model_select": 0.6422233210032573,
+     "monitor:probe": 0.5107821519923164,
+     "progress_io": 0.0008835580083541572
+    },
+    "peak_host_bytes": 6434086912,
+    "peak_device_bytes": 5567044608,
+    "peak_reserved_device_bytes": 6840909824,
+    "tokens": 2269,
+    "observations": 9,
+    "presentations": 9
+   }
+  ],
+  "costs": {
+   "loading_seconds": 5.311739286000375,
+   "update_seconds_per_token": 0.0011530999799625923,
+   "point_seconds_per_token": 0.0005089190167484398,
+   "checkpoint_seconds": 0.04439768700103741
+  },
+  "cadences": [
+   {
+    "eval_every_examples": 2,
+    "evaluation_points": 25,
+    "optimizer_steps": 24,
+    "training_tokens": 12096,
+    "monitor_tokens": 56725,
+    "loading_seconds": 5.311739286000375,
+    "training_seconds": 13.947897357627516,
+    "monitoring_seconds": 28.868431225055247,
+    "checkpoint_seconds": 1.1099421750259353,
+    "seconds": 49.238010043709075,
+    "max_seconds": 1200,
+    "max_tokens": 200000,
+    "max_monitor_tokens": 200000,
+    "feasible": true
+   },
+   {
+    "eval_every_examples": 4,
+    "evaluation_points": 13,
+    "optimizer_steps": 24,
+    "training_tokens": 12096,
+    "monitor_tokens": 29497,
+    "loading_seconds": 5.311739286000375,
+    "training_seconds": 13.947897357627516,
+    "monitoring_seconds": 15.011584237028728,
+    "checkpoint_seconds": 0.5771699310134863,
+    "seconds": 34.84839081167011,
+    "max_seconds": 1200,
+    "max_tokens": 200000,
+    "max_monitor_tokens": 200000,
+    "feasible": true
+   },
+   {
+    "eval_every_examples": 8,
+    "evaluation_points": 7,
+    "optimizer_steps": 24,
+    "training_tokens": 12096,
+    "monitor_tokens": 15883,
+    "loading_seconds": 5.311739286000375,
+    "training_seconds": 13.947897357627516,
+    "monitoring_seconds": 8.083160743015469,
+    "checkpoint_seconds": 0.3107838090072619,
+    "seconds": 27.653581195650624,
+    "max_seconds": 1200,
+    "max_tokens": 200000,
+    "max_monitor_tokens": 200000,
+    "feasible": true
+   }
+  ],
+  "training_mode_restored": true,
+  "phases": {
+   "leaf": [
+    "slot_packing",
+    "collate",
+    "transfer",
+    "host_embedding",
+    "forward",
+    "reduction",
+    "readout",
+    "backward",
+    "clip_optimizer",
+    "checkpoint",
+    "progress_io"
+   ],
+   "inclusive": [
+    "monitor:model_select",
+    "monitor:probe"
+   ]
+  },
+  "id": "462f041f72ee6ba2b38259baaaaefda5958c72d4ceb51c65ff42ebe278372029"
+ }
+}

@@ -7,8 +7,8 @@ import pytest
 from semantic_switch import Runtime, Select, files, tools
 from semantic_switch.kernel import F, T, U, compose
 
-from .conftest import FakeScorer
-from .conftest import envelopes
+from semantic_testkit.scoring import FakeScorer
+from semantic_testkit.labels import envelopes
 
 LABELS = {"alpha": "Alpha label", "beta": "Beta label", "gamma": {"description": "Gamma label", "requires": 'tier == "gold"'}}
 OPEN = {"applicable": T, "ineligible": F, "rejected": F, "superseded": F}
@@ -31,9 +31,9 @@ def oracle(state, question, width):
 
 def variants(cards):
     first = cards[0]
-    return {"none": {}, "empty": {"cases": [{"id": "empty", "when": "issues is empty", "then": "empty"}], "otherwise": "some"},
-            "one": {"cases": [{"id": "hit", "when": f'issues has "{first}"', "then": "hit"}], "otherwise": "miss"},
-            "all": {"cases": [{"id": k, "when": f'issues has "{k}"', "then": k} for k in cards], "otherwise": "otherwise", "resolve": "all"}}
+    return {"none": {}, "empty": {"rules": [{"id": "empty", "when": "issues is empty", "then": "empty"}], "otherwise": "some"},
+            "one": {"rules": [{"id": "hit", "when": f'issues has "{first}"', "then": "hit"}], "otherwise": "miss"},
+            "all": {"rules": [{"id": k, "when": f'issues has "{k}"', "then": k} for k in cards], "otherwise": "otherwise", "resolve": "all"}}
 
 
 def run(tmp_path, name, fact, extra, data):
@@ -41,7 +41,7 @@ def run(tmp_path, name, fact, extra, data):
     files.publish(path, {"name": name, "fields": {"message": {"type": "text", "required": True}, "tier": {"type": "text"}},
                          "reads": ["message"], "facts": {"issues": fact}, **extra})
     events = []
-    rt = Runtime({"judge": FakeScorer(oracle)}, on_decision=events.append)
+    rt = Runtime(FakeScorer(oracle), on_decision=events.append)
     return rt.load(path)(data), events[0].as_dict()
 
 
@@ -130,7 +130,7 @@ def test_inline_select_uses_the_same_composer(tmp_path):
     labels = {"alpha": "Alpha label", "beta": "Beta label", "gamma": "Gamma label"}
     for message in ("alpha+ beta?", "alpha! beta+", "quiet", "alpha+ gamma+"):
         saved, _ = run(tmp_path, "inline", {"select": "Which issues apply?", "labels": LABELS}, {}, {"message": message, "tier": "silver"})
-        rt = Runtime({"judge": FakeScorer(oracle)})
+        rt = Runtime(FakeScorer(oracle))
         inline = rt.ask({"message": message}, {"issues": Select("Which issues apply?", labels, eligible=lambda key: key != "gamma")})["issues"]
         fact = saved.facts["issues"]
         assert (inline.status, inline.value, inline.settled, inline.complete) == (fact.status, fact.value, fact.settled, fact.complete)
@@ -144,7 +144,7 @@ def test_evaluation_reads_the_effective_selection(tmp_path):
                          "reads": ["message"], "facts": {"issues": fact}})
     rows = [("alpha+ beta?", {"alpha": True, "beta": True, "gamma": False}), ("alpha+", {"alpha": True, "beta": False, "gamma": False}),
             ("alpha! beta+", {"alpha": False, "beta": True, "gamma": False})]
-    files.append(path.with_suffix(".test.jsonl"), envelopes([{"input": {"message": m, "tier": "silver"}, "facts": {"issues": g}, "group": f"g{n}"}
-                                                   for n, (m, g) in enumerate(rows)]))
-    report = tools.run_test(Runtime({"judge": FakeScorer(oracle)}), path)["fact_populations"]["fresh"]["issues"]
+    files.append(path.with_suffix(".test.jsonl"), files.jsonl(envelopes([{"input": {"message": m, "tier": "silver"}, "facts": {"issues": g}, "group": f"g{n}"}
+                                                   for n, (m, g) in enumerate(rows)])))
+    report = tools.run_test(Runtime(FakeScorer(oracle)), path)["fact_populations"]["fresh"]["issues"]
     assert report["full_gold"] == 3 and report["full_gold_settled"] == 1 and report["exact_set_correct"] == 1

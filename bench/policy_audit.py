@@ -8,13 +8,13 @@ import time
 import numpy as np
 
 from semantic_switch import ConfigError, Model, files
-from bench.outcomes import failure, measure, runtime as model_runtime
-from semantic_switch.metrics import Progress
+from bench.outcomes import failure, latency, measure, output_argument, report, runtime as model_runtime
+from bench.outcomes import Progress
 from semantic_switch.context import ContextError
 from semantic_switch.families import FamilyIndex
-from semantic_switch.examples import label_record, metadata, metadata_history, target_origins
+from semantic_switch.examples import derivation_summary, label_record, metadata_values, target_histories
 from semantic_switch.results import thaw
-from semantic_switch.selection import history
+from semantic_switch.selection import occurrences
 from semantic_switch.tools.common import test_items, input_key, taught, uses
 
 
@@ -37,7 +37,7 @@ def summarize(observations):
             population['submitted'] += 1
             if row['result']['status'] == 'ok':
                 population['accepted'] += 1
-                correct = thaw(row['result']['case']) == thaw(row['expected_case'])
+                correct = thaw(row['result']['rule']) == thaw(row['expected_case'])
                 population['correct'] += correct
                 population['wrong'] += not correct
             else:
@@ -164,9 +164,9 @@ def reject_known_overlap(switch, items, lock):
         audit_nodes.append(nodes[0])
     exposure = {}
     for node, known in stages.items():
-        exposure.setdefault(index.find(node), set()).update(known)
+        exposure.setdefault(index.add(node), set()).update(known)
     for n, (item, node) in enumerate(zip(items, audit_nodes)):
-        known = set(exposure.get(index.find(node), set()))
+        known = set(exposure.get(index.add(node), set()))
         try:
             known.update(uses(snap, item['input']))
             if taught(snap, item['input']):
@@ -192,30 +192,33 @@ def run(runtime, definition, audit, *, after_row=None):
     ids = set()
     for n, item in enumerate(items):
         try:
-            identifier = item.get('id', str(n))
-            if not isinstance(identifier, str) or not identifier.strip() or identifier in ids:
-                raise ConfigError('audit IDs must be unique nonempty strings')
-            ids.add(identifier)
-            item['id'] = identifier
             if 'input' not in item:
                 raise ConfigError('input is required')
+            try:
+                identifier = input_key(switch.plan, item['input'])
+            except ContextError:
+                identifier = f'row-{n}'
+            if identifier in ids:
+                raise ConfigError('audit IDs (canonical input keys) must be unique; a repeated input is one situation')
+            ids.add(identifier)
+            item['id'] = identifier
             labels = item.get('facts')
-            groups = metadata_history(item.get('groups', ()), metadata(item.get('group'), 'group'), 'group')
-            if not isinstance(labels, dict) or not (labels or 'case' in item) or not groups:
+            groups = metadata_values(item.get('groups', ()), 'group')
+            if not isinstance(labels, dict) or not (labels or 'rule' in item) or not groups:
                 raise ConfigError('labels and case-family membership are required')
             item['groups'] = list(groups)
-            item['pairs'] = list(metadata_history(item.get('pairs', ()), metadata(item.get('pair'), 'pair'), 'pair'))
-            item['selections'] = [selection.record() for selection in history(item.get('selections', ()), item.get('selection'))]
+            item['pairs'] = list(metadata_values(item.get('pairs', ()), 'pair'))
+            item['selections'] = [selection.record() for selection in occurrences(item.get('selections', ()))]
             item['label_sources'] = label_record(switch.plan, item['input'], labels, sources=item.get('label_sources', {}))['label_sources']
-            if 'case' in item:
+            if 'rule' in item:
                 if item.get('switch_rev') != switch.plan.switch_rev:
-                    raise ConfigError('case label lacks matching switch revision')
-                if switch.plan.first and isinstance(item['case'], list):
-                    raise ConfigError('first-resolution case labels must be a single case ID')
-                values = item['case'] if isinstance(item['case'], list) else [item['case']]
-                allowed = {case.id for case in switch.plan.cases} | ({'otherwise'} if switch.plan.otherwise is not None else set())
+                    raise ConfigError('rule label lacks matching switch revision')
+                if switch.plan.first and isinstance(item['rule'], list):
+                    raise ConfigError('first-resolution rule labels must be a single rule ID')
+                values = item['rule'] if isinstance(item['rule'], list) else [item['rule']]
+                allowed = {rule.id for rule in switch.plan.rules} | ({'otherwise'} if switch.plan.otherwise is not None else set())
                 if not values or any(not isinstance(value, str) or value not in allowed for value in values):
-                    raise ConfigError('case label must name a declared case or an existing otherwise outcome')
+                    raise ConfigError('rule label must name a declared rule or an existing otherwise outcome')
             for name, label in labels.items():
                 fact = switch.plan.fact(name)
                 labels[name] = fact.value(fact.index(label))
@@ -230,12 +233,12 @@ def run(runtime, definition, audit, *, after_row=None):
     progress = Progress('bench.policy_audit', len(items), unit='audit rows')
     for n, item in enumerate(items):
         measured = measure(lambda: switch(item['input']))
-        known = {'id': item.get('id', str(n)), 'input': item['input'], 'labels': item['facts'], 'case_labelled': 'case' in item, 'expected_case': item.get('case'),
-                 'groups': item.get('groups', [item.get('group')]), 'pairs': item.get('pairs', []), 'selections': item.get('selections', []),
-                 'label_origins': target_origins(item), 'elapsed_ms': measured.ms, 'peak_rss_bytes': measured.peak_rss_bytes, 'batch': n}
+        known = {'id': item['id'], 'input': item['input'], 'labels': item['facts'], 'case_labelled': 'rule' in item, 'expected_case': item.get('rule'),
+                 'groups': item['groups'], 'pairs': item.get('pairs', []), 'selections': item.get('selections', []),
+                 'label_derivations': list(map(derivation_summary, target_histories(item))), 'elapsed_ms': measured.ms, 'peak_rss_bytes': measured.peak_rss_bytes, 'batch': n}
         if measured.error is not None:
             row = failure(measured, **known, raw_answers={}, batch_inputs=None, batch_native_work={},
-                          result={'status': 'failed', 'case': None, 'facts': {name: {'settled': False, 'status': 'failed', 'value': None} for name in item['facts']}})
+                          result={'status': 'failed', 'rule': None, 'facts': {name: {'settled': False, 'status': 'failed', 'value': None} for name in item['facts']}})
         else:
             result = measured.result
             raw_answers = {}
@@ -248,31 +251,31 @@ def run(runtime, definition, audit, *, after_row=None):
                     value = definition.value(definition.keys.index(key))
                     raw_answers[name] = {'value': value, 'correct': definition.index(value) == definition.index(label),
                                          'distribution': distribution, 'source': fact.source}
-            row = {**known, 'outcome': 'predicted', 'raw_answers': raw_answers, 'batch_inputs': result.cost.get('batch_inputs'),
-                   'batch_native_work': result.cost.get('batch_native_work', {}), 'result': measured.output}
+            operation = result.cost.get('operation') or {}
+            row = {**known, 'outcome': 'predicted', 'raw_answers': raw_answers, 'batch_inputs': operation.get('inputs'),
+                   'batch_native_work': dict(operation.get('native_work', {})), 'result': measured.output}
         observations.append(row)
         progress.record([{'outcome': row['outcome'], 'accepted': row['result']['status'] == 'ok',
-                          'correct': thaw(row['result']['case']) == thaw(row['expected_case']) if row['case_labelled'] and row['result']['status'] == 'ok' else None}])
+                          'correct': thaw(row['result']['rule']) == thaw(row['expected_case']) if row['case_labelled'] and row['result']['status'] == 'ok' else None}])
         if after_row is not None:
             after_row()
     if switch.snapshot.candidate_id != snap.candidate_id or switch.snapshot.policies != snap.policies:
         raise RuntimeError('policy audit changed the frozen candidate')
     if files.sha256_file(audit) != audit_digest or files.sha256_file(switch.paths.lock) != lock_digest:
         raise RuntimeError('policy audit inputs changed during execution')
-    binding = {fact.name: fact.judgment.guidance.references for fact in switch.plan.visible}
+    described = thaw(switch.describe())
     return {'schema': 1, 'population': 'caller-supplied policy audit; representativeness and independence are caller declarations',
             'audit_sha256': audit_digest, 'lock_sha256': lock_digest, 'lock_id': snap.lock_id, 'candidate_id': snap.candidate_id,
-            'switch_revision': switch.plan.switch_rev, 'meanings': {fact.name: fact.meaning_rev for fact in switch.plan.visible},
+            'switch_revision': described['revision'], 'meanings': {name: fact['revision'] for name, fact in described['facts'].items()},
             'independence': 'no known overlap; external independence remains caller declared',
-            'guidance': thaw(binding), 'framing': snap.framing.as_dict() if snap.framing else None,
+            'guidance': {name: fact['guidance'] for name, fact in described['facts'].items()}, 'framing': snap.framing.as_dict() if snap.framing else None,
             'runtime': runtime.info(), 'policies': {source: {name: {'true': p.t_true, 'false': p.t_false} for name, p in values.items()}
                                                   for source, values in snap.policies.items()},
             'progress': progress.finish(), 'failed': sum(row['outcome'] == 'failed' for row in observations),
             'memory': {'max_operation_peak_rss_bytes': max(row['peak_rss_bytes'] for row in observations),
                        'device_memory': 'unmeasured'},
             'cold_load_seconds': cold_load_seconds, 'native_work': native_work(observations),
-            'latency_ms': {'p50': float(np.percentile([row['elapsed_ms'] for row in observations], 50)),
-                           'p95': float(np.percentile([row['elapsed_ms'] for row in observations], 95))},
+            'latency': latency(row['elapsed_ms'] for row in observations),
             'metrics': summarize(observations), 'observations': observations}
 
 
@@ -287,19 +290,18 @@ def main():
     parser.add_argument('audit', type=Path, nargs='?')
     parser.add_argument('--model')
     parser.add_argument('--compare', nargs=2, type=Path, metavar=('LEFT', 'RIGHT'))
-    parser.add_argument('--output', required=True, type=Path)
+    output_argument(parser)
     args = parser.parse_args()
     if args.compare:
         if args.definition or args.audit or args.model:
             parser.error('--compare cannot be combined with a model or audit inputs')
-        result = compare(*(files.read_json(path) for path in args.compare))
-        files.publish(args.output, result)
+        report(args.output, compare(*(files.read_json(path) for path in args.compare)))
         return
     if not args.definition or not args.audit or not args.model:
         parser.error('definition, audit and --model are required for execution')
     with model_runtime(Model(args.model)) as runtime:
         result = run(runtime, args.definition, args.audit)
-    files.publish(args.output, result)
+    report(args.output, result)
 
 
 if __name__ == '__main__':

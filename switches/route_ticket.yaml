@@ -40,7 +40,7 @@ facts:
     rate: How urgent is the customer's situation?
     levels: [can wait, today, immediately]
 
-cases:
+rules:
   - { id: legal,           when: legal_threat,                                       then: legal }
   - { id: refund_settled,  when: 'refund_requested and payment.status == "settled"', then: refund_review }
   - { id: payment_dispute, when: exists(payment.status) and disputes_payment_status, then: billing_escalation }

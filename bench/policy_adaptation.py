@@ -2,18 +2,19 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter, defaultdict
+import functools
 import json
 from pathlib import Path
 import time
 
-from semantic_switch import Check, Model, Pick, files, tools
+from semantic_switch import Check, ConfigError, Model, Pick, files, tools
 from semantic_switch.compiler import compile_spec
-from semantic_switch.errors import ConfigError
-from semantic_switch.examples import LabelSource, each_target, label_record
+from semantic_switch.examples import Actor, LabelSource, Verification, each_target, label_record, reviewed_content, situation_record
 from semantic_switch.tools.data import Labels, fold_of
 from semantic_switch.artifacts import artifact_digest
-from semantic_switch.metrics import Progress
-from bench.outcomes import classification_metrics, failure, measure, runtime
+from bench.outcomes import Progress
+from semantic_switch.training import Engine, fitted
+from bench.outcomes import classification_metrics, destination, failure, measure, report, runtime
 
 COHORT = Path(__file__).parents[1] / 'tests/fixtures/policy-adaptation.json'
 
@@ -74,8 +75,11 @@ def materialize(runtime, directory, cohort=COHORT):
         judgment.save(path, rt=runtime)
         name = path.stem
         plan = runtime.load(path, draft=True).plan
-        files.publish(path.with_suffix('.test.jsonl'), ''.join(json.dumps(authored(plan, {'input': {'message': case['text']}, 'facts': {name: case['gold']},
-                         'group': case['family'], 'pairs': case.get('pairs', ([case['pair']] if case.get('pair') else []))})) + '\n' for case in policy['cases']))
+        revision = f"{policy['id']}@{artifact_digest({key: value for key, value in policy.items() if key != 'cases'})}"
+        rows = [{'input': {'message': case['text']}, 'facts': {name: case['gold']}, 'group': case['family'],
+                 'pairs': case.get('pairs', ([case['pair']] if case.get('pair') else []))} for case in policy['cases']]
+        files.publish(path.with_suffix('.test.jsonl'), ''.join(json.dumps(authored(plan, row, fixture_sources(plan, row, cohort, f"{policy['id']}#{index}", revision))) + '\n'
+                                                               for index, row in enumerate(rows)))
         switch = runtime.load(path, draft=True)
         labels = Labels(switch)
         if not labels.examples(name, 'tune') or not labels.examples(name, 'check'):
@@ -125,7 +129,8 @@ def suites(runtime, directory, *, assets, quant='Q4_0', device='cpu', epochs=2):
         path.parent.mkdir(parents=True, exist_ok=True)
         files.publish(path, spec)
         plan = compile_spec(spec, path.name, path.parent)
-        files.publish(path.with_suffix('.test.jsonl'), ''.join(json.dumps(authored(plan, row), ensure_ascii=False) + '\n' for row in selected))
+        files.publish(path.with_suffix('.test.jsonl'), ''.join(json.dumps(authored(plan, row, each_target(row['facts'], [SUITES.record()])), ensure_ascii=False) + '\n'
+                                                               for row in selected))
         switch = runtime.load(path, draft=True)
         labels = Labels(switch)
         return path, [e for name in claims for e in labels.examples(name)]
@@ -154,9 +159,42 @@ CANDIDATES = {'all-linear': None, 'query-value': ['q_proj', 'v_proj']}
 SMALL_CONTEXT = Path(__file__).parents[1] / 'tests/fixtures/small-context-cohort-v3.json'
 
 
-def authored(plan, row):
-    return label_record(plan, row['input'], row['facts'], sources=each_target(row['facts'], [LabelSource('synthetic', 'bench.policy_adaptation').record()]),
-                        groups=[row['group']], pairs=row.get('pairs', []), selections=[{'selected_by': 'manual'}], created='bench.policy_adaptation')
+CODEX = LabelSource('authored', 'codex', actor=Actor('agent', 'gpt-6.1-sol', '01a117f0-2b2f-7f31-b6a0-8b4ef9465af0'))
+SUITES = LabelSource('authored', 'bench.quality CHECKS and bench.fresh FRESH (author unrecorded)', actor=Actor('unknown'))
+AUTHORS = {COHORT.name: CODEX}
+
+
+def author(fixture) -> LabelSource:
+    return AUTHORS.get(Path(fixture).name) or LabelSource('authored', f'{Path(fixture).name} (author unrecorded)', actor=Actor('unknown'))
+
+
+@functools.cache
+def recomputation(fixture):
+    path = Path(fixture).with_suffix('.verification.json')
+    found = files.read_json(path)
+    if found is not None and found['fixture_sha256'] != files.sha256_file(fixture):
+        raise ConfigError(f'{path} recomputed another revision of {fixture}; recompute the changed fixture again')
+    return found
+
+
+def fixture_sources(plan, row, fixture, key, criterion) -> dict:
+    data, found, out = situation_record(plan, row['input'])['input'], recomputation(Path(fixture).resolve()), {}
+    for name, value in row['facts'].items():
+        source = author(fixture)
+        if found is not None and key in found['answers'] and found['answers'][key] == value:
+            source = source.verified(Verification('label', found['verifier'], Actor.parse(found['actor']), found['method'], criterion,
+                                                  reviewed_content('label', data, (name,), value), 'confirm'))
+        out[name] = [source.record()]
+    return out
+
+
+def criterion(data, policy) -> str:
+    return f"{policy}@{artifact_digest({'policy': data['policies'][policy], 'judgment': data['judgments'][data['policies'][policy]['judgment']]})}"
+
+
+def authored(plan, row, sources):
+    return label_record(plan, row['input'], row['facts'], sources=sources, groups=[row['group']], pairs=row.get('pairs', []),
+                        selections=[{'selected_by': 'manual'}], created='bench.policy_adaptation')
 
 
 def cohort_spec(data, rows):
@@ -176,11 +214,12 @@ def cohort_rows(data):
             for fact in (variant['policy'] + ('_reference' if 'reference' in variant[language] else ''),)]
 
 
-def publish_definition(path, spec, rows):
+def publish_definition(path, spec, rows, cohort, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     files.publish(path, spec)
     plan = compile_spec(spec, path.name, path.parent)
-    files.publish(path.with_suffix('.test.jsonl'), ''.join(json.dumps(authored(plan, row['record']), ensure_ascii=False) + '\n' for row in rows))
+    files.publish(path.with_suffix('.test.jsonl'), ''.join(json.dumps(authored(plan, row['record'], fixture_sources(plan, row['record'], cohort, row['case_id'], criterion(data, row['policy']))),
+                                                                  ensure_ascii=False) + '\n' for row in rows))
 
 
 def materialize_cohort(runtime, directory, cohort=None):
@@ -192,7 +231,7 @@ def materialize_cohort(runtime, directory, cohort=None):
         raise ConfigError(f'{directory}: cohort source {cohort} changed after its family assignment was frozen from {frozen["cohort"]}; materialize into a new directory')
     rows = cohort_rows(data)
     path = directory / 'cohort.yaml'
-    publish_definition(path, cohort_spec(data, rows), rows)
+    publish_definition(path, cohort_spec(data, rows), rows, cohort, data)
     switch = runtime.load(path, draft=True)
     labels = Labels(switch)
     examples = [e for fact in labels.by_fact for e in labels.examples(fact)]
@@ -225,7 +264,7 @@ def cohort_pilot(runtime, directory, cohort_directory, *, assets, quant='Q4_0', 
     for fact in sorted({row['fact'] for row in held_out}):
         held = [row for row in held_out if row['fact'] == fact]
         path = directory / 'audit' / f'{fact}.yaml'
-        publish_definition(path, cohort_spec(data, held), held)
+        publish_definition(path, cohort_spec(data, held), held, assignment['cohort'], data)
         audit = Labels(runtime.load(path, draft=True))
         by_input = {json.dumps(row['input'], sort_keys=True): row for row in held}
         examples = audit.examples(fact)
@@ -298,7 +337,7 @@ def compare(definitions, models, output, selection=None):
     arms = []
     for name, model in models.items():
         started = time.perf_counter()
-        with runtime(model) as bound:
+        with Engine(model, own_judges=True) as bound:
             bound.judge()
             load_ms = (time.perf_counter() - started) * 1000
             rows, windows, locks, progress = [], [], {}, []
@@ -348,8 +387,7 @@ def compare(definitions, models, output, selection=None):
                                   'situation_components': len({row['family'] for row in arms[0]['rows']}) if arms else 0,
                                   'policy_variants': sum(definition['role'] == 'target' for definition in definitions)},
                 'quality_promotion': False, 'selection': selection, 'arms': arms}
-    files.publish(Path(output), artifact)
-    return artifact
+    return report(output, artifact)
 
 
 def main():
@@ -363,7 +401,7 @@ def main():
     parser.add_argument('--cohort', help='materialized small-context cohort directory; with it, DEFINITIONS is the pilot directory to create')
     parser.add_argument('--receipt', action='append', default=[], help='deployment receipt from semantic-trainer select; repeat, each arm named by its run directory')
     parser.add_argument('--precise')
-    parser.add_argument('--output')
+    parser.add_argument('--output', type=Path, help='comparison report path (required unless --suites/--cohort); refused when it exists')
     args = parser.parse_args()
     if args.suites or args.cohort:
         settings = {'assets': args.assets, 'quant': args.quant, 'device': args.device}
@@ -371,9 +409,13 @@ def main():
             pilot = cohort_pilot(bound, args.definitions, args.cohort, **settings) if args.cohort else suites(bound, args.definitions, **settings)
         print(json.dumps({key: value for key, value in pilot.items() if key not in ('groups', 'definitions', 'support')}))
         return
+    if args.output is None:
+        parser.error('a comparison publishes to --output')
+    destination(args.output)
     receipts = {Path(receipt).resolve().parents[1].name: receipt for receipt in args.receipt}
     compare(json.loads(Path(args.definitions).read_text())['definitions'],
-            {'base': Model(args.base), **{name: Model.from_specialization(receipt) for name, receipt in receipts.items()}, 'precise': Model(args.precise)}, args.output,
+            {'base': Model(args.base), **{name: fitted(receipt) for name, receipt in receipts.items()},
+             **({'precise': Model(args.precise)} if args.precise else {})}, args.output,
             {name: {'rule': report['rule'], 'selected': report['selected'],
                     'candidates': [{key: candidate[key] for key in ('name', 'raw_correct', 'class_regressions', 'p50_ms')} for candidate in report['candidates']]}
              for name, receipt in receipts.items() for report in (files.read_json(Path(receipt))['selection'],)} or None)

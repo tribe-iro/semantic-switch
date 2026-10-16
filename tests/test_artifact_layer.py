@@ -8,16 +8,16 @@ import threading
 
 import pytest
 
-from semantic_switch import ConfigError, Runtime, files, tools
+from semantic_switch import Actor, ConfigError, Runtime, files, tools
 from semantic_switch.artifacts import candidate_digest, read_export
 from semantic_switch.compiler import digest
 from semantic_switch.tools.data import Labels
 from semantic_switch.tools.dataset import EvidenceContext, evaluation_plan
 from semantic_switch.tools.lock import build_lock
 
-from .conftest import FakeScorer
+from semantic_testkit.scoring import FakeScorer
 from .test_artifact_pipeline import dataset, definition
-from .conftest import envelopes
+from semantic_testkit.labels import envelopes
 
 RANDOM = {'selected_by': 'random', 'frame_id': 'audit', 'independent': True, 'inclusion_probability': .5}
 
@@ -32,7 +32,7 @@ def test_new_artifacts_respect_umask(tmp_path):
     previous = os.umask(0o027)
     try:
         files.publish(tmp_path / 'a.json', {'x': 1})
-        files.append(tmp_path / 'a.jsonl', [{'x': 1}])
+        files.append(tmp_path / 'a.jsonl', files.jsonl([{'x': 1}]))
         stored = files.publish(tmp_path / 'm.json', {'x': 1}, {'p.jsonl': ['{}\n']})['payloads']['p.jsonl']['file']
     finally:
         os.umask(previous)
@@ -57,7 +57,7 @@ except BlockingIOError:
         with files.locked(target):
             with files.locked(target):
                 files.publish(target, {'nested': True})
-                outcome['probe'] = subprocess.run([sys.executable, '-c', probe, str(target) + '.write-lock']).returncode
+                outcome['probe'] = subprocess.run([sys.executable, '-c', probe, str(files.lock_file(target))]).returncode
                 outcome['holder'] = subprocess.run([sys.executable, '-c', 'import sys\nfrom semantic_switch import files\nwith files.locked(sys.argv[1], blocking=False): pass',
                                                     str(target)], capture_output=True, text=True).stderr
     worker = threading.Thread(target=nested)
@@ -73,7 +73,7 @@ except BlockingIOError:
 def test_publish_crash_before_manifest_keeps_previous_export(tmp_path, monkeypatch):
     path = definition(tmp_path)
     dataset(path, 40)
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         exported = tools.export(rt, path)
         before = read_export(exported['path'])
         module = __import__('semantic_switch.tools.export', fromlist=['input_key'])
@@ -93,7 +93,7 @@ def test_publish_crash_before_manifest_keeps_previous_export(tmp_path, monkeypat
             tools.export(rt, path)
     assert read_export(exported['path']) == before
     assert not [p for p in tmp_path.iterdir() if p.name.endswith('.tmp')]
-    (entry,) = before[0]['payloads'].values()
+    entry = next(value for name, value in before[0]['payloads'].items() if name.endswith('.observations.jsonl'))
     (tmp_path / entry['file']).write_text('')
     with pytest.raises(ConfigError, match='incomplete publication; re-run'):
         read_export(exported['path'])
@@ -102,7 +102,7 @@ def test_publish_crash_before_manifest_keeps_previous_export(tmp_path, monkeypat
 def test_audit_log_appends_without_rewrite(tmp_path):
     path = definition(tmp_path)
     dataset(path, 20)
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         labels = Labels(rt.load(path, draft=True))
         families = {e.group for e in labels.examples('refund', 'check')}
         context = EvidenceContext.of(labels)
@@ -114,7 +114,7 @@ def test_audit_log_appends_without_rewrite(tmp_path):
     with log.open('ab') as stream:
         stream.write(b'{"schema": 1, "cand')
     assert len(files.read_jsonl(log)) == 2
-    files.append(log, [{'schema': 1, 'candidate_id': 'third', 'families': []}])
+    files.append(log, files.jsonl([{'schema': 1, 'candidate_id': 'third', 'families': []}]))
     assert [r.get('candidate_id') or r['plan']['arms']['candidate'] for r in files.read_jsonl(log)] == ['first', 'second', 'third']
 
 
@@ -141,7 +141,7 @@ def loaded(monkeypatch, path):
 
 
 def test_provenance_fingerprint_unambiguous_and_cwd_independent(tmp_path, monkeypatch):
-    from bench.diagnostics import fingerprint
+    from bench.outcomes import fingerprint
     prints = []
     for name, content in (('ab', 'c = 1\n'), ('a', 'bc = 1\n')):
         root = tmp_path / name
@@ -162,17 +162,17 @@ def test_receipt_lineage_never_upgrades_unknown_membership(tmp_path, monkeypatch
     module = __import__('semantic_switch.tools.lock', fromlist=['specialization'])
     path = definition(tmp_path)
     dataset(path)
-    with Runtime({'judge': FakeScorer()}) as rt:
-        monkeypatch.setattr(module, 'specialization', lambda rt: (None, None))
+    with Runtime(FakeScorer()) as rt:
+        monkeypatch.setattr(module, 'specialization', lambda rt, role: (None, None))
         data, _, _ = build_lock(rt, path)
         assert data['lineage']['judge:refund']['state'] == 'unknown' and not data['predictor_artifacts']
         assert all(side['interval_95'] is None and side['interval']['interval'] is None for side in data['facts']['refund']['policies']['judge'].values())
         rows = ({'id': 'b' * 64, 'fact': 'refund', 'projection': '{"message": "elsewhere"}', 'group': 'elsewhere', 'family_seeds': [['group', 'elsewhere']],
                  'uses': ['selection'], 'source': 'x.export.jsonl', 'task_family': 'x:y', 'export_id': 'c' * 64},)
         provenance = Provenance('base', 'f' * 64, receipt='e' * 64, rows=rows)
-        monkeypatch.setattr(module, 'specialization', lambda rt: (provenance, rows))
+        monkeypatch.setattr(module, 'specialization', lambda rt, role: (provenance, rows))
         data, _, _ = build_lock(rt, path)
-    assert data['schema'] == 17 and data['lineage']['judge:refund']['state'] == 'declared_disjoint'
+    assert data['schema'] == 20 and data['lineage']['judge:refund']['state'] == 'declared_disjoint'
     assert data['predictor_artifacts']['judge']['gguf_sha256'] == 'f' * 64 and data['predictor_artifacts']['judge']['rows'][0]['uses'] == ['selection']
 
 
@@ -181,29 +181,29 @@ def test_obsolete_lock_schema_is_rejected_before_policy_use(tmp_path, schema):
     from semantic_switch.snapshot import from_lock
     path = definition(tmp_path)
     dataset(path, 40)
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         data, _, _ = build_lock(rt, path)
         data = {k: v for k, v in data.items() if k not in ('id', 'created')} | {'schema': schema}
         data['candidate_id'] = candidate_digest(data)
         data['id'] = digest(data)[:12]
         with pytest.raises(ConfigError, match=f'unsupported lock schema {schema}.*regenerate this lock'):
-            from_lock(data, rt.identity, False, 'lock')
+            from_lock(data, 'lock')
 
 
 def test_embedded_obsolete_dataset_is_rejected(tmp_path):
     from semantic_switch.snapshot import from_lock
     path = definition(tmp_path)
     dataset(path, 40)
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         tools.lock(rt, path)
         data = files.read_json(path.with_suffix('.lock.json'))
         dataset_ = {k: v for k, v in data['dataset'].items() if k != 'id'} | {'schema': 4}
         data = {k: v for k, v in data.items() if k not in ('id', 'created')} | {'dataset': dataset_ | {'id': digest(dataset_)}}
         data['id'] = digest(data)[:12]
-        with pytest.raises(ConfigError, match='embedded dataset is not a current schema-6'):
-            from_lock(data, rt.identity, False, 'lock')
+        with pytest.raises(ConfigError, match='embedded dataset is not a current schema-7'):
+            from_lock(data, 'lock')
         files.publish(path.with_suffix('.dataset.json'), dataset_ | {'id': digest(dataset_)})
-        with pytest.raises(ConfigError, match='current schema 6'):
+        with pytest.raises(ConfigError, match='current schema 7'):
             Labels(rt.load(path, draft=True))
 
 
@@ -212,11 +212,11 @@ def test_removed_fact_labels_ignored_with_warning(tmp_path):
     spec = {'name': 'decision', 'fields': {'message': {'type': 'text', 'required': True}}, 'reads': ['message'],
             'facts': {'refund': {'check': 'The customer asks to receive money back for a charge.'}, 'legal': {'check': 'The customer threatens legal action.'}}}
     files.publish(path, spec)
-    files.append(path.with_suffix('.test.jsonl'), envelopes([{'input': {'message': f'refund {i}'}, 'facts': {'refund': True, 'legal': False},
-                                                    'group': f'g{i}'} for i in range(6)]))
-    with Runtime({'judge': FakeScorer()}) as rt:
+    files.append(path.with_suffix('.test.jsonl'), files.jsonl(envelopes([{'input': {'message': f'refund {i}'}, 'facts': {'refund': True, 'legal': False},
+                                                    'group': f'g{i}'} for i in range(6)])))
+    with Runtime(FakeScorer()) as rt:
         sw = rt.load(path, draft=True)
-        sw.correct({'message': 'refund a'}, fact='legal', value=False)
+        sw.correct({'message': 'refund a'}, fact='legal', value=False, actor=Actor('human'))
         del spec['facts']['legal']
         files.publish(path, spec)
         locked = tools.lock(rt, path, dry_run=True)
@@ -230,7 +230,7 @@ def test_removed_fact_labels_ignored_with_warning(tmp_path):
 def test_relock_keeps_fresh_interval_for_unconsulted_families(tmp_path):
     path = definition(tmp_path)
     dataset(path, 40)
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         tools.lock(rt, path)
         first = tools.run_test(rt, path, cohort(tmp_path / 'first.jsonl', 'first', 30))
         assert first['facts']['refund']['interval']['interval'] is not None
@@ -250,7 +250,7 @@ def test_relock_keeps_fresh_interval_for_unconsulted_families(tmp_path):
 def test_lock_dry_run_records_exposure_without_lock(tmp_path):
     path = definition(tmp_path)
     dataset(path, 40)
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         result = tools.lock(rt, path, dry_run=True)
     audit = path.with_suffix('.audit.jsonl')
     assert result['lock'] is None and not path.with_suffix('.lock.json').exists()
@@ -264,7 +264,7 @@ def test_lock_dry_run_records_exposure_without_lock(tmp_path):
 def test_test_data_does_not_rewrite_dataset_manifest(tmp_path):
     path = definition(tmp_path)
     dataset(path, 40)
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         tools.lock(rt, path)
         manifest = path.with_suffix('.dataset.json')
         before = manifest.read_bytes()
@@ -279,12 +279,12 @@ def test_dataset_id_location_independent(tmp_path):
         (tmp_path / name).mkdir()
         path = definition(tmp_path / name)
         dataset(path, 20)
-        with Runtime({'judge': FakeScorer()}) as rt:
+        with Runtime(FakeScorer()) as rt:
             ids.append(Labels(rt.load(path, draft=True)).dataset_id)
         manifest = files.read_json(path.with_suffix('.dataset.json'))
-        assert manifest['schema'] == 6 and set(manifest['sources']) == {'definition', 'examples', 'labels'}
+        assert manifest['schema'] == 7 and set(manifest['sources']) == {'definition', 'examples', 'labels'}
     assert ids[0] == ids[1]
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         exported = tools.export(rt, path)
     assert all('definition' not in row and str(tmp_path) not in json.dumps(row) for row in read_export(exported['path'])[1])
 
@@ -292,10 +292,10 @@ def test_dataset_id_location_independent(tmp_path):
 def test_label_rejects_unknown_destination(tmp_path):
     path = definition(tmp_path)
     inputs = tmp_path / 'inputs.jsonl'
-    files.append(inputs, [{'message': 'refund please'}])
-    with Runtime({'judge': FakeScorer()}) as rt:
+    files.append(inputs, files.jsonl([{'message': 'refund please'}]))
+    with Runtime(FakeScorer()) as rt:
         with pytest.raises(ConfigError, match='destination'):
-            tools.label(rt, path, str(inputs), 'tset', ask=lambda _: 'y', show=lambda _: None)
+            tools.label(rt, path, str(inputs), 'tset', ask=lambda _: 'y', show=lambda _: None, actor=Actor('human'))
     result = subprocess.run([sys.executable, '-m', 'semantic_switch', 'label', str(path), str(inputs), '--to', 'tset'],
                             capture_output=True, text=True)
     assert result.returncode != 0
@@ -305,9 +305,10 @@ def test_label_rejects_unknown_destination(tmp_path):
 def test_each_and_single_exit_codes_match(monkeypatch):
     import typer
     from semantic_switch import cli
-    monkeypatch.setattr(cli, 'emit', lambda obj: None)
+    monkeypatch.setattr(cli, 'emit', lambda obj, raw=False: None)
     for statuses in (['ok'], ['ok', 'uncertain'], ['ok', 'failed'], ['needs_input', 'failed']):
+        monkeypatch.setattr(cli, 'states', lambda: iter(statuses))
         with pytest.raises(typer.Exit) as stopped:
-            cli.run_stream(type('R', (), {'status': s})() for s in statuses)
+            cli.run_stream(lambda chunk: [type('R', (), {'status': s})() for s in chunk], 2)
         assert stopped.value.exit_code == cli.worst(statuses) == max(cli.EXIT[s] for s in statuses)
     assert 'failed 3' in cli.app.info.help

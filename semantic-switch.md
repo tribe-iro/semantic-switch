@@ -28,7 +28,7 @@ route(ticket)
 > **Code builds a bounded decision → the model judges → code executes.**
 
 **The precision promise.** Untuned, the default judge is right about 89% of the time on the answers it settles in unseen domains (§8). Labels don't make the judge smarter. They let you:
-- **fix exact cases** (corrections);
+- **fix exact inputs** (corrections);
 - **measure generalisation** (`ss test` on unseen inputs);
 - **choose how often the switch answers:** `ss lock` tunes thresholds to your precision target, and **where the judge can't meet it, the switch abstains** rather than guess.
 
@@ -40,7 +40,7 @@ Until a switch is locked and tested, treat its answers as drafts.
 - **Typed judgments over shared input are now a commodity:** the OpenAI Decisions API (October 2026) offers predicate / choice / score at $0.10 per million input tokens.
 - **What this library adds is everything around the judgment:**
   - exact eligibility and identifiers enforced in code;
-  - facts and cases resolved with three-valued logic;
+  - facts and rules resolved with three-valued logic;
   - claims shared across a catalogue;
   - corrections and lexical heads that settle recurring inputs without a model;
   - measured abstention (held-out observations with intervals, not guarantees);
@@ -53,10 +53,10 @@ Until a switch is locked and tested, treat its answers as drafts.
 |---|---|---|
 | 0 | `ss.check(text, "The customer requests a refund.")` | none |
 | 1 | `refund = ss.Check("…")`, then `refund(text)` and `ss.ask(text, {"refund": refund, "topic": topic})` | A reusable judgment |
-| 2 | `sw = refund.save("switches/refund.yaml")`, then `sw.correct(text, fact="refund", value=True)` | Saved and teachable: same meaning, same acceptance policy, same answers |
-| 3 | `cases:`, `mentions(...)` and exact rules in the YAML | Rules |
+| 2 | `sw = refund.save("switches/refund.yaml")`, then `sw.correct(text, fact="refund", value=True, actor=ss.Actor("human"))` | Saved and teachable: same meaning, same acceptance policy, same answers |
+| 3 | `rules:`, `mentions(...)` and exact predicates in the YAML | Rules |
 | 4 | `ss label … --to test`, `ss lock`, `ss test` | Precision on your data |
-| 5 | `ss specialize` → `specialize: lexical` | Cheaper repeats |
+| 5 | `semantic-trainer lexical` → `ss analyze-head --head` → `ss lock --head FACT=BUNDLE` | Cheaper repeats |
 | 6 | `--judge my-finetuned.gguf`, `ss doctor --quality` | A better judge, with no API change |
 
 ### Where fast and cheap come from
@@ -74,7 +74,7 @@ Three kinds of judgment, all over **supplied** information and **supplied** opti
 | Kind | Example | API |
 |---|---|---|
 | Classification | "Which department does this ticket belong to?" | `pick`, `check` |
-| Applicability | "Which procedures apply to this incident?" | `select`, or facts + cases |
+| Applicability | "Which procedures apply to this incident?" | `select`, or facts + rules |
 | Comparative choice | "Which reply best calms the customer without promising money back?" | `pick` with a criterion in the question |
 
 **Comparative choice** is a free-form criterion over bounded candidates with a typed result. Two rules make it usable:
@@ -118,7 +118,7 @@ Use `--precise` for comparative choices whose goal runs against the stated situa
 | Status | Meaning |
 |---|---|
 | `ok` | A value or answer was produced |
-| `none` | `pick` with `allow_none` chose "none of these"; a switch without cases whose `select` facts are complete and empty |
+| `none` | `pick` with `allow_none` chose "none of these"; a switch without rules whose `select` facts are complete and empty |
 | `uncertain` | Not confident enough, or a search was incomplete |
 | `needs_input` | A field is missing, or a three-way check found the input doesn't say |
 | `failed` | Invalid input, a model error on something that decides, or a limit exceeded |
@@ -175,7 +175,7 @@ else:
 
 `Check`, `Pick` and `Rate` are values. `refund(text)` runs on the default runtime, `refund(text, rt=rt)` on a given one, and `ss.ask` composes them.
 
-`refund.save(path, field="message")` writes a switch without cases whose one fact is this judgment, **with its acceptance policy** (`min_score` becomes the fact's `min_score`), and returns the loaded `Switch`:
+`refund.save(path, field="message")` writes a switch without rules whose one fact is this judgment, **with its acceptance policy** (`min_score` becomes the fact's `min_score`), and returns the loaded `Switch`:
 - An existing file with the same definition is loaded.
 - A different definition raises `ConfigError`.
 
@@ -233,13 +233,13 @@ Use it for conditions about the world, where silence is common and a guess is co
 
 ```
 switches/
-  route_ticket.yaml            definition: fields, facts, cases, tests     — edited by people
+  route_ticket.yaml            definition: fields, facts, rules, tests     — edited by people
   route_ticket.examples.jsonl  corrections, append-only                    — written by correct / ss label
   route_ticket.test.jsonl      labelled inputs for lock / test / diff      — written by ss label / you
   route_ticket.lock.json       frozen behaviour                            — written only by ss lock
 ```
 
-Plain files in git; no database.
+Plain files in git; no database. `ss.load(path)` / `Runtime.load(path)` is the one loader: a definition loads as authored (draft or locked), and a frozen lock (`X.lock.json`, a fitted lock directory or its `receipt.json`, or a `current` pointer) loads exactly what it pinned, without the definition files beside it.
 
 Fields are typed (`text`, `number`, `bool`, `enum` with `values`, `json`), optionally `required`, with `max_chars` and `truncate: end | middle`. **Rendering, one function for inline and saved inputs:**
 - one line per field, in declared order, inside `<input>…</input>`;
@@ -279,7 +279,7 @@ facts:
     rate: How urgent is the customer's situation?
     levels: [can wait, today, immediately]
 
-cases:                                            # first TRUE case wins (resolve: all returns every TRUE case)
+rules:                                            # first TRUE rule wins (resolve: all returns every TRUE rule)
   - { id: legal,          when: legal_threat,                                       then: legal }
   - { id: refund_settled, when: 'refund_requested and payment.status == "settled"', then: refund_review }
   - { id: tech_urgent,    when: 'topic == "technical" and urgency >= "today"',      then: tech_priority }
@@ -290,26 +290,26 @@ tests:
     expect: legal
 ```
 
-- **Shorthand:** `cases: {legal: legal_threat, billing: refund_requested}`, where the answer is the case name.
+- **Shorthand:** `rules: {legal: legal_threat, billing: refund_requested}`, where the answer is the rule name.
 - **Long form:** `then` defaults to `id` and vice versa.
 - **Guard facts that read optional fields** with `exists(field) and …`.
 - **At most 32 named facts.** Anonymous claims compiled from catalogue strings don't count; they are bounded by `max_claims` at runtime. Equipment and catalogue examples are in §4.4; three-way facts are in §3.5.
 - **Errors:** every configuration error is a `ConfigError` naming the file, the YAML location and a did-you-mean suggestion.
 
-### 4.3 Switches without cases
+### 4.3 Switches without rules
 
-`cases` and `otherwise` are optional. Without them, a switch is a saved set of judgments: **every named fact is a requested output**, and calling it returns `r.facts`. The status comes from the outputs' own values, not from intermediate atoms:
+`rules` and `otherwise` are optional. Without them, a switch is a saved set of judgments: **every named fact is a requested output**, and calling it returns `r.facts`. The status comes from the outputs' own values, not from intermediate atoms:
 - `ok` when every fact's own value settles (a `select` fact settles when it has no unresolved card);
 - `none` when its `select` facts are complete and empty (§4.4) and everything else settled;
 - otherwise `uncertain`, `needs_input` or `failed`, from the unsettled facts' reasons.
 
-A fact you don't want as an output doesn't belong in a caseless switch: write it as a catalogue claim string instead.
+A fact you don't want as an output doesn't belong in a switch without rules: write it as a catalogue claim string instead.
 
 This is the teachable form of an inline judgment (§3.2), so there is one teaching system.
 
 ### 4.4 `select`: applicable cards from a catalog
 
-`select` is **cases over shared facts, compiled from a catalogue**. Exact rules decide eligibility, each distinct claim about the situation is judged once, and precedence is applied in code. A catalogue and the equivalent hand-written cases and facts give identical results: it is one engine.
+`select` is **rules over shared facts, compiled from a catalogue**. Exact rules decide eligibility, each distinct claim about the situation is judged once, and precedence is applied in code. A catalogue and the equivalent hand-written rules and facts give identical results: it is one engine.
 
 ```yaml
 # switches/equipment.yaml
@@ -354,7 +354,7 @@ facts:
 2. **A shortlist ranks; only an exact rule or an examination rules a card out.** An unexamined card is unknown, never "doesn't apply".
 
 **Claims and identity:**
-- An `applies_when` / `excludes` entry is either **`{fact: name}`**, naming a **check** fact of the switch (use this for anything shared), or a **plain claim string**, which compiles to an anonymous check fact reading the switch's `reads`. Facts never depend on `select` results, so the dependency graph is cases → facts / selects → claims, and has no cycles except `supersedes`, which is validated.
+- An `applies_when` / `excludes` entry is either **`{fact: name}`**, naming a **check** fact of the switch (use this for anything shared), or a **plain claim string**, which compiles to an anonymous check fact reading the switch's `reads`. Facts never depend on `select` results, so the dependency graph is rules → facts / selects → claims, and has no cycles except `supersedes`, which is validated.
 - Identity is the fact's `meaning_rev` (kind, text, `excludes`, `unstated`, `reads`, the full definition of every read field). Two entries are the same judgment only if their identities match, never because their text does.
 - `applies_when` claims are closed-world: silence means they don't hold. Exclusions are open-world, three-way facts: "states true" rejects the card, and "does not say" leaves it `unresolved` with `not_stated`.
   - An exclusion given as a plain string compiles to a three-way check.
@@ -375,7 +375,7 @@ facts:
 **Per call:**
 1. **Exact filter:** `requires` decides eligibility. An UNKNOWN `requires` keeps the card as unresolved-capable and records the missing field.
 2. **Cheap settlement:** facts settled by rules, corrections or lexical heads are used as is. A card that a settled claim already rejects spends no budget.
-3. **Budget** (`max_claims` counts **unsettled distinct claims** still needing the judge). How a claim is written never changes its budget: a claim needed **only** through this catalogue obeys the budget, whether it is a string or `{fact: name}`. A fact the cases need directly (or a caseless output) is scored for that reason, and the catalogue reuses it for free.
+3. **Budget** (`max_claims` counts **unsettled distinct claims** still needing the judge). How a claim is written never changes its budget: a claim needed **only** through this catalogue obeys the budget, whether it is a string or `{fact: name}`. A fact the rules need directly (or an output of a switch without rules) is scored for that reason, and the catalogue reuses it for free.
    - **Within budget:** every remaining claim is judged, and the result is `complete`.
    - **Over budget:** rank the remaining cards (alias mentions first, then BM25 over their titles, aliases and claims). Take cards **whole** in rank order: add a card's new claims if they fit, otherwise skip it and continue. Claims already scheduled are reused. A skipped card whose claims all got judged through other cards is settled anyway (card states are evaluated from claim states). The rest stay `unexamined`, and `complete` is false.
 4. **Judge** the scheduled claims in one read of the situation.
@@ -394,7 +394,7 @@ facts:
 - `superseded`: `{id: by}`;
 - `cards`: the final cards' `id`, `source` and `payload`. Payloads are borrowed from the loaded catalogue, not copied; treat them as read-only.
 
-**Known subset vs settled answer.** A case can rely on `procedures has "P01"` as soon as P01 is final, even while other cards are unresolved; that is the point of composing with cases. The fact's own `value` is settled only when no card is unresolved. `r.facts[name].settled` and `complete` make the difference explicit.
+**Known subset vs settled answer.** A rule can rely on `procedures has "P01"` as soon as P01 is final, even while other cards are unresolved; that is the point of composing with rules. The fact's own `value` is settled only when no card is unresolved. `r.facts[name].settled` and `complete` make the difference explicit.
 
 **Settled vs complete.** `complete` only says everything was examined. **`is empty`** is TRUE only when the search is complete **and** every card is `ineligible` or `rejected`, or applicable but superseded. It is FALSE when a card is final, and UNKNOWN otherwise. An incomplete search, or any unresolved card, never yields `none`.
 
@@ -464,9 +464,9 @@ The default is 0.90 (or the fact's `min_score`). It is the same policy as inline
 
 ### 4.6 Resolution
 
-Strong Kleene logic: `T and U = U`, `U and F = F`, `T or U = T`, `not U = U`. Cases are evaluated in order: TRUE → `ok`; FALSE → next; UNKNOWN → blocked; all FALSE → `otherwise`.
+Strong Kleene logic: `T and U = U`, `U and F = F`, `T or U = T`, `not U = U`. Rules are evaluated in order: TRUE → `ok`; FALSE → next; UNKNOWN → blocked; all FALSE → `otherwise`.
 
-A blocked case is classified from the UNKNOWN atoms left in its simplified expression:
+A blocked rule is classified from the UNKNOWN atoms left in its simplified expression:
 
 | Remaining UNKNOWN includes | Status | Reported |
 |---|---|---|
@@ -475,7 +475,7 @@ A blocked case is classified from the UNKNOWN atoms left in its simplified expre
 | `model_error` | `failed` | `errors` |
 | otherwise | `uncertain` | the uncertain facts |
 
-Errors in facts that don't decide never change the result. `resolve: all` returns every TRUE case, always as tuples.
+Errors in facts that don't decide never change the result. `resolve: all` returns every TRUE rule, always as tuples.
 
 ### 4.7 Execution
 
@@ -484,9 +484,9 @@ Errors in facts that don't decide never change the result. `resolve: all` return
 **Per call:**
 1. Project and validate the input.
 2. Evaluate exact atoms and eligibility.
-3. Find the facts the cases still need: **directly** (their atoms are in a case) or **through a `select`** (only its cards need them; these obey that catalogue's budget, §4.4).
+3. Find the facts the rules still need: **directly** (their atoms are in a rule) or **through a `select`** (only its cards need them; these obey that catalogue's budget, §4.4).
 4. Settle what's cheap: rules, then exact overrides, then lexical heads. Re-simplify after each.
-5. **Two-stage scoring:** score the first unresolved case's facts in one round; if that settles the switch, stop; otherwise score everything still needed in a second round. Each round is one batched judge call.
+5. **Two-stage scoring:** score the first unresolved rule's facts in one round; if that settles the switch, stop; otherwise score everything still needed in a second round. Each round is one batched judge call.
 
    **Two execution surfaces,** because responsiveness and throughput are different needs:
 
@@ -501,7 +501,7 @@ Errors in facts that don't decide never change the result. `resolve: all` return
    **Measured** (one question per input, default judge):
    - **GPU:** one decode over 4 / 8 / 16 inputs gave 2.5× / 3.5× / 3.9× the throughput of sequential calls at 20 tokens, and 1.3–1.4× at 261 tokens, with identical scores (max difference 0.0002).
    - **CPU:** 0.92–1.13×, so no gain; its compute is already saturated.
-   - Measured with the cache (E4, route_ticket, default judge): when the first case decides, 243 ms against 942 ms for scoring every fact at once; when a later case decides, within 0–8% of it. There is no `schedule` option.
+   - Measured with the cache (E4, route_ticket, default judge): when the first rule decides, 243 ms against 942 ms for scoring every fact at once; when a later rule decides, within 0–8% of it. There is no `schedule` option.
 6. Accept (`settle`), resolve, build the result. A rendered projection is built once per call and reused by heads, questions and the result.
 
 Engine overhead is about 0.2 ms per call.
@@ -510,16 +510,16 @@ Engine overhead is about 0.2 ms per call.
 
 ```python
 r = route(ticket)
-r                # <ok · 'billing' · case refund_other · 2 judged · 181 ms>
-r.status, r.answer, r.case, r.missing, r.invalid, r.uncertain, r.blocked_by, r.errors
-r.facts          # {"refund_requested": Fact(True, 0.96, judge), ...}
+r                # <ok · 'billing' · rule refund_other · 2 judged · 181 ms>
+r.status, r.answer, r.rule, r.missing, r.invalid, r.uncertain, r.blocked_by, r.errors
+r.facts          # {"refund_requested": FactResult(True, 0.96, judge), ...}
 r.cost           # {"rules": 3, "example": 0, "classifier": 0, "judge": 2, "rounds": 1, "tokens": 412,
                  #  "elapsed_ms": 181.0, "amortized_ms": 181.0}
-print(r.explain())   # cases ✓/✗/·, facts with value, score, source, why; explain(raw=True) adds atom states
+print(r.explain())   # rules ✓/✗/·, facts with value, score, source, why; explain(raw=True) adds atom states
 ```
 
-**`Fact(value, score, settled, source, why, scores)`:**
-- **`value`** is set only when **the fact's own answer** settles. A case may fire on `topic in [billing, technical]` while `topic.value` stays `None`.
+**`FactResult(value, score, settled, source, why, scores)`:**
+- **`value`** is set only when **the fact's own answer** settles. A rule may fire on `topic in [billing, technical]` while `topic.value` stays `None`.
 - **`source`** is `rule`, `example`, `classifier` or `judge`.
 - **`why`** is short ("uncertain", "low answer mass", "missing: payment.status", "not stated in the input", "error: …"). Reasons are typed internally, and the strings are made at the boundary.
 - **Truncation is visible:** `r.truncated` lists the fields cut by `max_chars` for this call. A settled answer on a truncated input stays settled, but the result says what the judge didn't see.
@@ -537,37 +537,39 @@ print(r.explain())   # cases ✓/✗/·, facts with value, score, source, why; e
 ### 5.1 Corrections
 
 ```python
-route.correct(ctx, fact="refund_requested", value=False)    # also "false", "u" for three-way
-route.correct(ctx, case="refund_other")                     # answer label → test file + derived fact labels
+route.correct(ctx, fact="refund_requested", value=False, actor=ss.Actor("human"))    # also "false", "u" for three-way
+route.correct(ctx, rule="refund_other", actor=ss.Actor("human"))                     # answer label → test file + derived fact labels
 ```
+
+- **Who wrote it:** every correction is an `authored` label naming its actor: `ss.Actor("human")`, or `ss.Actor("agent", model=…, session=…)` when an agent writes it (`author=` defaults to the login name; `ss correct`/`ss label` take `--actor`, `--model`, `--session`). The actor is traceability, not validation: a correction counts as verified only once a verification record confirms it.
 
 - **Examples file:** one JSON line per example, `{"id", "fact", "meaning_rev", "input", "value", "created"}`. It's append-only, and a later line with the same fact and input replaces the earlier one.
 - **Exact override:** when an active example's canonical key equals the input's projection and its value is eligible, the fact takes that value (`source="example"`, no model).
   - **Canonical key:** the fact's untruncated, typed projection, as JSON with sorted keys and NFC strings.
   - **No fuzzy matching.**
 - **Timing and scope:** on a draft, a correction takes effect immediately; on a locked switch, after the next `ss lock`. `correct()` says both: `{"recorded": 1, "scope": "this exact input", "effective": "now"}` (or `"after ss lock"`). A correction never changes how any other input is judged.
-- **Derived labels:** a case correction derives direct check atoms (TRUE in the chosen case, and FALSE in earlier single-atom cases **under first-match only**) and positive pick equality. Similar inputs are never relabelled.
+- **Derived labels:** a rule correction derives direct check atoms (TRUE in the chosen rule, and FALSE in earlier single-atom rules **under first-match only**) and positive pick equality. Similar inputs are never relabelled.
 
 ### 5.2 Revisions
 
 | Hash | Covers | When it changes |
 |---|---|---|
 | `meaning_rev` (per fact) | statement or question, `excludes`, `unstated`, options, levels, `requires`, `reads`, and the **full definition of every read field** (type, `values`, `max_chars`, `truncate`, `author`, `source`) | that fact's examples and labels go stale (ignored, with a warning); its head is dropped |
-| `switch_rev` | cases, `otherwise`, `resolve` | answer labels go stale |
+| `switch_rev` | rules, `otherwise`, `resolve` | answer labels go stale |
 
 Tool-written labels record the revisions they were made under; hand-written lines without them are trusted. Changing the model keeps labels; changing what a fact reads, or how it is rendered, doesn't.
 
-**Answer labels don't depend on fact revisions.** A case label records the decision you want for that input. Rewording a fact to fix it must not invalidate the answers you want; it only invalidates that fact's own labels. `ss diff` shows what the rewording changed.
+**Answer labels don't depend on fact revisions.** A rule label records the decision you want for that input. Rewording a fact to fix it must not invalidate the answers you want; it only invalidates that fact's own labels. `ss diff` shows what the rewording changed.
 
 ### 5.3 Lock, test, diff
 
-The test file holds labelled inputs in the versioned envelope: `{"schema": 2, "input": …, "facts": {…}, "label_sources": {…}, "case": "…", "groups": […], "pairs": […], "role": …, "tags": […], "selections": […]}`. `label_sources` mirrors `facts`: every labelled fact or member keeps an ordered history of sources (origin human, rule, synthetic or unknown; producer; artifact digest; address; review entries). The per-target `label_origin` in exports and reports is derived from that history (`mixed` when contributors differ), never an input.
+The test file holds labelled inputs in the versioned envelope: `{"schema": 3, "input": …, "facts": {…}, "label_sources": {…}, "rule": "…", "groups": […], "pairs": […], "role": …, "tags": […], "selections": […]}`. `label_sources` mirrors `facts`: every labelled fact or member keeps an ordered history of sources. Each source records three separate dimensions: its **derivation** (`computed` by a deterministic procedure with its revision, `judged` by a judge/model route, `authored` directly by a recorded actor — `{"kind": "human"}` or `{"kind": "agent", "model": …, "session": …}` — or `unknown`), its **verifications** (verifier, actor, method `procedure-recompute`/`source-check`/`review`, the criterion revision checked against, content digest, outcome) and, for judged labels only, its **training use** declaration. Who wrote a label is never a verification of it. The per-target `label_derivation` in exports and the `label_provenance` summary in reports are derived from that history (`mixed` when contributors differ), never inputs.
 
 **One labelled-data collector.** Export, lock, `specialize` and membership all read labels through a single collector, so tools can't disagree about what an example is:
 - **Sources:** corrections, test-file labels, and (if E8 is adopted) teacher labels.
 - **Merging:** records are merged per fact meaning and input projection; one input is one example, whatever its source.
 - **Groups are joined, never chosen.** Each example starts in its decision key's group plus every explicit `group` any of its records names. Groups that share an example are merged (union-find). Two explicit groups meeting on one input are joined, with a warning naming both. Joining can only make held-out sets more conservative; choosing one would leak the other.
-- **Conflicts:** conflicting labels for one example are a `ConfigError` naming the input. Agreeing records merge their source histories; no origin wins by rank.
+- **Conflicts:** conflicting labels for one example are a `ConfigError` naming the input. Agreeing records merge their source histories; no derivation wins by rank.
 - **Splits and folds** are assigned to the joined groups, never to raw records. **Corrections are examples too:** a correction whose group falls in the check half validates and never trains, while it still fixes its exact input at runtime.
 - **Taught inputs are excluded from validation:** an exact correction settles its input by rule, so it is no evidence for any policy.
 
@@ -577,7 +579,7 @@ It is split once, deterministically, into **tune** and **check** halves:
 
 **`ss lock`** is the only writer of frozen behaviour. `--dry-run` shows what it would choose without writing.
 1. Compile.
-2. **Train lexical heads** for `specialize: lexical` facts on that fact's **tune-split examples** (corrections and labels alike, §5.4).
+2. **Admit supplied lexical heads** (`--head FACT=BUNDLE`), each fitted by `semantic-trainer lexical` on that fact's **tune-split examples** (corrections and labels alike, §5.4).
 3. **Choose one policy per judgment and source** (the judge; the lexical head):
    - **checks:** the TRUE side scores "the answer is true"; the FALSE side scores "the answer is false";
    - **picks and rates:** a single θ scores "the top answer is the labelled one";
@@ -593,8 +595,8 @@ It is split once, deterministically, into **tune** and **check** halves:
      - **insufficient evidence:** too few labels to choose θ, or to validate it (fewer than 20 accepted on either half). The judge keeps its default policy (or `min_score`); a head never settles.
    - **The consequence is reported, not hidden.** Adding labels can move a side from "insufficient evidence" (default policy, settling) to "observed target missed" (abstaining). The lock shows each side's check-half coverage under the default and under the result, so a drop in automation is visible.
 5. **Report two more levels of evidence on the check half.** They are reported, not gated: a target is set per judgment, and doesn't transfer automatically.
-   - **Conditions:** each compiled atom the cases use (for example `topic in [A, B]`, or `urgency >= today`), with its own held-out precision and coverage.
-   - **Decisions:** the deployed snapshot (corrections → heads → judge → resolution) runs on the check half's labelled cases. It reports correct, wrong, abstained, coverage and judge calls avoided. This is the number a user acts on.
+   - **Conditions:** each compiled atom the rules use (for example `topic in [A, B]`, or `urgency >= today`), with its own held-out precision and coverage.
+   - **Decisions:** the deployed snapshot (corrections → heads → judge → resolution) runs on the check half's labelled inputs. It reports correct, wrong, abstained, coverage and judge calls avoided. This is the number a user acts on.
 
    **Why the check half, measured** (300 random splits by sentence family, target 0.95, true side):
    - **Fresh suite:** a θ chosen on one half reached only **83.4%** precision on the other, and **0 of 300** splits met the target. Tuning-only locks had reported "tuned" in all 300. The judge's errors are confident (p ≥ 0.99), so the half that tunes can't see the other half's.
@@ -613,7 +615,7 @@ It is split once, deterministically, into **tune** and **check** halves:
 - **`allow_model_change=True`** resets the affected thresholds, with a warning.
 - **Rollback** is `git checkout` of the lock file.
 
-**`ss test [--data f] [--intervals]`:**
+**`ss test [--data f]`:**
 - Reports in plain sentences (JSON when piped).
 - Reports three groups separately:
   - **taught:** the input is an exact correction;
@@ -626,27 +628,27 @@ It is split once, deterministically, into **tune** and **check** halves:
 - **Contrast metrics:**
   - **both-correct pair rate:** both members of a `pair` answered right. Correct ordering alone isn't enough; 0.99 vs 0.98 passes ordering;
   - **group invariance:** among groups whose members carry the **same label** (translations, paraphrases), the share answered consistently. Scenario families with different labels inside are excluded; for those, differing answers are expected.
-- Optional exact 95% intervals, and a note when fewer than about 60 accepted inputs make 90% and 95% indistinguishable.
+- Exact 95% intervals wherever sampling supports them, reported automatically, and a note when fewer than about 60 accepted inputs make 90% and 95% indistinguishable.
 - **Diagnosis, worded for what it shows:**
   - **AUC ≥ 0.9 with errors:** "ranking is strong; a boundary change may help". Strong ranking doesn't prove every error is a boundary error;
   - **AUC below about 0.75:** "the judge barely separates this claim; reword it, add exact rules, or use `--precise`".
 
 **`ss diff`** runs the lock and the edited draft and lists every input whose **observable outcome** changed:
-- With cases: status and answer.
-- Without cases: status and settled fact values.
+- With rules: status and answer.
+- Without rules: status and settled fact values.
 - `select`: applicable ids and `complete`.
 
 Its inputs are the test file plus every example record, stale ones included as inputs, not as truth.
 
-### 5.4 `specialize: lexical`: cheaper repeats
+### 5.4 Lexical heads: cheaper repeats
 
 A per-fact linear model on hashed word 1–2-grams and character 3–5-grams of the rendered input. It costs microseconds and no model call. It keeps codes and exact wording, and like any classifier it doesn't fix negation. It buys **speed on recurring wording**, never better semantics.
 
-- **Training data:** that fact's examples in the **tune split**: corrections and test labels, merged by the collector (§5.3). A correction whose group falls in the check half doesn't train; it validates. It needs at least two distinct values; otherwise `ss lock` fails with a `ConfigError` naming the fact and the value it has.
+- **Training data:** that fact's examples in the **tune split** of an `ss export`: corrections and test labels, merged by the collector (§5.3). A correction whose group falls in the check half doesn't train; it validates. `semantic-trainer lexical EXPORT --to BUNDLE` fits it after the same fitting admission as LoRA; it needs at least two distinct values, otherwise fitting fails with a `ConfigError` naming the fact and the value it has. `ss lock SWITCH --head FACT=BUNDLE` binds it.
 - **Binding:** bound to the fact's `meaning_rev`, so editing the claim drops it.
 - **It never settles unless validated:** its policy is chosen on out-of-fold predictions and must be `met` on the check half.
 - **Fallback:** whenever an atom the decision needs is still UNKNOWN after the head, the judge scores the fact.
-- **`ss specialize <switch> <fact>` measures it, through the executor users run:**
+- **`ss analyze-head <switch> <fact> --head BUNDLE` measures a supplied head, through the executor users run:**
   1. Gather the fact's labelled inputs (examples and test labels) and assign 5 folds by `group` (or decision key).
   2. Per fold, train the head and choose its policy on out-of-fold predictions of the training part. This runs **outside** the timed section.
   3. Install the head in a temporary snapshot whose corrections exclude the held-out fold.
@@ -659,7 +661,7 @@ A per-fact linear model on hashed word 1–2-grams and character 3–5-grams of 
   - the judge alone: correct, wrong, abstained, ms per input, and its ranking AUC with the diagnosis above;
   - with the head: judge calls avoided, correct answers **gained**, wrong answers **avoided** (by abstaining), wrong answers **introduced**, and ms per input.
 
-  **Admission is advisory:** it recommends the head only if it avoids judge calls without adding wrong answers. Writing `specialize: lexical` is the developer's decision; `ss lock` does not re-check admission.
+  **Admission is advisory:** it recommends the head only if it avoids judge calls without adding wrong answers. Binding it with `ss lock --head` is the developer's decision; `ss lock` does not re-check admission.
 
 **Readout adaptation was measured and is not offered.**
 - **The idea:** a probe on the judge's hidden state, Platt calibration, or a free cutpoint, each trained on about 16 labels per judgment.
@@ -673,7 +675,7 @@ A per-fact linear model on hashed word 1–2-grams and character 3–5-grams of 
   | free cutpoint | 0.831 | — | — |
 
   The differences sit inside one standard error (about 2.7 points), and higher precision came only from settling less. An earlier "+7 points" for the probe came from translated twins in training. A boundary-only claim ("leave": AUC 1.0, accuracy 0.80) was fixed by calibration and by the probe alike; a weakly separated one ("decline": AUC 0.67) by neither.
-- **The remedy is diagnosis** (`ss test`, `ss specialize`): reword, add exact rules, abstain, or use `--precise`.
+- **The remedy is diagnosis** (`ss test`, `ss analyze-head`): reword, add exact rules, abstain, or use `--precise`.
 - **Verdict: rejected.** It is not offered, and its benchmark code is scheduled for removal.
 
 **Specialisation keeps the base model frozen.** The intended path is LoRA specialists on the off-the-shelf judge, decided by E8 (`EXPERIMENTS.md`):
@@ -691,7 +693,7 @@ Users of example-based routers report adding examples and seeing no change, beca
 | `correct()` | that exact input's fact (exact override) | any other input | `scope`, `effective` |
 | `ss label --to test` | the labelled data only | any answer, until you lock | how many inputs were labelled |
 | `ss lock` | **when** each judgment answers (its policy), validated on held-out labels, and trains configured heads | what the judge thinks | each policy side: observed target met / missed / insufficient evidence, with held-out precision and interval; condition and decision reports |
-| `specialize: lexical` + `ss lock` | adds a cheaper predictor in front of the judge | the judge; inputs the head can't settle | `ss specialize`: errors introduced and corrected, coverage, latency |
+| `ss lock --head FACT=BUNDLE` | adds a cheaper predictor in front of the judge | the judge; inputs the head can't settle | `ss analyze-head`: errors introduced and corrected, coverage, latency |
 | `--judge` / `--precise` | the judge itself, so every semantic answer | rules, corrections | `ss doctor --quality`, then `ss test` (re-lock required) |
 
 No implicit learned changes:
@@ -703,10 +705,10 @@ No implicit learned changes:
 
 ```bash
 # 1. correct as you go (Python: sw.correct(...))
-ss label support_route new_inputs.jsonl --to test     # 2. labels for tuning and checking (y / n / u)
-ss specialize support_route refund                    # 3. does a lexical head help? (reports only)
-#  4. if it helps: add `specialize: lexical` to the fact
-ss lock support_route                                 # 5. tune and freeze (the only step that trains)
+ss label support_route new_inputs.jsonl --to test --actor human     # 2. labels for tuning and checking (y / n / u)
+ss export support_route && semantic-trainer lexical support_route.export.jsonl --to head/ --fact refund
+ss analyze-head support_route refund --head head/     # 3. does a lexical head help? (reports only)
+ss lock support_route --head refund=head/             # 4-5. if it helps: bind it, tune and freeze
 ss test support_route                                 # 6. measure on unseen labelled inputs
 ```
 
@@ -734,7 +736,7 @@ It is the only contract with external training. The trainer owns how the model l
 | **1. Definition** | **`Judgment`** (check, three-way check, pick, rate) is **data**: meaning, identity (`meaning_rev`), its question text and its value parsing (every label, example, correction and CLI answer). **Acceptance** is one pure function, `settle(p, truth_vector, policy, mass) → (state, reason)` (§4.5). Also the catalogue index (claims, links, precedence expressions and ranking statistics prepared at load), `Plan`, and one `render`. | `judgment.py`, `compiler.py`, `context.py` |
 | **2. Evidence** | Exact atoms, mentions, eligibility, exact overrides, catalog shortlist, lexical heads | `kernel.py`, `executor.py`, `examples.py`, `heads.py` |
 | **3. Scoring** | `Judge` protocol; `LlamaJudge` with the input cache; adapter; native backend | `judge.py`, `adapters/`, `backend.py` |
-| **4. Resolution** | Three-valued logic, cases, relevance, card precedence and completeness | `kernel.py`, `executor.py` |
+| **4. Resolution** | Three-valued logic, rules, relevance, card precedence and completeness | `kernel.py`, `executor.py` |
 | **5. Interfaces and tools** | Inline API, `Switch`, results, CLI; `lock`, `test`, `diff`, `label`, `specialize`, `doctor`, `bench` **only call layers 1–4** | `inline.py`, `switch.py`, `results.py`, `api.py`, `cli.py`, `tools/` |
 
 Inline calls keep their own short driver, because callables and per-call objects don't belong in a compiled plan. They build `Judgment`s and call the same acceptance functions with the same policy, so **inline and saved judgments answer identically by construction.** Catalogue claims are `Judgment`s too. No tool keeps its own acceptance, parsing or question rules. `Judgment` is a definition, not an executor: relevance, cheap settlement and scheduling stay in the executor, tokens in the backend.
@@ -765,7 +767,7 @@ class Scores:
 
 `LlamaJudge` (adapter + scorer) implements it, and so can any non-decoder judge (a cross-encoder, a remote API) directly.
 
-**Hosted judges** implement the same contract through one built-in binding, OpenRouter (`judge_from('openrouter:MODEL')`): chat log probabilities for ordinary models, System One for an explicit table of verified structured models (`typesafe/jev-1.13`, used only with TypeSafe's consent; `openai/gpt-6-luna-decisions`). Applications may supply any other `Judge`. The structured mapping:
+**Hosted judges** implement the same contract through one built-in binding, OpenRouter (`ss.judge('openrouter:MODEL')`): chat log probabilities for ordinary models, System One for an explicit table of verified structured models (`typesafe/jev-1.13`, used only with TypeSafe's consent; `openai/gpt-6-luna-decisions`). Applications may supply any other `Judge`. The structured mapping:
 - **Probabilities:** per-option and per-level probabilities map to `probs`. A predicate's probability p maps to (p, 1 − p).
 - **Answer mass:** `None`, since there are no answer tokens.
 - **Refusals** become `Scores(None, None, error)`.
@@ -893,13 +895,13 @@ Earlier tables cleared the cached system prompt as well (324 / 1,009 ms CPU, 147
 - `device="auto"` offloads every layer to a GPU if the build offers one.
 - **`device="cpu"` means the CPU only.** The model loads without the GPU's host buffer (`no_host`) and with op offload off. In a GPU build, llama.cpp otherwise put CPU weights in the GPU's host buffer, which disables the repacked 4-bit kernels (2× slower), and quietly offloaded large batches.
 - **Quality belongs to model + quantisation + backend.** Gemma 4 E2B Q4_0 agrees across CPU and GPU to two decimals; Qwen3-0.6B Q4_K_M shifts by 0.10–0.26 on Vulkan and flips 2 of 12 probe answers. Run `ss doctor --quality` on each device you deploy on; its cache is keyed by backend and device.
-- **Two-stage scoring on the GPU** is a symmetric trade: 27–29% faster than eager when the first case decides, 16–21% slower otherwise. It stays the only behaviour.
+- **Two-stage scoring on the GPU** is a symmetric trade: 27–29% faster than eager when the first rule decides, 16–21% slower otherwise. It stays the only behaviour.
 - **`device="gpu"` is a requirement:** a build without GPU offload raises `ConfigError` instead of silently running on CPU.
 - `ss doctor` and `ss bench` report the **requested device** (`gpu` = offload requested and supported by this build). llama.cpp doesn't expose where each layer finally runs, so reports never claim more than that.
 
-**Specialists are ordinary models.** A task specialist is one merged, quantized GGUF built by `semantic-trainer select` (LoRA converted to an F16 adapter, merged into the F16 base with `llama-export-lora`, quantized with `llama-quantize`); it is bound as `Runtime.from_specialization(receipt)` (weights, bundled task, frozen policies and realized execution) or model-only as `Model.from_specialization(receipt)`. There is no runtime adapter loading.
-- Its identity is the merged file's sha256 and template, pinned by locks like any model.
-- **Provenance:** the deployment `receipt.json` records every observation that adapted, selected or calibrated it, and `Model.from_specialization` retains that verified record on the model. The lock marks those examples "trained the judge", so `ss test` never counts them as fresh, and warns if any fall in the check half. A plain `Model(path)` has unknown provenance and supports no independent-evidence interval; filenames prove nothing.
+**Specialists are ordinary models.** A task specialist built by `semantic-trainer select` is a fitted lock that declares its representation: merged weights (LoRA converted to an F16 adapter, merged into the F16 base with `llama-export-lora`, quantized with `llama-quantize`) or an independently pinned base plus runtime adapter. It is loaded by the one loader as `Runtime().load(BUNDLE)` or `ss.load(BUNDLE)` (weights, bundled task, frozen policies and realized execution, relocatable and without the trainer or torch) or model-only as `ss.judge(BUNDLE)`.
+- Its identity is the sha256 of the merged file (or of the base and adapter files) and the template, pinned by locks like any model.
+- **Provenance:** the fitted lock's `receipt.json` records every observation that adapted, selected or calibrated it, and `ss.judge(BUNDLE)` retains that verified record on the model. The lock marks those examples "trained the judge", so `ss test` never counts them as fresh, and warns if any fall in the check half. A plain `Model(path)` has unknown provenance and supports no independent-evidence interval; filenames prove nothing.
 
 ---
 
@@ -914,14 +916,17 @@ ss pick  "Which address?" --options addresses.txt [--focus mentions] < invoice.t
 ss rate  "How urgent?" --levels "can wait,today,immediately" < ticket.txt
 ss ask   questions.yaml [--each] < in.jsonl
 ss run   support_route [--each] < messages.jsonl
-ss explain support_route [--raw] < message.json
-ss correct · label · specialize · lock [--dry-run] · test [--intervals] · diff · export · doctor [--quality] · bench
+ss --verbose run support_route [--raw] < message.json        # the decision with its explanation; an explain field with --json
+ss correct [--fact F --value V | --rule R] --actor human|agent [--model M --session S] [--author ID] · label --actor … · specialize · lock [--dry-run] · test · diff · export · doctor [--quality] · bench
+ss compare --baseline LOCK --candidate LOCK --examples LABELS --evidence MANIFEST --margin M --to DIR [--claim C --benefit B --required-precision P --tolerate K=N --forbidden ADDRESS=KEY]
+ss promote POINTER LOCK --reason R [--decision DIR/decision.json]
+ss rollback POINTER --reason R --expected ENTRY_ID [--to ENTRY_ID]
 ```
 
 **Output and exit codes:**
 - **Two outputs:**
-  - **On a terminal:** one short line per result (`billing  (case billing)`, `needs input: payment.status`), with `--verbose` giving `explain()`.
-  - **Piped or `--json`:** one JSON object per line from `as_dict()`, with stable fields. `--verbose` adds scores, cost and partial results. `explain` follows the same rule.
+  - **On a terminal:** one short line per result (`billing  (rule billing)`, `needs input: payment.status`), with `--verbose` giving `explain()`.
+  - **Piped or `--json`:** one JSON object per line from `as_dict()`, with stable fields. `--verbose` adds scores, cost and partial results, and for `run` an `explain` field (`--raw` shows the raw scores in it).
 - **Exit codes:**
   - 0 ok / none;
   - 1 false (`check` only);
@@ -932,6 +937,8 @@ ss correct · label · specialize · lock [--dry-run] · test [--intervals] · d
 - **Errors vs results:** configuration problems are `error: …` on stderr with exit 5; scoring problems are results with `status="failed"`.
 
 **Behaviour:**
+- **`ss compare`** scores each frozen lock over the check-role inputs of the evidence manifest in one bounded scoring operation per arm, journaled per input and resumable, reports the paired difference with a decision and publishes `decision.json`, the promotion decision, beside `comparison.json`. `--claim improvement|non_inferiority`, `--benefit latency|cost`, `--required-precision`, `--tolerate failed|unresolved|forbidden=N` and `--forbidden ADDRESS=KEY` complete the predeclared claim. The report is an adoption claim only on fresh independent evidence with disjoint lineage and a typed per-target reference assessment that places every scored target inside the declared `--reference` scope, and otherwise descriptive with its reason. `--robustness MANIFEST` adds a descriptive flip/contrast/probability diagnostic per arm.
+- **`ss promote`** moves a `current` pointer to a lock: a first adoption without `--decision`, otherwise only to the candidate of a supported `decision.json` and only while the pointer still serves the incumbent that decision compared against; a stale incumbent changes nothing. **`ss rollback`** points it back at a previously verified entry from its history (`--to`, default the previous one) only while `--expected` names the current entry.
 - **`ss bench`** reports three workloads, each named for what it measures: the same input repeated (cached responsiveness); a new input each time with the system prompt cached (a normal request); and 4 questions on a new input. With a switch it adds per-decision latency and `many()` throughput. A switch with no labelled inputs or YAML tests is a `ConfigError`, not a crash.
 - **`--each`** answers each line as it arrives (streaming). **`--each --batch N`** reads N lines, runs them as one finite batch, and emits their results in order. It pays only on judges with batch capacity above 1 (§4.7).
 - **`ss label`** parses answers through the fact's own values and re-asks on invalid answers. Its prompts go to stderr.
@@ -969,7 +976,7 @@ ss correct · label · specialize · lock [--dry-run] · test [--intervals] · d
   - **structure:** on the equipment set, the default judge got 9/34 given the whole catalogue in one question, 26/34 with shared facts plus exact rules, and 28/34 with catalogue cards whose claims carry no titles. Exact rules took impossible procedures off the table; with them, no wrong procedure was committed;
   - the embedding head never helped (removed in v0.19);
   - **prompt examples were removed after E5:** on the fresh suite with the default judge, retrieved precedents moved accuracy 0.856 → 0.869 and precision at 0.9 88.9% → 89.9%, random ones 0.887 / 91.5%, both under the 5-point bar and at 2.6× latency (334 → 870 ms);
-  - two-stage scoring with the input cache: 4× faster than eager when the first case decides, within 0–8% when a later case decides (E4);
+  - two-stage scoring with the input cache: 4× faster than eager when the first rule decides, within 0–8% when a later rule decides (E4);
   - the input cache removes the input re-read on repeated rounds, with byte-identical scores;
   - **option position** (`bench/positions.py`, correct option at slots 1–20 of 20): no late-position failure (24/24 at slots 5–20). Order bias appears only between two plausible options: "can't log in to see my invoices" → billing 0.95 in one order, account 0.85 in the other; clear items don't move;
   - **averaging two option orders was measured and rejected** (removed `permute` script; results in `bench/results/permute.json`): no wrong answer removed on the selection, fresh or 20-option suites, 3 fewer settled at 20 options, +37–66% latency. Ambiguity is handled by labels, tuning and abstention, not by permutation;
@@ -1053,7 +1060,7 @@ v0.17–v0.26 are implemented (see `CHANGELOG.md`). **v0.24–v0.26, as built:**
    - streaming `sw(x)` / `sw.many()` / `--each`, and finite batches `sw.run(list)` / `--each --batch N`;
    - windows sized by `Judge.batch_inputs` (GPU llama 8, CPU 1);
    - `elapsed_ms` and `amortized_ms`.
-6. **Merged specialists** bound as ordinary models (`Model.from_specialization(receipt)`), with training provenance from the deployment receipt (§6.6).
+6. **Fitted locks** loaded like ordinary locks (`ss.load(BUNDLE)`, model-only `ss.judge(BUNDLE)`), with training provenance from the fitted lock (§6.6).
 7. **Hosted judges** behind the `Judge` contract (§6.2):
    - OpenRouter chat log probabilities; System One for verified structured models (Jev with consent);
    - probabilities mapped, `mass=None`, refusals as errors, `Scores.confidence` as a diagnostic;
@@ -1088,11 +1095,11 @@ v0.17–v0.26 are implemented (see `CHANGELOG.md`). **v0.24–v0.26, as built:**
 2. UNKNOWN never silently becomes a value; "not stated", "not examined" and "missing" are never FALSE.
 3. A missing field is reported by name, and the model is never asked about it.
 4. Cheap or invalid calls never load a model.
-5. `Fact.value` is set only when the fact's own answer settles, and a switch without cases is `ok` only when every output's value settled.
-6. Inline and saved judgments answer identically on the same input: same meaning, same question, same acceptance policy. A catalogue and its equivalent hand-written cases and facts answer identically too.
+5. `FactResult.value` is set only when the fact's own answer settles, and a switch without rules is `ok` only when every output's value settled.
+6. Inline and saved judgments answer identically on the same input: same meaning, same question, same acceptance policy. A catalogue and its equivalent hand-written rules and facts answer identically too.
 7. Only an exact rule or an examination rules a candidate out. An incomplete search (a catalogue over budget, a shortlisted pick), or any unresolved card, never yields `none`. Precedence reads base applicability, and cycles are rejected. How a claim is written never changes its budget.
 8. A correction fixes exactly its input; labels go stale when meaning changes; inputs used by a lock never count as fresh.
-9. A lexical head settles only on a policy side whose target was observed met on held-out labels. `ss specialize` never recommends a head that adds wrong answers.
+9. A lexical head settles only on a policy side whose target was observed met on held-out labels. `ss analyze-head` never recommends a head that adds wrong answers.
 10. A lock runs exactly what was tested, on exactly the pinned models.
 11. Limits fail one question, never a whole call.
 12. Payloads and catalog instructions never reach the model.

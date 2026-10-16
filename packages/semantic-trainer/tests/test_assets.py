@@ -95,7 +95,7 @@ def test_assets_reject_invalid_requests(toolchain, repo, quants, match):
 def test_jobs_resolve_assets_only_through_manifest(tmp_path, monkeypatch):
     from semantic_switch.artifacts import native_model
     from semantic_trainer.jobs import resolve
-    from tests.test_adaptation_contracts import training_job
+    from semantic_testkit.assets import training_job
     job_path, job, _ = training_job(tmp_path, monkeypatch)
     resolved, _ = resolve(job_path)
     root = str(tmp_path / 'assets')
@@ -103,7 +103,7 @@ def test_jobs_resolve_assets_only_through_manifest(tmp_path, monkeypatch):
     assert resolved['toolchain']['path'].startswith(root) and 'source' not in resolved['native'] and native_model(resolved).source == resolved['model']['gguf']
     for change, match in (({'assets': {**job['assets'], 'manifest': 'f' * 64}}, 'not found'), ({'assets': {**job['assets'], 'quant': 'Q8_0'}}, 'no .Q8_0. base'),
                           ({'assets': {'manifest': job['assets']['manifest']}}, 'manifest and quant'), ({'model': {'hf': '/tmp/hf'}}, 'unsupported job fields'),
-                          ({'schema': 6}, 'schema: 7'), ({'loss': {**job['loss'], 'version': 1}}, 'prepare a new job')):
+                          ({'schema': 7}, 'schema: 8'), ({'loss': {**job['loss'], 'version': 1}}, 'prepare a new job')):
         files.publish(job_path, {**job, **change})
         with pytest.raises(ConfigError, match=match):
             resolve(job_path)
@@ -113,20 +113,28 @@ def test_jobs_resolve_assets_only_through_manifest(tmp_path, monkeypatch):
         resolve(job_path)
 
 
-def test_fitting_device_validated_against_installed_torch(tmp_path, monkeypatch):
-    torch = pytest.importorskip('torch')
-    from semantic_trainer.jobs import fitting_settings, physical_cores
-    monkeypatch.setattr(torch.cuda, 'is_available', lambda: False)
-    for settings, match in (({}, 'cpu, xpu:N or cuda:N'), ({'device': 'gpu'}, 'cpu, xpu:N or cuda:N'), ({'device': 'cuda:0'}, 'unavailable.*README'),
-                            ({'device': 'cpu', 'precision': 'float16'}, 'float32 or bfloat16'), ({'device': 'cpu', 'threads': 0}, 'threads'),
-                            ({'device': 'cpu', 'attention': 'flash'}, 'attention'), ({'device': 'cpu', 'offload': True}, 'fitting accepts')):
+def test_fitting_settings_decode_without_torch_and_the_device_is_validated_before_model_construction(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+    from semantic_trainer.jobs import fitting_device, fitting_settings, physical_cores
+    code = ("import sys; from semantic_trainer.jobs import fitting_settings; "
+            "assert fitting_settings({'device': 'cuda:7'})['precision'] == 'bfloat16'; assert 'torch' not in sys.modules")
+    subprocess.run([sys.executable, '-c', code], check=True)
+    for settings, match in (({}, 'cpu, xpu:N or cuda:N'), ({'device': 'gpu'}, 'cpu, xpu:N or cuda:N'), ({'device': 'cpu', 'precision': 'float16'}, 'float32 or bfloat16'),
+                            ({'device': 'cpu', 'threads': 0}, 'threads'), ({'device': 'cpu', 'attention': 'flash'}, 'attention'),
+                            ({'device': 'cpu', 'fused_optimizer': 1}, 'fused_optimizer'), ({'device': 'cpu', 'offload': True}, 'fitting accepts')):
         with pytest.raises(ConfigError, match=match):
             fitting_settings(settings)
-    monkeypatch.setattr(torch.xpu, 'is_available', lambda: True)
-    monkeypatch.setattr(torch.xpu, 'device_count', lambda: 1)
-    assert fitting_settings({'device': 'xpu:0', 'gradient_checkpointing': True}) == {'device': 'xpu:0', 'precision': 'bfloat16', 'threads': physical_cores(),
-                                                                                       'attention': 'eager', 'gradient_checkpointing': True}
+    assert fitting_settings({'device': 'xpu:0', 'gradient_checkpointing': True, 'attention': 'sdpa', 'fused_optimizer': True}) == {
+        'device': 'xpu:0', 'precision': 'bfloat16', 'threads': physical_cores(), 'attention': 'sdpa', 'gradient_checkpointing': True, 'fused_optimizer': True}
     with pytest.raises(ConfigError, match='bfloat16'):
         fitting_settings({'device': 'xpu:0', 'precision': 'float32'})
+    torch = pytest.importorskip('torch')
+    monkeypatch.setattr(torch.cuda, 'is_available', lambda: False)
+    with pytest.raises(ConfigError, match='unavailable.*README'):
+        fitting_device(fitting_settings({'device': 'cuda:0'}))
+    monkeypatch.setattr(torch.xpu, 'is_available', lambda: True)
+    monkeypatch.setattr(torch.xpu, 'device_count', lambda: 1)
+    assert fitting_device(fitting_settings({'device': 'xpu:0'})) == 'xpu:0' and fitting_device(fitting_settings({'device': 'cpu'})) == 'cpu'
     with pytest.raises(ConfigError, match='unavailable'):
-        fitting_settings({'device': 'xpu:1'})
+        fitting_device(fitting_settings({'device': 'xpu:1'}))

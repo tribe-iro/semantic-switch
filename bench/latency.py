@@ -7,15 +7,25 @@ from collections import Counter
 from pathlib import Path
 
 from semantic_switch import DEFAULT_JUDGE, Check, ConfigError, Pick, Rate, files
-from semantic_switch.judge import CONFORMANCE_PROBES, CONFORMANCE_QUESTIONS
-from bench import diagnostics
-from bench.outcomes import failure, judged, measure
-from semantic_switch.metrics import Progress
+from bench import outcomes
+from bench.outcomes import Progress, failure, judged, measure, output_argument, provenance, report
+
+FIXTURE = Path(__file__).resolve().parent / "data" / "latency.json"
+KINDS = {"check": lambda item: Check(item["question"]), "pick": lambda item: Pick(item["question"], item["options"]),
+         "rate": lambda item: Rate(item["question"], item["options"])}
+
+
+def workload(path=FIXTURE) -> dict:
+    fixture = files.read_json(Path(path))
+    if not isinstance(fixture, dict) or fixture.get("schema") != 1:
+        raise ConfigError(f"{path}: unsupported latency workload fixture")
+    return {"fixture": fixture, "digest": outcomes.artifact_digest(fixture), "inputs": tuple(fixture["inputs"]),
+            "items": {item["name"]: KINDS[item["kind"]](item) for item in fixture["items"]},
+            "claim": next(item["question"] for item in fixture["items"] if item["name"] == fixture["claim"])}
 
 
 def _summary(samples: list[dict]) -> dict | None:
-    s = sorted(sample["ms"] for sample in samples)
-    return {"count": len(s), "p50": round(statistics.median(s), 1), "p95": round(s[min(len(s) - 1, int(len(s) * 0.95))], 1)} if s else None
+    return outcomes.latency([sample["ms"] for sample in samples]) if samples else None
 
 
 def _stats(samples: list[dict], progress) -> dict:
@@ -60,38 +70,36 @@ PROTOCOL = {"boundary": "public call: bind, render, score, compose and JSON seri
 
 
 def cohort_latency(rt, directory) -> dict:
-    from bench.policy_workflow import cohort_cases
+    from bench.policy_workflow import cohort_cases, chunks, CHUNK
     _, cases = cohort_cases(rt, directory)
     indexed = {case["case_id"]: case for case in cases}
-    report = {"cohort_ms": _series("cohort", [lambda c=c: c["item"](c["evidence"], rt) for c in cases], rt)}
+    items = {case["case_id"]: item for _, item, members in chunks(cases, "guided", CHUNK) for case in members}
+    report = {"cohort_ms": _series("cohort", [lambda c=c: items[c["case_id"]](c["rendered_input"], rt) for c in cases], rt)}
     pairs = [(case, other) for case in cases if "procedure" in case["tags"]
              and (other := indexed[f"{case['situation']}:{case['contrast']}:{case['language']}"])["evidence"] == case["evidence"]]
     changed, repeated = [], []
     progress = {name: Progress(f"bench.latency {name}", len(pairs), unit="calls") for name in ("changed_guidance", "repeated_guidance")}
     for case, other in pairs:
-        other["item"](other["evidence"], rt)
-        changed.append(_sample(lambda: case["item"](case["evidence"], rt), rt, progress["changed_guidance"]))
-        repeated.append(_sample(lambda: case["item"](case["evidence"], rt), rt, progress["repeated_guidance"]))
+        items[other["case_id"]](other["rendered_input"], rt)
+        changed.append(_sample(lambda: items[case["case_id"]](case["rendered_input"], rt), rt, progress["changed_guidance"]))
+        repeated.append(_sample(lambda: items[case["case_id"]](case["rendered_input"], rt), rt, progress["repeated_guidance"]))
     report["changed_guidance_ms"] = {"boundary": "same input, first call after answering it under the contrasting procedure", **_stats(changed, progress["changed_guidance"])}
     report["repeated_guidance_ms"] = {"boundary": "the same call repeated immediately", **_stats(repeated, progress["repeated_guidance"])}
     return report
 
 
-def latency(rt, path=None, n: int = 20, cohort=None, recording=None) -> dict:
+def latency(rt, path=None, n: int = 20, cohort=None, receipts=None, fixture=FIXTURE) -> dict:
     if n < 1:
         raise ConfigError("benchmark n must be positive")
-    items = {"refund": Check(CONFORMANCE_QUESTIONS[0].text),
-             "topic": Pick(CONFORMANCE_QUESTIONS[1].text, CONFORMANCE_QUESTIONS[1].options),
-             "urgency": Rate(CONFORMANCE_QUESTIONS[2].text, CONFORMANCE_QUESTIONS[2].options),
-             "legal": Check(CONFORMANCE_QUESTIONS[3].text)}
-    claim = CONFORMANCE_QUESTIONS[0].text
-    rt.check(CONFORMANCE_PROBES[0], claim)
+    loaded = workload(fixture)
+    texts, items, claim = loaded["inputs"], loaded["items"], loaded["claim"]
+    rt.check(texts[0], claim)
     info = rt.info()
-    report = {"provenance": diagnostics.provenance(rt, CONFORMANCE_PROBES, boundary="public SDK"), "model": rt.identity(), "execution": info, "samples": n,
-              "protocol": PROTOCOL,
-              "same_input_ms": _series("same_input", [lambda: rt.check(CONFORMANCE_PROBES[0], claim)] * n, rt),
-              "new_input_ms": _series("new_input", [lambda k=k: rt.check(f"{CONFORMANCE_PROBES[k % 3]} ({k})", claim) for k in range(n)], rt),
-              "new_input_4_questions_ms": _series("new_input_4_questions", [lambda k=k: rt.ask(f"{CONFORMANCE_PROBES[k % 3]} ({k})", items) for k in range(n)], rt)}
+    report = {"provenance": provenance(rt, loaded["fixture"]), "workload": {"path": str(fixture), "digest": loaded["digest"]}, "model": rt.identity(),
+              "execution": info, "samples": n, "protocol": PROTOCOL,
+              "same_input_ms": _series("same_input", [lambda: rt.check(texts[0], claim)] * n, rt),
+              "new_input_ms": _series("new_input", [lambda k=k: rt.check(f"{texts[k % len(texts)]} ({k})", claim) for k in range(n)], rt),
+              "new_input_4_questions_ms": _series("new_input_4_questions", [lambda k=k: rt.ask(f"{texts[k % len(texts)]} ({k})", items) for k in range(n)], rt)}
     if path:
         sw = rt.load(path)
         inputs = [it["input"] for it in files.read_jsonl(sw.paths.test)] or [t.input for t in sw.plan.tests]
@@ -111,7 +119,7 @@ def latency(rt, path=None, n: int = 20, cohort=None, recording=None) -> dict:
         report["switch_native_work"] = sequential.work or None
     if cohort:
         report["cohort"] = cohort_latency(rt, cohort)
-    report["provider_usage"] = recording.summary()["usage"] if recording is not None else None
+    report["provider_usage"] = receipts.summary()["usage"] if receipts is not None else None
     return report
 
 
@@ -124,10 +132,10 @@ def main():
     parser.add_argument("--cohort", help="materialized small-context cohort directory: per-item and changed-guidance timing")
     parser.add_argument("-n", type=int, default=20)
     parser.add_argument("--device")
-    parser.add_argument("--output", required=True)
+    output_argument(parser)
     args = parser.parse_args()
-    with judged(args.judge, provider=args.provider, key_file=args.key_file, device=args.device) as (rt, recording):
-        files.publish(args.output, {"judge": args.judge, **latency(rt, args.switch, args.n, args.cohort, recording)})
+    with judged(args.judge, provider=args.provider, key_file=args.key_file, device=args.device) as (rt, receipts):
+        report(args.output, {"judge": args.judge, **latency(rt, args.switch, args.n, args.cohort, receipts)})
 
 
 if __name__ == "__main__":

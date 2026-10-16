@@ -22,7 +22,7 @@ ROUTE = {
         "approved": {"check": "A supervisor explicitly approves an exception for this refund."},
         "duplicate": {"check": "The customer reports being charged twice for the same order."},
     },
-    "cases": [
+    "rules": [
         {"id": "approved", "when": "approved", "then": "pay_exception"},
         {"id": "small_duplicate", "when": "duplicate and refund_percent <= 50", "then": "refund"},
     ],
@@ -44,7 +44,7 @@ def routed(message, refund, paid, runtime):
         path = Path(directory) / "refund_route.yaml"
         path.write_text(yaml.safe_dump(ROUTE), encoding="utf-8")
         r = runtime.load(path)({"message": message, "refund_percent": 100 * refund / paid})
-    return {"status": r.status, "answer": r.answer, "case": r.case,
+    return {"status": r.status, "answer": r.answer, "rule": r.rule,
             "facts": {name: {"status": fact.status, "value": fact.value,
                              "prediction": None if fact.prediction is None else fact.prediction.value}
                       for name, fact in r.facts.items()}}

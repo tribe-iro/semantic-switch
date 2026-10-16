@@ -12,13 +12,13 @@ from .guidance import normalize
 from .compiler import FieldSpec, compile_spec, digest, document, membership_cards, memberships
 from .context import Bm25, ContextError, absent, error_status, project, render
 from .errors import ConfigError
-from .judge import Scores, checkpoint, distinct, scored
+from .executor import FactState, absorb, stage_of
+from .judge import distinct
 from .judgment import MAX_OPTIONS, WHY, Judgment, Policy, authored_bool, authored_budget, authored_levels, authored_strings, authored_text, complete, \
-    definitions, outcome, predict, reason_text, unpresent
-from .presentation import Presentation, definition, focused, present
+    definitions, outcome, predict, reason_text
+from .presentation import Presentation, definition, present
 from .kernel import F, T, U, atom, budgeted, compose, matched_mentions, ranked
-from .protocols import Judge
-from .results import CheckResult, PickResult, RateResult, SelectResult, freeze
+from .results import CheckResult, PickResult, Preview, RateResult, SelectResult, Stage, freeze
 
 MAX_CANDIDATES = 1000
 
@@ -41,32 +41,6 @@ def rendered(state, fields=None) -> str:
     return render(specs, project(specs, state), tuple(specs))
 
 
-@dataclass(frozen=True)
-class Prepared:
-    make: Callable[[Judge], tuple[Presentation, ...]] | None
-    finish: Callable[[tuple[Presentation, ...], tuple[Scores, ...]], object] | None
-    immediate: object = None
-
-
-def single(make: Callable[[Judge], Presentation], finish: Callable[[Presentation, Scores], object]) -> Prepared:
-    return Prepared(lambda judge: (make(judge),), lambda ps, scs: finish(ps[0], scs[0]))
-
-
-def checked(j: Judgment, policy: Policy, p: Presentation, sc: Scores) -> tuple[CheckResult, tuple | None]:
-    models, shown, sent = ((sc.model,) if sc.model else ()), (p.record(),), distinct((sc.request,))
-    if sc.error:
-        return CheckResult("failed", error=sc.error, observed_models=models, requests=sent, presentations=shown), ("model_error", sc.error)
-    dist = unpresent(p.slots, sc, len(j.keys))
-    status, i, why = outcome(j, dist, policy, sc.mass)
-    return CheckResult(status, None if i is None else i == 0, float(dist[0]), sc.mass, WHY.get(why),
-                       float(dist[2]) if j.unstated else None, observed_models=models, requests=sent, prediction=predict(j, dist),
-                       presentations=shown, _probs=dist), None if status == "ok" else (why or "uncertain",)
-
-
-def done(result) -> Prepared:
-    return Prepared(None, None, result)
-
-
 class Saveable:
     def record(self) -> dict:
         raise NotImplementedError
@@ -84,18 +58,19 @@ class Saveable:
         return freeze({"address": None, "kind": type(self).__name__.lower(), "definition": definition, "reads": None,
                        "guidance": guidance.references, "revision": digest([definition, guidance.digest])[:8]})
 
-    def __call__(self, state, rt=None, fields=None, *, guidance=None):
+    def __call__(self, input, rt=None, fields=None, *, guidance=None):
         from .api import default
 
-        return (rt or default()).ask(state, {"_": self}, fields=fields, guidance=guidance)["_"]
+        return (rt or default()).ask(input, {"_": self}, fields=fields, guidance=guidance)["_"]
 
-    def run(self, states, rt=None, fields=None, *, guidance=None):
+    def run(self, inputs, rt=None, fields=None, *, guidance=None):
         from .api import default
-        return [row["_"] for row in (rt or default()).ask_many(states, {"_": self}, fields=fields, guidance=guidance)]
+        return [row["_"] for row in (rt or default()).ask_many(inputs, {"_": self}, fields=fields, guidance=guidance)]
 
-    def many(self, states, rt=None, fields=None, *, guidance=None):
-        for state in states:
-            yield self(state, rt, fields, guidance=guidance)
+    def many(self, inputs, rt=None, fields=None, *, guidance=None, window=1):
+        from .api import default
+        for row in (rt or default())._asked_stream(inputs, {'_': self}, fields, guidance, 'judge', window):
+            yield row['_']
 
     def save(self, path, field: str = "message", rt=None, *, guidance=None):
         from .api import default
@@ -139,10 +114,8 @@ class Check(Saveable):
     def record(self) -> dict:
         return {"check": self.statement, "excludes": list(self.excludes), "unstated": self.unstated, "min_score": self.min_score}
 
-    def prepare(self, text: str, guidance) -> Prepared:
-        j = Judgment.check(self.statement, self.excludes, self.unstated, guidance)
-        policy = Policy.of(self.min_score)
-        return single(lambda judge: present(judge, j, range(len(j.keys))), lambda p, sc: checked(j, policy, p, sc)[0])
+    def lower(self, guidance) -> Lowered:
+        return _Check(self, guidance)
 
 
 @dataclass(frozen=True)
@@ -161,22 +134,8 @@ class Rate(Saveable):
     def record(self) -> dict:
         return {"rate": self.question, "levels": list(self.levels), "excludes": list(self.excludes), "min_score": self.min_score}
 
-    def prepare(self, text: str, guidance) -> Prepared:
-        levels = self.levels
-        j = Judgment("rate", self.question, levels, levels, self.excludes, guidance=guidance)
-        policy = Policy.of(self.min_score)
-
-        def finish(p: Presentation, sc: Scores) -> RateResult:
-            if sc.error:
-                return RateResult("failed", error=sc.error, presentations=(p.record(),), _levels=levels)
-            dist = unpresent(p.slots, sc, len(levels))
-            status, i, why = outcome(j, dist, policy, sc.mass)
-            return RateResult(status, None if i is None else levels[i], i,
-                              float((dist * np.arange(len(levels))).sum()) if complete(dist) else None,
-                              float(dist.max()), sc.mass, WHY.get(why), prediction=predict(j, dist),
-                              presentations=(p.record(),), _levels=levels, _probs=dist)
-
-        return single(lambda judge: present(judge, j, range(len(levels))), finish)
+    def lower(self, guidance) -> Lowered:
+        return _Rate(self, guidance)
 
 
 def identities(objs: list, ids: Callable) -> list[tuple[str, ...]]:
@@ -238,62 +197,8 @@ class Pick(Saveable):
                 "focus": self.focus, "shortlist": self.shortlist, "min_score": self.min_score,
                 "callbacks": [name for name in ("definition", "eligible", "ids") if getattr(self, name) is not None]}
 
-    def prepare(self, text: str, guidance) -> Prepared:
-        policy = Policy.of(self.min_score)
-        if self.compiled is not None:
-            keys, given, idents, corpus = self.compiled
-            objs, describe = keys, given.__getitem__
-        else:
-            objs, corpus = self.options, None
-            keys = range(len(objs))
-            describe = (lambda i: authored_text(self.definition(objs[i]), "description")) if self.definition else objs.__getitem__
-            idents = identities(objs, self.ids) if self.ids is not None and (self.focus or self.shortlist) else None
-        keep = [i for i, o in enumerate(objs) if self.eligible is None or self.eligible(o)]
-        kept = set(keep)
-        removed = {"ineligible": [keys[i] for i in range(len(objs)) if i not in kept], "not_examined": []}
-        if not keep:
-            return done(PickResult("none", removed=removed))
-        slots = MAX_OPTIONS - int(self.allow_none)
-        if len(keep) > slots and (self.shortlist != "lexical" or len(keep) > MAX_CANDIDATES):
-            limit = MAX_CANDIDATES if self.shortlist else slots
-            return done(PickResult("failed", removed=removed, error=f"too many candidates ({len(keep)} > {limit})"))
-        memo: dict = {}
-        descs = {i: describe(i) for i in keep}
-        if len(keep) > slots:
-            named = [keep[index] for index in matched_mentions(text, [idents[i] for i in keep], memo)] if idents else []
-            chosen = set(named)
-            rest = [i for i in keep if i not in chosen]
-            ranking = corpus.subset(rest) if self.compiled is not None else Bm25([descs[i] for i in rest])
-            order = named + [rest[k] for k in ranking.rank(f"{self.question} {text}", range(len(rest)), max(0, slots - len(named)))]
-            chosen = set(order[:slots])
-            removed["not_examined"] = [keys[i] for i in keep if i not in chosen]
-            keep = [i for i in keep if i in chosen]
-        examined = not removed["not_examined"]
-        none = len(keep) if self.allow_none else None
-        j = Judgment("pick", self.question, tuple(keys[i] for i in keep) + (("none",) if self.allow_none else ()),
-                     tuple(descs[i] for i in keep) + (("none of the above",) if self.allow_none else ()), self.excludes,
-                     guidance=guidance)
-
-        def stage(shown, mode: str, before: tuple = ()) -> Prepared:
-            def finish(p: Presentation, sc: Scores):
-                scored = sorted(s for s in p.slots if s >= 0)
-                record = before + (p.record(),)
-                common = dict(removed=removed, _keys=tuple(j.keys[s] for s in scored), focus=mode, complete=examined, presentations=record)
-                if sc.error:
-                    return PickResult("failed", error=sc.error, **common)
-                dist = unpresent(p.slots, sc, len(j.keys))
-                if dist is None:
-                    return stage(range(len(j.keys)), "fallback", record)
-                guess = predict(j, dist, none, lambda s: (keys[keep[s]], objs[keep[s]]))
-                status, s, why = outcome(j, dist, policy, sc.mass, none=none, complete=examined)
-                if status == "ok":
-                    return PickResult("ok", objs[keep[s]], keys[keep[s]], float(dist[s]), sc.mass, prediction=guess, _probs=dist[scored], **common)
-                return PickResult(status, score=float(dist.max()), mass=sc.mass, error=WHY.get(why), prediction=guess, _probs=dist[scored], **common)
-
-            return single(lambda judge: present(judge, j, shown, escape=mode == "mentions", stage=mode), finish)
-
-        named = focused(text, [idents[i] for i in keep], range(len(keep)), memo) if self.focus == "mentions" else None
-        return stage(named, "mentions") if named else stage(range(len(j.keys)), "full")
+    def lower(self, guidance) -> Lowered:
+        return _Pick(self, guidance)
 
 
 @dataclass(frozen=True)
@@ -325,90 +230,285 @@ class Select(Saveable):
                 "excludes": list(self.excludes), "unstated": self.unstated, "min_score": self.min_score, "max_claims": self.max_claims,
                 "callbacks": ["eligible"] if self.eligible is not None else []}
 
-    def prepare(self, text: str, guidance) -> Prepared:
-        members, cards, ranking = self.compiled
-        n = len(cards)
-        policy, keys = Policy.of(self.min_score), tuple(self.labels)
-        allowed = [T if self.eligible is None or self.eligible(key) else F for key in keys]
-        open_ = [k for k, a in enumerate(allowed) if a == T]
-        order = open_ if self.max_claims is None else ranked(text, self.question, open_, [c.aliases for c in cards], ranking)
-        examined = sorted(budgeted(order, [c.claims for c in cards], set(), self.max_claims))
-        judgments = [replace(members[k], guidance=guidance) if guidance else members[k] for k in examined]
-
-        def finish(ps, scs) -> SelectResult:
-            verdicts = dict(zip(examined, (checked(j, policy, p, sc) for j, p, sc in zip(judgments, ps, scs))))
-            bases = [F if a == F else U if k not in verdicts or verdicts[k][1] is not None else T if verdicts[k][0].value else F
-                     for k, a in enumerate(allowed)]
-            state = compose(allowed, bases, ((),) * n, False, [k not in verdicts for k in range(n)],
-                            [verdicts[k][1] if k in verdicts else ("not_examined",) for k in range(n)])
-            return SelectResult(state.status, tuple(keys[k] for k in state.selected), state.complete, state.settled,
-                                MappingProxyType(dict(zip(keys, state.states))),
-                                MappingProxyType({keys[k]: reason_text(r) for k, r in enumerate(state.reasons) if r is not None}),
-                                MappingProxyType({keys[k]: r for k, (r, _) in verdicts.items()}))
-
-        if not examined:
-            return done(finish((), ()))
-        return Prepared(lambda judge: tuple(present(judge, j, range(len(j.keys))) for j in judgments), finish)
+    def lower(self, guidance) -> Lowered:
+        return _Select(self, guidance)
 
 
-RESULTS = {Check: CheckResult, Pick: PickResult, Rate: RateResult, Select: SelectResult}
+def check_result(j: Judgment, policy: Policy, state: FactState) -> tuple[CheckResult, tuple | None]:
+    models, sent, shown = state.observed_models, state.requests, state.presentations
+    if state.error is not None:
+        return CheckResult("failed", error=state.error, observed_models=models, requests=sent, _shown=shown), ("model_error", state.error)
+    dist = np.asarray(state.dist)
+    status, i, why = outcome(j, dist, policy, state.mass)
+    return CheckResult(status, None if i is None else i == 0, float(dist[0]), state.mass, WHY.get(why),
+                       float(dist[2]) if j.unstated else None, observed_models=models, requests=sent, prediction=predict(j, dist),
+                       _shown=shown, _probs=dist), None if status == "ok" else (why or "uncertain",)
 
 
-def ask_many(get_judge: Callable[[], Judge], states, items: Mapping, fields=None, guidance=None) -> list[dict]:
-    default_guidance = normalize(guidance)
-    bound = {key: normalize(spec.guidance) if spec.guidance is not None else default_guidance for key, spec in items.items()}
-    texts, pending = [], []
-    for state in states:
+class Lowered:
+    __slots__ = ("spec", "guidance", "policy", "presented")
+
+    def __init__(self, spec, guidance):
+        self.spec, self.guidance, self.policy, self.presented = spec, guidance, Policy.of(spec.min_score), {}
+
+    def shown(self, ask: Asking, key, j: Judgment) -> Presentation:
+        found = self.presented.get((ask.binding, key))
+        if found is None:
+            found = self.presented[(ask.binding, key)] = present(ask.judge(), j, range(len(j.keys)))
+        return found
+
+
+class Single:
+    __slots__ = ("low", "state")
+
+    def __init__(self, low):
+        self.low, self.state = low, FactState()
+
+    def entries(self, ask: Asking) -> list:
+        return [(None, self.low.shown(ask, None, self.low.j))]
+
+    def absorb(self, ask: Asking, key, p: Presentation, sc):
+        absorb(self.state, p, sc, len(self.low.j.keys))
+
+    def result(self):
+        return self.low.finish(self.state)
+
+
+class _Check(Lowered):
+    __slots__ = ("j",)
+
+    def __init__(self, spec, guidance):
+        super().__init__(spec, guidance)
+        self.j = Judgment.check(spec.statement, spec.excludes, spec.unstated, guidance)
+
+    def item(self, ask: Asking):
+        return Single(self)
+
+    def finish(self, state: FactState) -> CheckResult:
+        return check_result(self.j, self.policy, state)[0]
+
+    def failed(self, status: str, error: str) -> CheckResult:
+        return CheckResult(status, error=error)
+
+
+class _Rate(Lowered):
+    __slots__ = ("j",)
+
+    def __init__(self, spec, guidance):
+        super().__init__(spec, guidance)
+        self.j = Judgment("rate", spec.question, spec.levels, spec.levels, spec.excludes, guidance=guidance)
+
+    def item(self, ask: Asking):
+        return Single(self)
+
+    def finish(self, state: FactState) -> RateResult:
+        levels, common = self.spec.levels, dict(observed_models=state.observed_models, requests=state.requests, _shown=state.presentations)
+        if state.error is not None:
+            return RateResult("failed", error=state.error, _levels=levels, **common)
+        dist = np.asarray(state.dist)
+        status, i, why = outcome(self.j, dist, self.policy, state.mass)
+        return RateResult(status, None if i is None else levels[i], i, float((dist * np.arange(len(levels))).sum()) if complete(dist) else None,
+                          float(dist.max()), state.mass, WHY.get(why), prediction=predict(self.j, dist), _levels=levels, _probs=dist, **common)
+
+    def failed(self, status: str, error: str) -> RateResult:
+        return RateResult(status, error=error)
+
+
+class Choice:
+    __slots__ = ("low", "text", "memo", "keys", "objs", "keep", "removed", "examined", "j", "none", "aliases", "state", "immediate")
+
+    def __init__(self, low: _Pick, ask: Asking):
+        spec = low.spec
+        self.low, self.text, self.memo, self.state, self.immediate = low, ask.text, ask.mentions, FactState(), None
+        if spec.compiled is not None:
+            keys, given, idents, corpus = spec.compiled
+            objs, describe = keys, given.__getitem__
+        else:
+            objs, corpus = spec.options, None
+            keys = range(len(objs))
+            describe = (lambda i: authored_text(spec.definition(objs[i]), "description")) if spec.definition else objs.__getitem__
+            idents = identities(objs, spec.ids) if spec.ids is not None and (spec.focus or spec.shortlist) else None
+        keep = [i for i, o in enumerate(objs) if spec.eligible is None or spec.eligible(o)]
+        kept = set(keep)
+        removed = {"ineligible": [keys[i] for i in range(len(objs)) if i not in kept], "not_examined": []}
+        self.keys, self.objs, self.removed = keys, objs, removed
+        if not keep:
+            self.immediate = PickResult("none", removed=removed)
+            return
+        slots = MAX_OPTIONS - int(spec.allow_none)
+        if len(keep) > slots and (spec.shortlist != "lexical" or len(keep) > MAX_CANDIDATES):
+            limit = MAX_CANDIDATES if spec.shortlist else slots
+            self.immediate = PickResult("failed", removed=removed, error=f"too many candidates ({len(keep)} > {limit})")
+            return
+        descs = {i: describe(i) for i in keep}
+        if len(keep) > slots:
+            named = [keep[index] for index in matched_mentions(self.text, [idents[i] for i in keep], self.memo)] if idents else []
+            chosen = set(named)
+            rest = [i for i in keep if i not in chosen]
+            ranking = corpus.subset(rest) if spec.compiled is not None else Bm25([descs[i] for i in rest])
+            order = named + [rest[k] for k in ranking.rank(f"{spec.question} {self.text}", range(len(rest)), max(0, slots - len(named)))]
+            chosen = set(order[:slots])
+            removed["not_examined"] = [keys[i] for i in keep if i not in chosen]
+            keep = [i for i in keep if i in chosen]
+        self.keep, self.examined = keep, not removed["not_examined"]
+        self.none = len(keep) if spec.allow_none else None
+        self.j = Judgment("pick", spec.question, tuple(keys[i] for i in keep) + (("none",) if spec.allow_none else ()),
+                          tuple(descs[i] for i in keep) + (("none of the above",) if spec.allow_none else ()), spec.excludes, guidance=low.guidance)
+        self.aliases = tuple(idents[i] for i in keep) if spec.focus == "mentions" else ()
+
+    def present(self, ask: Asking) -> Presentation:
+        slots, escape, stage = stage_of(self.text, self.aliases, range(len(self.j.keys)), self.memo, bool(self.aliases), self.state.focus_done)
+        return present(ask.judge(), self.j, slots, escape=escape, stage=stage)
+
+    def entries(self, ask: Asking) -> list:
+        return [] if self.immediate is not None else [(None, self.present(ask))]
+
+    def absorb(self, ask: Asking, key, p: Presentation, sc):
+        if absorb(self.state, p, sc, len(self.j.keys)):
+            return self.present(ask)
+
+    def result(self) -> PickResult:
+        if self.immediate is not None:
+            return self.immediate
+        state, j, keys, objs, keep = self.state, self.j, self.keys, self.objs, self.keep
+        scored = sorted(s for s in state.presentations[-1].slots if s >= 0)
+        common = dict(removed=self.removed, _keys=tuple(j.keys[s] for s in scored), focus=state.presentations[-1].stage, complete=self.examined,
+                      _shown=state.presentations, observed_models=state.observed_models, requests=state.requests)
+        if state.error is not None:
+            return PickResult("failed", error=state.error, **common)
+        dist = np.asarray(state.dist)
+        guess = predict(j, dist, self.none, lambda s: (keys[keep[s]], objs[keep[s]]))
+        status, s, why = outcome(j, dist, self.low.policy, state.mass, none=self.none, complete=self.examined)
+        if status == "ok":
+            return PickResult("ok", objs[keep[s]], keys[keep[s]], float(dist[s]), state.mass, prediction=guess, _probs=dist[scored], **common)
+        return PickResult(status, score=float(dist.max()), mass=state.mass, error=WHY.get(why), prediction=guess, _probs=dist[scored], **common)
+
+
+class _Pick(Lowered):
+    __slots__ = ()
+
+    def item(self, ask: Asking):
+        return Choice(self, ask)
+
+    def failed(self, status: str, error: str) -> PickResult:
+        return PickResult(status, error=error)
+
+
+class Members:
+    __slots__ = ("low", "allowed", "states")
+
+    def __init__(self, low: _Select, ask: Asking):
+        spec = low.spec
+        _, cards, ranking = spec.compiled
+        self.low = low
+        self.allowed = [T if spec.eligible is None or spec.eligible(key) else F for key in low.keys]
+        open_ = [k for k, a in enumerate(self.allowed) if a == T]
+        order = open_ if spec.max_claims is None else ranked(ask.text, spec.question, open_, [c.aliases for c in cards], ranking, ask.mentions)
+        self.states = {k: FactState() for k in sorted(budgeted(order, [c.claims for c in cards], set(), spec.max_claims))}
+
+    def entries(self, ask: Asking) -> list:
+        return [(k, self.low.shown(ask, k, self.low.members[k])) for k in self.states]
+
+    def absorb(self, ask: Asking, key, p: Presentation, sc):
+        absorb(self.states[key], p, sc, len(self.low.members[key].keys))
+
+    def result(self) -> SelectResult:
+        low, n = self.low, len(self.allowed)
+        verdicts = {k: check_result(low.members[k], low.policy, state) for k, state in self.states.items()}
+        bases = [F if a == F else U if k not in verdicts or verdicts[k][1] is not None else T if verdicts[k][0].value else F
+                 for k, a in enumerate(self.allowed)]
+        state = compose(self.allowed, bases, ((),) * n, False, [k not in verdicts for k in range(n)],
+                        [verdicts[k][1] if k in verdicts else ("not_examined",) for k in range(n)])
+        keys = low.keys
+        return SelectResult(state.status, tuple(keys[k] for k in state.selected), state.complete, state.settled,
+                            MappingProxyType(dict(zip(keys, state.states))),
+                            MappingProxyType({keys[k]: reason_text(r) for k, r in enumerate(state.reasons) if r is not None}),
+                            MappingProxyType({keys[k]: r for k, (r, _) in verdicts.items()}),
+                            observed_models=tuple(m for s in self.states.values() for m in s.observed_models),
+                            requests=distinct(r for s in self.states.values() for r in s.requests))
+
+
+class _Select(Lowered):
+    __slots__ = ("keys", "members")
+
+    def __init__(self, spec, guidance):
+        super().__init__(spec, guidance)
+        self.keys = tuple(spec.labels)
+        self.members = tuple(replace(member, guidance=guidance) if guidance else member for member in spec.compiled[0])
+
+    def item(self, ask: Asking):
+        return Members(self, ask)
+
+    def failed(self, status: str, error: str) -> SelectResult:
+        return SelectResult(status, error=error)
+
+
+class Asking:
+    __slots__ = ("ex", "lowered", "binding", "text", "error", "items", "retry", "first", "tokens", "mentions")
+
+    def __init__(self, ex, lowered: Mapping, binding: str, state, fields=None):
+        self.ex, self.lowered, self.binding, self.retry, self.first, self.tokens, self.mentions = ex, lowered, binding, [], True, 0, {}
         try:
-            text = rendered(state, fields)
-            row = {key: spec.prepare(text, bound[key]) for key, spec in items.items()}
+            self.text, self.error = rendered(state, fields), None
         except ContextError as error:
-            text = ""
-            row = {key: done(RESULTS[type(spec)](error_status(error), error=str(error))) for key, spec in items.items()}
-        texts.append(text)
-        pending.append(row)
-    outputs = [{} for _ in texts]
-    receipts = [{} for _ in texts]
-    requests = [{} for _ in texts]
-    while any(pending):
-        checkpoint()
-        live = []
-        for n, row in enumerate(pending):
-            questions = {}
-            for key, prepared in row.items():
-                if prepared.make is None:
-                    outputs[n][key] = prepared.immediate
-                else:
-                    questions[key] = prepared
-            pending[n] = {}
-            if questions:
-                live.append((n, questions))
-        if not live:
-            break
-        judge = get_judge()
-        presented = [{key: prepared.make(judge) for key, prepared in row.items()} for _, row in live]
-        results = scored(judge, [(texts[n], [p.question for ps in shown.values() for p in ps]) for (n, _), shown in zip(live, presented)])
-        for (n, row), shown, result in zip(live, presented, results):
-            at = 0
-            for key, prepared in row.items():
-                ps = shown[key]
-                scs, at = result.scores[at:at + len(ps)], at + len(ps)
-                models = receipts[n].setdefault(key, [])
-                models.extend(score.model for score in scs if score.model is not None)
-                requests[n][key] = distinct((*requests[n].get(key, ()), *(score.request for score in scs)))
-                answer = prepared.finish(ps, scs)
-                if isinstance(answer, Prepared):
-                    pending[n][key] = answer
-                else:
-                    answer.observed_models = tuple(models)
-                    answer.requests = requests[n][key]
-                    outputs[n][key] = answer
-    for out in outputs:
+            self.text, self.error = "", error
+        self.items = {} if self.error is not None else {key: low.item(self) for key, low in lowered.items()}
+
+    def judge(self):
+        return self.ex.rt.judge(self.binding)
+
+    def advance(self, ex) -> list:
+        if self.first:
+            self.first = False
+            entries = [((key, sub), p) for key, item in self.items.items() for sub, p in item.entries(self)]
+        else:
+            entries, self.retry = self.retry, []
+        return [(self.binding, self.text, tuple(entries))] if entries else []
+
+    def absorb(self, ex, binding, key, p, sc):
+        name, sub = key
+        again = self.items[name].absorb(self, sub, p, sc)
+        if again is not None:
+            self.retry.append((key, again))
+
+    def result(self) -> dict:
+        if self.error is not None:
+            out = {key: low.failed(error_status(self.error), str(self.error)) for key, low in self.lowered.items()}
+        else:
+            out = {key: item.result() for key, item in self.items.items()}
         for key, answer in out.items():
             for result in (answer, *getattr(answer, "members", {}).values()):
-                result.guidance = bound[key].references
-    return [{key: out[key] for key in items} for out in outputs]
+                result.guidance = self.lowered[key].guidance.references
+        return out
 
 
-def ask(get_judge: Callable[[], Judge], state, items: Mapping, fields=None, guidance=None) -> dict:
-    return ask_many(get_judge, [state], items, fields, guidance)[0]
+def lower(items: Mapping, guidance=None) -> dict:
+    if not isinstance(items, Mapping):
+        raise ConfigError("ask needs a mapping of names to Check, Pick, Rate or Select")
+    default = normalize(guidance)
+    out = {}
+    for key, spec in items.items():
+        if not isinstance(spec, Saveable):
+            raise ConfigError(f"{key!r}: expected Check, Pick, Rate or Select")
+        out[key] = spec.lower(normalize(spec.guidance) if spec.guidance is not None else default)
+    return out
+
+
+def preview(ask: Asking) -> Preview:
+    if ask.error is not None:
+        return Preview(str(ask.error), (), ())
+    stages, requests = [], []
+    for binding, text, entries in ask.advance(ask.ex):
+        for (key, sub), p in entries:
+            item = ask.items[key]
+            target = (key,) if sub is None else (key, ask.lowered[key].keys[sub])
+            stages.append(Stage(target, binding, p.stage, p, None, False))
+            if p.stage == "mentions":
+                item.state.focus_done = True
+                later = item.present(ask)
+                item.state.focus_done = False
+                stages.append(Stage(target, binding, later.stage, later, None, True))
+        prepared = getattr(ask.judge(), "preview", None)
+        for request in prepared([(text, tuple(p.question for _, p in entries))]) if prepared else ():
+            requests.append(MappingProxyType({**request, "binding": binding, "targets": [list(entries[k][0]) for k in request["questions"]]}))
+    return Preview(None, tuple(stages), tuple(requests))

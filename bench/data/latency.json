@@ -1,0 +1,42 @@
+{
+ "schema": 1,
+ "workload": "latency@1",
+ "inputs": [
+  "subject: Double charge\nbody: I was charged twice in May, please refund one of them.",
+  "subject: Router dead\nbody: My router stopped working yesterday and nothing blinks. I need it today.",
+  "subject: Final notice\nbody: If this is not fixed by Monday my lawyer will file a lawsuit against you."
+ ],
+ "claim": "refund",
+ "items": [
+  {
+   "name": "refund",
+   "kind": "check",
+   "question": "The customer asks to receive money back for a charge."
+  },
+  {
+   "name": "topic",
+   "kind": "pick",
+   "question": "What is the message mainly about?",
+   "options": [
+    "charges, invoices or payments",
+    "the product is broken, erroring or unavailable",
+    "login, profile or account access"
+   ]
+  },
+  {
+   "name": "urgency",
+   "kind": "rate",
+   "question": "How urgent is the customer's situation?",
+   "options": [
+    "can wait",
+    "today",
+    "immediately"
+   ]
+  },
+  {
+   "name": "legal",
+   "kind": "check",
+   "question": "The customer threatens legal action against us."
+  }
+ ]
+}

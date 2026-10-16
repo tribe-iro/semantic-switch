@@ -4,7 +4,8 @@ import os
 
 import pytest
 
-from semantic_switch import ConfigError, api, files, model_job
+from semantic_switch import ConfigError, api, files
+from semantic_switch.training import model_job
 
 
 def publication(tmp_path, rows):
@@ -65,8 +66,8 @@ def test_short_writes_complete(tmp_path, monkeypatch):
     monkeypatch.setattr(os, 'write', lambda fd, data: write(fd, bytes(data[:3])))
     rows = [f'row-{i}' for i in range(50)]
     manifest = publication(tmp_path, rows)
-    files.append(tmp_path / 'log.jsonl', [{'n': i, 'text': 'x' * 40} for i in range(20)])
-    files.append(tmp_path / 'log.jsonl', [{'n': 20}])
+    files.append(tmp_path / 'log.jsonl', files.jsonl([{'n': i, 'text': 'x' * 40} for i in range(20)]))
+    files.append(tmp_path / 'log.jsonl', files.jsonl([{'n': 20}]))
     monkeypatch.undo()
     assert manifest['payloads']['data.jsonl']['count'] == 50
     assert contents(tmp_path / 'data.manifest.json') == (manifest, rows)

@@ -3,25 +3,25 @@ import json
 import pytest
 
 from semantic_switch import ConfigError, Runtime, files, tools
-from tests.conftest import FakeScorer
-from tests.test_adaptation_contracts import label_file, pipeline_base
+from semantic_testkit.assets import pipeline_base
+from semantic_testkit.labels import action_definition, label_file
+from semantic_testkit.scoring import FakeScorer
 
 RECIPE = {'eval_every_examples': 8}
 
 
 @pytest.fixture
 def cohort(tmp_path, monkeypatch):
-    from examples import adapt_judgment
     manifest = pipeline_base(tmp_path, monkeypatch)
     rows = files.read_jsonl(label_file(tmp_path, n=12))
     scorer = FakeScorer()
-    with Runtime({'judge': scorer}) as runtime:
-        definition = adapt_judgment.definition(runtime, tmp_path / 'task')
+    with Runtime(scorer) as runtime:
+        definition = action_definition(runtime, tmp_path / 'task')
     def export(name, *members, task='task'):
         labels = tmp_path / f'{name}.jsonl'
         files.publish(labels, ''.join(json.dumps({**rows[index], 'groups': [group], 'role': role}) + '\n' for index, group, role in members))
-        with Runtime({'judge': scorer}) as runtime:
-            return tools.export(runtime, adapt_judgment.definition(runtime, tmp_path / task), to=tmp_path / f'{name}.export.jsonl', native=True,
+        with Runtime(scorer) as runtime:
+            return tools.export(runtime, action_definition(runtime, tmp_path / task), to=tmp_path / f'{name}.export.jsonl', native=True,
                                 task_family='maintenance:test', labels=labels)['path']
     selecting = [(index, f'select-{index}', 'model_select') for index in range(6, 12)]
     return manifest, definition, export, selecting
@@ -57,13 +57,13 @@ def test_shared_family_across_exports_is_one_budget_unit_and_gains_later_seeds(t
 
 
 def test_cohort_is_invariant_to_export_order_and_repeated_copies(tmp_path, cohort):
-    from test_contract import republish
+    from semantic_testkit.labels import republish
     _, _, export, selecting = cohort
     first = export('first', (0, 'a', 'fit'), (1, 'b', 'fit'), (2, 'c', 'fit'), *selecting)
     second = export('second', (1, 'd', 'fit'), (2, 'd', 'fit'), (3, 'e', 'fit'))
     copy = tmp_path / 'copy' / 'second.export.jsonl.manifest.json'
     from semantic_switch.artifacts import read_export
-    republish(copy, files.read_published(second), read_export(second, native=True)[1])
+    republish(copy, *read_export(second, native=True))
     forward = prepared(tmp_path, cohort, [first, second], 'forward', fit_situations=3)[1]
     backward = prepared(tmp_path, cohort, [second, first, second], 'backward', fit_situations=3)[1]
     copied = prepared(tmp_path, cohort, [str(copy), first, second], 'copied', fit_situations=3)[1]
@@ -93,7 +93,7 @@ def test_an_unselected_bridge_export_cannot_split_a_family_across_roles(tmp_path
     result, _, _ = prepared(tmp_path, cohort, [first], 'clean')
     job = files.read_yaml(result['job'])
     from semantic_switch.artifacts import read_export
-    job['exports'].append({'path': bridge, 'export_id': read_export(bridge, native=True)[0]['export_id'], 'roles': {}})
+    job['exports'].append({'path': bridge, 'export_id': read_export(bridge, native=True)[0]['export_id'], 'task': job['exports'][0]['task'], 'roles': {}})
     files.publish(result['job'], job)
     with pytest.raises(ConfigError, match='crosses roles'):
         resolve(result['job'])

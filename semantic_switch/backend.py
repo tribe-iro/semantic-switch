@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import ctypes
 import importlib.util
+import math
+import mmap
 import os
 import re
 import struct
@@ -9,21 +11,25 @@ import sys
 import threading
 import warnings
 import weakref
+from collections import OrderedDict
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import lru_cache
-from typing import Sequence
+from types import MappingProxyType
+from typing import Mapping, Sequence
 
 import numpy as np
 
 from .errors import ConfigError
-from .protocols import ScoreBlock, ScoreRequest
+from .guidance import Guidance
+from .protocols import MAX_INPUT_TOKENS, MAX_PREFIX_TOKENS, MAX_QUESTION_TOKENS, ScoreBlock, ScoreRequest, Tokens
+from .resident import Resources
 
 _lock = threading.Lock()
 _init = threading.Lock()
 _ready = False
 _captured: list | None = None
-BUFFER = re.compile(r"(\S+) +(model|output|KV|compute) buffer size = +([\d.]+) MiB")
+BUFFER = re.compile(r"(\S+) +(model|output|KV|compute|LoRA) buffer size = +([\d.]+) MiB")
 REPACKED = re.compile(r"repack tensor \S+ with (\S+)")
 TENSOR_TYPES = re.compile(r"- type +(\S+): +\d+ tensors")
 
@@ -75,27 +81,335 @@ def _buffers(lines: list[str]) -> dict[str, int]:
 
 
 _GGUF = {0: "B", 1: "b", 2: "H", 3: "h", 4: "I", 5: "i", 6: "f", 7: "?", 10: "Q", 11: "q", 12: "d"}
+_NUMPY = {0: "<u1", 1: "<i1", 2: "<u2", 3: "<i2", 4: "<u4", 5: "<i4", 6: "<f4", 7: "?", 10: "<u8", 11: "<i8", 12: "<f8"}
+GGUF_ALIGNMENT = 32
+GGML_BLOCKS = {0: (1, 4), 1: (1, 2), 2: (32, 18), 3: (32, 20), 6: (32, 22), 7: (32, 24), 8: (32, 34), 10: (256, 84), 11: (256, 110),
+               12: (256, 144), 13: (256, 176), 14: (256, 210), 30: (1, 2)}
+LORA_TYPES = (0, 1, 8, 30)
+ADDS_BOS = {"model": ("llama", "bert"), "pre": ("llama3", "llama-v3", "llama-bpe")}
 
 
-def gguf_metadata(path: str) -> dict:
+@dataclass(frozen=True, slots=True)
+class Tensor:
+    shape: tuple[int, ...]
+    type: int
+    span: int
+
+    @property
+    def nbytes(self) -> int | None:
+        if self.type not in GGML_BLOCKS:
+            return None
+        block, size = GGML_BLOCKS[self.type]
+        if not self.shape or self.shape[0] % block:
+            raise ValueError(f"tensor shape {self.shape} does not tile ggml type {self.type} blocks of {block}")
+        return math.prod(self.shape) // block * size
+
+    @property
+    def bytes(self) -> int:
+        known = self.nbytes
+        return self.span if known is None else known
+
+
+@dataclass(frozen=True, slots=True)
+class Strings:
+    count: int
+    offset: int
+
+
+@dataclass(frozen=True, slots=True, eq=False)
+class Gguf:
+    path: str
+    size: int
+    meta: Mapping
+    tensors: Mapping[str, Tensor]
+    vocab: int
+    bos: str
+    eos: str
+
+    @property
+    def architecture(self) -> str | None:
+        return self.meta.get("general.architecture")
+
+    def chat(self) -> dict:
+        meta = self.meta
+        default = meta.get("tokenizer.ggml.model") in ADDS_BOS["model"] or meta.get("tokenizer.ggml.pre") in ADDS_BOS["pre"]
+        return {"template": meta.get("tokenizer.chat_template"), "bos": self.bos, "eos": self.eos,
+                "add_bos": bool(meta.get("tokenizer.ggml.add_bos_token", default))}
+
+
+def _parse_gguf(path: str, data, size: int) -> Gguf:
+    offset = 0
+
+    def read(code):
+        nonlocal offset
+        found = struct.unpack_from("<" + code, data, offset)[0]
+        offset += struct.calcsize(code)
+        return found
+
+    def string():
+        nonlocal offset
+        length = read("Q")
+        found = bytes(data[offset:offset + length]).decode(errors="replace")
+        offset += length
+        return found
+
+    def value(kind):
+        nonlocal offset
+        if kind == 8:
+            return string()
+        if kind != 9:
+            return read(_GGUF[kind])
+        item, count = read("I"), read("Q")
+        if item in _NUMPY:
+            found = np.frombuffer(data, dtype=_NUMPY[item], count=count, offset=offset).copy()
+            found.setflags(write=False)
+            offset += found.nbytes
+            return found
+        if item == 8:
+            start = offset
+            for _ in range(count):
+                offset += 8 + struct.unpack_from("<Q", data, offset)[0]
+            return Strings(count, start)
+        return tuple(value(item) for _ in range(count))
+
+    if bytes(data[:4]) != b"GGUF":
+        raise ValueError(f"{path} is not a GGUF v2+ file")
+    offset = 4
+    if read("I") < 2:
+        raise ValueError(f"{path} is not a GGUF v2+ file")
+    count = read("Q")
+    meta = {}
+    for _ in range(read("Q")):
+        key = string()
+        meta[key] = value(read("I"))
+    infos = []
+    for _ in range(count):
+        name = string()
+        shape = tuple(read("Q") for _ in range(read("I")))
+        infos.append((name, shape, read("I"), read("Q")))
+    alignment = meta.get("general.alignment", GGUF_ALIGNMENT)
+    start = size - -(-offset // alignment) * alignment
+    ends = sorted({where for *_, where in infos} | {start})
+    following = dict(zip(ends, ends[1:]))
+    tensors = {}
+    for name, shape, kind, where in infos:
+        tensors[name] = tensor = Tensor(shape, kind, following[where] - where if where < start else -1)
+        if tensor.span < 0 or tensor.bytes > tensor.span:
+            raise ValueError(f"{path}: tensor {name} data exceeds its GGUF layout")
+    tokens = meta.get("tokenizer.ggml.tokens")
+    special = {}
+    if isinstance(tokens, Strings):
+        wanted = {meta[f"tokenizer.ggml.{name}_token_id"]: name for name in ("bos", "eos")
+                  if isinstance(meta.get(f"tokenizer.ggml.{name}_token_id"), int) and 0 <= meta[f"tokenizer.ggml.{name}_token_id"] < tokens.count}
+        offset = tokens.offset
+        for index in range(max(wanted, default=-1) + 1):
+            text = string()
+            if index in wanted:
+                special[wanted[index]] = text
+    return Gguf(path, size, MappingProxyType(meta), MappingProxyType(tensors), tokens.count if isinstance(tokens, Strings) else 0,
+                special.get("bos", ""), special.get("eos", ""))
+
+
+_GGUFS: OrderedDict = OrderedDict()
+_GGUF_LOCK = threading.Lock()
+
+
+def gguf(path: str) -> Gguf:
     with open(path, "rb") as f:
-        def read(code):
-            return struct.unpack("<" + code, f.read(struct.calcsize(code)))[0]
-
-        def value(kind):
-            if kind == 8:
-                return f.read(read("Q")).decode(errors="replace")
-            if kind != 9:
-                return read(_GGUF[kind])
-            item, count = read("I"), read("Q")
-            if item in _GGUF:
-                return list(struct.unpack(f"<{count}{_GGUF[item]}", f.read(count * struct.calcsize(_GGUF[item]))))
-            return [value(item) for _ in range(count)]
-
-        if f.read(4) != b"GGUF" or read("I") < 2:
+        stat = os.fstat(f.fileno())
+        key = (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
+        with _GGUF_LOCK:
+            found = _GGUFS.get(key)
+            if found is not None:
+                _GGUFS.move_to_end(key)
+                return found
+        if stat.st_size < 24:
             raise ValueError(f"{path} is not a GGUF v2+ file")
-        read("Q")
-        return {value(8): value(read("I")) for _ in range(read("Q"))}
+        with mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as data:
+            try:
+                found = _parse_gguf(str(path), data, stat.st_size)
+            except struct.error:
+                raise ValueError(f"{path}: truncated GGUF header") from None
+    with _GGUF_LOCK:
+        _GGUFS[key] = found
+        while len(_GGUFS) > 16:
+            _GGUFS.popitem(last=False)
+    return found
+
+
+LORA_SUFFIXES = (".lora_a", ".lora_b")
+
+
+def lora_layout(adapter: str, base: str) -> dict:
+    found, reference = gguf(adapter), gguf(base)
+    meta, tensors, base_tensors = found.meta, found.tensors, reference.tensors
+    if meta.get("general.type") != "adapter" or meta.get("adapter.type") != "lora":
+        raise ValueError(f"{adapter} is not a LoRA adapter GGUF")
+    if found.architecture != reference.architecture:
+        raise ValueError(f"{adapter}: adapter architecture {found.architecture} differs from base {reference.architecture}")
+    alpha = meta.get("adapter.lora.alpha")
+    stems = {name[:-len(suffix)] for name in tensors for suffix in LORA_SUFFIXES if name.endswith(suffix)}
+    if not stems or len(tensors) != 2 * len(stems) or isinstance(alpha, bool) or not isinstance(alpha, (int, float)) or not alpha > 0:
+        raise ValueError(f"{adapter}: needs paired lora_a/lora_b tensors and a positive adapter.lora.alpha")
+    unsupported = sorted(name for name, tensor in tensors.items() if tensor.type not in LORA_TYPES)
+    if unsupported:
+        raise ValueError(f"{adapter}: tensors {unsupported[:3]} have ggml types outside the supported adapter types {list(LORA_TYPES)}")
+    ranks = set()
+    for stem in sorted(stems):
+        a, b = (getattr(tensors.get(stem + suffix), "shape", None) for suffix in LORA_SUFFIXES)
+        weight = getattr(base_tensors.get(stem), "shape", None)
+        if weight is None:
+            raise ValueError(f"{adapter}: target {stem} is absent from the base")
+        if a is None or b is None or len(a) != 2 or len(b) != 2 or len(weight) < 2 or a[0] != weight[0] or b[1] != weight[1] or a[1] != b[0]:
+            raise ValueError(f"{adapter}: {stem} lora shapes {a}/{b} do not match base weight {weight}")
+        ranks.add(a[1])
+    if len(ranks) != 1:
+        raise ValueError(f"{adapter}: mixed adapter ranks {sorted(ranks)}")
+    return {"architecture": found.architecture, "rank": ranks.pop(), "alpha": float(alpha), "targets": sorted(stems),
+            "tensors": {name: tensor.nbytes for name, tensor in tensors.items()}, "file_bytes": found.size,
+            "header": found.size - sum(t.span for t in tensors.values())}
+
+
+INPUT_TENSORS = ("token_embd", "per_layer_token_embd")
+OUTPUT_TENSORS = ("output", "output_norm")
+BUFFER_RESOLUTION = 5243
+LORA_ALLOCATION = {"revision": 1, "build": "llama-cpp-python 0.3.36", "alignment": 256, "buffer_slack": 8192, "tensor_overhead": 512, "contexts": 2,
+                   "placement": "tensor-by-tensor beside its base weight's layer device; repacked or host base weights keep the adapter on the host",
+                   "transient": "one read buffer of the largest tensor"}
+
+
+def host_buffer(name: str) -> bool:
+    return name.startswith("CPU") or name.endswith("_Host")
+
+
+@lru_cache(maxsize=1)
+def offload_device() -> tuple[str, bool] | None:
+    from pathlib import Path
+    L = _llama()
+    ggml = ctypes.CDLL(str(Path(L.__file__).parent / "lib" / "libggml.so"))
+    ggml.ggml_backend_dev_count.restype = ctypes.c_size_t
+    ggml.ggml_backend_dev_get.argtypes, ggml.ggml_backend_dev_get.restype = [ctypes.c_size_t], ctypes.c_void_p
+    ggml.ggml_backend_dev_type.argtypes, ggml.ggml_backend_dev_type.restype = [ctypes.c_void_p], ctypes.c_int
+    ggml.ggml_backend_dev_name.argtypes, ggml.ggml_backend_dev_name.restype = [ctypes.c_void_p], ctypes.c_char_p
+    found = {1: [], 2: []}
+    for index in range(ggml.ggml_backend_dev_count()):
+        device = ggml.ggml_backend_dev_get(index)
+        found.setdefault(ggml.ggml_backend_dev_type(device), []).append(ggml.ggml_backend_dev_name(device).decode())
+    chosen, unified = (found[1], False) if found[1] else (found[2], True)
+    if len(chosen) > 1:
+        raise ConfigError(f"offload devices {chosen} split layers by free memory, which the pinned placement profile does not describe; "
+                          "admission cannot certify a bounded GPU load: expose one device (e.g. GGML_VK_VISIBLE_DEVICES=0) or use device='cpu'")
+    return (chosen[0], unified) if chosen else None
+
+
+@dataclass(frozen=True, slots=True)
+class Allocation:
+    resources: Resources
+    overhead: int
+    unified: bool
+
+    def escapes(self, observed: dict[str, int]) -> str | None:
+        host, devices = self.overhead, {}
+        for key, value in observed.items():
+            name = key.rsplit(" ", 1)[0]
+            if host_buffer(name):
+                host += value + BUFFER_RESOLUTION
+            else:
+                devices[name] = devices.get(name, 0) + value + BUFFER_RESOLUTION
+        physical = host + (sum(devices.values()) if self.unified else 0)
+        if observed and self.resources.covers(Resources(physical, devices)):
+            return None
+        return (f"adapter allocation {observed or 'was not reported by the native build'} exceeds or escapes its estimate "
+                f"{self.resources.record()} (overhead {self.overhead}, resolution {BUFFER_RESOLUTION} bytes per buffer); "
+                f"the pinned allocation profile revision {LORA_ALLOCATION['revision']} does not describe this build")
+
+
+_ADVISED: set = set()
+
+
+def advise(kind: str, message: str):
+    key = kind, getattr(sys.modules.get("llama_cpp"), "__version__", None)
+    if key not in _ADVISED:
+        _ADVISED.add(key)
+        warnings.warn(f"{message} (advisory outside an explicit model job; reported once per native build)", RuntimeWarning, stacklevel=3)
+
+
+@dataclass(frozen=True, slots=True)
+class Placement:
+    layers: int
+    gpu_layers: int
+    device: str | None = None
+    unified: bool = False
+
+    @classmethod
+    def of(cls, model: Gguf, gpu_layers: int) -> Placement:
+        device, unified = (offload_device() if gpu_layers else None) or (None, False)
+        return cls(int(model.meta[f"{model.architecture}.block_count"]), gpu_layers, device, unified)
+
+    def where(self, name: str) -> str:
+        if self.device is None:
+            return "host"
+        start, parts = max(self.layers + 1 - self.gpu_layers, 0), name.split(".")
+        if parts[0] == "blk" and len(parts) > 2 and parts[1].isdigit():
+            return "device" if int(parts[1]) >= start else "host"
+        if parts[0] in OUTPUT_TENSORS:
+            return "device" if self.layers >= start else "host"
+        return "host" if parts[0] in INPUT_TENSORS else "unknown"
+
+    def charge(self, host: int, device: int = 0) -> Resources:
+        return Resources(host + (device if self.unified else 0), {self.device: device} if device else {})
+
+    def weights(self, size: int, tensors: dict) -> Resources:
+        placed = {name: self.where(name) for name in tensors}
+        device = sum(tensors[name].bytes for name, where in placed.items() if where != "host")
+        if "output.weight" not in tensors and "token_embd.weight" in tensors and self.where("output.weight") == "device":
+            device += tensors["token_embd.weight"].bytes
+        return self.charge(size - sum(tensors[name].bytes for name, where in placed.items() if where == "device"), device)
+
+    def kv(self, size: int) -> Resources:
+        return self.charge(0, size) if self.device else Resources(size)
+
+    def lora(self, adapter) -> Allocation:
+        profile, buffers = LORA_ALLOCATION, {}
+        for name, size in adapter.tensors:
+            where = self.where(name.rsplit(".", 1)[0])
+            if where == "unknown":
+                raise ConfigError(f"adapter {adapter.sha256[:12]}: target {name} has no pinned placement on {self.device}; "
+                                  "a bounded GPU load cannot be certified for it")
+            buffers[where] = buffers.get(where, 0) + -(-size // profile["alignment"]) * profile["alignment"]
+        buffers = {where: size + profile["buffer_slack"] for where, size in buffers.items()}
+        overhead = adapter.header + profile["contexts"] * len(adapter.tensors) * profile["tensor_overhead"] + max((size for _, size in adapter.tensors), default=0)
+        return Allocation(self.charge(overhead + buffers.get("host", 0), buffers.get("device", 0)), overhead, self.unified)
+
+
+def lora_abi(L) -> dict:
+    handle = L.llama_adapter_lora_p_ctypes
+    expected = {"llama_adapter_lora_init": ([L.llama_model_p_ctypes, ctypes.c_char_p], handle),
+                "llama_adapter_lora_free": ([handle], None),
+                "llama_set_adapters_lora": ([L.llama_context_p_ctypes, ctypes.POINTER(handle), ctypes.c_size_t, ctypes.POINTER(ctypes.c_float)], ctypes.c_int32)}
+    for name, (arguments, result) in expected.items():
+        function = getattr(L, name, None)
+        if function is None or list(getattr(function, "argtypes", None) or ()) != arguments or getattr(function, "restype", None) is not result:
+            raise ConfigError(f"this llama.cpp build does not expose the runtime adapter ABI {name}({', '.join(t.__name__ for t in arguments)}) -> "
+                              f"{getattr(result, '__name__', result)}; runtime-adapter bindings are unsupported on it")
+    return {"version": getattr(L, "__version__", None), "functions": sorted(expected)}
+
+
+class Lora:
+    def __init__(self, weights: Weights, path: str, key: str):
+        L = weights.L
+        self.abi = lora_abi(L)
+        self.L, self.path, self.key = L, path, key
+        with _capture() as lines:
+            self.ptr = L.llama_adapter_lora_init(weights.ptr, path.encode())
+        if not self.ptr:
+            raise RuntimeError(f"cannot load adapter {path}")
+        self.buffers = _buffers(lines)
+
+    def close(self):
+        ptr, self.ptr = self.ptr, None
+        if ptr:
+            self.L.llama_adapter_lora_free(ptr)
 
 
 class _NativeHandles:
@@ -144,24 +458,16 @@ def reduce_row(row: np.ndarray, slots: tuple[tuple[int, ...], ...], scratch: np.
     return (slot_lp - lse_slots).astype(np.float32), min(0., lse_slots - lse_all)
 
 
-SHARED_CHECKS = ("D1 shared = reference", "D3 no leakage")
-
-
-def shared_ok(checks: dict) -> bool:
-    return all(checks.get(k, {"ok": False})["ok"] for k in SHARED_CHECKS)
-
-
 def gpu_available() -> bool:
     return bool(_llama().llama_supports_gpu_offload())
 
 
 class Weights:
-    def __init__(self, path: str, n_gpu_layers: int = 0, vocab_only: bool = False, repack: bool = True):
+    def __init__(self, path: str, n_gpu_layers: int = 0, repack: bool = True):
         L = _llama()
         params = L.llama_model_default_params()
         params.n_gpu_layers = n_gpu_layers
         params.no_host = n_gpu_layers == 0
-        params.vocab_only = vocab_only
         params.use_extra_bufts = repack
         self.L = L
         self.handles = _NativeHandles(L)
@@ -194,7 +500,7 @@ class Weights:
         if n < 0:
             buf = (self.L.llama_token * -n)()
             n = self.L.llama_tokenize(self.vocab, data, len(data), buf, -n, add_special, special)
-        return tuple(buf[:n])
+        return Tokens.from_array(np.ctypeslib.as_array(buf)[:n])
 
     def detokenize(self, tokens: Sequence[int], special: bool = False) -> str:
         self._live()
@@ -209,14 +515,6 @@ class Weights:
                 raise RuntimeError("cannot detokenize token")
             out += piece.raw[:n]
         return out.decode("utf-8", errors="replace")
-
-    def chat(self) -> dict:
-        self._live()
-        tmpl = self.L.llama_model_chat_template(self.ptr, None)
-        text = lambda tok: self.detokenize([tok], special=True) if tok >= 0 else ""
-        return {"template": tmpl.decode() if tmpl else None, "bos": text(self.L.llama_vocab_bos(self.vocab)),
-                "eos": text(self.L.llama_vocab_eos(self.vocab)),
-                "add_bos": bool(self.L.llama_vocab_get_add_bos(self.vocab))}
 
     def close(self):
         self.handles.close()
@@ -235,18 +533,21 @@ def validate_native_integer(name, value, *, optional=False):
         raise ValueError(f"{name} exceeds native integer limit {maximum}")
 
 
-BRANCHES = 32
-INPUT_TOKENS = 1024
-GROUPINGS = ("serial", "batched")
-
-
 @dataclass(frozen=True, slots=True)
 class Capacity:
     n_ctx: int
     n_batch: int
     prefix_slots: int
-    states: int
-    branches: int
+    branch = 2
+    outputs_per_decode = 1
+
+    @property
+    def n_ctx_seq(self):
+        return ((self.n_ctx + 255) // 256) * 256
+
+    @property
+    def total_ctx(self):
+        return self.n_ctx_seq * self.n_seq_max
 
     @property
     def n_ubatch(self) -> int:
@@ -254,38 +555,65 @@ class Capacity:
 
     @property
     def n_seq_max(self) -> int:
-        return self.prefix_slots + self.states + self.branches
+        return self.prefix_slots + 2
 
     @property
     def n_outputs_max(self) -> int:
         return self.n_seq_max
 
     @property
-    def outputs_per_decode(self) -> int:
-        return self.branches
-
-    @property
-    def first_branch(self) -> int:
-        return 1 + self.states
-
-    @property
     def residents(self) -> range:
-        return range(self.n_seq_max - self.prefix_slots + 1, self.n_seq_max)
+        return range(self.branch + 1, self.n_seq_max)
 
 
-def capacity(n_ctx: int | None, n_batch: int, inputs: int, prefix_slots: int, grouping: str = "serial") -> Capacity:
-    for name, value in (("n_ctx", n_ctx), ("n_batch", n_batch), ("inputs", inputs), ("prefix_slots", prefix_slots)):
+def ceiling(max_input_tokens: int, max_prefix_tokens: int) -> int:
+    return max_input_tokens + MAX_QUESTION_TOKENS + max_prefix_tokens
+
+
+def capacity(n_ctx: int | None, n_batch: int, prefix_slots: int, *, max_input_tokens: int = MAX_INPUT_TOKENS, max_prefix_tokens: int = MAX_PREFIX_TOKENS) -> Capacity:
+    for name, value in (("n_ctx", n_ctx), ("n_batch", n_batch), ("prefix_slots", prefix_slots), ("max_input_tokens", max_input_tokens),
+                        ("max_prefix_tokens", max_prefix_tokens)):
         validate_native_integer(name, value, optional=name == "n_ctx")
-    if grouping not in GROUPINGS:
-        raise ValueError(f"grouping must be one of {', '.join(GROUPINGS)}")
-    states, branches = (inputs, BRANCHES) if grouping == "batched" else (1, 1)
-    out = Capacity(n_ctx or 8192 + (states - 1) * INPUT_TOKENS, n_batch, prefix_slots, states, branches)
-    validate_native_integer("n_ctx", out.n_ctx)
+    useful = ceiling(max_input_tokens, max_prefix_tokens)
+    if n_ctx is not None and n_ctx > useful:
+        raise ValueError(f"n_ctx {n_ctx} exceeds the useful request window {useful} = max_input_tokens {max_input_tokens} + question suffix cap "
+                         f"{MAX_QUESTION_TOKENS} + max_prefix_tokens {max_prefix_tokens}; omit n_ctx or raise those budgets explicitly")
+    out = Capacity(useful if n_ctx is None else n_ctx, n_batch, prefix_slots)
     if out.n_seq_max > MAX_SEQUENCES:
         raise ValueError(f"{out.n_seq_max} sequence slots exceed the native limit of {MAX_SEQUENCES}")
-    if min(out.n_ctx, out.n_batch, 512) < out.n_seq_max:
-        raise ValueError(f"native capacity requires n_ctx and n_batch >= {out.n_seq_max} for {out.n_seq_max} sequence slots; microbatch limit is 512")
+    if out.total_ctx > (1 << 32) - 1:
+        raise ValueError("total native context exceeds native integer limit")
+    if min(out.n_batch, 512) < out.n_seq_max:
+        raise ValueError(f"native capacity requires n_batch >= {out.n_seq_max} for {out.n_seq_max} sequence slots; microbatch limit is 512")
     return out
+
+
+class Writer:
+    def __init__(self, batch, size: int):
+        self.batch, self.size, self.n, self.outputs = batch, size, 0, []
+        self.token = np.ctypeslib.as_array(batch.token, shape=(size,))
+        self.pos = np.ctypeslib.as_array(batch.pos, shape=(size,))
+        self.flags = np.ctypeslib.as_array(batch.logits, shape=(size,))
+        np.ctypeslib.as_array(batch.n_seq_id, shape=(size,))[:] = 1
+        self.member = np.full(size, -1, dtype=np.int64)
+        self.steps = np.arange(size, dtype=np.int32)
+
+    def fill(self, tokens: Tokens, start: int, take: int, position: int, sequence: int):
+        n, end = self.n, self.n + take
+        self.token[n:end] = tokens.array[start:start + take]
+        np.add(self.steps[:take], position, out=self.pos[n:end])
+        self.flags[n:end] = 0
+        stale = np.flatnonzero(self.member[n:end] != sequence)
+        if len(stale):
+            rows = self.batch.seq_id
+            for j in stale.tolist():
+                rows[n + j][0] = sequence
+            self.member[n:end] = sequence
+        self.n = end
+
+    def output(self, key):
+        self.flags[self.n - 1] = 1
+        self.outputs.append((key, self.n - 1))
 
 
 class Context:
@@ -293,14 +621,14 @@ class Context:
         validate_native_integer("threads", threads, optional=True)
         L = weights.L
         p = L.llama_context_default_params()
-        p.n_ctx = cap.n_ctx
+        p.n_ctx = cap.total_ctx
         p.n_batch = cap.n_batch
         p.n_ubatch = cap.n_ubatch
         p.n_seq_max = cap.n_seq_max
         p.n_outputs_max = cap.n_outputs_max
         p.n_threads = p.n_threads_batch = threads or os.cpu_count()
         p.swa_full = True
-        p.kv_unified = True
+        p.kv_unified = False
         p.op_offload = weights.offload
         p.flash_attn_type = L.LLAMA_FLASH_ATTN_TYPE_ENABLED
         p.type_k = p.type_v = L.GGML_TYPE_F16
@@ -313,12 +641,15 @@ class Context:
             raise RuntimeError("cannot create llama context")
         self.mem = L.llama_get_memory(self.ptr)
         self.handles.batch = L.llama_batch_init(cap.n_batch, 0, cap.n_seq_max)
+        self.writer = Writer(self.handles.batch, cap.n_batch)
         self.n_ctx, self.n_batch, self.n_seq_max = L.llama_n_ctx(self.ptr), L.llama_n_batch(self.ptr), L.llama_n_seq_max(self.ptr)
+        self.n_ctx_seq = L.llama_n_ctx_seq(self.ptr)
+        self.sequence_limit = min(cap.n_ctx, self.n_ctx_seq)
         self.n_outputs_max, self.outputs_per_decode = p.n_outputs_max, cap.outputs_per_decode
         self.lock = threading.RLock()
         self.submissions = 0
         self.submitted_tokens = 0
-        self.requested = {"n_ctx": cap.n_ctx, "n_batch": cap.n_batch, "n_seq_max": cap.n_seq_max}
+        self.requested = {"n_ctx": cap.total_ctx, "n_ctx_seq": cap.n_ctx, "n_batch": cap.n_batch, "n_seq_max": cap.n_seq_max}
         self.buffers = _buffers(lines)
         self.realized = {"n_outputs_max": p.n_outputs_max, "swa_full": p.swa_full, "kv_unified": p.kv_unified, "n_ubatch": p.n_ubatch,
                          "flash_attn": "enabled", "type_k": "f16", "type_v": "f16"}
@@ -343,55 +674,68 @@ class Context:
         if self.mem:
             self.L.llama_memory_clear(self.mem, True)
 
-    def run(self, entries: list, on_output):
+    def decode(self, spans, on_output=None):
         self._live()
-        start = 0
-        while start < len(entries):
-            end, outputs = start, 0
-            while end < len(entries) and end - start < self.n_batch and (entries[end][3] is None or outputs < self.outputs_per_decode):
-                outputs += entries[end][3] is not None
-                end += 1
-            chunk, start = entries[start:end], end
-            b = self.handles.batch
-            b.n_tokens = len(chunk)
-            for j, (tok, pos, seq, out) in enumerate(chunk):
-                b.token[j] = tok
-                b.pos[j] = pos
-                sequences = (seq,) if isinstance(seq, int) else seq
-                b.n_seq_id[j] = len(sequences)
-                for index, sequence in enumerate(sequences):
-                    b.seq_id[j][index] = sequence
-                b.logits[j] = out is not None
-            self.submissions += 1
-            self.submitted_tokens += len(chunk)
-            rc = self.L.llama_decode(self.ptr, b)
-            if rc != 0:
-                raise RuntimeError(f"llama decode returned {rc}")
-            for j, (_, _, seq, out) in enumerate(chunk):
-                if out is not None:
-                    on_output(out, j, seq)
+        writer = self.writer
+        writer.n, writer.outputs = 0, []
+        limit = min(self.n_batch, writer.size)
+        for tokens, position, sequence, output in spans:
+            tokens, start = Tokens(tokens), 0
+            total = len(tokens)
+            while start < total:
+                if writer.n == limit or (output is not None and len(writer.outputs) >= self.outputs_per_decode and total - start <= limit - writer.n):
+                    self._submit(on_output)
+                take = min(total - start, limit - writer.n)
+                writer.fill(tokens, start, take, position + start, sequence)
+                start += take
+            if output is not None and total:
+                writer.output(output)
+        if writer.n:
+            self._submit(on_output)
+
+    def _submit(self, on_output):
+        writer, batch = self.writer, self.handles.batch
+        outputs, count = writer.outputs, writer.n
+        writer.n, writer.outputs = 0, []
+        batch.n_tokens = count
+        self.submissions += 1
+        self.submitted_tokens += count
+        rc = self.L.llama_decode(self.ptr, batch)
+        if rc != 0:
+            raise RuntimeError(f"llama decode returned {rc}")
+        for key, j in outputs:
+            on_output(key, j)
 
     def logits(self, j: int) -> np.ndarray:
         self._live()
         return np.ctypeslib.as_array(self.L.llama_get_logits_ith(self.ptr, j), shape=(self.w.n_vocab,))
 
 
-SERIAL = 1
-SCHEDULING = "resident-prefix-cache@1"
+SCHEDULING = "resident-prefix-streams@3"
+_UNSET = object()
+
+
+@dataclass(frozen=True, slots=True)
+class CacheKey:
+    binding: str | None
+    tokens: Tokens
+
+    def __len__(self) -> int:
+        return len(self.tokens)
 
 
 class LlamaScorer:
     def __init__(self, path: str, *, n_ctx: int | None = None, n_batch: int = 512, inputs: int = 1,
                  threads: int | None = None, n_gpu_layers: int = 0, shared: bool | None = None,
-                 prefix_slots: int = 4, grouping: str = "serial",
-                 repack: bool = True):
+                 prefix_slots: int = 4, repack: bool = True, max_input_tokens: int = MAX_INPUT_TOKENS, max_prefix_tokens: int = MAX_PREFIX_TOKENS):
         validate_native_integer("threads", threads, optional=True)
-        self.layout = capacity(n_ctx, n_batch, inputs, prefix_slots, grouping)
+        validate_native_integer("inputs", inputs)
+        self.layout = capacity(n_ctx, n_batch, prefix_slots, max_input_tokens=max_input_tokens, max_prefix_tokens=max_prefix_tokens)
         self.weights = Weights(path, n_gpu_layers, repack=repack)
         self.handles = self.weights.handles
         self.inputs = inputs
         self.prefix_slots = prefix_slots
-        self._resident = {}
+        self._resident: dict[CacheKey, int] = {}
         self._dirty = False
         try:
             self.ctx = Context(self.weights, self.layout, threads)
@@ -399,17 +743,14 @@ class LlamaScorer:
             self.handles.close()
             raise
         self._finalizer = weakref.finalize(self, _collect, self.handles)
-        self.shared = (not self.weights.hybrid) if shared is None else shared
+        self.shared = True if shared is None else shared
         self.path = path
-        self.stats = {key: 0 for key in ("prefix_hits", "prefix_misses", "state_hits", "state_misses",
-                                       "state_tokens", "suffix_tokens", "submissions", "branch_groups", "failures",
-                                       "prefix_tokens", "prefix_evictions")}
-        self.grouping = grouping
-        self.width, self.branches = self.layout.states, self.layout.branches
+        self.stats = {key: 0 for key in ("prefix_hits", "prefix_misses", "state_hits", "state_misses", "state_tokens", "suffix_tokens", "suffix_rows",
+                                       "failures", "prefix_tokens", "prefix_evictions", "adapter_switches")}
         self._scratch = np.empty(self.weights.n_vocab, dtype=np.float64)
-        self.fused = self.weights.offload and grouping == "batched"
-        self._prefix: tuple | None = None
-        self._states: dict[int, tuple] = {}
+        self._prefix: CacheKey | None = None
+        self._state: Tokens | None = None
+        self._active, self.namespace, self._uses = None, None, {}
 
     def _live(self):
         if self.handles.ctx is None:
@@ -427,7 +768,7 @@ class LlamaScorer:
                 return
             self._resident = {}
             self._prefix = None
-            self._states = {}
+            self._state = None
             self.ctx.clear()
             self._dirty = False
 
@@ -435,11 +776,9 @@ class LlamaScorer:
         with self.ctx.lock:
             self._live()
             c = self.ctx
-            return {"n_ctx": c.n_ctx, "n_batch": c.n_batch, "n_seq_max": c.n_seq_max, "prefix_slots": self.prefix_slots,
+            return {"n_ctx": c.n_ctx, "n_ctx_seq": c.n_ctx_seq, "sequence_limit": c.sequence_limit, "n_batch": c.n_batch, "n_seq_max": c.n_seq_max, "prefix_slots": self.prefix_slots,
                     "scheduling": SCHEDULING, **c.realized, **self.weights.realized,
-                    "buffers": {**self.weights.buffers, **c.buffers}, "shared": self.shared, "grouping": self.grouping,
-                    "serial": SERIAL if self.grouping == "serial" else None,
-                    "fusion": self.fused if self.shared else self.weights.offload}
+                    "buffers": {**self.weights.buffers, **c.buffers}, "shared": self.shared}
 
     def tokenizer_identity(self):
         from .compiler import digest
@@ -461,8 +800,7 @@ class LlamaScorer:
             return self.weights.detokenize(tokens)
 
     def chat(self) -> dict:
-        with self.operation():
-            return self.weights.chat()
+        return gguf(self.path).chat()
 
     @contextmanager
     def operation(self):
@@ -470,44 +808,73 @@ class LlamaScorer:
             self._live()
             yield
 
-    def score(self, requests: Sequence[ScoreRequest], *, reference: bool = False) -> ScoreBlock:
+    def _activate(self, lora: Lora | None):
+        if lora is self._active:
+            return
+        L, previous, self._active = self.ctx.L, self._active, _UNSET
+        if lora is None:
+            rc = L.llama_set_adapters_lora(self.ctx.ptr, None, 0, None)
+        else:
+            if not lora.ptr:
+                raise RuntimeError(f"adapter {lora.key} was released")
+            rc = L.llama_set_adapters_lora(self.ctx.ptr, (L.llama_adapter_lora_p_ctypes * 1)(lora.ptr), 1, (ctypes.c_float * 1)(1.0))
+        if rc != 0:
+            raise RuntimeError(f"llama_set_adapters_lora returned {rc}")
+        self._active = lora
+        self.stats["adapter_switches"] += previous is not _UNSET
+
+    def _bind(self, lora: Lora | None, binding: str | None):
+        namespace = binding if binding is not None else None if lora is None else lora.key
+        used = None if lora is None else lora.key
+        if self._uses.setdefault(namespace, used) != used:
+            raise RuntimeError(f"binding namespace {namespace} already names adapter {self._uses[namespace]}, not {used}")
+        self._activate(lora)
+        self.namespace = namespace
+
+    def forget(self, lora: Lora):
+        with self.operation():
+            if self._active is lora or self._active is _UNSET:
+                self._activate(None)
+            stale = {namespace for namespace, used in self._uses.items() if used == lora.key}
+            for key in [key for key in self._resident if key.binding in stale]:
+                self.ctx.rm(self._resident.pop(key))
+            if self._prefix is not None and self._prefix.binding in stale:
+                for sequence in (0, 1):
+                    self.ctx.rm(sequence)
+                self._prefix, self._state = None, None
+            for namespace in stale:
+                del self._uses[namespace]
+
+    def score(self, requests: Sequence[ScoreRequest], *, reference: bool = False, lora: Lora | None = None, binding: str | None = None) -> ScoreBlock:
         width = max((len(s) for r in requests for s in r.slots), default=1)
         out = ScoreBlock.empty(sum(len(r.suffixes) for r in requests), width)
-        rows, row = [], 0
-        for r in requests:
-            rows.append(row)
-            row += len(r.suffixes)
         with self.operation():
+            live, row = [], 0
+            for request in requests:
+                if request.suffixes:
+                    if len(request.prefix) + len(request.state) + max(map(len, request.suffixes)) > self.ctx.sequence_limit:
+                        self._fail(range(row, row + len(request.suffixes)), out, set(), RuntimeError('sequence exceeds per-sequence context'))
+                    else:
+                        live.append((request, row))
+                row += len(request.suffixes)
+            if not live:
+                return out
             if self._dirty:
                 self.invalidate()
-            if self.shared and not reference:
-                for window in self._windows(requests):
-                    self._shared([(requests[n], rows[n]) for n in window], out)
-            else:
-                for r, row0 in zip(requests, rows):
-                    self._reference(r, row0, out)
+            try:
+                self._bind(lora, binding)
+            except BaseException:
+                self.invalidate()
+                raise
+            run = self._shared if self.shared and not reference else self._reference
+            for request, row in live:
+                run(request, row, out)
         return out
 
-    def _windows(self, requests: Sequence[ScoreRequest]) -> list[list[int]]:
-        windows, cur, states, used, largest = [], [], set(), 0, 0
-        for n, r in enumerate(requests):
-            if not r.suffixes:
-                continue
-            new = r.state not in states
-            cost = len(r.state) if new else 0
-            if cur and (requests[cur[0]].prefix != r.prefix or (new and len(states) >= self.width)
-                        or len(r.prefix) + used + cost + max(largest, max(map(len, r.suffixes), default=0)) > self.ctx.n_ctx):
-                windows.append(cur)
-                cur, states, used, new, cost, largest = [], set(), 0, True, len(r.state), 0
-            cur.append(n)
-            states.add(r.state)
-            used += cost
-            largest = max(largest, max(map(len, r.suffixes), default=0))
-        return windows + ([cur] if cur else [])
-
-    def _writer(self, slots: dict, out: ScoreBlock, done: set):
-        def write(row, j, _seq):
-            logp, log_mass = reduce_row(self.ctx.logits(j), slots[row], self._scratch)
+    def _emit(self, out: ScoreBlock, done: set):
+        def write(key, j):
+            row, slots = key
+            logp, log_mass = reduce_row(self.ctx.logits(j), slots, self._scratch)
             out.logp[row, :len(logp)] = logp
             out.log_mass[row] = log_mass
             done.add(row)
@@ -522,24 +889,18 @@ class LlamaScorer:
 
     def _reference(self, r: ScoreRequest, row0: int, out: ScoreBlock):
         c = self.ctx
-        slots = {row0 + i: s for i, s in enumerate(r.slots)}
-        for i, suffix in enumerate(r.suffixes):
+        for i, (suffix, slots) in enumerate(zip(r.suffixes, r.slots)):
             done: set = set()
             try:
-                if len(r.prefix) + len(r.state) + len(suffix) > c.n_ctx:
-                    raise RuntimeError("sequence exceeds context")
                 self.invalidate()
                 self._dirty = True
+                spans = ((r.prefix, 0, 1, None), (r.state, len(r.prefix), 1, None), (suffix, len(r.prefix) + len(r.state), 1, (row0 + i, slots)))
+                write = self._emit(out, done)
                 if self.weights.offload:
-                    tokens = r.prefix + r.state + suffix
-                    c.run([(token, position, 1, row0 + i if position == len(tokens) - 1 else None)
-                           for position, token in enumerate(tokens)], self._writer(slots, out, done))
+                    c.decode(spans, write)
                 else:
-                    position = 0
-                    for tokens, last in ((r.prefix, False), (r.state, False), (suffix, True)):
-                        c.run([(token, position + k, 1, row0 + i if last and k == len(tokens) - 1 else None)
-                               for k, token in enumerate(tokens)], self._writer(slots, out, done))
-                        position += len(tokens)
+                    for span in spans:
+                        c.decode((span,), write)
             except RuntimeError as e:
                 self._fail([row0 + i], out, done, e)
             except BaseException:
@@ -549,15 +910,15 @@ class LlamaScorer:
                 c.rm(1)
         self._dirty = False
 
-    def _ensure_prefix(self, prefix: tuple[int, ...], reserve=0):
+    def _ensure_prefix(self, prefix: Tokens):
         c = self.ctx
-        if self._prefix != prefix:
-            for sequence in tuple(self._states):
-                c.rm(sequence)
-            self._states = {}
-            hit = self._resident.pop(prefix, None)
+        key = CacheKey(self.namespace, prefix)
+        if self._prefix != key:
+            c.rm(1)
+            self._state = None
+            hit = self._resident.pop(key, None)
             old = self._prefix
-            temporary = self.layout.first_branch
+            temporary = self.layout.branch
             if old is not None and self.prefix_slots > 1:
                 c.cp(0, temporary)
             c.rm(0)
@@ -577,100 +938,45 @@ class LlamaScorer:
                 c.cp(temporary, free)
                 self._resident[old] = free
                 c.rm(temporary)
-            self._prefix = prefix if hit is not None else None
+            self._prefix = key if hit is not None else None
         else:
             self.stats["prefix_hits"] += 1
-        while self._resident and len(prefix) + reserve + sum(map(len, self._resident)) > c.n_ctx:
-            victim = next(iter(self._resident))
-            c.rm(self._resident.pop(victim))
-            self.stats["prefix_evictions"] += 1
         if self._prefix is None:
-            c.run([(token, position, 0, None) for position, token in enumerate(prefix)], None)
+            c.decode(((prefix, 0, 0, None),))
             self.stats["prefix_tokens"] += len(prefix)
-            self._prefix = prefix
+            self._prefix = key
 
-    def _ensure_states(self, prefix: tuple[int, ...], states: list[tuple]) -> dict[tuple, int]:
+    def _ensure_state(self, prefix: Tokens, state: Tokens) -> int:
         c = self.ctx
-        seq_of = {st: s for s, st in self._states.items() if st in states}
-        for s in [s for s, st in self._states.items() if st not in seq_of]:
-            c.rm(s)
-            del self._states[s]
-        free = [s for s in range(1, self.width + 1) if s not in self._states]
-        new = [st for st in dict.fromkeys(states) if st not in seq_of]
-        for st, s in zip(new, free):
-            c.cp(0, s)
-            seq_of[st] = s
-        c.run([(t, len(prefix) + k, seq_of[st], None) for st in new for k, t in enumerate(st)], None)
-        self._states.update({seq_of[st]: st for st in new})
-        return seq_of
+        if self._state is not None and self._state == state:
+            self.stats["state_hits"] += 1
+            return 1
+        c.rm(1)
+        self._state = None
+        c.cp(0, 1)
+        c.decode(((state, len(prefix), 1, None),))
+        self._state = state
+        self.stats["state_misses"] += 1
+        self.stats["state_tokens"] += len(state)
+        return 1
 
-    def _shared(self, window: list[tuple[ScoreRequest, int]], out: ScoreBlock):
+    def _shared(self, r: ScoreRequest, row0: int, out: ScoreBlock):
         c = self.ctx
         done: set = set()
-        prefix = window[0][0].prefix
-        rows = [row0 + i for r, row0 in window for i in range(len(r.suffixes))]
-        slots = {row0 + i: s for r, row0 in window for i, s in enumerate(r.slots)}
-        write = self._writer(slots, out, done)
+        rows = range(row0, row0 + len(r.suffixes))
         try:
-            if any(len(prefix) + len(r.state) + max(map(len, r.suffixes)) > c.n_ctx for r, _ in window):
-                raise RuntimeError("sequence exceeds context")
             self._dirty = True
-            states = list(dict.fromkeys(r.state for r, _ in window))
-            reserve = sum(map(len, states)) + max(len(suffix) for r, _ in window for suffix in r.suffixes)
-            self._ensure_prefix(prefix, reserve)
-            seq_of = {state: sequence for sequence, state in self._states.items() if state in states}
-            for sequence in list(self._states):
-                if self._states[sequence] not in seq_of:
-                    c.rm(sequence)
-                    del self._states[sequence]
-            free = iter(sequence for sequence in range(1, self.width + 1) if sequence not in self._states)
-            new = [state for state in states if state not in seq_of]
-            self.stats["state_hits"] += len(states) - len(new)
-            self.stats["state_misses"] += len(new)
-            self.stats["state_tokens"] += sum(map(len, new))
-            for state in new:
-                seq_of[state] = next(free)
-                c.cp(0, seq_of[state])
-            budget = c.n_ctx - len(prefix) - sum(map(len, self._resident)) - sum(map(len, states))
-            branches = [(r, row0 + i, suffix) for r, row0 in window for i, suffix in enumerate(r.suffixes)]
-            first = self.layout.first_branch
-            groups, group, used = [], [], 0
-            for branch in branches:
-                if group and (used + len(branch[2]) > budget or len(group) >= self.branches):
-                    groups.append(group)
-                    group, used = [], 0
-                if len(branch[2]) > budget:
-                    raise RuntimeError("sequence exceeds context")
-                group.append(branch)
-                used += len(branch[2])
-            if group:
-                groups.append(group)
-            if not self.fused:
-                c.run([(token, len(prefix) + k, seq_of[state], None) for state in new for k, token in enumerate(state)], None)
-                self._states.update({seq_of[state]: state for state in new})
-                new = []
-            for index, group in enumerate(groups):
-                self.stats["branch_groups"] += 1
-                self.stats["suffix_tokens"] += sum(len(suffix) for _, _, suffix in group)
+            self._ensure_prefix(r.prefix)
+            sequence = self._ensure_state(r.prefix, r.state)
+            branch, base, write = self.layout.branch, len(r.prefix) + len(r.state), self._emit(out, done)
+            for row, suffix, slots in zip(rows, r.suffixes, r.slots):
+                self.stats["suffix_tokens"] += len(suffix)
+                self.stats["suffix_rows"] += 1
                 try:
-                    for g, (request, _, _) in enumerate(group):
-                        c.cp(0 if index == 0 and request.state in new else seq_of[request.state], first + g)
-                    entries = []
-                    if index == 0:
-                        for state in new:
-                            sequences = (seq_of[state],) + tuple(first + g for g, (r, _, _) in enumerate(group)
-                                                                 if r.state == state)
-                            entries.extend((token, len(prefix) + k, sequences, None) for k, token in enumerate(state))
-                    entries.extend((token, len(prefix) + len(request.state) + k, first + g,
-                                    row if k == len(suffix) - 1 else None)
-                                   for g, (request, row, suffix) in enumerate(group)
-                                   for k, token in enumerate(suffix))
-                    c.run(entries, write)
-                    if index == 0:
-                        self._states.update({seq_of[state]: state for state in new})
+                    c.cp(sequence, branch)
+                    c.decode(((suffix, base, branch, (row, slots)),), write)
                 finally:
-                    for g in range(len(group)):
-                        c.rm(first + g)
+                    c.rm(branch)
             self._dirty = False
         except RuntimeError as e:
             self.stats["failures"] += len(rows) - len(done)
@@ -680,57 +986,76 @@ class LlamaScorer:
             self.invalidate()
             raise
 
-    def selftest(self, adapter, texts, questions) -> dict:
+    def selftest(self, adapter, texts, questions, *, lora: Lora | None = None, binding: str | None = None) -> dict:
         with self.operation():
-            n_batch = self.ctx.n_batch
+            n_batch, shared = self.ctx.n_batch, self.shared
             try:
-                return self._selftest(adapter, texts, questions)
+                return self._selftest(adapter, texts, questions, {"lora": lora, "binding": binding})
             except RuntimeError as error:
-                self.shared = False
                 return {"D1 shared = reference": {"ok": False, "error": str(error)}}
             finally:
-                self.ctx.n_batch = n_batch
+                self.ctx.n_batch, self.shared = n_batch, shared
                 self.invalidate()
 
-    def _selftest(self, adapter, texts, questions):
+    def _selftest(self, adapter, texts, questions, bound):
         def probs(text, qs):
-            block = self.score([adapter.request(adapter.state(text), list(qs))])
+            block = self.score([adapter.request(adapter.state(text), list(qs))], **bound)
             if any(block.error) or any(not np.isfinite(block.logp[i, :q.width]).all() for i, q in enumerate(qs)):
                 raise RuntimeError("conformance scoring failed: " + repr(block.error))
-            return np.where(np.isfinite(block.logp), np.exp(block.logp), 0.)
+            return np.column_stack((np.where(np.isfinite(block.logp), np.exp(block.logp), 0.), np.exp(block.log_mass)))
 
         self.shared = True
         a = probs(texts[0], questions[:1])
         self.shared = False
         b = probs(texts[0], questions[:1])
         self.shared = True
-        checks = {"D1 shared = reference": {"ok": float(np.abs(a - b).max()) < 1e-3,
-                                            "max_diff": float(np.abs(a - b).max())}}
+        checks = {"D1 shared = reference": {"ok": bool(np.array_equal(a, b)),
+                                            "max_diff": float(np.abs(a - b).max()), "includes_mass": True}}
         if self.inputs > 1:
             requests = [adapter.request(adapter.state(text), questions[:1]) for text in texts[:2]]
             self.shared = True
-            multi = self.score(requests)
+            multi = self.score(requests, **bound)
             self.shared = False
-            reference = self.score(requests)
+            reference = self.score(requests, **bound)
             error = any(multi.error) or any(reference.error)
-            difference = float(np.abs(np.exp(multi.logp) - np.exp(reference.logp)).max())
+            difference = max(float(np.abs(np.exp(multi.logp) - np.exp(reference.logp)).max()),
+                             float(np.abs(np.exp(multi.log_mass) - np.exp(reference.log_mass)).max()))
             checks["D1 shared = reference"].update(multi_input_diff=difference, inputs=2,
-                ok=checks["D1 shared = reference"]["ok"] and not error and difference < .15 and
-                   bool((multi.logp.argmax(axis=1) == reference.logp.argmax(axis=1)).all()))
+                ok=checks["D1 shared = reference"]["ok"] and not error and difference == 0 and
+                   bool(np.array_equal(multi.logp, reference.logp) and np.array_equal(multi.log_mass, reference.log_mass)))
             self.shared = True
         first = probs(texts[2], questions[:1])
         self.invalidate()
         fresh = probs(texts[2], questions[:1])
-        checks["D3 no leakage"] = {"ok": float(np.abs(first - fresh).max()) < 1e-3,
+        checks["D3 no leakage"] = {"ok": bool(np.array_equal(first, fresh)),
                                    "max_diff": float(np.abs(first - fresh).max())}
+        def observation(text, qs):
+            block = self.score([adapter.request(adapter.state(text), list(qs))], **bound)
+            if any(block.error):
+                raise RuntimeError('residency conformance scoring failed: ' + repr(block.error))
+            return np.column_stack((block.logp, block.log_mass))
+        self.invalidate()
+        target = observation(texts[1], questions)
+        repeat = observation(texts[1], questions)
+        for i in range(self.prefix_slots + 2):
+            guided = [replace(q, guidance=Guidance(f'Use the supplied evidence. Residency probe {i}.')) for q in questions[:1]]
+            observation(texts[i % len(texts)], guided)
+        after = observation(texts[1], questions)
+        delta = np.zeros_like(target)
+        np.subtract(target, after, out=delta, where=np.isfinite(target) & np.isfinite(after))
+        checks['D7 residency'] = {'ok': bool(np.array_equal(target, repeat) and np.array_equal(target, after)),
+                                  'max_diff': float(np.abs(delta).max()), 'includes_mass': True}
         ref = probs(texts[0], questions)
         n_batch, self.ctx.n_batch = self.ctx.n_batch, 7
         tiny = probs(texts[0], questions)
+        tiny_repeat = probs(texts[0], questions)
         self.ctx.n_batch = n_batch
-        same_top = bool((ref.argmax(axis=1) == tiny.argmax(axis=1)).all())
-        checks["D6 chunking"] = {"ok": same_top and float(np.abs(ref - tiny).max()) < 0.25,
-                                 "max_diff": float(np.abs(ref - tiny).max())}
-        self.shared = shared_ok(checks)
+        restored = probs(texts[0], questions)
+        checks["D6 chunking"] = {"ok": bool(np.array_equal(tiny, tiny_repeat) and np.array_equal(ref, restored)),
+                                 "scope": "repeatability within each execution shape; cross-shape probabilities are diagnostic",
+                                 "shapes": [n_batch, 7], "max_diff": float(np.abs(ref - tiny).max()),
+                                 "argmax_changes": int(np.sum(np.argmax(ref[:, :-1], axis=1) != np.argmax(tiny[:, :-1], axis=1))),
+                                 "repeat_diff": float(np.abs(tiny - tiny_repeat).max()), "restored_diff": float(np.abs(ref - restored).max())}
         return checks
 
     def close(self):

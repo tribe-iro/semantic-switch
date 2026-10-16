@@ -1,0 +1,771 @@
+{
+  "utc": "2026-10-14T09:07:10.468144+00:00",
+  "scope": "base-only public calls, 3 inputs x 4 questions; temporary in-process Context change only; no latency comparison to unified KV",
+  "experiment": {
+    "kv_unified": false,
+    "n_ctx_seq": 1536
+  },
+  "execution": {
+    "identity": {
+      "presentation": {
+        "evidence": "named-fields@2",
+        "choices": "full-criteria@3"
+      },
+      "file": "Q8_0.gguf",
+      "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+      "template": "chat@3:0a2c8073",
+      "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb"
+    },
+    "requested_device": "gpu",
+    "threads": null,
+    "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+    "loaded": true,
+    "observed_models": [],
+    "accelerated": true,
+    "batch_inputs": 1,
+    "max_slots": 20,
+    "capabilities": {
+      "shared": true,
+      "conformance": true,
+      "counters": {
+        "prefix_hits": 9,
+        "prefix_misses": 15,
+        "state_hits": 0,
+        "state_misses": 24,
+        "state_tokens": 736,
+        "suffix_tokens": 2676,
+        "failures": 0,
+        "prefix_tokens": 1008,
+        "prefix_evictions": 11,
+        "adapter_switches": 0,
+        "submissions": 99,
+        "submitted_tokens": 4420
+      }
+    },
+    "requested_capacity": {
+      "n_ctx": 8192,
+      "n_batch": 512,
+      "n_seq_max": 6
+    },
+    "configuration": {
+      "max_input_tokens": 1024,
+      "prefix_slots": 4
+    },
+    "capacity": {
+      "n_ctx": 9216,
+      "n_batch": 512,
+      "n_seq_max": 6,
+      "prefix_slots": 4,
+      "scheduling": "resident-prefix-cache@2",
+      "n_outputs_max": 6,
+      "swa_full": true,
+      "kv_unified": false,
+      "n_ubatch": 512,
+      "flash_attn": "enabled",
+      "type_k": "f16",
+      "type_v": "f16",
+      "device": "gpu",
+      "tensor_types": [
+        "f16",
+        "f32",
+        "q8_0"
+      ],
+      "use_extra_bufts": true,
+      "repacked": [],
+      "buffers": {
+        "Vulkan0 model": 2456069079,
+        "Vulkan_Host model": 2923429888,
+        "Vulkan_Host output": 6291456,
+        "Vulkan0 KV": 169869312,
+        "Vulkan0 compute": 112564634,
+        "Vulkan_Host compute": 28049408
+      },
+      "shared": true
+    },
+    "binding": {
+      "representation": "base",
+      "adapter": "7bdb4b879ce1a88d0ff493a03de1cc144146e868ca6c4996ebc9c69e02e06eab",
+      "pool": {
+        "loads": 0,
+        "hits": 0,
+        "evictions": 0,
+        "underestimates": 0,
+        "unestimated": 0,
+        "max_adapters": 4,
+        "resident": {}
+      }
+    }
+  },
+  "phases": [
+    {
+      "phase": "initial",
+      "seconds": 3.321567978011444,
+      "rows": [
+        {
+          "0": {
+            "scores": {
+              "true": 0.9999999999956541,
+              "false": 4.345764349260926e-12
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": true
+          },
+          "1": {
+            "scores": {
+              "0": 0.9999999999999178,
+              "1": 3.4339911756975815e-14,
+              "2": 4.7948736158478534e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": "charges, invoices or payments"
+          },
+          "2": {
+            "scores": {
+              "can wait": 0.0018348934728067844,
+              "today": 0.9979213058364405,
+              "immediately": 0.0002438006907528025
+            },
+            "mass": 0.9999996423721313,
+            "status": "ok",
+            "value": "today"
+          },
+          "3": {
+            "scores": {
+              "true": 6.035072313204494e-16,
+              "false": 0.9999999999999993
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          }
+        },
+        {
+          "0": {
+            "scores": {
+              "true": 6.417356303785165e-20,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          },
+          "1": {
+            "scores": {
+              "0": 2.8941037374933534e-15,
+              "1": 0.9999999999999097,
+              "2": 8.738532606083721e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": "the product is broken, erroring or unavailable"
+          },
+          "2": {
+            "scores": {
+              "can wait": 1.610569021555763e-07,
+              "today": 0.8652733090240374,
+              "immediately": 0.1347265299190604
+            },
+            "mass": 0.9999991655349731,
+            "status": "uncertain",
+            "value": null
+          },
+          "3": {
+            "scores": {
+              "true": 2.1003859654528947e-18,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          }
+        },
+        {
+          "0": {
+            "scores": {
+              "true": 5.734121323751864e-20,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          },
+          "1": {
+            "scores": {
+              "0": 0.9999993594988537,
+              "1": 2.612599025992012e-07,
+              "2": 3.7924124368223587e-07
+            },
+            "mass": 0.9999998807907104,
+            "status": "ok",
+            "value": "charges, invoices or payments"
+          },
+          "2": {
+            "scores": {
+              "can wait": 1.0106784446179474e-06,
+              "today": 4.556145350317703e-05,
+              "immediately": 0.9999534278680522
+            },
+            "mass": 0.9999998211860657,
+            "status": "ok",
+            "value": "immediately"
+          },
+          "3": {
+            "scores": {
+              "true": 0.9999999999999285,
+              "false": 7.140471830336276e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": true
+          }
+        }
+      ],
+      "same_probabilities": true,
+      "same_mass": true,
+      "max_probability_delta": 0.0,
+      "changed_statuses": 0,
+      "execution_shape": "shared-prefix-serial"
+    },
+    {
+      "phase": "repeat",
+      "seconds": 1.1672627899970394,
+      "rows": [
+        {
+          "0": {
+            "scores": {
+              "true": 0.9999999999956541,
+              "false": 4.345764349260926e-12
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": true
+          },
+          "1": {
+            "scores": {
+              "0": 0.9999999999999178,
+              "1": 3.4339911756975815e-14,
+              "2": 4.7948736158478534e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": "charges, invoices or payments"
+          },
+          "2": {
+            "scores": {
+              "can wait": 0.0018348934728067844,
+              "today": 0.9979213058364405,
+              "immediately": 0.0002438006907528025
+            },
+            "mass": 0.9999996423721313,
+            "status": "ok",
+            "value": "today"
+          },
+          "3": {
+            "scores": {
+              "true": 6.035072313204494e-16,
+              "false": 0.9999999999999993
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          }
+        },
+        {
+          "0": {
+            "scores": {
+              "true": 6.417356303785165e-20,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          },
+          "1": {
+            "scores": {
+              "0": 2.8941037374933534e-15,
+              "1": 0.9999999999999097,
+              "2": 8.738532606083721e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": "the product is broken, erroring or unavailable"
+          },
+          "2": {
+            "scores": {
+              "can wait": 1.610569021555763e-07,
+              "today": 0.8652733090240374,
+              "immediately": 0.1347265299190604
+            },
+            "mass": 0.9999991655349731,
+            "status": "uncertain",
+            "value": null
+          },
+          "3": {
+            "scores": {
+              "true": 2.1003859654528947e-18,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          }
+        },
+        {
+          "0": {
+            "scores": {
+              "true": 5.734121323751864e-20,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          },
+          "1": {
+            "scores": {
+              "0": 0.9999993594988537,
+              "1": 2.612599025992012e-07,
+              "2": 3.7924124368223587e-07
+            },
+            "mass": 0.9999998807907104,
+            "status": "ok",
+            "value": "charges, invoices or payments"
+          },
+          "2": {
+            "scores": {
+              "can wait": 1.0106784446179474e-06,
+              "today": 4.556145350317703e-05,
+              "immediately": 0.9999534278680522
+            },
+            "mass": 0.9999998211860657,
+            "status": "ok",
+            "value": "immediately"
+          },
+          "3": {
+            "scores": {
+              "true": 0.9999999999999285,
+              "false": 7.140471830336276e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": true
+          }
+        }
+      ],
+      "same_probabilities": true,
+      "same_mass": true,
+      "max_probability_delta": 0.0,
+      "changed_statuses": 0,
+      "execution_shape": "shared-prefix-serial"
+    },
+    {
+      "phase": "after_eviction_0",
+      "seconds": 2.3042237000045134,
+      "rows": [
+        {
+          "0": {
+            "scores": {
+              "true": 0.9999999999956541,
+              "false": 4.345764349260926e-12
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": true
+          },
+          "1": {
+            "scores": {
+              "0": 0.9999999999999178,
+              "1": 3.4339911756975815e-14,
+              "2": 4.7948736158478534e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": "charges, invoices or payments"
+          },
+          "2": {
+            "scores": {
+              "can wait": 0.0018348934728067844,
+              "today": 0.9979213058364405,
+              "immediately": 0.0002438006907528025
+            },
+            "mass": 0.9999996423721313,
+            "status": "ok",
+            "value": "today"
+          },
+          "3": {
+            "scores": {
+              "true": 6.035072313204494e-16,
+              "false": 0.9999999999999993
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          }
+        },
+        {
+          "0": {
+            "scores": {
+              "true": 6.417356303785165e-20,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          },
+          "1": {
+            "scores": {
+              "0": 2.8941037374933534e-15,
+              "1": 0.9999999999999097,
+              "2": 8.738532606083721e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": "the product is broken, erroring or unavailable"
+          },
+          "2": {
+            "scores": {
+              "can wait": 1.610569021555763e-07,
+              "today": 0.8652733090240374,
+              "immediately": 0.1347265299190604
+            },
+            "mass": 0.9999991655349731,
+            "status": "uncertain",
+            "value": null
+          },
+          "3": {
+            "scores": {
+              "true": 2.1003859654528947e-18,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          }
+        },
+        {
+          "0": {
+            "scores": {
+              "true": 5.734121323751864e-20,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          },
+          "1": {
+            "scores": {
+              "0": 0.9999993594988537,
+              "1": 2.612599025992012e-07,
+              "2": 3.7924124368223587e-07
+            },
+            "mass": 0.9999998807907104,
+            "status": "ok",
+            "value": "charges, invoices or payments"
+          },
+          "2": {
+            "scores": {
+              "can wait": 1.0106784446179474e-06,
+              "today": 4.556145350317703e-05,
+              "immediately": 0.9999534278680522
+            },
+            "mass": 0.9999998211860657,
+            "status": "ok",
+            "value": "immediately"
+          },
+          "3": {
+            "scores": {
+              "true": 0.9999999999999285,
+              "false": 7.140471830336276e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": true
+          }
+        }
+      ],
+      "same_probabilities": true,
+      "same_mass": true,
+      "max_probability_delta": 0.0,
+      "changed_statuses": 0,
+      "execution_shape": "shared-prefix-serial"
+    },
+    {
+      "phase": "after_eviction_1",
+      "seconds": 1.4734135890030302,
+      "rows": [
+        {
+          "0": {
+            "scores": {
+              "true": 0.9999999999956541,
+              "false": 4.345764349260926e-12
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": true
+          },
+          "1": {
+            "scores": {
+              "0": 0.9999999999999178,
+              "1": 3.4339911756975815e-14,
+              "2": 4.7948736158478534e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": "charges, invoices or payments"
+          },
+          "2": {
+            "scores": {
+              "can wait": 0.0018348934728067844,
+              "today": 0.9979213058364405,
+              "immediately": 0.0002438006907528025
+            },
+            "mass": 0.9999996423721313,
+            "status": "ok",
+            "value": "today"
+          },
+          "3": {
+            "scores": {
+              "true": 6.035072313204494e-16,
+              "false": 0.9999999999999993
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          }
+        },
+        {
+          "0": {
+            "scores": {
+              "true": 6.417356303785165e-20,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          },
+          "1": {
+            "scores": {
+              "0": 2.8941037374933534e-15,
+              "1": 0.9999999999999097,
+              "2": 8.738532606083721e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": "the product is broken, erroring or unavailable"
+          },
+          "2": {
+            "scores": {
+              "can wait": 1.610569021555763e-07,
+              "today": 0.8652733090240374,
+              "immediately": 0.1347265299190604
+            },
+            "mass": 0.9999991655349731,
+            "status": "uncertain",
+            "value": null
+          },
+          "3": {
+            "scores": {
+              "true": 2.1003859654528947e-18,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          }
+        },
+        {
+          "0": {
+            "scores": {
+              "true": 5.734121323751864e-20,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          },
+          "1": {
+            "scores": {
+              "0": 0.9999993594988537,
+              "1": 2.612599025992012e-07,
+              "2": 3.7924124368223587e-07
+            },
+            "mass": 0.9999998807907104,
+            "status": "ok",
+            "value": "charges, invoices or payments"
+          },
+          "2": {
+            "scores": {
+              "can wait": 1.0106784446179474e-06,
+              "today": 4.556145350317703e-05,
+              "immediately": 0.9999534278680522
+            },
+            "mass": 0.9999998211860657,
+            "status": "ok",
+            "value": "immediately"
+          },
+          "3": {
+            "scores": {
+              "true": 0.9999999999999285,
+              "false": 7.140471830336276e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": true
+          }
+        }
+      ],
+      "same_probabilities": true,
+      "same_mass": true,
+      "max_probability_delta": 0.0,
+      "changed_statuses": 0,
+      "execution_shape": "shared-prefix-serial"
+    },
+    {
+      "phase": "whole_sequence_reference",
+      "seconds": 1.8416144799994072,
+      "rows": [
+        {
+          "0": {
+            "scores": {
+              "true": 0.9999999999956541,
+              "false": 4.345764349260926e-12
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": true
+          },
+          "1": {
+            "scores": {
+              "0": 0.9999999999999178,
+              "1": 3.4339911756975815e-14,
+              "2": 4.7948736158478534e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": "charges, invoices or payments"
+          },
+          "2": {
+            "scores": {
+              "can wait": 0.0018348934728067844,
+              "today": 0.9979213058364405,
+              "immediately": 0.0002438006907528025
+            },
+            "mass": 0.9999996423721313,
+            "status": "ok",
+            "value": "today"
+          },
+          "3": {
+            "scores": {
+              "true": 6.035072313204494e-16,
+              "false": 0.9999999999999993
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          }
+        },
+        {
+          "0": {
+            "scores": {
+              "true": 6.417356303785165e-20,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          },
+          "1": {
+            "scores": {
+              "0": 2.8941037374933534e-15,
+              "1": 0.9999999999999097,
+              "2": 8.738532606083721e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": "the product is broken, erroring or unavailable"
+          },
+          "2": {
+            "scores": {
+              "can wait": 1.610569021555763e-07,
+              "today": 0.8652733090240374,
+              "immediately": 0.1347265299190604
+            },
+            "mass": 0.9999991655349731,
+            "status": "uncertain",
+            "value": null
+          },
+          "3": {
+            "scores": {
+              "true": 2.1003859654528947e-18,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          }
+        },
+        {
+          "0": {
+            "scores": {
+              "true": 5.734121323751864e-20,
+              "false": 1.0
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": false
+          },
+          "1": {
+            "scores": {
+              "0": 0.9999993594988537,
+              "1": 2.612599025992012e-07,
+              "2": 3.7924124368223587e-07
+            },
+            "mass": 0.9999998807907104,
+            "status": "ok",
+            "value": "charges, invoices or payments"
+          },
+          "2": {
+            "scores": {
+              "can wait": 1.0106784446179474e-06,
+              "today": 4.556145350317703e-05,
+              "immediately": 0.9999534278680522
+            },
+            "mass": 0.9999998211860657,
+            "status": "ok",
+            "value": "immediately"
+          },
+          "3": {
+            "scores": {
+              "true": 0.9999999999999285,
+              "false": 7.140471830336276e-14
+            },
+            "mass": 1.0,
+            "status": "ok",
+            "value": true
+          }
+        }
+      ],
+      "same_probabilities": true,
+      "same_mass": true,
+      "max_probability_delta": 0.0,
+      "changed_statuses": 0,
+      "execution_shape": "whole-sequence-reference"
+    }
+  ],
+  "probe": {
+    "path": ".artifacts/review-20261014/residency-controls.py",
+    "sha256": "70046dd51106b7213f5282c7110d0296b425eed3c10cb8a4829a6551fd1a9640",
+    "configuration_change": "Context.__init__: p.kv_unified = False; temporary process-only experiment, production source unchanged"
+  },
+  "baseline_source_files": {
+    "semantic_switch/api.py": "470a12e7e84e077011e2b2ee9ec914e47cbce45823cd4e19d9c5a2335f3e8761",
+    "semantic_switch/backend.py": "ad4b2c8d5b33d55dd36c5b54681e9e855a03a8cbb5289d5c1b9fb47122aad5cf",
+    "semantic_switch/judge.py": "5c5cea8de8646f0faa6f1632d6165a1e24883d497339729cb23a51a8173e67eb",
+    "semantic_switch/resident.py": "3cf807bbab9c64d2fd999f1b51cbe12aa1e7a6a23f805d0c118cc0fb7490a499"
+  },
+  "command": [
+    ".venv/bin/python",
+    ".artifacts/review-20261014/residency-controls.py"
+  ]
+}

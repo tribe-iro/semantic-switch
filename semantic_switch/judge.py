@@ -10,12 +10,11 @@ from typing import Callable, Sequence
 
 import numpy as np
 
-from .protocols import Question, ScoreBlock, ScoreRequest
+from .protocols import MAX_INPUT_TOKENS, MAX_PREFIX_TOKENS, MAX_QUESTION_TOKENS, Question, ScoreBlock, ScoreRequest
 
 from .judgment import MIN_MASS
+from .metrics import OPTION_SOFTMAX
 from .errors import ConfigError
-MAX_STATE_TOKENS = 1024
-MAX_QUESTION_TOKENS = 1536
 BATCH_QUESTIONS = 64
 BATCH_TOKENS = 16384
 ADVISED = 1024
@@ -46,10 +45,18 @@ class Request:
     queue_seconds: float = 0.
     service_seconds: float = 0.
     retry_seconds: float = 0.
+    admission: dict | None = None
+
+    def __post_init__(self):
+        from .results import freeze
+        object.__setattr__(self, 'usage', freeze(self.usage))
+        object.__setattr__(self, 'admission', freeze(self.admission))
 
     def as_dict(self) -> dict:
-        return {"id": self.id, "seconds": self.seconds, "attempts": self.attempts, "status": self.status, "usage": self.usage,
-                "queue_seconds": self.queue_seconds, "service_seconds": self.service_seconds, "retry_seconds": self.retry_seconds}
+        from .results import thaw
+        return {"id": self.id, "seconds": self.seconds, "attempts": self.attempts, "status": self.status, "usage": thaw(self.usage),
+                "queue_seconds": self.queue_seconds, "service_seconds": self.service_seconds, "retry_seconds": self.retry_seconds,
+                "admission": thaw(self.admission)}
 
 
 def distinct(requests) -> tuple:
@@ -93,12 +100,14 @@ def checkpoint():
 
 @dataclass(frozen=True, slots=True)
 class Scores:
-    probs: np.ndarray | None
+    probs: np.ndarray | tuple[float, ...] | None
     mass: float | None
     error: str | None = None
     confidence: float | None = None
     model: str | None = None
     request: Request | None = None
+    raw: np.ndarray | None = None
+    auxiliary: dict | None = None
 
     @property
     def low_mass(self) -> bool:
@@ -113,7 +122,7 @@ class Scored:
     native_work: tuple = ()
 
 
-def _limit(req: ScoreRequest, k: int, max_input_tokens=MAX_STATE_TOKENS) -> Scores | None:
+def _limit(req: ScoreRequest, k: int, max_input_tokens=MAX_INPUT_TOKENS) -> Scores | None:
     if len(req.state) > max_input_tokens:
         return Scores(None, None, f"limit: input is {len(req.state)} tokens (max {max_input_tokens})")
     if len(req.suffixes[k]) > MAX_QUESTION_TOKENS:
@@ -148,32 +157,48 @@ def _scores(block: ScoreBlock, row: int, width: int) -> Scores:
     return Scores(p / p.sum(), None if np.isnan(lm) else float(np.exp(lm)))
 
 
-def scored(judge, items: Sequence[tuple[str, Sequence[Question]]]) -> list:
+def _stamped(result: Scored) -> Scored:
+    if result.model is None or all(score.model is not None for score in result.scores):
+        return result
+    return replace(result, scores=tuple(score if score.model is not None else replace(score, model=result.model) for score in result.scores))
+
+
+def judge_name(judge) -> str:
+    return judge.identity.get("file") or judge.identity.get("source") or type(judge).__name__
+
+
+def validated(name: str, n: int, questions: Sequence[Question], result: Scored) -> Scored:
+    result = _stamped(result)
+    if len(result.scores) != len(questions):
+        raise TypeError(f"judge {name}, input {n}: {len(result.scores)} scores for {len(questions)} questions")
+    for k, (q, sc) in enumerate(zip(questions, result.scores)):
+        if sc.error is not None:
+            continue
+        p = np.asarray(sc.probs, dtype=np.float64)
+        if p.shape != (q.width,) or not np.isfinite(p).all() or (p < 0).any() or p.sum() > 1 + 1e-3:
+            raise TypeError(f"judge {name}, input {n}, question {k}: scores must be {q.width} finite "
+                            f"non-negative values summing to at most 1, got {p.tolist()}")
+        if sc.mass is not None and not 0 <= sc.mass <= 1:
+            raise TypeError(f"judge {name}, input {n}, question {k}: answer mass must be None or within [0, 1], "
+                            f"got {sc.mass}")
+        if sc.confidence is not None and not 0 <= sc.confidence <= 1:
+            raise TypeError(f"judge {name}, input {n}, question {k}: confidence must be None or within [0, 1], "
+                            f"got {sc.confidence}")
+    return result
+
+
+def guided(judge, items) -> None:
     if any(q.guidance for _, qs in items for q in qs) and not getattr(judge, "supports_guidance", False):
         raise ConfigError("this judge does not support guidance")
+
+
+def scored(judge, items: Sequence[tuple[str, Sequence[Question]]]) -> list:
+    guided(judge, items)
     results = judge.score_many(items)
-    name = judge.identity.get("file") or judge.identity.get("source") or type(judge).__name__
+    name = judge_name(judge)
     if len(results) != len(items):
         raise TypeError(f"judge {name} returned {len(results)} results for {len(items)} inputs")
-    results = [replace(result, scores=tuple(replace(score, model=score.model or result.model) for score in result.scores))
-               for result in results]
-    for n, ((_, questions), result) in enumerate(zip(items, results)):
-        if len(result.scores) != len(questions):
-            raise TypeError(f"judge {name}, input {n}: {len(result.scores)} scores for {len(questions)} questions")
-        for k, (q, sc) in enumerate(zip(questions, result.scores)):
-            if sc.error is not None:
-                continue
-            p = np.asarray(sc.probs, dtype=np.float64)
-            if p.shape != (q.width,) or not np.isfinite(p).all() or (p < 0).any() or p.sum() > 1 + 1e-3:
-                raise TypeError(f"judge {name}, input {n}, question {k}: scores must be {q.width} finite "
-                                f"non-negative values summing to at most 1, got {p.tolist()}")
-            if sc.mass is not None and not 0 <= sc.mass <= 1:
-                raise TypeError(f"judge {name}, input {n}, question {k}: answer mass must be None or within [0, 1], "
-                                f"got {sc.mass}")
-            if sc.confidence is not None and not 0 <= sc.confidence <= 1:
-                raise TypeError(f"judge {name}, input {n}, question {k}: confidence must be None or within [0, 1], "
-                                f"got {sc.confidence}")
-    return results
+    return [validated(name, n, questions, result) for n, ((_, questions), result) in enumerate(zip(items, results))]
 
 
 def validate_requests(requests: Sequence[ScoreRequest]) -> tuple[ScoreRequest, ...]:
@@ -185,19 +210,22 @@ def validate_requests(requests: Sequence[ScoreRequest]) -> tuple[ScoreRequest, .
             ids = [t for group in slots for t in group]
             if not slots or not all(slots) or len(set(ids)) != len(ids):
                 raise ConfigError(f"native request {n}: answer slots must be non-empty and disjoint")
-        if any(type(t) is not int or t < 0 for t in (*r.prefix, *r.state, *(t for s in r.suffixes for t in s), *(t for slots in r.slots for g in slots for t in g))):
+        if any(np.any(segment.array < 0) for segment in (r.prefix, r.state, *r.suffixes)) or \
+                any(type(token) is not int or token < 0 for slots in r.slots for group in slots for token in group):
             raise ConfigError(f"native request {n}: token IDs must be non-negative integers")
     return requests
 
 
 class LlamaJudge:
     supports_guidance = True
+    normalization = OPTION_SOFTMAX
 
     def __init__(self, scorer, adapter, identity: dict | None = None, accelerated: bool = False,
-                 batch_inputs: int | None = None, *, max_input_tokens=MAX_STATE_TOKENS, quality_profile=None):
+                 batch_inputs: int | None = None, *, max_input_tokens=MAX_INPUT_TOKENS, max_prefix_tokens=MAX_PREFIX_TOKENS, quality_profile=None):
         if isinstance(max_input_tokens, bool) or not isinstance(max_input_tokens, int) or max_input_tokens < 1:
             raise ConfigError("max_input_tokens must be a positive integer")
         self.max_input_tokens = max_input_tokens
+        self.max_prefix_tokens = max_prefix_tokens
         self.quality_profile = quality_profile
         self._advised = OrderedDict()
         self.scorer = scorer
@@ -215,36 +243,52 @@ class LlamaJudge:
 
     @property
     def max_slots(self) -> int:
-        return self.adapter.max_slots
+        from .presentation import LETTERS
+        return min(len(LETTERS), self.adapter.max_slots)
 
     def score_many(self, items: Sequence[tuple[str, Sequence[Question]]]) -> list[Scored]:
         with self.scorer.operation() if hasattr(self.scorer, "operation") else nullcontext():
             return self._score_many(items)
 
-    def _score_many(self, items):
-        context = getattr(self.scorer, "ctx", None)
-        before = {key: getattr(context, key, 0) for key in ("submissions", "submitted_tokens")}
-        requests, positions = [], []
-        scores = [[None for _ in qs] for _, qs in items]
-        tokens = [0] * len(items)
+    def _requests(self, items):
+        requests, positions, tokens = [], [], [0] * len(items)
         for n, (state, questions) in enumerate(items):
             state, groups = self.adapter.state(state), OrderedDict()
             for k, question in enumerate(questions):
-                groups.setdefault((question.guidance.digest, question.framing), []).append((k, question))
+                groups.setdefault((question.guidance.digest, question.framing, question.catalog), []).append((k, question))
             for group in groups.values():
                 request = self.adapter.request(state, [q for _, q in group])
                 context = getattr(self.scorer, "ctx", None)
-                if context is not None and any(q.guidance for _, q in group):
+                if len(request.prefix) > self.max_prefix_tokens:
+                    raise ConfigError(f"prefix requires {len(request.prefix)} tokens; prefix limit {self.max_prefix_tokens}")
+                if context is not None and any(q.guidance or q.catalog for _, q in group):
                     static = len(request.prefix) + max(map(len, request.suffixes), default=0)
-                    if static + 1 > context.n_ctx:
-                        ids = [section.id for section in group[0][1].guidance.sections]
-                        raise ConfigError(f"guidance {ids}: prefix/question requires {static} tokens; context capacity {context.n_ctx}")
-                self._advise(group[0][1].guidance)
+                    if static + 1 > context.sequence_limit:
+                        ids = [section.id for section in group[0][1].guidance.sections] if group[0][1].guidance else ["criteria catalog"]
+                        raise ConfigError(f"guidance {ids}: prefix/question requires {static} tokens; per-sequence context capacity {context.sequence_limit}")
                 requests.append(request)
                 positions.append([(n, k) for k, _ in group])
                 tokens[n] += len(request.state) + sum(map(len, request.suffixes))
-                if group[0][1].guidance:
+                if group[0][1].guidance or group[0][1].catalog:
                     tokens[n] += len(request.prefix)
+        return requests, positions, tokens
+
+    def preview(self, items: Sequence[tuple[str, Sequence[Question]]]) -> list[dict]:
+        from .presentation import messages
+        requests, positions, _ = self._requests(items)
+        return [{"representation": "local", "input": positions[r][0][0], "questions": [k for _, k in positions[r]],
+                 "prompts": [messages(items[n][0], items[n][1][k]) for n, k in positions[r]],
+                 "prefix": list(request.prefix), "state": list(request.state), "suffixes": [list(s) for s in request.suffixes],
+                 "slots": [[list(group) for group in slots] for slots in request.slots]}
+                for r, request in enumerate(requests)]
+
+    def _score_many(self, items):
+        context = getattr(self.scorer, "ctx", None)
+        before = {key: getattr(context, key, 0) for key in ("submissions", "submitted_tokens")}
+        scores = [[None for _ in qs] for _, qs in items]
+        requests, positions, tokens = self._requests(items)
+        for request, at in zip(requests, positions):
+            self._advise(items[at[0][0]][1][at[0][1]].guidance)
         limits = [[_limit(req, k, self.max_input_tokens) for k in range(len(req.suffixes))] for req in requests]
         for r, row in enumerate(limits):
             for k, score in enumerate(row):
@@ -303,11 +347,15 @@ class LlamaJudge:
             return {**checks, "D2 batching": {"ok": False, "error": initial.error}}
         alone = initial.probs
         self.score(CONFORMANCE_PROBES[0], [long_])
-        after = self.score(CONFORMANCE_PROBES[1], [short])[0].probs
-        batched = self.score(CONFORMANCE_PROBES[1], [long_, short])[1].probs
-        d_after, d_batch = float(np.abs(alone - after).max()), float(np.abs(alone - batched).max())
-        checks["D2 batching"] = {"ok": d_after < 1e-3 and d_batch < 0.15, "after_diff": d_after,
-                                 "batched_diff": d_batch}
+        after = self.score(CONFORMANCE_PROBES[1], [short])[0]
+        batched = self.score(CONFORMANCE_PROBES[1], [long_, short])[1]
+        if after.error or batched.error:
+            checks['D2 batching'] = {'ok': False, 'error': after.error or batched.error}
+        else:
+            checks["D2 batching"] = {"ok": bool(np.array_equal(alone, after.probs) and np.array_equal(alone, batched.probs)
+                                                and initial.mass == after.mass == batched.mass),
+                                     "after_diff": float(np.abs(alone - after.probs).max()),
+                                     "batched_diff": float(np.abs(alone - batched.probs).max()), 'includes_mass': True}
         ids = [t for group in self.adapter.letters for t in group]
         checks["D4 answer tokens"] = {"ok": all(len(slots) == len(set(slots)) for slots in
                                                 (ids, *([t for group in pair for t in group] for pair in (self.adapter.binary, self.adapter.polar))))}

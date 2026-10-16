@@ -71,17 +71,17 @@ SPEC = {
     "facts": {"c": {"check": "is it?"},
               "p": {"pick": "which?", "options": {"x": "X", "y": "Y", "z": "Z"}},
               "r": {"rate": "how much?", "levels": ["low", "mid", "high"]}},
-    "cases": [{"when": "c", "then": 1}],
+    "rules": [{"when": "c", "then": 1}],
 }
 
 
 def compiled(when: str):
-    return compile_spec({**SPEC, "cases": [{"when": when, "then": 1}]})
+    return compile_spec({**SPEC, "rules": [{"when": when, "then": 1}]})
 
 
 def test_not_equal_is_the_negated_atom():
     plan = compiled('p == "x" or p != "x"')
-    assert plan.cases[0].expr == ("const", T)
+    assert plan.rules[0].expr == ("const", T)
     plan = compiled('p != "x"')
     assert plan.atoms == (Sem(1, (F, T, T, T)),)
 
@@ -108,7 +108,7 @@ def test_atoms_across_judgments_stay_separate():
 
 def test_three_way_negation_reads_the_false_side():
     plan = compile_spec({**SPEC, "facts": {**SPEC["facts"], "c": {"check": "is it?", "unstated": True}},
-                         "cases": [{"when": "not c", "then": 1}]})
+                         "rules": [{"when": "not c", "then": 1}]})
     assert plan.atoms == (Sem(0, (F, T, U)),)
 
 
@@ -121,15 +121,42 @@ def test_compile_errors_are_config_errors_with_hints(when, needle):
         compiled(when)
 
 
-def test_cases_shorthand_and_then_defaults_to_id():
-    plan = compile_spec({**SPEC, "cases": {"yes": "c", "big": 'r == "high"'}, "otherwise": "no"})
-    assert [(c.id, c.then, c.when) for c in plan.cases] == [("yes", "yes", "c"), ("big", "big", 'r == "high"')]
-    plan = compile_spec({**SPEC, "cases": [{"id": "x", "when": "c"}, {"when": "not c", "then": "y"}]})
-    assert [(c.id, c.then) for c in plan.cases] == [("x", "x"), ("y", "y")]
+def test_rules_shorthand_and_then_defaults_to_id():
+    plan = compile_spec({**SPEC, "rules": {"yes": "c", "big": 'r == "high"'}, "otherwise": "no"})
+    assert [(c.id, c.then, c.when) for c in plan.rules] == [("yes", "yes", "c"), ("big", "big", 'r == "high"')]
+    plan = compile_spec({**SPEC, "rules": [{"id": "x", "when": "c"}, {"when": "not c", "then": "y"}]})
+    assert [(c.id, c.then) for c in plan.rules] == [("x", "x"), ("y", "y")]
 
 
 def test_meaning_rev_tracks_meaning_only():
     a = compile_spec(SPEC).facts[0].meaning_rev
-    b = compile_spec({**SPEC, "cases": [{"when": "not c", "then": 2}]}).facts[0].meaning_rev
+    b = compile_spec({**SPEC, "rules": [{"when": "not c", "then": 2}]}).facts[0].meaning_rev
     c = compile_spec({**SPEC, "facts": {**SPEC["facts"], "c": {"check": "is it really?"}}}).facts[0].meaning_rev
     assert a == b != c
+
+
+def test_one_mention_matcher_per_catalog_matches_an_independent_per_alias_reference():
+    import re
+    import unicodedata
+    from semantic_switch import kernel
+
+    def reference(text, identities):
+        normalized = unicodedata.normalize("NFC", text)
+        def hit(alias):
+            body = re.escape(unicodedata.normalize("NFC", alias))
+            return re.search(r"(?<![\w-])(?<!\w\.)" + body + r"(?![\w-])(?!\.\w)", normalized, re.IGNORECASE) is not None
+        return [index for index, aliases in enumerate(identities) if any(hit(alias) for alias in aliases)]
+
+    identities = [("card",), ("credit card", "cc"), ("credit",), ("card fee",), ("e.g",), ("re-fund",), ("café",), ("São Paulo",),
+                  ("日本",), ("a+b",), ("ZT411",), ("zt411 printer",), ("fee",)]
+    texts = ["My CREDIT CARD fee was charged", "cards and credit-card", "café in São Paulo", "pay with cc.", "e.g. a+b works",
+             "re-fund vs refund", "日本 語", "zt411 printer jammed; ZT411.", "a credit card fee", "x.card", "card-holder", ""]
+    kernel.mentions.cache_clear()
+    for text in texts:
+        assert kernel.matched_mentions(text, identities) == reference(text, identities), text
+        memo = {}
+        assert kernel.matched_mentions(text, identities[:5], memo) == reference(text, identities[:5])
+        assert kernel.matched_mentions(text, identities, memo) == reference(text, identities)
+    assert kernel.mentions.cache_info().currsize <= 3
+    assert kernel.exact_state(Exact("m", "mentions", ("credit card", "fee")), {"m": "a credit card"}) == T
+    assert kernel.exact_state(Exact("m", "mentions", ("fees",)), {"m": "a fee"}) == F

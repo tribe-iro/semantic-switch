@@ -10,7 +10,8 @@ import pytest
 
 from semantic_switch import ConfigError, Runtime, files
 from bench import select_quality as sq
-from .conftest import FakeScorer
+from bench.outcomes import Receipts
+from semantic_testkit.scoring import FakeScorer
 
 SAMPLE = json.loads((Path(__file__).parent / "fixtures" / "s1mb-sample.json").read_text())["cases"]
 CIVIL = next(row for row in SAMPLE if row["benchmark"] == "civil-comments-noul-test-v1")
@@ -60,8 +61,8 @@ def test_select_members_present_the_same_evidence_and_definitions_as_named_check
     row = ROWS[2]
     members = sq.labels(row["benchmark"], row["case"])
     fake = FakeScorer(oracle([row]))
-    with Runtime({"judge": fake}) as rt:
-        found = sq.predict(rt, None, row["case"], sq.TASKS[row["benchmark"]], members)
+    with Runtime(fake) as rt:
+        found = sq.predict(rt, Receipts(), row["case"], sq.TASKS[row["benchmark"]], members)
     selected, checked = fake.requests[:len(members)], fake.requests[len(members):]
     assert len(selected) == len(checked) == len(members) == 7
     for key, label in members.items():
@@ -70,7 +71,7 @@ def test_select_members_present_the_same_evidence_and_definitions_as_named_check
         assert member == check and row["case"]["state"]["text"] in member
         s, c = found["select"]["result"]["members"][key], found["checks"]["result"][key]
         assert {k: s[k] for k in ("status", "value", "prediction", "p_true", "mass")} == {k: c[k] for k in ("status", "value", "prediction", "p_true", "mass")}
-    assert found["select"]["transport"] is None and found["select"]["result"]["complete"]
+    assert found["select"]["requests"] == [] and found["select"]["result"]["complete"]
     with pytest.raises(ValueError, match="not an unprompted true/false criterion"):
         sq.labels("x", {"case_id": "1", "questions": [{**row["case"]["questions"][0], "system_prompt": "Be strict."}]})
 
@@ -83,15 +84,15 @@ class Interrupting(FakeScorer):
 
 
 def test_runner_scores_memberships_resumes_and_refuses_a_changed_configuration(tmp_path, monkeypatch):
-    monkeypatch.setattr(sq, "CACHE", tmp_path)
-    monkeypatch.setattr(sq, "install", lambda: {"evaluator": "pinned"})
-    monkeypatch.setattr(sq, "evaluator", lambda command, limit, path: files.publish(path, "".join(json.dumps(row) + "\n" for row in ROWS)))
+    rows_path = tmp_path / "rows.jsonl"
+    files.publish(rows_path, "".join(json.dumps(row) + "\n" for row in ROWS))
+    monkeypatch.setattr(sq, "cases", lambda root, limit: ({"evaluator": "pinned"}, rows_path))
     output = tmp_path / "select.json"
 
     def run(judge, **changed):
-        monkeypatch.setattr(sq, "judge_spec", lambda spec, **settings: (judge, None))
+        monkeypatch.setattr(sq, "judge_spec", lambda spec, **settings: judge)
         return sq.run(SimpleNamespace(**{"judge": "fake", "provider": None, "key_file": None, "device": "gpu", "max_input_tokens": 4096,
-                                         "output": str(output), "fresh": False, **changed}))
+                                         "output": str(output), "work": None, "fresh": False, **changed}))
     with pytest.raises(KeyboardInterrupt):
         run(Interrupting(oracle(ROWS, failing=("threat",))))
     done = len(files.read_jsonl(f"{output}.journal.jsonl")) - 1

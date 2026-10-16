@@ -18,17 +18,17 @@ REPORTS = [{"report": "it runs hot, floor is dry"}, {"report": "rattles, maybe h
 
 def test_selected_card_fact_resolves_like_normal_execution(tmp_path):
     rt = fake_rt(claim_oracle)
-    caseless = rt.load(catalogue(tmp_path, [HOT, RATTLE]))
-    cased = rt.load(catalogue(tmp_path, [HOT, RATTLE], [{"id": "wet", "when": "leak", "then": "mop"}]))
-    assert "procs" not in cased(REPORTS[0]).facts
-    for data, row in zip(REPORTS, cased.score_facts(REPORTS, facts=["procs"])):
-        expected = caseless(data).facts["procs"]
+    ruleless = rt.load(catalogue(tmp_path, [HOT, RATTLE]))
+    ruled = rt.load(catalogue(tmp_path, [HOT, RATTLE], [{"id": "wet", "when": "leak", "then": "mop"}]))
+    assert "procs" not in ruled(REPORTS[0]).facts
+    for data, row in zip(REPORTS, ruled.score_facts(REPORTS, facts=["procs"])):
+        expected = ruleless(data).facts["procs"]
         assert (row["procs"].value, row["procs"].settled, dict(row["procs"].states)) == \
             (expected.value, expected.settled, dict(expected.states))
-    assert cased.score_facts(REPORTS[:1], facts=["procs"])[0]["procs"].value == ("hot",)
+    assert ruled.score_facts(REPORTS[:1], facts=["procs"])[0]["procs"].value == ("hot",)
 
 
-def test_selected_fact_absent_from_cases_is_judged(tmp_path):
+def test_selected_fact_absent_from_rules_is_judged(tmp_path):
     rt = fake_rt(claim_oracle)
     sw = rt.load(catalogue(tmp_path, [HOT], [{"id": "warm", "when": 'procs has "hot"', "then": "cool"}]))
     assert "leak" not in sw({"report": "it runs hot, oil below"}).facts
@@ -39,26 +39,28 @@ def test_selected_fact_absent_from_cases_is_judged(tmp_path):
 def test_export_reference_round_trips_through_reader(tmp_path):
     path = definition(tmp_path)
     dataset(path, 40)
-    with Runtime({"judge": ExecutionScorer()}) as rt:
+    with Runtime(ExecutionScorer()) as rt:
         exported = tools.export(rt, path)
     reference = Path(exported["path"])
     assert reference.is_file() and reference.name.endswith(".manifest.json")
     manifest, rows = read_export(reference)
-    assert len(rows) == exported["rows"] == len(manifest["rows"]) and manifest['export_id'] == export_identity(manifest)
+    assert len(rows) == exported["rows"] == manifest["counts"]["observations"]
+    assert manifest['export_id'] == export_identity(manifest, [row["digest"] for row in rows], manifest["situations"])
 
 
 @pytest.mark.parametrize("trim", ["payload", "manifest"])
 def test_export_rejects_row_count_mismatch(tmp_path, trim):
     path = definition(tmp_path)
     dataset(path, 40)
-    with Runtime({"judge": ExecutionScorer()}) as rt:
+    with Runtime(ExecutionScorer()) as rt:
         reference = Path(tools.export(rt, path)["path"])
-    manifest, rows = read_export(reference)
-    name = reference.name.removesuffix(".manifest.json")
+    manifest = files.read_published(reference)
+    name = next(name for name in manifest["payloads"] if name.endswith(".observations.jsonl"))
     with files.open_published(reference) as (_, payloads):
-        lines = payloads[name].readlines()
-    files.publish(reference, {**{k: v for k, v in manifest.items() if k != "payloads"}, "rows": manifest["rows"][:-1] if trim == "manifest" else manifest["rows"]},
-                  {name: lines[:-1] if trim == "payload" else lines})
+        lines = {key: stream.readlines() for key, stream in payloads.items()}
+    counts = {**manifest["counts"], "observations": manifest["counts"]["observations"] - 1} if trim == "manifest" else manifest["counts"]
+    files.publish(reference, {**{k: v for k, v in manifest.items() if k != "payloads"}, "counts": counts},
+                  {key: value[:-1] if trim == "payload" and key == name else value for key, value in lines.items()})
     with pytest.raises(ConfigError, match="invalid export"):
         read_export(reference)
 
@@ -66,10 +68,10 @@ def test_export_rejects_row_count_mismatch(tmp_path, trim):
 def test_candidate_id_binds_execution(tmp_path):
     path = definition(tmp_path)
     dataset(path, 40)
-    with Runtime({"judge": ExecutionScorer()}) as rt:
+    with Runtime(ExecutionScorer()) as rt:
         data, snap, _ = build_lock(rt, path)
         assert snapshot_digest(snap, rt) == snap.candidate_id == data["candidate_id"] == candidate_digest(data)
     changed = {**data, "execution": {"judge": {**data["execution"]["judge"], "n_ubatch": 512}}}
     assert candidate_digest(changed) != data["candidate_id"]
-    with Runtime({"judge": ExecutionScorer(n_ubatch=512)}) as other:
+    with Runtime(ExecutionScorer(n_ubatch=512)) as other:
         assert snapshot_digest(snap, other) == candidate_digest(changed)

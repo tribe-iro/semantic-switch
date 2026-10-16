@@ -7,15 +7,17 @@ import numpy as np
 import pytest
 
 import semantic_switch as ss
-from semantic_switch import ConfigError, Label, Pick, Rate, Runtime, Select, files, tools
-from semantic_switch.artifacts import load_receipt, read_export
+from semantic_switch import Actor, ConfigError, Label, Pick, Rate, Runtime, Select, files, tools
+from semantic_switch.artifacts import RECEIPT_SCHEMA, load_receipt, read_export
 from semantic_switch.heads import LexicalHead
 from semantic_switch.judgment import accept
 from semantic_switch.tools.data import Labels
-from semantic_switch.tools.evaluate import confusion, distances
+from semantic_switch.metrics import confusion
+from semantic_switch.tools.evaluate import ordered_counts, pick_counts
+from semantic_switch.training import Engine
 
-from .conftest import FakeScorer
-from .conftest import envelopes
+from semantic_testkit.scoring import FakeScorer
+from semantic_testkit.labels import envelopes
 
 LABELS = {"refund": "Money back for a charge", "delivery": {"description": "Shipping problems", "excludes": ["damaged items"]},
           "billing": "Billing"}
@@ -42,7 +44,7 @@ def oracle(state, question, width, scale=.97):
 
 def judge(fn=oracle):
     fake = FakeScorer(fn)
-    return fake, Runtime({"judge": fake})
+    return fake, Runtime(fake)
 
 
 def questions(fake):
@@ -104,10 +106,10 @@ def test_definitions_are_immutable_validated_and_loaded_from_yaml(tmp_path):
     assert loaded["delivery"] == Label("Shipping problems", ("damaged items",)) and Pick("Which?", loaded).options == loaded
     with pytest.raises(ConfigError, match="exactly one candidate source"):
         saved(tmp_path, {"issues": {"select": "Which?", "labels": LABELS, "cards": [{"id": "a", "applies_when": ["x"]}]}})
-        Runtime({"judge": FakeScorer()}).load(tmp_path / "issues.yaml")
+        Runtime(FakeScorer()).load(tmp_path / "issues.yaml")
     for fact in ({"select": "Which?", "labels": LABELS, "exclusive": True}, {"select": "Which?", "cards": [{"id": "a", "applies_when": ["x"]}], "unstated": True}):
         with pytest.raises(ConfigError, match="does not apply"):
-            Runtime({"judge": FakeScorer()}).load(saved(tmp_path, {"issues": fact}))
+            Runtime(FakeScorer()).load(saved(tmp_path, {"issues": fact}))
 
 
 def test_saved_labels_file_and_requires(tmp_path):
@@ -133,7 +135,7 @@ def test_mixed_ask_preserves_order_rounds_and_partial_failure():
     assert failed.status == "failed" and failed.value == ("refund",) and failed.members["delivery"].status == "failed"
     assert failed.members["billing"].status == "ok" and rows[0]["urgency"].status == "uncertain"
     assert rows[1]["issues"].value == ("refund", "delivery") and rows[1]["issues"].status == "ok"
-    assert calls == [[5], [5]] and rows[0]["route"].focus == rows[1]["route"].focus == "mentions"
+    assert calls == [[5, 5]] and rows[0]["route"].focus == rows[1]["route"].focus == "mentions"
     assert len(fake.requests) == 10 and rows[0]["route"].prediction.key == "refund"
 
 
@@ -199,20 +201,20 @@ def test_selection_outcomes_round_trip(tmp_path, text, status, value, complete, 
 
 def test_budget_incomplete_and_events_record_members():
     events = []
-    with Runtime({"judge": FakeScorer(oracle)}, on_decision=events.append) as rt:
+    with Runtime(FakeScorer(oracle), on_decision=events.append) as rt:
         result = rt.ask("refund", {"issues": Select("Which issues?", LABELS, max_claims=1), "legal": ss.Check("Legal action.")})
     assert result["issues"].value == ("refund",) and not result["issues"].complete and result["issues"].status == "uncertain"
     assert result["issues"].unresolved == {"delivery": "not examined (over max_claims)", "billing": "not examined (over max_claims)"}
     record = events[0].as_dict()
-    assert events[0].schema == 5 and record["facts"]["issues"]["score"] is None
+    assert events[0].schema == 9 and record["facts"]["issues"]["score"] is None
     assert set(record["facts"]["issues"]["members"]) == {"refund"} and record["facts"]["issues"]["members"]["refund"]["score"] > .9
 
 
 def lock_dataset(path, n=120):
-    files.append(path.with_suffix(".test.jsonl"), envelopes([
+    files.append(path.with_suffix(".test.jsonl"), files.jsonl(envelopes([
         {"input": {"message": f'{"refund" if i % 2 else "hello"} item{i}'},
          "facts": {"issues": {"refund": bool(i % 2)} | ({"delivery": False} if i % 3 == 0 else {})}, "group": f"family{i}"}
-        for i in range(n)]))
+        for i in range(n)])))
 
 
 def test_member_fitting_binds_back_to_deployed_acceptance(tmp_path):
@@ -245,8 +247,8 @@ def test_corrections_and_paths_avoid_separator_collisions(tmp_path):
     path = saved(tmp_path, {"a": {"select": "Which?", "labels": {"b.c": "First"}}, "a.b": {"select": "Which?", "labels": {"c": "Second"}}})
     _, rt = judge()
     sw = rt.load(path)
-    receipt = sw.correct({"message": "x"}, fact="a", value={"b.c": True})
-    sw.correct({"message": "x"}, fact="a.b", value={"c": False})
+    receipt = sw.correct({"message": "x"}, fact="a", value={"b.c": True}, actor=Actor('human'))
+    sw.correct({"message": "x"}, fact="a.b", value={"c": False}, actor=Actor('human'))
     records = files.read_jsonl(path.with_suffix(".examples.jsonl"))
     assert receipt["facts"] == [["a", "b.c"]] and [(r["fact"], r["member"], r["value"]) for r in records] == [("a", "b.c", True), ("a.b", "c", False)]
     assert sw({"message": "x"}).facts["a"].value == ("b.c",) and sw({"message": "x"}).facts["a.b"].value == ()
@@ -258,7 +260,8 @@ def test_corrections_and_paths_avoid_separator_collisions(tmp_path):
 def test_member_export_matches_runtime_presentation(tmp_path):
     path = saved(tmp_path, {"issues": {"select": "Which issues?", "labels": {"refund": "Money back", "delivery": "Shipping"}}})
     lock_dataset(path, 20)
-    fake, rt = judge()
+    fake = FakeScorer(oracle)
+    rt = Engine(fake)
     exported = tools.export(rt, path, split="all", native=True)
     _, rows = read_export(exported["path"], fitting=False, native=True)
     row = next(r for r in rows if r.get("member") == "refund")
@@ -266,21 +269,23 @@ def test_member_export_matches_runtime_presentation(tmp_path):
     fake.requests.clear()
     rt.load(path)(row["bound_input"])
     asked = next(q for q in questions(fake) if member(q) == "refund")
-    assert rt.detokenize(row["native"]["presentations"][0]["question"]).startswith(asked)
+    assert rt.detokenize(row["presentations"][0].question).startswith(asked)
 
 
 def test_pick_confusion_and_rate_distance():
     class Fact:
         keys = ("a", "b", "none")
-    table = confusion(Fact, [(0, 0), (None, 0), (2, 1), (1, 1)])
+    counted = confusion({"gold": y, "predicted": o} for o, y in [(0, 0), (None, 0), (2, 1), (1, 1)])
+    assert counted["abstained"] == [{"gold": 0, "count": 1}] and counted["predicted"] == 3 and counted["correct"] == 2
+    table = pick_counts(Fact, counted)
     assert table["confusion"] == {"a": {"a": 1, "abstain": 1}, "b": {"none": 1, "b": 1}, "none": {}}
     assert table["per_label"]["b"] == {"gold": 2, "accepted": 1, "correct": 1}
-    assert distances([(0, 2), (1, 1), (None, 0)]) == {"index_distance": {"0": 1, "2": 1}, "mean_index_distance": 1.0}
+    assert ordered_counts([(0, 2), (1, 1), (None, 0)]) == {"index_distance": {"0": 1, "2": 1}, "mean_index_distance": 1.0}
 
 
 def test_obsolete_receipt_and_head_artifacts_are_rejected(tmp_path):
     files.publish(tmp_path / "receipt.json", {"schema": 2, "kind": "specialization-receipt", "rows": []})
-    with pytest.raises(ConfigError, match="current schema 3"):
+    with pytest.raises(ConfigError, match=f"current schema {RECEIPT_SCHEMA}"):
         load_receipt(tmp_path / "receipt.json")
     head = LexicalHead(("true", "false"), np.array([1], dtype=np.int32), np.zeros((1, 2), dtype=np.float32), np.zeros(2, dtype=np.float32)).to_json()
     with pytest.raises(ConfigError, match="feature identity"):

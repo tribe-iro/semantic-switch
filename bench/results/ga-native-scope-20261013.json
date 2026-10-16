@@ -1,0 +1,854 @@
+{
+ "utc": "2026-10-13T20:34:43.047051+00:00",
+ "controls": {
+  "path": "bench/results/ga-native-controls-20261013.json",
+  "sha256": "e54116603c7c75d9fcb8d743e5065cdca33aeb2f9eea4e89d17b15048ee91aaf",
+  "completed_utc": "2026-10-13T20:15:39.604094+00:00",
+  "command": [
+   ".venv/bin/python",
+   "-m",
+   "bench.adapter_profile",
+   "--base",
+   "/home/tribeiro/.cache/semantic-switch/trainer/models/google--gemma-4-E2B-it/3e22461f65e89153144f8adb70e3b8c2cc9845a7/llama.cpp-a4cb4c61fd9d9c2066c7c1747821d3d65b8943bd/Q8_0.gguf",
+   "--work",
+   ".artifacts/ga-completion/native-probes",
+   "--output",
+   "bench/results/ga-native-controls-20261013.json",
+   "--device",
+   "gpu",
+   "--repeats",
+   "4",
+   "--max-setter-ms",
+   "10",
+   "--max-first-scoring-ms",
+   "1000",
+   "--max-public-call-ms",
+   "1500",
+   "--max-adapter-mib",
+   "128"
+  ]
+ },
+ "minimized": {
+  "path": "bench/results/ga-native-minimized-second-20261013.json",
+  "sha256": "f1a848bb9ad498e673a84a3e900ae08f5b3aa39e1153f36c3d446a9b355fd368",
+  "input": "subject: Router dead\nbody: My router stopped working yesterday and nothing blinks. I need it today.",
+  "question": "How urgent is the customer's situation?",
+  "rows": {
+   "base": {
+    "binding": "base",
+    "question": 2,
+    "prefix_tokens": 40,
+    "input_tokens": 31,
+    "suffix_tokens": 55,
+    "fresh": [
+     {
+      "native": {
+       "columns": 3,
+       "finite": [
+        true,
+        true,
+        true
+       ],
+       "logp": [
+        -15.641508102416992,
+        -0.14470985531806946,
+        -2.0045082569122314
+       ],
+       "log_mass": -8.051288773458509e-07,
+       "error": null
+      },
+      "observation": {
+       "revision": 1,
+       "kind": "rate",
+       "options": [
+        "can wait",
+        "today",
+        "immediately"
+       ],
+       "probabilities": [
+        1.610569021555763e-07,
+        0.8652733090240374,
+        0.1347265299190604
+       ],
+       "stage": "final",
+       "normalization": "option-softmax@1",
+       "mass": 0.9999991655349731,
+       "status": "uncertain",
+       "source": "judge",
+       "accepted": null,
+       "score": null,
+       "stages": [],
+       "presentations": [],
+       "models": [],
+       "execution": null
+      },
+      "public": {
+       "status": "uncertain",
+       "reason": "uncertain",
+       "answer": "today",
+       "accepted": false
+      }
+     }
+    ],
+    "reference": [
+     {
+      "native": {
+       "columns": 3,
+       "finite": [
+        true,
+        true,
+        true
+       ],
+       "logp": [
+        -15.641508102416992,
+        -0.14470985531806946,
+        -2.0045082569122314
+       ],
+       "log_mass": -8.051288773458509e-07,
+       "error": null
+      },
+      "observation": {
+       "revision": 1,
+       "kind": "rate",
+       "options": [
+        "can wait",
+        "today",
+        "immediately"
+       ],
+       "probabilities": [
+        1.610569021555763e-07,
+        0.8652733090240374,
+        0.1347265299190604
+       ],
+       "stage": "final",
+       "normalization": "option-softmax@1",
+       "mass": 0.9999991655349731,
+       "status": "uncertain",
+       "source": "judge",
+       "accepted": null,
+       "score": null,
+       "stages": [],
+       "presentations": [],
+       "models": [],
+       "execution": null
+      },
+      "public": {
+       "status": "uncertain",
+       "reason": "uncertain",
+       "answer": "today",
+       "accepted": false
+      }
+     }
+    ],
+    "namespace_first": [
+     {
+      "native": {
+       "columns": 3,
+       "finite": [
+        true,
+        true,
+        true
+       ],
+       "logp": [
+        -15.384027481079102,
+        -0.17883430421352386,
+        -1.8093818426132202
+       ],
+       "log_mass": -9.621795697967173e-07,
+       "error": null
+      },
+      "observation": {
+       "revision": 1,
+       "kind": "rate",
+       "options": [
+        "can wait",
+        "today",
+        "immediately"
+       ],
+       "probabilities": [
+        2.0835396024080866e-07,
+        0.8362444580072746,
+        0.16375533363876515
+       ],
+       "stage": "final",
+       "normalization": "option-softmax@1",
+       "mass": 0.9999990463256836,
+       "status": "uncertain",
+       "source": "judge",
+       "accepted": null,
+       "score": null,
+       "stages": [],
+       "presentations": [],
+       "models": [],
+       "execution": null
+      },
+      "public": {
+       "status": "uncertain",
+       "reason": "uncertain",
+       "answer": "today",
+       "accepted": false
+      }
+     }
+    ],
+    "namespace_shifted": [
+     {
+      "native": {
+       "columns": 3,
+       "finite": [
+        true,
+        true,
+        true
+       ],
+       "logp": [
+        -15.648675918579102,
+        -0.13515029847621918,
+        -2.068183183670044
+       ],
+       "log_mass": -8.303333061121521e-07,
+       "error": null
+      },
+      "observation": {
+       "revision": 1,
+       "kind": "rate",
+       "options": [
+        "can wait",
+        "today",
+        "immediately"
+       ],
+       "probabilities": [
+        1.5990660220847277e-07,
+        0.8735845948501761,
+        0.12641524524322165
+       ],
+       "stage": "final",
+       "normalization": "option-softmax@1",
+       "mass": 0.9999991655349731,
+       "status": "uncertain",
+       "source": "judge",
+       "accepted": null,
+       "score": null,
+       "stages": [],
+       "presentations": [],
+       "models": [],
+       "execution": null
+      },
+      "public": {
+       "status": "uncertain",
+       "reason": "uncertain",
+       "answer": "today",
+       "accepted": false
+      }
+     }
+    ],
+    "reference_difference": {
+     "rows": 1,
+     "max_abs_prob": 0.0,
+     "max_abs_mass": 0.0,
+     "max_abs_logp": 0.0,
+     "max_abs_log_mass": 0.0,
+     "shape_changes": 0,
+     "answer_changes": 0,
+     "status_changes": 0,
+     "acceptance_changes": 0,
+     "errors": []
+    },
+    "repeat_difference": {
+     "rows": 1,
+     "max_abs_prob": 0.0,
+     "max_abs_mass": 0.0,
+     "max_abs_logp": 0.0,
+     "max_abs_log_mass": 0.0,
+     "shape_changes": 0,
+     "answer_changes": 0,
+     "status_changes": 0,
+     "acceptance_changes": 0,
+     "errors": []
+    },
+    "layout_difference": {
+     "rows": 1,
+     "max_abs_prob": 0.037340136842901495,
+     "max_abs_mass": 1.1920928955078125e-07,
+     "max_abs_logp": 0.2646484375,
+     "max_abs_log_mass": 1.318462636845652e-07,
+     "shape_changes": 0,
+     "answer_changes": 0,
+     "status_changes": 0,
+     "acceptance_changes": 0,
+     "errors": []
+    }
+   },
+   "A": {
+    "binding": "A",
+    "question": 2,
+    "prefix_tokens": 40,
+    "input_tokens": 31,
+    "suffix_tokens": 55,
+    "fresh": [
+     {
+      "native": {
+       "columns": 3,
+       "finite": [
+        true,
+        true,
+        true
+       ],
+       "logp": [
+        -15.285554885864258,
+        -0.4093569219112396,
+        -1.0908745527267456
+       ],
+       "log_mass": -7.70990595810872e-07,
+       "error": null
+      },
+      "observation": {
+       "revision": 1,
+       "kind": "rate",
+       "options": [
+        "can wait",
+        "today",
+        "immediately"
+       ],
+       "probabilities": [
+        2.2991529802672535e-07,
+        0.6640771799824928,
+        0.3359225901022092
+       ],
+       "stage": "final",
+       "normalization": "option-softmax@1",
+       "mass": 0.9999992251396179,
+       "status": "uncertain",
+       "source": "judge",
+       "accepted": null,
+       "score": null,
+       "stages": [],
+       "presentations": [],
+       "models": [],
+       "execution": null
+      },
+      "public": {
+       "status": "uncertain",
+       "reason": "uncertain",
+       "answer": "today",
+       "accepted": false
+      }
+     }
+    ],
+    "reference": [
+     {
+      "native": {
+       "columns": 3,
+       "finite": [
+        true,
+        true,
+        true
+       ],
+       "logp": [
+        -15.33924674987793,
+        -0.43577641248703003,
+        -1.0406147241592407
+       ],
+       "log_mass": -7.683412945880264e-07,
+       "error": null
+      },
+      "observation": {
+       "revision": 1,
+       "kind": "rate",
+       "options": [
+        "can wait",
+        "today",
+        "immediately"
+       ],
+       "probabilities": [
+        2.1789626040559913e-07,
+        0.646762313065667,
+        0.3532374690380726
+       ],
+       "stage": "final",
+       "normalization": "option-softmax@1",
+       "mass": 0.9999992251396179,
+       "status": "uncertain",
+       "source": "judge",
+       "accepted": null,
+       "score": null,
+       "stages": [],
+       "presentations": [],
+       "models": [],
+       "execution": null
+      },
+      "public": {
+       "status": "uncertain",
+       "reason": "uncertain",
+       "answer": "today",
+       "accepted": false
+      }
+     }
+    ],
+    "namespace_first": [
+     {
+      "native": {
+       "columns": 3,
+       "finite": [
+        true,
+        true,
+        true
+       ],
+       "logp": [
+        -15.473862648010254,
+        -0.35648441314697266,
+        -1.2044181823730469
+       ],
+       "log_mass": -6.844058475508064e-07,
+       "error": null
+      },
+      "observation": {
+       "revision": 1,
+       "kind": "rate",
+       "options": [
+        "can wait",
+        "today",
+        "immediately"
+       ],
+       "probabilities": [
+        1.9045257203748534e-07,
+        0.700133390527631,
+        0.2998664190197969
+       ],
+       "stage": "final",
+       "normalization": "option-softmax@1",
+       "mass": 0.9999992847442627,
+       "status": "uncertain",
+       "source": "judge",
+       "accepted": null,
+       "score": null,
+       "stages": [],
+       "presentations": [],
+       "models": [],
+       "execution": null
+      },
+      "public": {
+       "status": "uncertain",
+       "reason": "uncertain",
+       "answer": "today",
+       "accepted": false
+      }
+     }
+    ],
+    "namespace_shifted": [
+     {
+      "native": {
+       "columns": 3,
+       "finite": [
+        true,
+        true,
+        true
+       ],
+       "logp": [
+        -15.408161163330078,
+        -0.3869752585887909,
+        -1.1366510391235352
+       ],
+       "log_mass": -7.380049851235526e-07,
+       "error": null
+      },
+      "observation": {
+       "revision": 1,
+       "kind": "rate",
+       "options": [
+        "can wait",
+        "today",
+        "immediately"
+       ],
+       "probabilities": [
+        2.0338580543845268e-07,
+        0.6791079111524345,
+        0.3208918854617601
+       ],
+       "stage": "final",
+       "normalization": "option-softmax@1",
+       "mass": 0.9999992251396179,
+       "status": "uncertain",
+       "source": "judge",
+       "accepted": null,
+       "score": null,
+       "stages": [],
+       "presentations": [],
+       "models": [],
+       "execution": null
+      },
+      "public": {
+       "status": "uncertain",
+       "reason": "uncertain",
+       "answer": "today",
+       "accepted": false
+      }
+     }
+    ],
+    "reference_difference": {
+     "rows": 1,
+     "max_abs_prob": 0.01731487893586342,
+     "max_abs_mass": 0.0,
+     "max_abs_logp": 0.053691864013671875,
+     "max_abs_log_mass": 2.649301222845679e-09,
+     "shape_changes": 0,
+     "answer_changes": 0,
+     "status_changes": 0,
+     "acceptance_changes": 0,
+     "errors": []
+    },
+    "repeat_difference": {
+     "rows": 1,
+     "max_abs_prob": 0.0,
+     "max_abs_mass": 0.0,
+     "max_abs_logp": 0.0,
+     "max_abs_log_mass": 0.0,
+     "shape_changes": 0,
+     "answer_changes": 0,
+     "status_changes": 0,
+     "acceptance_changes": 0,
+     "errors": []
+    },
+    "layout_difference": {
+     "rows": 1,
+     "max_abs_prob": 0.0210254793751965,
+     "max_abs_mass": 5.960464477539063e-08,
+     "max_abs_logp": 0.06776714324951172,
+     "max_abs_log_mass": 5.359913757274626e-08,
+     "shape_changes": 0,
+     "answer_changes": 0,
+     "status_changes": 0,
+     "acceptance_changes": 0,
+     "errors": []
+    }
+   },
+   "B": {
+    "binding": "B",
+    "question": 2,
+    "prefix_tokens": 40,
+    "input_tokens": 31,
+    "suffix_tokens": 55,
+    "fresh": [
+     {
+      "native": {
+       "columns": 3,
+       "finite": [
+        true,
+        true,
+        true
+       ],
+       "logp": [
+        -15.20040512084961,
+        -0.08765647560358047,
+        -2.4778409004211426
+       ],
+       "log_mass": -8.247374694292375e-07,
+       "error": null
+      },
+      "observation": {
+       "revision": 1,
+       "kind": "rate",
+       "options": [
+        "can wait",
+        "today",
+        "immediately"
+       ],
+       "probabilities": [
+        2.5035019505163215e-07,
+        0.9160755186099749,
+        0.08392423103983002
+       ],
+       "stage": "final",
+       "normalization": "option-softmax@1",
+       "mass": 0.9999991655349731,
+       "status": "ok",
+       "source": "judge",
+       "accepted": "today",
+       "score": null,
+       "stages": [],
+       "presentations": [],
+       "models": [],
+       "execution": null
+      },
+      "public": {
+       "status": "ok",
+       "reason": null,
+       "answer": "today",
+       "accepted": true
+      }
+     }
+    ],
+    "reference": [
+     {
+      "native": {
+       "columns": 3,
+       "finite": [
+        true,
+        true,
+        true
+       ],
+       "logp": [
+        -15.30461597442627,
+        -0.08151687681674957,
+        -2.5474298000335693
+       ],
+       "log_mass": -7.766053613522672e-07,
+       "error": null
+      },
+      "observation": {
+       "revision": 1,
+       "kind": "rate",
+       "options": [
+        "can wait",
+        "today",
+        "immediately"
+       ],
+       "probabilities": [
+        2.2557436283624868e-07,
+        0.9217171639666848,
+        0.07828261045895235
+       ],
+       "stage": "final",
+       "normalization": "option-softmax@1",
+       "mass": 0.9999992251396179,
+       "status": "ok",
+       "source": "judge",
+       "accepted": "today",
+       "score": null,
+       "stages": [],
+       "presentations": [],
+       "models": [],
+       "execution": null
+      },
+      "public": {
+       "status": "ok",
+       "reason": null,
+       "answer": "today",
+       "accepted": true
+      }
+     }
+    ],
+    "namespace_first": [
+     {
+      "native": {
+       "columns": 3,
+       "finite": [
+        true,
+        true,
+        true
+       ],
+       "logp": [
+        -15.209672927856445,
+        -0.09602794051170349,
+        -2.3907485008239746
+       ],
+       "log_mass": -8.360750030078634e-07,
+       "error": null
+      },
+      "observation": {
+       "revision": 1,
+       "kind": "rate",
+       "options": [
+        "can wait",
+        "today",
+        "immediately"
+       ],
+       "probabilities": [
+        2.480407142194573e-07,
+        0.9084386278781306,
+        0.09156112408115519
+       ],
+       "stage": "final",
+       "normalization": "option-softmax@1",
+       "mass": 0.9999991655349731,
+       "status": "ok",
+       "source": "judge",
+       "accepted": "today",
+       "score": null,
+       "stages": [],
+       "presentations": [],
+       "models": [],
+       "execution": null
+      },
+      "public": {
+       "status": "ok",
+       "reason": null,
+       "answer": "today",
+       "accepted": true
+      }
+     }
+    ],
+    "namespace_shifted": [
+     {
+      "native": {
+       "columns": 3,
+       "finite": [
+        true,
+        true,
+        true
+       ],
+       "logp": [
+        -15.251191139221191,
+        -0.091660276055336,
+        -2.4351489543914795
+       ],
+       "log_mass": -8.705450795787328e-07,
+       "error": null
+      },
+      "observation": {
+       "revision": 1,
+       "kind": "rate",
+       "options": [
+        "can wait",
+        "today",
+        "immediately"
+       ],
+       "probabilities": [
+        2.3795336133150744e-07,
+        0.9124150624505436,
+        0.08758469959609497
+       ],
+       "stage": "final",
+       "normalization": "option-softmax@1",
+       "mass": 0.9999991059303284,
+       "status": "ok",
+       "source": "judge",
+       "accepted": "today",
+       "score": null,
+       "stages": [],
+       "presentations": [],
+       "models": [],
+       "execution": null
+      },
+      "public": {
+       "status": "ok",
+       "reason": null,
+       "answer": "today",
+       "accepted": true
+      }
+     }
+    ],
+    "reference_difference": {
+     "rows": 1,
+     "max_abs_prob": 0.005641645356709857,
+     "max_abs_mass": 5.960464477539063e-08,
+     "max_abs_logp": 0.10421085357666016,
+     "max_abs_log_mass": 4.8132108076970326e-08,
+     "shape_changes": 0,
+     "answer_changes": 0,
+     "status_changes": 0,
+     "acceptance_changes": 0,
+     "errors": []
+    },
+    "repeat_difference": {
+     "rows": 1,
+     "max_abs_prob": 0.0,
+     "max_abs_mass": 0.0,
+     "max_abs_logp": 0.0,
+     "max_abs_log_mass": 0.0,
+     "shape_changes": 0,
+     "answer_changes": 0,
+     "status_changes": 0,
+     "acceptance_changes": 0,
+     "errors": []
+    },
+    "layout_difference": {
+     "rows": 1,
+     "max_abs_prob": 0.0039764345724130346,
+     "max_abs_mass": 5.960464477539063e-08,
+     "max_abs_logp": 0.04440045356750488,
+     "max_abs_log_mass": 3.4470076570869423e-08,
+     "shape_changes": 0,
+     "answer_changes": 0,
+     "status_changes": 0,
+     "acceptance_changes": 0,
+     "errors": []
+    }
+   }
+  }
+ },
+ "scope": {
+  "build": {
+   "native": "49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1",
+   "system": "CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+   "version": "0.3.36"
+  },
+  "base": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+  "placement": {
+   "device": "gpu",
+   "execution": {
+    "device": "gpu",
+    "tensor_types": [
+     "f16",
+     "f32",
+     "q8_0"
+    ],
+    "flash_attn": "enabled",
+    "type_k": "f16",
+    "type_v": "f16",
+    "use_extra_bufts": true,
+    "repacked": [],
+    "n_ctx": 8192,
+    "n_batch": 512,
+    "n_ubatch": 512,
+    "n_seq_max": 6,
+    "n_outputs_max": 6,
+    "swa_full": true,
+    "kv_unified": true,
+    "prefix_slots": 4,
+    "scheduling": "resident-prefix-cache@2",
+    "shared": true,
+    "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}"
+   },
+   "adapter_buffers": [
+    "Vulkan0 LoRA"
+   ]
+  },
+  "workload": {
+   "inputs": 3,
+   "questions": 4,
+   "rows": 12,
+   "prefix_tokens": 40,
+   "state_tokens": 92,
+   "suffix_tokens": 570,
+   "digest": "b8c29ca0e4755e0384ea5b6442f19141dac5e4282397bc74e524f4ff016ff7df",
+   "sequence": [
+    "A",
+    "B",
+    "base",
+    "A",
+    "A",
+    "B",
+    "B",
+    "base",
+    "base",
+    "A"
+   ],
+   "repeats": 4
+  },
+  "requirements": {
+   "max_first_scoring_ms": 1000.0,
+   "max_setter_ms": 10.0,
+   "max_public_call_ms": 1500.0,
+   "max_adapter_mib": 128.0,
+   "max_prob_diff": 0.001,
+   "acceptance_threshold": 0.9
+  }
+ },
+ "unsupported": [
+  "probability equivalence within 0.001 across shared-prefix cache namespaces on this Vulkan/Gemma4/Q8_0 execution",
+  "probability equivalence within 0.001 between shared and whole-sequence paths with these deterministic runtime adapters",
+  "first complete adapter scoring call below 1000 ms for the recorded workload"
+ ],
+ "observed_supported": [
+  "identical cached request determinism",
+  "warm state reuse",
+  "same-schedule adapter switching"
+ ],
+ "attribution": {
+  "layout": "one base-only request changes probability when its prefix namespace changes; an adapter switch is unnecessary",
+  "reference": "one input and one urgency question reproduce the A/B shared-versus-whole-sequence differences",
+  "boundary": "difference is reproducible across native decode/KV layouts; this isolates the execution boundary, not a specific native kernel instruction"
+ },
+ "tolerance": 0.001,
+ "repair": null,
+ "policy": "no tolerance change and no forced cache disable; shared runtime-adapter portfolios cannot claim this equivalence"
+}

@@ -7,7 +7,7 @@ import yaml
 
 from semantic_switch import ConfigError, Runtime
 
-from .conftest import FakeScorer
+from semantic_testkit.scoring import FakeScorer
 
 SPEC = {
     "name": "single",
@@ -23,7 +23,7 @@ SPEC = {
         "issues": {"select": "Which issues apply?", "labels": {"late": "Late delivery", "broken": "Broken item", "invoice": "Invoice"},
                    "max_claims": 1},
     },
-    "cases": [{"id": "urgent", "when": "urgent", "then": "escalate"}, {"id": "refund", "when": "refund", "then": "billing"}],
+    "rules": [{"id": "urgent", "when": "urgent", "then": "escalate"}, {"id": "refund", "when": "refund", "then": "billing"}],
     "otherwise": "general",
 }
 
@@ -44,15 +44,15 @@ class Flipping:
 def switch(tmp_path, oracle, spec=SPEC):
     path = tmp_path / "single.yaml"
     path.write_text(yaml.safe_dump(spec, sort_keys=False))
-    rt = Runtime({"judge": FakeScorer(oracle)})
+    rt = Runtime(FakeScorer(oracle))
     return rt, rt.load(path, draft=True), path
 
 
-def test_case_facts_and_cost_come_from_one_call_with_each_judgment_once(tmp_path):
+def test_rule_facts_and_cost_come_from_one_call_with_each_judgment_once(tmp_path):
     oracle = Flipping({"urgent": True, "money back": True, "weather": False})
     _, sw, _ = switch(tmp_path, oracle)
     result = sw({"text": "urgent refund"}, facts=["refund", "weather", "route"])
-    assert (result.status, result.case, result.answer) == ("ok", "urgent", "escalate")
+    assert (result.status, result.rule, result.answer) == ("ok", "urgent", "escalate")
     assert result.facts["refund"].value is True and result.facts["weather"].value is False and result.facts["urgent"].value is True
     assert not result.facts["route"].settled and set(result.facts["route"].unresolved) == {"billing", "triage"}
     assert set(oracle.asked.values()) == {1} and {"urgent", "money back", "weather"} <= {key for key, _ in oracle.asked}
@@ -63,14 +63,14 @@ def test_omitted_facts_keep_demand_driven_behavior(tmp_path):
     oracle = Flipping({"urgent": True})
     _, sw, _ = switch(tmp_path, oracle)
     result = sw({"text": "urgent"})
-    assert result.case == "urgent" and {key for key, _ in oracle.asked} == {"urgent"} and "weather" not in result.facts
+    assert result.rule == "urgent" and {key for key, _ in oracle.asked} == {"urgent"} and "weather" not in result.facts
 
 
-def test_irrelevant_fact_does_not_change_the_case_and_failed_extra_demand_is_explicit(tmp_path):
+def test_irrelevant_fact_does_not_change_the_rule_and_failed_extra_demand_is_explicit(tmp_path):
     oracle = Flipping({"money back": True}, failing=("weather",))
     _, sw, _ = switch(tmp_path, oracle)
     result = sw({"text": "refund"}, facts=["weather"])
-    assert (result.status, result.case) == ("ok", "refund")
+    assert (result.status, result.rule) == ("ok", "refund")
     assert result.facts["weather"].status == "failed" and not result.facts["weather"].settled and result.errors["weather"]
 
 
@@ -85,7 +85,7 @@ def test_windowed_run_and_failed_binding_represent_requested_facts(tmp_path):
     oracle = Flipping({"money back": True})
     _, sw, _ = switch(tmp_path, oracle)
     first, second = sw.run([{"text": "a"}, {"text": "b"}], facts=["weather"])
-    assert first.case == second.case == "refund" and first.facts["weather"].value is False and second.facts["weather"].value is False
+    assert first.rule == second.rule == "refund" and first.facts["weather"].value is False and second.facts["weather"].value is False
     failed = sw({}, facts=["weather"])
     assert failed.status != "ok" and failed.facts["weather"].status in ("needs_input", "failed") and not failed.facts["weather"].settled
 
@@ -137,25 +137,27 @@ def frozen_printer(tmp_path):
     spec["facts"]["actions"]["guidance"] = ["manual"]
     task = deployment / "printer.yaml"
     task.write_text(yaml.safe_dump(spec, sort_keys=False))
-    with Runtime({"judge": FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         tools.lock(rt, task)
     (deployment / "specialist.gguf").write_bytes(b"specialist")
     listed = {name: files.sha256_file(deployment / name) for name in ("specialist.gguf", "printer.yaml", "printer.lock.json")}
     receipt = {"schema": RECEIPT_SCHEMA, "kind": "specialization-receipt", "selected": "epoch-1", "gguf": "specialist.gguf", "task": "printer.yaml",
                "lock": {"path": "printer.lock.json", "id": "fixture", "candidate_id": "c" * 64}, "files": listed, "native": {"device": "cpu"},
-               "execution": {"device": "cpu"}, "provenance": {"kind": "base", "rows": []}}
+               "execution": {"device": "cpu"}, "provenance": {"kind": "base", "rows": []},
+               "scope": {"targets": ["actions"], "whole_task": True, "binding": "judge"}, "publication": "application"}
     files.publish(deployment / RECEIPT_NAME, {**receipt, "id": artifact_digest(receipt)})
     return deployment / RECEIPT_NAME, spec
 
 
 def test_receipt_example_executes_the_frozen_task_not_working_tree_files(tmp_path, monkeypatch):
     from examples import printer_snapshot
-    from semantic_switch.artifacts import load_receipt
+    from semantic_switch.artifacts import Receipt
     receipt, spec = frozen_printer(tmp_path)
     monkeypatch.setattr(printer_snapshot, "DEFINITION", tmp_path / "deleted.yaml")
-    with Runtime({"judge": FakeScorer()}) as rt:
-        rt._deployment = load_receipt(receipt)
-        printed = printer_snapshot.run(rt.load())
+    scorer = FakeScorer()
+    monkeypatch.setattr(Receipt, "model", lambda self, **settings: scorer)
+    with Runtime() as rt:
+        printed = printer_snapshot.run(rt.load(receipt))
         assert [d["reference"] for d in printed["documents"]] == ["manual"] and printed["documents"][0]["text"] == "Calibrate only after verified loading."
         assert len(printed["decisions"]) == len(printer_snapshot.EVIDENCE) and all("justified" in row for row in printed["decisions"])
         draft = tmp_path / "draft.yaml"
@@ -163,4 +165,4 @@ def test_receipt_example_executes_the_frozen_task_not_working_tree_files(tmp_pat
         assert printer_snapshot.run(rt.load(draft, draft=True))["documents"][0]["text"] == "Edited working tree."
         (receipt.parent / "printer.lock.json").unlink()
         with pytest.raises(ConfigError, match="missing or changed"):
-            rt.load()
+            rt.load(receipt)

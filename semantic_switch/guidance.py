@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import hashlib
 import json
 from pathlib import Path
@@ -21,6 +21,8 @@ class Section:
 @dataclass(frozen=True, slots=True, init=False)
 class Guidance:
     sections: tuple[Section, ...]
+    digest: str = field(compare=False, repr=False)
+    text: str = field(compare=False, repr=False)
 
     def __init__(self, text: str | None = None, *, sections=()):
         if text is not None and sections:
@@ -46,6 +48,9 @@ class Guidance:
             resolved.append(Section(identifier, content, hashlib.sha256(encoded).hexdigest(), location))
             seen.add(identifier)
         object.__setattr__(self, "sections", tuple(resolved))
+        payload = [REVISION, [(s.id, s.content_digest) for s in resolved]]
+        object.__setattr__(self, "digest", hashlib.sha256(json.dumps(payload, ensure_ascii=False).encode()).hexdigest())
+        object.__setattr__(self, "text", "\n\n".join(f"[{s.id}]\n{s.text}" for s in resolved))
 
     def __bool__(self):
         return bool(self.sections)
@@ -58,15 +63,6 @@ class Guidance:
         except (OSError, UnicodeError) as error:
             raise ConfigError(f"guidance.{id}: cannot read {path}: {error}") from None
         return cls(sections=((id, text, str(path)),))
-
-    @property
-    def digest(self):
-        payload = [REVISION, [(s.id, s.content_digest) for s in self.sections]]
-        return hashlib.sha256(json.dumps(payload, ensure_ascii=False).encode()).hexdigest()
-
-    @property
-    def text(self):
-        return "\n\n".join(f"[{s.id}]\n{s.text}" for s in self.sections)
 
     def as_dict(self):
         return {s.id: {"text": s.text} for s in self.sections}

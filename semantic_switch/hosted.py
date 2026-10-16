@@ -1,32 +1,30 @@
 from __future__ import annotations
 
-from concurrent.futures import CancelledError
-from dataclasses import dataclass, field, replace
+from concurrent.futures import CancelledError, Future
+from dataclasses import dataclass, field
 from email.utils import parsedate_to_datetime
+import inspect
 import json
 import math
-import os
 import random
 import threading
 import time
 import uuid
 import warnings
-from typing import Awaitable, Callable, Sequence
-
-import numpy as np
+from typing import TYPE_CHECKING, Awaitable, Callable, Mapping, Protocol, Sequence
 
 from .errors import ConfigError
 from .judge import OPERATION, Cancelled, Request, Scored, Scores
 from .protocols import Question
+
+if TYPE_CHECKING:
+    from .drivers.profiles import ModelProfile
 
 try:
     import anyio
 except ImportError:
     anyio = None
 
-OPENROUTER = "https://openrouter.ai/api/v1"
-STRUCTURED = frozenset({"typesafe/jev-1.13", "openai/gpt-6-luna-decisions"})
-TOP_LOGPROBS = 20
 IN_FLIGHT = 2
 ATTEMPTS = 5
 
@@ -51,6 +49,10 @@ def unique(pairs):
     return result
 
 
+def serialized(body: dict) -> bytes:
+    return json.dumps(body, ensure_ascii=False, separators=(",", ":"), allow_nan=False).encode()
+
+
 def hosted_dependencies():
     if anyio is None:
         raise ConfigError("hosted judges require semantic-switch[hosted]")
@@ -62,17 +64,17 @@ def hosted_dependencies():
 
 
 class Wire:
-    def __init__(self, httpx, key: str, connections: int, max_bytes: int):
-        self.httpx, self.headers, self.connections, self.max_bytes = httpx, {"Authorization": f"Bearer {key}"}, connections, max_bytes
+    def __init__(self, httpx, headers: dict, connections: int, max_bytes: int):
+        self.httpx, self.headers, self.connections, self.max_bytes = httpx, {**headers, "Content-Type": "application/json"}, connections, max_bytes
         self.client = None
 
-    async def __call__(self, url: str, body: dict, remaining: float) -> Reply:
+    async def __call__(self, url: str, body: bytes, remaining: float) -> Reply:
         httpx = self.httpx
         if self.client is None:
             self.client = httpx.AsyncClient(limits=httpx.Limits(max_connections=self.connections, max_keepalive_connections=self.connections))
         timeout = httpx.Timeout(remaining, connect=min(10.0, remaining))
         try:
-            async with self.client.stream("POST", url, json=body, headers=self.headers, timeout=timeout) as response:
+            async with self.client.stream("POST", url, content=body, headers=self.headers, timeout=timeout) as response:
                 chunks, size = [], 0
                 async for chunk in response.aiter_bytes():
                     size += len(chunk)
@@ -100,12 +102,31 @@ class Wire:
             await client.aclose()
 
 
-def http(key: str | None = None, connections: int = 8, max_bytes: int = 1 << 20) -> Wire:
-    httpx = hosted_dependencies()
-    key = key or os.environ.get("OPENROUTER_API_KEY")
-    if not key:
-        raise ConfigError("OpenRouter judges need an API key: set OPENROUTER_API_KEY or pass key=...")
-    return Wire(httpx, key, connections, max_bytes)
+@dataclass(frozen=True, slots=True)
+class Envelope:
+    returned: str
+    route: str | None
+    tokens: int
+    payload: dict
+
+
+class Provider(Protocol):
+    name: str
+    revision: int
+    route: str | None
+    identity: dict
+
+    def endpoint(self, codec) -> str: ...
+
+    def wire(self, connections: int, max_bytes: int) -> Wire: ...
+
+    def envelope(self, model: str, codec, body: dict) -> dict: ...
+
+    def usage(self, body: dict) -> dict | None: ...
+
+    def unwrap(self, body: dict) -> Envelope: ...
+
+    def rejected(self, reply: Reply) -> str: ...
 
 
 def retry_after(value: str | None) -> float | None:
@@ -125,167 +146,25 @@ def retryable(status: int) -> bool:
     return status in (408, 429) or status >= 500
 
 
-def instructions(q: Question) -> str:
-    from .presentation import criterion
-    return "\n".join([*([f"Guidance:\n{q.guidance.text}\n\nCriterion:"] if q.guidance else []), criterion(q), *(f"Except: {x}." for x in q.excludes)])
-
-
-ROUNDING = 0.005
-
-
-def probability(value) -> float:
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
-        raise ValueError("probability must be a number")
-    value = float(value)
-    if not math.isfinite(value) or not 0 <= value <= 1:
-        raise ValueError("probability must be finite and within [0, 1]")
-    return value
-
-
-def distribution(q: Question, probs: dict) -> np.ndarray:
-    if set(probs) != set(range(q.width)):
-        raise ValueError("probabilities must cover each option exactly once")
-    p = np.array([probability(probs[k]) for k in range(q.width)])
-    if abs(float(p.sum()) - 1) > max(1e-3, ROUNDING * q.width):
-        raise ValueError("probabilities must sum to one")
-    return p / p.sum()
-
-
-def level(value) -> int:
-    if not isinstance(value, str) or not value.isdigit() or str(int(value)) != value:
-        raise ValueError("level keys must be canonical integer indices")
-    return int(value)
-
-
-def confidence(answer):
-    value = answer.get("confidence")
-    return None if value is None else probability(value)
-
-
-class Chat:
-    name, path, joint, response_bytes = "chat-logprobs", "chat/completions", False, 1 << 18
-    routing = {"require_parameters": True}
-    identity = {"scoring": f"answer-token-lower-bound@2:top{TOP_LOGPROBS}", "reasoning": "disabled"}
-
-    @staticmethod
-    def validate(questions: Sequence[Question]):
-        return None
-
-    @staticmethod
-    def body(state: str, questions: Sequence[Question]) -> dict:
-        from .presentation import messages
-        system, user = messages(state, *questions)
-        return {"messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-                "max_tokens": 1, "temperature": 1, "logprobs": True, "top_logprobs": TOP_LOGPROBS, "reasoning": {"enabled": False}}
-
-    @staticmethod
-    def scores(response: dict, questions: Sequence[Question]) -> tuple[Scores, ...]:
-        if ((response.get("usage") or {}).get("completion_tokens_details") or {}).get("reasoning_tokens"):
-            raise ValueError("reasoning tokens were billed despite disabled reasoning")
-        return (token_scores(*questions, response),)
-
-
-class SystemOne:
-    name, path, joint, response_bytes = "systemone", "systemone", True, 1 << 22
-    routing = {}
-    identity = {}
-
-    @staticmethod
-    def validate(questions: Sequence[Question]):
-        for question in questions:
-            if question.kind not in ("check", "rate", "pick"):
-                raise ConfigError(f"unsupported System One question kind {question.kind!r}")
-            if question.kind == "rate" and not 2 <= len(question.options) <= 10:
-                raise ConfigError(f"System One scores take 2 to 10 levels, got {len(question.options)}; use a local judge or an openrouter chat model for this Rate")
-
-    @staticmethod
-    def body(state: str, questions: Sequence[Question]) -> dict:
-        out = {}
-        for k, question in enumerate(questions):
-            row = {"instructions": instructions(question)}
-            if question.kind == "check":
-                row["type"] = "noul"
-            elif question.kind == "rate":
-                row.update(type="score", criteria=list(question.options))
-            else:
-                row.update(type="choice", criteria={chr(65 + i): option for i, option in enumerate(question.options)})
-            out[f"q{k}"] = row
-        return {"state": state, "questions": out}
-
-    @staticmethod
-    def scores(response: dict, questions: Sequence[Question]) -> tuple[Scores, ...]:
-        if response.get("refusal"):
-            return tuple(Scores(None, None, f"hosted refusal: {response['refusal']}") for _ in questions)
-        answers = response["answers"]
-        if not isinstance(answers, dict) or set(answers) - {f"q{k}" for k in range(len(questions))}:
-            raise ValueError("answers must be an object keyed by the requested question names")
-        return tuple(systemone_answer(question, answers.get(f"q{k}")) for k, question in enumerate(questions))
-
-
-def systemone_answer(question: Question, answer) -> Scores:
-    try:
-        if not isinstance(answer, dict):
-            raise ValueError("expected an object")
-        if answer.get("refusal") or answer.get("type") == "refusal":
-            return Scores(None, None, f"hosted refusal: {answer.get('refusal', 'refused')}")
-        expected = {"check": "noul", "rate": "score", "pick": "choice"}[question.kind]
-        if "type" in answer and answer["type"] != expected:
-            raise ValueError("answer type differs from requested question")
-        if question.kind == "check":
-            p = probability(answer["noul"])
-            return Scores(np.array([p, 1 - p]), None, None, confidence(answer))
-        probabilities = answer["probabilities"]
-        if not isinstance(probabilities, dict):
-            raise ValueError("probabilities must be an object")
-        if expected == "score":
-            probabilities = {level(key): value for key, value in probabilities.items()}
-        elif any(not isinstance(letter, str) or len(letter) != 1 or not "A" <= letter <= "T" for letter in probabilities):
-            raise ValueError("probabilities must be a mapping of answer letters")
-        else:
-            probabilities = {ord(letter) - 65: value for letter, value in probabilities.items()}
-        return Scores(distribution(question, probabilities), None, None, confidence(answer))
-    except (KeyError, TypeError, ValueError) as error:
-        return Scores(None, None, f"hosted: malformed answer ({error})")
-
-
-def token_scores(question: Question, response: dict) -> Scores:
-    from .presentation import answers
-    choices = response["choices"]
-    if len(choices) != 1 or choices[0].get("finish_reason") not in ("stop", "length"):
-        raise ValueError("expected one completed answer token")
-    content = (choices[0].get("logprobs") or {}).get("content") or ()
-    if len(content) != 1:
-        raise ValueError("answer-position log probabilities unavailable")
-    found = {}
-    for row in (content[0], *content[0]["top_logprobs"]):
-        token, logprob = row["token"], row["logprob"]
-        if not isinstance(token, str) or isinstance(logprob, bool) or not isinstance(logprob, (int, float)) or not math.isfinite(logprob) or logprob > 0:
-            raise ValueError("invalid answer log probability")
-        if found.setdefault(token, logprob) != logprob:
-            raise ValueError("conflicting answer token log probabilities")
-    words = tuple(answer.lower() for answer in answers(question))
-    mass = np.zeros(len(words))
-    for token, logprob in found.items():
-        if token.strip().lower() in words:
-            mass[words.index(token.strip().lower())] += math.exp(logprob)
-    reported, answered = math.fsum(map(math.exp, found.values())), float(mass.sum())
-    if reported > 1 + 1e-3:
-        raise ValueError("reported token mass exceeds one")
-    if answered <= 0:
-        raise ValueError("no answer token among the returned alternatives")
-    return Scores(mass / (answered + max(0., 1 - reported)), min(answered, 1.))
-
-
-def merged(results: Sequence[Scored]) -> Scored:
-    models = {result.model for result in results} - {None}
-    return Scored(tuple(replace(score, model=score.model or result.model) for result in results for score in result.scores),
-                  sum(result.tokens for result in results), next(iter(models)) if len(models) == 1 else None)
-
-
 def leaf(failure: BaseException) -> BaseException:
     while isinstance(failure, BaseExceptionGroup):
         failure = next((error for error in failure.exceptions if not isinstance(error, anyio.get_cancelled_exc_class())), failure.exceptions[0])
     return failure
+
+
+@dataclass(frozen=True, slots=True)
+class Unit:
+    owner: int
+    index: tuple[int, ...]
+    state: str
+    questions: tuple[Question, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class Completion:
+    owner: int
+    index: tuple[int, ...]
+    scored: Scored
 
 
 @dataclass(slots=True)
@@ -295,92 +174,153 @@ class Progress:
     attempts: int = 0
     status: int | None = None
     usage: dict | None = None
-    service: float | None = None
+    queued: float = 0.
     retry: float = 0.
+    admission: dict | None = None
 
     def request(self, now: float) -> Request:
-        queued = (now if self.service is None else self.service) - self.started
-        return Request(self.id, now - self.started, self.attempts, self.status, self.usage, queued,
-                       0. if self.service is None else now - self.service, self.retry)
+        seconds = now - self.started
+        return Request(self.id, seconds, self.attempts, self.status, self.usage, self.queued, seconds - self.queued - self.retry, self.retry,
+                       self.admission)
 
 
-class OpenRouterJudge:
-    source = "openrouter"
+class HostedJudge:
     supports_guidance = True
     accelerated = True
-    max_slots = 20
 
-    def __init__(self, model: str, *, provider: str | None = None, key: str | None = None,
-                 transport: Callable[[str, dict, float], Awaitable[Reply]] | None = None, own_transport: bool = False,
+    def __init__(self, provider: Provider, model: str, profile: ModelProfile, *,
+                 transport: Callable[[str, bytes, float], Awaitable[Reply]] | None = None, own_transport: bool = False,
                  timeout: float = 60.0, batch_inputs: int = 8,
                  max_response_bytes: int | None = None, clock: Callable[[], float] = time.monotonic,
                  sleep: Callable[[float], Awaitable[None]] | None = None):
-        if isinstance(batch_inputs, bool) or not isinstance(batch_inputs, int) or batch_inputs < 1:
-            raise ValueError("batch_inputs must be a positive integer")
         if anyio is None:
             raise ConfigError("hosted judges require semantic-switch[hosted]")
+        from .drivers.codecs import CODECS
         from .presentation import identity as presentation_identity
-        self.model, self.provider, self.timeout, self.batch_inputs = model, provider, timeout, batch_inputs
-        self.protocol = SystemOne if model in STRUCTURED else Chat
-        self.max_response_bytes = self.protocol.response_bytes if max_response_bytes is None else max_response_bytes
+        if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or not 0 < timeout < math.inf:
+            raise ConfigError("timeout must be a positive number of seconds")
+        if isinstance(batch_inputs, bool) or not isinstance(batch_inputs, int) or batch_inputs < 1:
+            raise ConfigError("batch_inputs must be a positive integer")
+        if not isinstance(own_transport, bool):
+            raise ConfigError("own_transport must be boolean")
+        if transport is not None and not callable(transport):
+            raise ConfigError("transport must be an async send(url, body_bytes, remaining_seconds) callable")
+        if own_transport and transport is None:
+            raise ConfigError("own_transport transfers a supplied transport; the built-in transport is always owned")
+        if profile.codec not in CODECS:
+            raise ConfigError(f"profile {profile.name} names unknown codec {profile.codec!r}")
+        self.codec = CODECS[profile.codec]
+        self.codec.accepts(profile)
+        self.max_response_bytes = self.codec.response_bytes if max_response_bytes is None else max_response_bytes
         if isinstance(self.max_response_bytes, bool) or not isinstance(self.max_response_bytes, int) or self.max_response_bytes < 1:
-            raise ValueError("max_response_bytes must be a positive integer")
-        self.url = f"{OPENROUTER}/{self.protocol.path}"
-        self.send = transport if transport is not None else http(key, batch_inputs, self.max_response_bytes)
+            raise ConfigError("max_response_bytes must be a positive integer")
+        self.provider, self.model, self.profile, self.timeout, self.batch_inputs = provider, model, profile, timeout, batch_inputs
+        self.url = provider.endpoint(self.codec)
+        self.send = transport if transport is not None else provider.wire(batch_inputs, self.max_response_bytes)
         self.own_transport = transport is None or own_transport
         self.clock, self.sleep = clock, sleep or anyio.sleep
-        self.identity = {"source": self.source, "model": model, "presentation": presentation_identity(), "endpoint": self.url,
-                         "protocol": self.protocol.name, "provider": provider,
-                         "question_scope": "joint" if self.protocol.joint else "individual", **self.protocol.identity}
+        record = profile.record()
+        self._scope, self._limits = "joint" if self.codec.joint else "individual", profile.admission()
+        self.identity = {"source": provider.name, "driver": f"{provider.name}@{provider.revision}", "model": model,
+                         "presentation": presentation_identity(), "endpoint": self.url,
+                         "remote": {"route": provider.route, "observed": "per-response", "weights": profile.weights,
+                                    "guarantee": profile.pinning},
+                         **provider.identity, "codec": f"{self.codec.name}@{self.codec.revision}", **self.codec.identity,
+                         "question_scope": self._scope,
+                         "profile": {"name": profile.name, "revision": profile.revision, "record": record},
+                         "score_semantics": profile.semantics, "normalization": profile.normalization, "precision": record["precision"]}
+        self.normalization = profile.normalization
         self.returned: str | None = None
         self.observed_models = set()
         self._lock = threading.Lock()
         self._closed = False
+        self._released = threading.Event()
         self._portal = None
         self._scopes = set()
         self._drained = None
+        self._not_before = -math.inf
 
-    def payload(self, state: str, questions: Sequence[Question]) -> dict:
-        return {"model": self.model, **self.protocol.body(state, questions),
-                "provider": {**({"only": [self.provider]} if self.provider else {}), "allow_fallbacks": False, **self.protocol.routing}}
+    @property
+    def max_slots(self) -> int:
+        return self.profile.max_slots
 
-    def _units(self, items):
-        for owner, (_, questions) in enumerate(items):
-            if self.protocol.joint:
-                if questions:
-                    yield owner, tuple(questions)
-            else:
-                yield from ((owner, (question,)) for question in questions)
+    def static(self, questions: Mapping[str, Question]) -> None:
+        from .presentation import validate_question
+        for name, question in questions.items():
+            try:
+                validate_question(self, question)
+                self.profile.validate((question,))
+            except ConfigError as error:
+                raise ConfigError(f"{name}: {error}") from None
 
-    def score_many(self, items: Sequence[tuple[str, Sequence[Question]]]) -> list[Scored]:
+    def _prepared(self, items) -> tuple[list, list[Unit]]:
         from .presentation import validate_question
         items = [(state, tuple(questions)) for state, questions in items]
         for _, questions in items:
             for question in questions:
                 validate_question(self, question)
-            self.protocol.validate(questions)
+        units = []
+        for owner, (state, questions) in enumerate(items):
+            if not isinstance(state, str):
+                raise ConfigError(f"profile {self.profile.name} accepts text evidence only; images and video need a separate evidence contract")
+            if not questions:
+                continue
+            for index in (tuple(range(len(questions))),) if self.codec.joint else ((k,) for k in range(len(questions))):
+                unit = tuple(questions[k] for k in index)
+                self.profile.validate(unit)
+                units.append(Unit(owner, index, state, unit))
+        return items, units
+
+    def preview(self, items: Sequence[tuple[str, Sequence[Question]]]) -> list[dict]:
+        return [{"representation": "hosted", "input": unit.owner, "questions": list(unit.index), "joint": self.codec.joint, "endpoint": self.url,
+                 "body": self.provider.envelope(self.model, self.codec, self.codec.encode(unit.state, unit.questions, self.profile))}
+                for unit in self._prepared(items)[1]]
+
+    def start(self, items: Sequence[tuple[str, Sequence[Question]]], complete: Callable[[Completion], None]) -> Future:
+        seen, previous = set(), self.returned
+
+        def observed(done: Completion):
+            models = {score.model for score in done.scored.scores if score.model is not None}
+            if models:
+                with self._lock:
+                    seen.update(models)
+                    self.observed_models.update(models)
+                    self.returned = next(iter(seen)) if len(seen) == 1 else previous
+            complete(done)
+        return self._submit(self._prepared(items)[1], observed)
+
+    def _submit(self, units: list[Unit], complete: Callable[[Completion], None]) -> Future:
         portal = self._bound()
         try:
-            future = portal.start_task_soon(self._score_many, items)
+            return portal.start_task_soon(self._operation, units, complete)
         except RuntimeError:
             raise RuntimeError("judge is closed") from None
+
+    def score_many(self, items: Sequence[tuple[str, Sequence[Question]]]) -> list[Scored]:
+        slots = [[None] * len(questions) for _, questions in items]
+        tokens, returned = [0] * len(items), [set() for _ in items]
+
+        def complete(done: Completion):
+            for k, score in zip(done.index, done.scored.scores):
+                slots[done.owner][k] = score
+            tokens[done.owner] += done.scored.tokens
+            if done.scored.model is not None:
+                returned[done.owner].add(done.scored.model)
+        future = self.start(items, complete)
         handle = OPERATION.get()
         release = handle.register(future.cancel) if handle is not None else (lambda: None)
         try:
-            results = future.result()
+            future.result()
         except CancelledError:
             if self._closed:
                 raise RuntimeError("judge is closed") from None
             raise Cancelled("operation cancelled") from None
         finally:
             release()
-        models = sorted({model for result in results for model in (result.model, *(score.model for score in result.scores)) if model is not None})
+        results = [Scored(tuple(scores), tokens[n], next(iter(returned[n])) if len(returned[n]) == 1 else None) for n, scores in enumerate(slots)]
+        models = sorted({score.model for result in results for score in result.scores if score.model is not None})
         if len(models) > 1:
             warnings.warn(f"hosted operation returned mixed model versions: {models}", stacklevel=2)
-        with self._lock:
-            self.observed_models.update(models)
-            if len(models) == 1:
-                self.returned = models[0]
         return results
 
     def _bound(self):
@@ -401,24 +341,15 @@ class OpenRouterJudge:
     async def _primitives(self):
         return anyio.Semaphore(IN_FLIGHT * self.batch_inputs), anyio.Semaphore(self.batch_inputs), anyio.Event()
 
-    async def _score_many(self, items) -> list[Scored]:
+    async def _operation(self, units: list[Unit], complete: Callable[[Completion], None]) -> None:
         if self._closed:
             raise RuntimeError("judge is closed")
-        units, results = [], []
         with anyio.CancelScope() as operation:
             self._scopes.add(operation)
             try:
                 async with anyio.create_task_group() as group:
-                    for owner, questions in self._units(items):
-                        progress, limit = Progress(self.clock()), anyio.current_time() + self.timeout
-                        units.append(owner)
-                        results.append(None)
-                        with anyio.CancelScope(deadline=limit) as admission:
-                            await self._admission.acquire()
-                        if admission.cancelled_caught:
-                            results[-1] = self._failed(questions, "deadline exceeded awaiting admission", progress)
-                            continue
-                        group.start_soon(self._unit, results, len(results) - 1, items[owner][0], questions, progress, limit)
+                    for unit in units:
+                        await self._admit(group, unit, complete)
             except BaseExceptionGroup as failure:
                 raise leaf(failure) from None
             finally:
@@ -427,119 +358,173 @@ class OpenRouterJudge:
                     self._drained.set()
         if operation.cancelled_caught:
             raise RuntimeError("judge is closed")
-        groups = [[] for _ in items]
-        for owner, result in zip(units, results):
-            groups[owner].append(result)
-        return [merged(group) for group in groups]
 
-    async def _unit(self, results, index, state, questions, progress: Progress, limit: float):
+    async def _admit(self, group, unit: Unit, complete) -> None:
+        progress = Progress(self.clock())
+        deadline = progress.started + self.timeout
+        with anyio.move_on_after(max(0., deadline - self.clock())) as waited:
+            await self._admission.acquire()
+        progress.queued = self.clock() - progress.started
+        if waited.cancelled_caught:
+            complete(Completion(unit.owner, unit.index, self._failed(unit.questions, "deadline exceeded awaiting admission", progress)))
+            return
         try:
-            body = self.payload(state, questions)
-            with anyio.CancelScope(deadline=limit) as unit:
-                async with self._active:
-                    progress.service = self.clock()
-                    results[index] = await self._score(body, questions, progress)
-            if unit.cancelled_caught:
-                results[index] = self._failed(questions, f"deadline of {self.timeout:g}s exceeded after {progress.attempts} attempts", progress)
+            body = serialized(self.provider.envelope(self.model, self.codec, self.codec.encode(unit.state, unit.questions, self.profile)))
+            reason = self.profile.unsupported(len(body))
+            progress.admission = {**self._limits, "bytes": len(body), "grouping": {"scope": self._scope, "questions": len(unit.questions)},
+                                  "unsupported": reason}
+            failure = reason and f"unsupported request ({reason})"
+        except MemoryError:
+            self._admission.release()
+            raise
+        except Exception as error:
+            body, failure = None, f"request encoding failed ({type(error).__name__}: {error})"
+        if failure:
+            self._admission.release()
+            complete(Completion(unit.owner, unit.index, self._failed(unit.questions, failure, progress)))
+            return
+        group.start_soon(self._unit, unit, body, progress, deadline, complete, self.clock())
+
+    async def _unit(self, unit: Unit, body: bytes, progress: Progress, deadline: float, complete, ready: float) -> None:
+        progress.queued += self.clock() - ready
+        try:
+            scored = await self._score(unit, body, progress, deadline)
+        except MemoryError:
+            raise
+        except Exception as error:
+            scored = self._failed(unit.questions, f"unit failed ({type(error).__name__}: {error})", progress)
         finally:
             self._admission.release()
+        complete(Completion(unit.owner, unit.index, scored))
 
     def _failed(self, questions, message, progress: Progress, model=None, tokens=0) -> Scored:
         request = progress.request(self.clock())
         return Scored(tuple(Scores(None, None, f"hosted: {message}", model=model, request=request) for _ in questions), tokens, model)
 
-    async def _score(self, body: dict, questions: Sequence[Question], progress: Progress) -> Scored:
-        deadline = progress.started + self.timeout
+    def _expired(self, progress: Progress) -> str:
+        return f"deadline of {self.timeout:g}s exceeded after {progress.attempts} attempts"
+
+    async def _score(self, unit: Unit, body: bytes, progress: Progress, deadline: float) -> Scored:
+        questions = unit.questions
         response, error = await self._exchange(body, deadline, progress)
         if error:
             return self._failed(questions, error, progress)
-        model, provider, usage = response.get("model"), response.get("provider"), response.get("usage")
-        if not isinstance(model, str) or provider is not None and not isinstance(provider, str) or usage is not None and not isinstance(usage, dict):
-            return self._failed(questions, "malformed response (returned model, provider or usage)", progress)
-        returned = f"{model}@{provider}" if provider else model
-        tokens = (usage or {}).get("prompt_tokens", (usage or {}).get("input_tokens", 0))
-        if isinstance(tokens, bool) or not isinstance(tokens, int) or tokens < 0:
-            return self._failed(questions, "malformed response (prompt tokens must be a nonnegative integer)", progress, returned)
-        if self.provider and provider != self.provider:
-            return self._failed(questions, f"provider route changed to {provider!r}", progress, returned, tokens)
         try:
-            scores = self.protocol.scores(response, questions)
+            envelope = self.provider.unwrap(response)
+        except (AttributeError, KeyError, TypeError, ValueError) as error:
+            return self._failed(questions, f"malformed response ({error})", progress)
+        returned, tokens = envelope.returned, envelope.tokens
+        if self.provider.route and envelope.route != self.provider.route:
+            return self._failed(questions, f"provider route changed to {envelope.route!r}", progress, returned, tokens)
+        try:
+            scores = tuple(self.codec.decode(envelope.payload, questions, self.profile, returned, progress.request(self.clock())))
+            if len(scores) != len(questions):
+                raise ValueError(f"codec returned {len(scores)} scores for {len(questions)} questions")
         except (AttributeError, KeyError, TypeError, ValueError) as error:
             return self._failed(questions, f"malformed response ({error})", progress, returned, tokens)
         if self.clock() >= deadline:
             return self._failed(questions, f"response completed after the {self.timeout:g}s deadline", progress, returned, tokens)
-        request = progress.request(self.clock())
-        return Scored(tuple(replace(score, model=returned, request=request) for score in scores), tokens, returned)
+        return Scored(scores, tokens, returned)
 
-    async def _exchange(self, body: dict, deadline: float, progress: Progress) -> tuple[dict | None, str | None]:
-        while True:
-            remaining = deadline - self.clock()
-            if remaining <= 0:
-                return None, f"deadline of {self.timeout:g}s exceeded after {progress.attempts} attempts"
-            progress.attempts += 1
-            try:
-                reply = await self.send(self.url, body, remaining)
-            except TransportError as error:
-                return None, str(error)
-            except (ConnectionError, TimeoutError) as error:
-                progress.status, hint, failure = None, None, f"connection failed ({type(error).__name__})"
+    async def _wait(self, seconds: float, progress: Progress) -> None:
+        before = self.clock()
+        try:
+            await self.sleep(seconds)
+        finally:
+            spent = self.clock() - before
+            if progress.attempts:
+                progress.retry += spent
             else:
-                progress.status = reply.status
+                progress.queued += spent
+
+    async def _exchange(self, body: bytes, deadline: float, progress: Progress) -> tuple[dict | None, str | None]:
+        failure = "provider Retry-After"
+        while True:
+            now = self.clock()
+            if now >= deadline:
+                return None, self._expired(progress)
+            hold = self._not_before - now
+            if hold > 0:
+                if now + hold >= deadline:
+                    return None, f"{failure}; retry after {hold:.1f}s would exceed the {self.timeout:g}s deadline"
+                await self._wait(hold, progress)
+                continue
+            reply = None
+            with anyio.move_on_after(deadline - now) as bounded:
+                async with self._active:
+                    progress.queued += self.clock() - now
+                    remaining = deadline - self.clock()
+                    if self._not_before > self.clock() or remaining <= 0:
+                        continue
+                    progress.attempts += 1
+                    try:
+                        reply = await self.send(self.url, body, remaining)
+                    except TransportError as error:
+                        return None, str(error)
+                    except (ConnectionError, TimeoutError) as error:
+                        failure = f"connection failed ({type(error).__name__})"
+            if bounded.cancelled_caught:
+                return None, self._expired(progress)
+            hint = None
+            progress.status = None if reply is None else reply.status
+            if reply is not None:
                 if 200 <= reply.status < 300:
                     if not isinstance(reply.body, dict):
                         return None, "response must be a JSON object"
-                    progress.usage = reply.body.get("usage") if isinstance(reply.body.get("usage"), dict) else None
+                    progress.usage = self.provider.usage(reply.body)
                     if self.clock() >= deadline:
                         return None, f"response completed after the {self.timeout:g}s deadline"
                     return reply.body, None
                 if not retryable(reply.status):
-                    return None, self.rejected(reply)
+                    return None, self.provider.rejected(reply)
                 hint, failure = retry_after(reply.retry_after), f"HTTP {reply.status}"
+            if hint is not None:
+                self._not_before = max(self._not_before, self.clock() + hint)
             if progress.attempts == ATTEMPTS:
                 return None, f"{failure} after {ATTEMPTS} attempts"
-            wait = hint if hint is not None else 2 ** (progress.attempts - 1) * random.uniform(.5, 1)
+            if hint is not None:
+                continue
+            wait = 2 ** (progress.attempts - 1) * random.uniform(.5, 1)
             if self.clock() + wait >= deadline:
                 return None, f"{failure}; retry after {wait:.1f}s would exceed the {self.timeout:g}s deadline"
-            before = self.clock()
-            try:
-                await self.sleep(wait)
-            finally:
-                progress.retry += self.clock() - before
+            await self._wait(wait, progress)
 
-    def rejected(self, reply: Reply) -> str:
-        error = reply.body.get("error") if isinstance(reply.body, dict) else None
-        error = error if isinstance(error, dict) else {}
-        message = error.get("message")[:300] if isinstance(error.get("message"), str) else None
-        if reply.status != 400:
-            return f"HTTP {reply.status}" + (f": {message}" if message else "")
-        metadata = error.get("metadata") if isinstance(error.get("metadata"), dict) else {}
-        named = metadata.get("provider_name") if isinstance(metadata.get("provider_name"), str) else self.provider
-        return ((f"provider {named}" if named else "the routed provider") + " rejected the request shape (HTTP 400" + (f": {message}" if message else "") +
-                f"); pin a provider that accepts it with provider=PROVIDER or --provider PROVIDER")
+    async def _release_transport(self):
+        close = getattr(self.send, "close", None) if self.own_transport else None
+        if close is not None:
+            result = close()
+            if inspect.isawaitable(result):
+                await result
 
     async def _shutdown(self):
         for scope in list(self._scopes):
             scope.cancel()
         if self._scopes:
             await self._drained.wait()
-        if self.own_transport:
-            await self.send.close()
+        await self._release_transport()
 
     def close(self):
         with self._lock:
-            if self._closed:
-                return
-            self._closed = True
-            bound, self._portal = self._portal, None
-        if bound is None:
-            if self.own_transport:
-                anyio.run(self.send.close)
+            closing, self._closed = not self._closed, True
+            bound, self._portal = (self._portal, None) if closing else (None, self._portal)
+        if not closing:
+            self._released.wait()
             return
-        manager, portal = bound
         try:
-            portal.call(self._shutdown)
+            if bound is not None:
+                manager, portal = bound
+                try:
+                    portal.call(self._shutdown)
+                finally:
+                    manager.__exit__(None, None, None)
+            elif self.own_transport and getattr(self.send, "close", None) is not None:
+                with anyio.from_thread.start_blocking_portal() as portal:
+                    portal.call(self._release_transport)
         finally:
-            manager.__exit__(None, None, None)
+            self._released.set()
+
+    async def aclose(self):
+        await anyio.to_thread.run_sync(self.close)
 
     def __enter__(self):
         return self

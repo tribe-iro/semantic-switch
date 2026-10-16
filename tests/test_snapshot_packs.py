@@ -2,18 +2,21 @@ from __future__ import annotations
 
 from dataclasses import replace
 import json
+import re
+from pathlib import Path
 
 import pytest
 import yaml
 
 from semantic_switch import ConfigError, Runtime, files
+from semantic_switch.metrics import METRICS
 from semantic_switch.presentation import identity as presentation_identity
-from bench import diagnostics, evidence, procedures, snapshots, support
+from bench import evidence, outcomes, procedures, snapshots, support
 from bench.evidence import Decision, Gold
 from bench.outcomes import journal_path
 from semantic_switch.journal import replay
 from semantic_switch.tools.dataset import EvidenceContext
-from tests.conftest import FakeScorer
+from semantic_testkit.scoring import FakeScorer
 
 
 
@@ -36,12 +39,13 @@ def frontier(gold):
 def published(tmp_path, quotas=None):
     pack = evidence.load_pack(procedures.PACK)
     rows = procedures.scenarios(0, 1)
-    built, golds = procedures.build(rows)
+    ref = procedures.standard()
+    reviewed = evidence.review(pack, procedures.frames(rows), (), ref, authored=procedures.authored())
+    built, golds = reviewed.frames, reviewed.golds
     assignment = evidence.assign(built, quotas or {"fit": 8, "model_select": 6}, seed=0, counted=evidence.situation_frames(built, golds, procedures.TRAINED))
-    manifest = evidence.publish(tmp_path / "pack", pack, scenarios=rows, frames=built, golds=golds, definition=files.read_yaml(procedures.DEFINITION),
+    manifest = evidence.publish(tmp_path / "pack", pack, reviewed, ref, scenarios=rows, definition=files.read_yaml(procedures.DEFINITION),
                                 name=procedures.DEFINITION.name, condition=procedures.TRAINED, assignment=assignment,
-                                producer="bench.procedures.reference", producer_digest=evidence.code_digest(procedures, evidence),
-                                reference=procedures.reference, fields=procedures.FIELDS, stratum=procedures.stratum, authored=procedures.authored())
+                                producer="bench.procedures.reference", producer_digest=evidence.code_digest(procedures, evidence), stratum=procedures.stratum)
     return manifest, built, golds, assignment
 
 
@@ -94,14 +98,20 @@ def test_structured_and_prose_evidence_parity_and_hidden_state_invariance():
     by = {}
     for frame in built:
         by.setdefault(evidence.counterpart(frame.id), []).append(golds[frame.id])
-    assert all(len(group) == 6 and all(g.decisions == group[0].decisions and g.primitives == group[0].primitives for g in group) for group in by.values())
+    for group in by.values():
+        assert len(group) == 6
+        assert all(g.decisions == group[0].decisions for g in group)
+        assert all({name: g.primitives[name] for name in procedures.PRIMITIVES} ==
+                   {name: group[0].primitives[name] for name in procedures.PRIMITIVES} for g in group)
+        assert sum(set(g.primitives) - set(procedures.PRIMITIVES) == {'idle_prompt', 'paused_prompt', 'tt_method'} for g in group) == 2
     row = next(r for r in rows if r["variant"] == "missing_media")
     other = {**row, "state": {**row["state"], "media": procedures.DT, "ribbon": False}}
     (a,), (b,) = procedures.frames([row], ("structured",), ("en",)), procedures.frames([other], ("structured",), ("en",))
     assert a.content == b.content and procedures.reference(a) == procedures.reference(b)
-    evidence.invariant(procedures.reference, [a, b])
-    with pytest.raises(ConfigError, match="identical public evidence"):
-        evidence.invariant(lambda frame: frame.id, [a, replace(b, id="other")])
+    ref = procedures.standard()
+    assert evidence.invariant(ref, [a, replace(b, id="other")], {a.id: procedures.reference(a), "other": procedures.reference(b)}) == {"observable_problems": 1, "frames": 2}
+    with pytest.raises(ConfigError, match="one observable problem"):
+        evidence.invariant(ref, [a, replace(b, id="other")], {a.id: procedures.reference(a), "other": printer("base", "method_mismatch")[2]})
 
 
 def test_spans_paths_leakage_and_added_text_are_validated():
@@ -176,10 +186,10 @@ def test_whole_family_assignment_is_exact_or_rejected():
 def test_deterministic_publication_labels_and_digest_validation(tmp_path):
     first, built, golds, _ = published(tmp_path)
     labels = files.read_jsonl(tmp_path / "pack" / first["payloads"]["labels.jsonl"]["file"])
-    assert labels and all({s["origin"] for h in row["label_sources"].values() for s in (h if isinstance(h, list) else [x for v in h.values() for x in v])} == {"rule"}
+    assert labels and all({s["derivation"] for h in row["label_sources"].values() for s in (h if isinstance(h, list) else [x for v in h.values() for x in v])} == {"computed"}
                           and "actions" not in row["facts"] for row in labels)
     row = labels[0]
-    assert set(row["label_sources"]) == set(row["facts"]) and row["label_sources"]["tt_media"][0]["origin"] == "rule"
+    assert set(row["label_sources"]) == set(row["facts"]) and row["label_sources"]["tt_media"][0]["derivation"] == "computed"
     situations = files.read_jsonl(tmp_path / "pack" / first["payloads"]["situations.jsonl"]["file"])
     assert all(set(s) == {"schema", "input", "role", "groups", "pairs", "tags"} for s in situations)
     again, _, _, _ = published(tmp_path)
@@ -220,14 +230,15 @@ def test_unexamined_members_stay_unresolved_and_menu_permutation_keeps_ids(tmp_p
     got = snapshots.targets(domain, {"actions": {"status": "uncertain", "states": {"set_method_tt": "unexamined", "load_ribbon": "applicable"}}})
     assert got["actions/set_method_tt"]["value"] is None and got["actions/load_ribbon"]["value"] is True and got["actions/resume_printing"]["value"] is None
     _, frame, _ = printer("base", "detection")
-    oracle = lambda state, question, width: [.97, .03, 0.][:width] if "detection problem" in question or "attempted or reported" in question else [.03, .97, 0.][:width]
+    held = ("detection problem", "loading is due", "a ribbon is loaded", "thermal-transfer media is loaded")
+    oracle = lambda state, question, width: [.97, .03, 0.][:width] if any(text in question for text in held) else [.03, .97, 0.][:width]
     spec = procedures.definition("structured")
     permuted = {**spec, "facts": {**spec["facts"], "actions": {**spec["facts"]["actions"], "cards": spec["facts"]["actions"]["cards"][::-1]}}}
     selected = []
     for definition in (spec, permuted):
         path = tmp_path / f"{len(selected)}.yaml"
         path.write_text(yaml.safe_dump(definition, sort_keys=False))
-        with Runtime({"judge": FakeScorer(oracle)}) as rt:
+        with Runtime(FakeScorer(oracle)) as rt:
             selected.append(rt.load(path, draft=True)(frame.input).facts["actions"].value)
     assert set(selected[0]) == set(selected[1]) == {"start_calibration", "verify_loading"}
 
@@ -251,7 +262,13 @@ def test_public_fake_runtime_snapshot_round_trip_records_identities_and_exposure
     again = snapshots.evaluate("zt411", tmp_path / "pack", staged(tmp_path), scorers, tmp_path / "out" / "eval2.json", baseline="base", margin=.02)
     assert len(files.read_jsonl(context.audit)) == 1 and (tmp_path / "pack" / "benchmark.json").read_bytes() == before
     assert again["exposure"]["state"] == "repeat" and again["plan"]["id"] == artifact["plan"]["id"]
-    assert all(p["role"] == "reference" and "adoption" not in p for p in artifact["paired"])
+    assert all(p["role"] == "reference" and "adoption" not in p for p in artifact["paired"]) and artifact["lineage"] == {}
+    with pytest.raises(ConfigError, match="no specialist workflow rows"):
+        snapshots.derived_check(tmp_path / "out" / "eval.json", tmp_path / "out" / "check.json")
+    files.publish(tmp_path / "out" / "old.json", {**files.read_json(tmp_path / "out" / "eval.json"), "schema": 3})
+    with pytest.raises(ConfigError, match="not a schema-4"):
+        snapshots.derived_check(tmp_path / "out" / "old.json", tmp_path / "out" / "check.json")
+    assert not (tmp_path / "out" / "check.json").exists() and len(files.read_jsonl(context.audit)) == 1
     with pytest.raises(ConfigError, match="deployment receipt"):
         snapshots.evaluate("zt411", tmp_path / "pack", staged(tmp_path), scorers, tmp_path / "out" / "eval4.json", baseline="base", specialist="other", margin=.02)
     other = snapshots.evaluate("zt411", tmp_path / "pack", staged(tmp_path), scorers, tmp_path / "out" / "eval3.json", baseline="other", margin=.02)
@@ -327,7 +344,7 @@ def test_interrupted_episode_restarts_from_initial_state():
 
 def test_public_snapshot_demos_run_through_runtime_only():
     from examples import printer_snapshot, support_snapshot
-    with Runtime({"judge": FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         printed = printer_snapshot.run(rt.load(printer_snapshot.DEFINITION, draft=True))
         supported = support_snapshot.run(rt.load(support_snapshot.DEFINITION, draft=True))
     assert set(printed["menu"]) == set(procedures.MENU) and len(printed["decisions"]) == len(printer_snapshot.EVIDENCE)
@@ -346,7 +363,7 @@ def test_episode_runner_publishes_replayable_traces(tmp_path):
 def test_episode_runner_commits_complete_episodes_and_resumes(tmp_path, monkeypatch):
     published(tmp_path)
     output = tmp_path / "out" / "episodes.json"
-    monkeypatch.setattr(diagnostics, "fingerprint", lambda: {"revision": None, "sources": "code"})
+    monkeypatch.setattr(outcomes, "fingerprint", lambda: {"revision": None, "sources": "code"})
     original, calls = procedures.episode, []
 
     def interrupted(row, decide, **kwargs):
@@ -362,7 +379,7 @@ def test_episode_runner_commits_complete_episodes_and_resumes(tmp_path, monkeypa
     assert artifact["progress"]["resumed"] == 1 and artifact["execution"]["completed"] == len(artifact["traces"]) == artifact["progress"]["total"]
     with pytest.raises(ConfigError, match="different run"):
         snapshots.episodes(tmp_path / "pack", FakeScorer(), output, seed=1)
-    monkeypatch.setattr(diagnostics, "fingerprint", lambda: {"revision": None, "sources": "changed"})
+    monkeypatch.setattr(outcomes, "fingerprint", lambda: {"revision": None, "sources": "changed"})
     with pytest.raises(ConfigError, match="different run"):
         snapshots.episodes(tmp_path / "pack", FakeScorer(), output)
 
@@ -390,20 +407,29 @@ def test_adoption_requires_lower_bound_strictly_above_required_improvement():
     reported = {"support": "reported"}
     even = {"forbidden_action_situations": 1, "failures": 0}
 
-    def verdict(interval, margin=.02, specialist=even, exposure="fresh", review="reviewed", support="reported"):
+    def verdict(interval, margin=.02, specialist=even, exposure="fresh", review="reviewed", support="reported", lineage="declared_disjoint"):
         state = {"state": exposure, "independent": exposure in ("fresh", "repeat")}
-        return snapshots.adoption({"support": support, "interval": interval}, margin, even, specialist, exposure=state, review=review)["verdict"]
+        return snapshots.adoption({"support": support, "interval": interval}, margin, even, specialist, exposure=state, lineage={"state": lineage},
+                                  review=review)["verdict"]
     assert verdict([.03, .1]) == "adopt"
     assert verdict([.02, .1]) == "not_adopted" and verdict([0., .1], margin=0) == "not_adopted"
     assert verdict([-.01, .05]) == "not_adopted"
     assert verdict([.001, .1], margin=0) == "adopt"
-    assert verdict([.03, .1], support="sparse") == "inconclusive"
+    assert verdict([.03, .1], support="sparse") == "inconclusive" and verdict(None, support="sparse", exposure="consulted") == "reused_evidence"
     assert verdict([.03, .1], exposure="consulted") == verdict([.03, .1], exposure="unknown_history") == "reused_evidence"
     assert verdict([.03, .1], exposure="repeat") == "adopt"
     assert verdict([.03, .1], review="unreviewed") == "unreviewed_reference"
     assert verdict([.03, .1], specialist={"forbidden_action_situations": 2, "failures": 0}) == "constraint_violated"
-    decision = snapshots.adoption({**reported, "interval": [.03, .1]}, .02, even, even, exposure={"state": "fresh", "independent": True}, review="reviewed")
-    assert decision["schema"] == 2 and decision["required_improvement"] == .02 and decision["lower_bound"] == .03 and "tolerated_regression" not in decision
+    assert verdict([.03, .1], exposure="empty") == "no_check_evidence"
+    assert verdict([.03, .1], lineage="known_overlap") == verdict([.03, .1], lineage="undeclared_overrides") == "overlapping_lineage"
+    assert verdict([.03, .1], lineage="unproven") == "unproven_lineage" and verdict([.03, .1], exposure="consulted", lineage="unproven") == "reused_evidence"
+    assert verdict([.03, .1], lineage="known_overlap", review="unreviewed") == "overlapping_lineage"
+    decision = snapshots.adoption({**reported, "interval": [.03, .1]}, .02, even, even, exposure={"state": "fresh", "independent": True},
+                                  lineage={"state": "unproven", "reason": "why"}, review="reviewed")
+    assert decision["lineage"] == {"state": "unproven", "reason": "why"}
+    decision = snapshots.adoption({**reported, "interval": [.03, .1]}, .02, even, even, exposure={"state": "fresh", "independent": True},
+                                  lineage={"state": "declared_disjoint", "targets": {}}, review="reviewed")
+    assert decision["schema"] == 3 and decision["lineage"] == {"state": "declared_disjoint"} and decision["required_improvement"] == .02 and decision["lower_bound"] == .03 and "tolerated_regression" not in decision
 
 
 def test_snapshot_rows_commit_once_through_the_journal_and_resume_pending(tmp_path):
@@ -423,8 +449,9 @@ def test_snapshot_rows_commit_once_through_the_journal_and_resume_pending(tmp_pa
     artifact = snapshots.evaluate("zt411", tmp_path / "pack", staged(tmp_path), {"base": FakeScorer(lambda s, q, w: [.03, .97, 0.][:w])}, output, baseline="base", margin=0,
                                   kinds=("workflow",))
     execution = artifact["execution"]
-    assert execution["attempts"] == execution["completed"] == sum(len(r["rows"]) for r in artifact["results"].values()) and not execution["superseded"]
-    assert sum(r["progress"]["resumed"] for r in artifact["results"].values()) == len(committed)
+    assert execution["attempts"] == execution["completed"] == sum(len(r["rows"]) for r in artifact["results"].values()) + len(artifact["results"]) and not execution["superseded"]
+    _, payloads = outcomes.recorded(output)
+    assert sum(r["progress"]["resumed"] for r in artifact["results"].values()) == sum("setup" not in payloads[key] for key in committed)
 
 
 def test_failed_snapshot_rows_are_retained_unless_fresh(tmp_path):
@@ -450,11 +477,11 @@ def test_published_report_set_aggregates_recompute_from_rows_or_are_unrecoverabl
     states = recompute.recompute(tmp_path / "out" / "eval.json", tmp_path / "out" / "recomputed.json")
     again = files.read_json(tmp_path / "out" / "recomputed.json")
     assert set(states.values()) == {"recomputed"} and all(again["results"][k]["sets"] == v["sets"] for k, v in artifact["results"].items())
-    assert again["baselines"] == artifact["baselines"] and again["recomputed"]["metrics"] == 3 and again["recomputed"]["source_sha256"]
+    assert again["baselines"] == artifact["baselines"] and again["recomputed"]["metrics"] == METRICS and again["recomputed"]["source_sha256"]
     old = files.read_json(tmp_path / "out" / "eval.json")
     for result in old["results"].values():
         for row in result["rows"]:
-            row["targets"] = {t: {k: v for k, v in p.items() if k != "state"} for t, p in row["targets"].items()}
+            row["targets"] = {t: {k: v for k, v in p.items() if k not in ("state", "probability")} for t, p in row["targets"].items()}
         result["sets"]["actions"]["frontier"] = {"exact": 1, "exact_rate": 1.}
     for arms in old["baselines"].values():
         for arm in arms.values():
@@ -518,3 +545,296 @@ def test_missing_media_unknown_reference_is_never_exact_through_every_set_adapte
     assert files.read_json(tmp_path / "again.json")["snapshot_steps"] == snapshots.set_metrics(steps)
     files.publish(tmp_path / "old-episodes.json", {"traces": [{**trace, "steps": [{k: v for k, v in s.items() if k != "outcome"} for s in trace["steps"]]}]})
     assert recompute.recompute(tmp_path / "old-episodes.json", tmp_path / "old-again.json") == {"snapshot_steps": "unrecoverable"}
+
+
+def test_keyed_stage_and_plan_named_results_replace_adapter_identity_bookkeeping(tmp_path):
+    published(tmp_path)
+    first = evidence.stage_under(tmp_path / "pack", tmp_path / "stages")
+    key = files.sha256_file(tmp_path / "pack" / "benchmark.json")[:16]
+    assert Path(first["evidence"]).parent == tmp_path / "stages" / key and [p.name for p in (tmp_path / "stages").iterdir()] == [key]
+    scorers = {"base": FakeScorer(), "other": FakeScorer(name="other")}
+    artifact = snapshots.evaluate("zt411", tmp_path / "pack", first["evidence"], scorers, results=tmp_path / "results", baseline="base", margin=.02, kinds=("workflow",))
+    named = tmp_path / "results" / f"zt411-check-{artifact['plan']['id'][:16]}.json"
+    assert files.read_json(named)["plan"] == artifact["plan"] and len(files.read_jsonl(first["audit"])) == 1
+    again = evidence.stage_under(tmp_path / "pack", tmp_path / "stages")
+    assert again == first and len(files.read_jsonl(again["audit"])) == 1
+    repeat = snapshots.evaluate("zt411", tmp_path / "pack", again["evidence"], scorers, results=tmp_path / "results", baseline="base", margin=.02, kinds=("workflow",))
+    assert repeat["exposure"]["state"] == "repeat" and sorted(p.name for p in (tmp_path / "results").glob("*.json")) == [named.name]
+    changed = snapshots.evaluate("zt411", tmp_path / "pack", again["evidence"], scorers, results=tmp_path / "results", baseline="base", margin=.05, kinds=("workflow",))
+    assert changed["exposure"]["state"] == "consulted" and (tmp_path / "results" / f"zt411-check-{changed['plan']['id'][:16]}.json").is_file()
+    with pytest.raises(ConfigError, match="either the comparison output or a results directory"):
+        snapshots.evaluate("zt411", tmp_path / "pack", again["evidence"], scorers, tmp_path / "x.json", results=tmp_path / "results", baseline="base", margin=.02)
+    Path(again["labels"]).write_text("{}\n")
+    with pytest.raises(ConfigError, match="differ from"):
+        evidence.stage_under(tmp_path / "pack", tmp_path / "stages")
+
+
+def rule(pack, rule_id):
+    return next(r for r in evidence.load_pack(pack).rules if r.id == rule_id)
+
+
+def test_stale_handover_note_precedes_a_rendered_media_change():
+    for template, action in (("method_mismatch", "set_method_tt"), ("direct_thermal", "set_method_dt")):
+        for condition in ("structured", "prose"):
+            _, frame, gold = printer("stale_media", template, condition)
+            stale = next(a for a in frame.assertions if a.status == "stale")
+            change = next(a for a in frame.assertions if a.property == "media_changed")
+            assert change.status == "current" and change.subject == stale.subject == frame.input["asset"] and change.time > stale.time
+            assert stale.spans[0].start < change.spans[0].start and frame.input["notes"][stale.spans[0].start:].startswith("Earlier shift: ")
+            assert gold.decisions[f"actions/{action}"].value is None and "ZT-CURRENT" in gold.decisions[f"actions/{action}"].rules
+            assert gold.primitives["tt_media"].value == "unstated"
+
+
+def test_structured_alerts_are_unknown_without_a_current_controller_reading():
+    _, base, _ = printer("base", "ribbon_out")
+    _, commanded, gold = printer("commanded_load", "ribbon_out")
+    assert base.input["alerts"] == ["08:02 RIBBON OUT"] and commanded.input["alerts"] == "unknown"
+    assert gold.primitives["ribbon_loaded"].value == "unstated" and gold.decisions["actions/load_ribbon"].unresolved == ("ribbon_loaded",)
+    for template, variant in (("detection", "base"), ("cancelled", "cancelled"), ("cancelled", "reported_completion")):
+        _, frame, gold = printer(variant, template)
+        assert "media out" in frame.input["notes"] and frame.input["alerts"] == "unknown" and gold.primitives["detection_symptom"].value is True
+    assert all(frame.input.get("alerts") != [] for frame in procedures.frames(procedures.scenarios(0, 2), ("structured", "structured_permuted")))
+
+
+def test_ribbon_out_alert_contradicted_by_a_loaded_report_prohibits_resume_under_both_branches():
+    for condition in ("structured", "prose"):
+        _, frame, gold = printer("contradiction", "ribbon_out", condition)
+        ids = tuple(a.id for a in frame.assertions if a.property == "ribbon_loaded")
+        assert gold.primitives["detection_symptom"].value is None and "ZT-CONFLICT" in gold.primitives["detection_symptom"].rules
+        for action in ("start_calibration", "verify_loading", "load_ribbon"):
+            decision = gold.decisions[f"actions/{action}"]
+            assert decision.value is None and decision.unresolved == ("ribbon_loaded",) and "ZT-CONFLICT" in decision.rules
+        resume = gold.decisions["actions/resume_printing"]
+        assert resume == Decision(False, ("ZT-RESUME", "ZT-RIBBON", "ZT-CONFLICT"), ids) and gold.prohibited == ("resume_printing",)
+        assert gold.primitives["ready_to_print"].value is False and gold.primitives["verification_due"].value is None
+        assert procedures.justified(gold) == ("request_observation",)
+
+
+def test_rule_texts_cover_the_reference_behaviour():
+    resume = rule(procedures.PACK, "ZT-RESUME").text
+    assert "with a current unaddressed detection symptom" in resume
+    _, _, detection = printer("base", "detection")
+    assert "resume_printing" in detection.prohibited and detection.decisions["actions/resume_printing"].rules == ("ZT-RESUME",)
+    ribbon = rule(procedures.PACK, "ZT-RIBBON").text
+    assert "with ribbon absence established" in ribbon and "no ribbon established" not in ribbon
+    assert {rule(procedures.PACK, r).source for r in ("ZT-CAL-NEXT", "ZT-CAL-CANCEL", "ZT-CAL-HOLD")} == {evidence.CONVENTION}
+    assert procedures.REVISION == "zt411-reference-3" and support.REVISION == "support-reference-3"
+
+
+def test_ready_to_print_is_false_while_calibrating():
+    for variant in ("reported_step", "verified_step", "wrong_method"):
+        _, frame, gold = printer(variant, "calibration_step")
+        assert frame.input["prompt"] == "calibration_1" and gold.primitives["ready_to_print"].value is False
+        assert "resume_printing" in gold.prohibited
+    spec = files.read_yaml(procedures.DEFINITION)
+    assert "not running a calibration sequence" in spec["facts"]["ready_to_print"]["check"]
+
+
+def test_method_change_waits_for_calibration_to_be_cancelled():
+    _, _, wrong = printer("wrong_method", "calibration_step")
+    _, _, base = printer("base", "method_mismatch")
+    assert wrong.primitives["tt_media"].value is True and wrong.primitives["method_inconsistent"].value is True
+    assert wrong.decisions["actions/set_method_tt"] == Decision(False, ("ZT-CAL-HOLD",))
+    assert {"cancel_calibration", "verify_loading"} == set(procedures.justified(wrong))
+    assert base.decisions["actions/set_method_tt"].value is True and base.decisions["actions/set_method_tt"].rules == ("ZT-METHOD-TT",)
+    assert "wait until calibration is cancelled" in rule(procedures.PACK, "ZT-CAL-HOLD").text
+
+
+def test_unresolved_lists_name_every_property_the_decision_depends_on():
+    _, _, gold = printer("missing_media", "direct_thermal")
+    assert gold.decisions["actions/load_ribbon"].unresolved == ("media_type", "ribbon_loaded")
+    assert "ZT-METHOD-DT" in gold.decisions["actions/load_ribbon"].rules
+    assert set(gold.decisions["actions/resume_printing"].unresolved) == {"media_type", "ribbon_loaded"}
+    assert gold.decisions["actions/set_method_dt"].unresolved == ("media_type",)
+    _, _, commanded = printer("commanded_load", "ribbon_out")
+    assert commanded.decisions["actions/load_ribbon"].unresolved == ("ribbon_loaded",)
+
+
+def test_action_cards_reproduce_the_reference_actions_from_its_facts():
+    spec = files.read_yaml(procedures.DEFINITION)
+    facts = spec["facts"]
+    assert "attempted or reported" not in facts["unverified_step"]["check"] and "ribbon-load command" in facts["unverified_step"]["check"]
+    assert "ribbon-load command" in rule(procedures.PACK, "ZT-VERIFY").text
+    assert [card["applies_when"] for card in facts["actions"]["cards"] if card["id"] == "verify_loading"] == [[{"fact": "verification_due"}]]
+
+    def truth(value):
+        return value if value in (True, False) else None
+    checked, built = 0, procedures.frames(procedures.scenarios(0, 3), ("structured",), ("en",))
+    for frame in built:
+        gold = procedures.reference(frame)
+        for card in facts["actions"]["cards"]:
+            allowed = eval(card["requires"], {}, {"print_method": frame.input.get("print_method"), "prompt": frame.input.get("prompt")}) \
+                if "requires" in card else True
+            claims = [truth(gold.primitives[c["fact"]].value) for c in card["applies_when"]]
+            claims += [None if truth(gold.primitives[c["fact"]].value) is None else not gold.primitives[c["fact"]].value for c in card.get("excludes", ())]
+            derived = False if not allowed or False in claims else None if None in claims else True
+            assert derived == gold.decisions[f"actions/{card['id']}"].value, (frame.id, card["id"])
+            checked += 1
+    assert checked == len(built) * len(procedures.MENU) > 0
+
+
+def test_support_catalogue_renders_questions_entities_and_explicit_current_order_requests():
+    assert all(text.endswith("?") for text in support.TEXT["pt"]["refund_status"][1])
+    for language in support.LANGUAGES:
+        for phrase in support.TEXT[language]["disputed_charge"][1]:
+            assert "this order" not in phrase and "este pedido" not in phrase
+    statements = [{"property": "issue:disputed_charge", "status": "current", "other": "A20000"},
+                  {"property": "request:replacement", "status": "current", "phrase": 1, "explicit": True}]
+    for language, opening in (("en", "Regarding this order A10000, "), ("pt", "Sobre este pedido A10000, ")):
+        frame = support.render("s", statements, {}, frame_id="f", family="s", order="A10000", language=language)
+        evidence.validate_frame(frame, support.FIELDS)
+        request = frame.assertions[1]
+        span = request.spans[0]
+        assert frame.input["message"][span.start:span.end].startswith(opening) and request.subject == "A10000"
+        assert "?." not in frame.input["message"]
+        gold = support.reference(frame)
+        assert gold.values()["issues/disputed_charge"] is False and gold.values()["requests/replacement"] is True
+    rows = support.scenarios(0, 40)
+    other = [row for row in rows if row["variant"] == "other_order"]
+    assert other and all(row["statements"][1].get("explicit") for row in other)
+    pt = support.render("s", [{"property": "request:refund_status", "status": "current", "phrase": 1}], {}, frame_id="f", family="s", order="A1", language="pt")
+    assert pt.input["message"] == "Meu reembolso já foi processado?"
+
+
+def test_refund_request_without_issue_falls_through_and_rule_texts_say_so():
+    refund = [{"property": "issue:size_mismatch", "status": "resolved"}, {"property": "request:refund_initiate", "status": "current"}]
+    eligible = {"delivered_days_ago": 5, "amount": 40.0, "refund_blocked": False}
+    for account, expected in ((eligible, "no_action"), ({**eligible, "refund_blocked": True}, "refund_ineligible"),
+                              ({**eligible, "amount": 800.0}, "refund_ineligible")):
+        frame = support.render("s", refund, account, frame_id="f", family="s", order="A1")
+        assert support.response(frame, support.reference(frame)).value == expected
+    with_status = [*refund, {"property": "request:refund_status", "status": "current"}]
+    frame = support.render("s", with_status, eligible, frame_id="f", family="s", order="A1")
+    assert support.response(frame, support.reference(frame)).value == "refund_desk"
+    pack = evidence.load_pack(support.PACK)
+    texts = {r.id: r.text for r in pack.rules}
+    assert "neither eligible nor ineligible" in texts["S-REFUND"] and "falls through to the later branches" in texts["S-RESPONSE"]
+
+
+def test_support_scenarios_never_pair_a_missing_delivery_with_received_item_problems():
+    received = {"size_mismatch", "color_mismatch", "stain_damage", "return_item", "order_change"}
+    rows = support.scenarios(0, 200)
+    for row in rows:
+        members = {s["property"].split(":")[1] for s in row["statements"] if ":" in s["property"] and not s.get("other")}
+        assert "missing_delivery" not in members or not members & received, row
+    assert any("missing_delivery" in {s["property"].split(":")[-1] for s in row["statements"]} for row in rows)
+    assert not support.plausible("missing_delivery", "return_item") and not support.plausible("size_mismatch", "missing_delivery")
+    assert support.plausible("missing_delivery", "replacement") and support.plausible("disputed_charge", "return_item")
+
+
+def hand(*events, prompt="paused"):
+    state = procedures.State("PR-01", "ZT411", procedures.TT, True, procedures.TT, prompt)
+    frame = procedures.render("hand", state, events, condition="structured", frame_id="hand", family="hand")
+    evidence.validate_frame(frame, procedures.FIELDS)
+    return procedures.reference(frame)
+
+
+def test_branch_equivalence_decides_targets_whose_possible_values_agree():
+    ev, TT, DT = procedures.ev, procedures.TT, procedures.DT
+    tt, paused = ev(0, "configuration", "PR-01", "print_method", TT), ev(0, "display", "PR-01", "prompt", "paused")
+    loaded = ev(1, "verification", "PR-01", "ribbon_loaded", True, "Ana")
+    media = [ev(1, "operator_report", "PR-01", "media_type", TT, "Ana"), ev(2, "operator_report", "PR-01", "media_type", DT, "Ana")]
+    gold = hand(tt, ev(0, "display", "PR-01", "prompt", "ready"), loaded, *media)
+    assert gold.decisions["actions/set_method_dt"].value is None and gold.decisions["actions/set_method_dt"].unresolved == ("media_type",)
+    assert gold.decisions["actions/load_ribbon"].value is False and gold.decisions["actions/load_ribbon"].unresolved == ()
+    assert {"ZT-RIBBON", "ZT-METHOD-DT", "ZT-CONFLICT"} <= set(gold.decisions["actions/load_ribbon"].rules)
+    assert gold.decisions["actions/resume_printing"] == Decision(False, ("ZT-DEFAULT",)) and gold.prohibited == ()
+    assert gold.primitives["tt_media"].value is None and gold.primitives["method_inconsistent"].value is None
+    assert gold.primitives["ready_to_print"].value is None
+    unknown_prompt = hand(ev(0, "configuration", "PR-01", "print_method", DT), ev(1, "verification", "PR-01", "media_type", DT, "Ana"))
+    assert unknown_prompt.decisions["actions/set_method_tt"].value is False and unknown_prompt.decisions["actions/calibration_next"].value is False
+    assert unknown_prompt.decisions["actions/resume_printing"].value is None and unknown_prompt.decisions["actions/resume_printing"].unresolved == ("prompt",)
+    assert unknown_prompt.prohibited == () and unknown_prompt.primitives["ready_to_print"].value == "unstated"
+    assert unknown_prompt.primitives["method_inconsistent"].value is False
+    unknown_ribbon = hand(tt, paused, ev(1, "operator_report", "PR-01", "media_type", DT, "Ana"))
+    assert unknown_ribbon.decisions["actions/load_ribbon"].value is False and unknown_ribbon.decisions["actions/set_method_dt"].value is True
+    assert unknown_ribbon.decisions["actions/resume_printing"].value is False and unknown_ribbon.prohibited == ("resume_printing",)
+    assert unknown_ribbon.primitives["ready_to_print"].value is False and unknown_ribbon.primitives["ribbon_absent"].value == "unstated"
+    ribbon = [ev(2, "reading", "PR-01", "ribbon_loaded", False), ev(3, "operator_report", "PR-01", "ribbon_loaded", True, "Ana")]
+    both = hand(tt, paused, media[0], *ribbon)
+    assert both.decisions["actions/resume_printing"].value is False and both.prohibited == ("resume_printing",)
+    assert [both.decisions[f"actions/{a}"].value for a in ("load_ribbon", "start_calibration", "verify_loading")] == [None] * 3
+    reported = hand(tt, paused, media[0], ribbon[1], ev(2, "operator_report", "PR-01", "detection_symptom", True, "Ana"))
+    assert procedures.justified(reported) == ("start_calibration", "verify_loading") and reported.primitives["detection_symptom"].value is True
+
+
+def test_sensitivity_names_only_properties_whose_branches_change_the_answer():
+    table = {("paused", "thermal_transfer", m, r, False): {"t": (m == "thermal_transfer" and r, ())} for m in (procedures.TT, procedures.DT) for r in (True, False)}
+    assert procedures.sensitive(table, ("media_type", "ribbon_loaded"), lambda o: o["t"][0]) == ("media_type", "ribbon_loaded")
+    flat = {world: {"t": (False, ())} for world in table}
+    assert procedures.sensitive(flat, ("media_type", "ribbon_loaded"), lambda o: o["t"][0]) == ()
+
+
+def test_unstated_and_false_are_explicit_and_a_started_calibration_is_not_verified():
+    facts = files.read_yaml(procedures.DEFINITION)["facts"]
+    current = set(procedures.UNSTATED) - set(files.read_yaml(procedures.DEFINITION)["retired"])
+    assert {name for name, fact in facts.items() if fact.get("unstated")} == current
+    assert all("Unstated when" in facts[name]["check"] or "unstated when" in facts[name]["check"] for name in current if name != "ready_to_print")
+    assert "unstated if an observation is missing" in facts["ready_to_print"]["check"] and "it is false" in facts["detection_symptom"]["check"]
+    assert "was started, is running, was cancelled" in facts["calibration_verified"]["check"]
+    for variant in ("reported_step", "verified_step", "wrong_method"):
+        assert printer(variant, "calibration_step")[2].primitives["calibration_verified"].value is False
+    assert printer("cancelled", "cancelled")[2].primitives["calibration_verified"].value is False
+    assert printer("base", "detection")[2].primitives["calibration_verified"].value == "unstated"
+
+
+def test_cal_start_separates_an_operator_symptom_report_from_a_contradicted_controller_alert():
+    text = rule(procedures.PACK, "ZT-CAL-START").text
+    assert "an operator reporting an out indication despite loaded media" in text and "a controller out alert while loaded" in text
+    assert "is unresolved" not in text and "possible values give different answers" in rule(procedures.PACK, "ZT-CONFLICT").text
+    _, frame, gold = printer("base", "detection")
+    symptom = next(a for a in frame.assertions if a.property == "detection_symptom")
+    assert symptom.indication == "operator_report" and gold.primitives["detection_symptom"].value is True
+    assert procedures.justified(gold) == ("start_calibration", "verify_loading")
+
+
+def test_structured_controller_lists_carry_times_so_ordering_is_observable():
+    stamped = re.compile(r"^\d\d:\d\d ")
+    for frame in procedures.frames(procedures.scenarios(0, 3), ("structured", "structured_permuted")):
+        assert all(stamped.match(item) for key in ("verified", "attempted") for item in frame.input[key]), frame.id
+        assert frame.input["alerts"] == "unknown" or all(stamped.match(item) for item in frame.input["alerts"])
+    _, completed, gold = printer("completed", "cancelled")
+    assert "08:04 calibration_complete:true" in completed.input["verified"] and "[08:02 " in completed.input["notes"]
+    assert gold.decisions["actions/resume_printing"].value is True
+    _, commanded, _ = printer("commanded_load", "ribbon_out")
+    assert commanded.input["attempted"] == ["08:03 load_ribbon"] and "[08:02 controller" in commanded.input["notes"]
+
+
+def test_quoted_requests_are_disclaimed_and_refund_status_wording_names_the_status():
+    for language, disclaimer in (("en", '", but I am not asking for that.'), ("pt", '", mas não estou pedindo isso.')):
+        for request in support.REQUESTS:
+            for phrase in (0, 1):
+                frame = support.render("s", [{"property": f"request:{request}", "status": "hypothetical", "phrase": phrase}], {}, frame_id="f",
+                                       family="s", order="A1", language=language)
+                assert frame.input["message"].endswith(disclaimer) and "only asking" not in frame.input["message"]
+                assert support.reference(frame).values()[f"requests/{request}"] is False
+    for language in support.LANGUAGES:
+        topics = {key: topic for key, (topic, _) in support.TEXT[language].items()}
+        assert "update" not in topics["refund_status"] and "status" in topics["refund_status"]
+    retained = support.render("s", [{"property": "request:refund_status", "status": "current", "retain": True}], {}, frame_id="f", family="s", order="A1")
+    assert retained.input["message"] == "Also keep a refund status check in place." and support.reference(retained).values()["requests/refund_status"] is True
+
+
+def test_retraction_is_inside_the_superseded_and_superseding_spans_and_only_retraction_replaces():
+    statements = [{"property": "issue:size_mismatch", "status": "current"}, {"property": "request:refund_status", "status": "superseded"},
+                  {"property": "request:replacement", "status": "superseded_by"}]
+    for language, forget in (("en", "Actually, forget that. "), ("pt", "Na verdade, esqueçam isso. ")):
+        frame = support.render("s", statements, {}, frame_id="f", family="s", order="A1", language=language)
+        evidence.validate_frame(frame, support.FIELDS)
+        text = frame.input["message"]
+        retracted, superseding = frame.assertions[1], frame.assertions[2]
+        assert [text[s.start:s.end] for s in retracted.spans][-1] == forget and text[superseding.spans[0].start:superseding.spans[0].end] == forget
+        gold = support.reference(frame)
+        assert gold.values()["requests/refund_status"] is False and gold.values()["requests/replacement"] is True
+        assert "s1" in gold.decisions["requests/refund_status"].evidence and "S-LATEST" in gold.decisions["requests/refund_status"].rules
+    unretracted = support.render("s", [{**statements[1], "status": "current"}, {**statements[2], "status": "current"}], {}, frame_id="f", family="s", order="A1")
+    assert {k: v for k, v in support.reference(unretracted).values().items() if k.startswith("requests/") and v} == \
+        {"requests/refund_status": True, "requests/replacement": True}
+    texts = {r.id: r.text for r in evidence.load_pack(support.PACK).rules}
+    assert "explicitly retracts" in texts["S-LATEST"] and "does not replace an earlier one" in texts["S-LATEST"] and "conflicting" not in texts["S-LATEST"]
+    assert "applies only to a current request to start a refund (refund_initiate)" in texts["S-REFUND"]
+    assert "refund status and refund update requests are not subject to it" in texts["S-REFUND"]
+    for kind in ("refund_status", "refund_update"):
+        frame = support.render("s", [{"property": "issue:size_mismatch", "status": "current"}, {"property": f"request:{kind}", "status": "current"}],
+                               {"refund_blocked": True, "amount": 900.0, "delivered_days_ago": 90}, frame_id="f", family="s", order="A1")
+        assert support.response(frame, support.reference(frame)).value == "refund_desk"

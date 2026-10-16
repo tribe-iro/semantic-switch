@@ -3,6 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import Mapping
+from collections.abc import MutableMapping
+
+from .context import OwnedMapping, OwnedJSON, JSONArray
 
 import numpy as np
 
@@ -10,10 +13,14 @@ from .kernel import F, STATE_NAMES, T, U, evaluate
 
 
 def freeze(x):
+    if type(x) in (OwnedMapping, OwnedJSON, JSONArray):
+        return x
     if isinstance(x, Mapping):
-        return MappingProxyType({k: freeze(v) for k, v in x.items()})
+        values = {k: freeze(v) for k, v in x.items()}
+        return OwnedMapping._normalized(values)
     if isinstance(x, (list, tuple)):
-        return tuple(freeze(v) for v in x)
+        values = tuple(freeze(v) for v in x)
+        return x if isinstance(x, tuple) and all(a is b for a, b in zip(values, x)) else values
     return x
 
 
@@ -51,7 +58,50 @@ def requested(requests) -> list:
     return [request.as_dict() for request in requests]
 
 
-class Result:
+def shown(presentations) -> list:
+    return [presentation.as_dict() for presentation in presentations]
+
+
+_REQUESTS = object()
+
+
+class Cost(MutableMapping):
+    __slots__ = ('_values', 'requests')
+
+    def __init__(self, values, requests):
+        self._values, self.requests = values, requests
+        self._values["requests"] = _REQUESTS
+
+    def __getitem__(self, key):
+        value = self._values[key]
+        if value is _REQUESTS:
+            value = self._values[key] = requested(self.requests)
+        return value
+
+    def __setitem__(self, key, value):
+        self._values[key] = value
+
+    def __delitem__(self, key):
+        del self._values[key]
+        if key == 'requests':
+            self.requests = ()
+
+    def __iter__(self):
+        return iter(self._values)
+
+    def __len__(self):
+        return len(self._values)
+
+
+class Shown:
+    __slots__ = ()
+
+    @property
+    def presentations(self) -> tuple:
+        return tuple(presentation.record() for presentation in self._shown)
+
+
+class Result(Shown):
     __slots__ = ()
 
     def __bool__(self):
@@ -70,7 +120,7 @@ class CheckResult(Result):
     observed_models: tuple = ()
     requests: tuple = ()
     prediction: Prediction | None = None
-    presentations: tuple = ()
+    _shown: tuple = ()
     _probs: np.ndarray | None = None
 
     @property
@@ -88,7 +138,7 @@ class CheckResult(Result):
         out = {"status": self.status, "value": self.value, "prediction": predicted(self.prediction), "p_true": self.p_true,
                "mass": self.mass, "error": self.error, "guidance": thaw(self.guidance), "observed_models": list(self.observed_models)}
         out = out | {"p_unstated": self.p_unstated} if self.p_unstated is not None else out
-        return out | {"scores": self.scores, "requests": requested(self.requests), "presentations": thaw(self.presentations)} if verbose else out
+        return out | {"scores": self.scores, "requests": requested(self.requests), "presentations": shown(self._shown)} if verbose else out
 
 
 @dataclass(slots=True, eq=False, repr=False)
@@ -104,7 +154,7 @@ class PickResult(Result):
     complete: bool = True
     _keys: tuple = ()
     _probs: np.ndarray | None = None
-    presentations: tuple = ()
+    _shown: tuple = ()
     guidance: tuple = ()
     observed_models: tuple = ()
     requests: tuple = ()
@@ -126,7 +176,7 @@ class PickResult(Result):
                "score": self.score, "error": self.error, "complete": self.complete, "guidance": thaw(self.guidance),
                "observed_models": list(self.observed_models)}
         return out | {"scores": self.scores, "removed": self.removed,
-                      "mass": self.mass, "focus": self.focus, "presentations": thaw(self.presentations),
+                      "mass": self.mass, "focus": self.focus, "presentations": shown(self._shown),
                       "requests": requested(self.requests)} if verbose else out
 
 
@@ -143,7 +193,7 @@ class RateResult(Result):
     observed_models: tuple = ()
     requests: tuple = ()
     prediction: Prediction | None = None
-    presentations: tuple = ()
+    _shown: tuple = ()
     _levels: tuple = ()
     _probs: np.ndarray | None = None
 
@@ -162,7 +212,7 @@ class RateResult(Result):
         out = {"status": self.status, "value": self.value, "index": self.index, "prediction": predicted(self.prediction),
                "score": self.score, "error": self.error, "guidance": thaw(self.guidance), "observed_models": list(self.observed_models)}
         return out | {"expected": self.expected, "scores": self.scores, "mass": self.mass, "requests": requested(self.requests),
-                      "presentations": thaw(self.presentations)} if verbose else out
+                      "presentations": shown(self._shown)} if verbose else out
 
 
 def selection_record(value, complete, settled, states, unresolved) -> dict:
@@ -183,6 +233,7 @@ class SelectResult(Result):
     guidance: tuple = ()
     observed_models: tuple = ()
     requests: tuple = ()
+    _shown: tuple = ()
 
     def __repr__(self):
         return f"<{self.status} · {self.error}>" if self.error else \
@@ -216,7 +267,7 @@ def _human(status: str, value: str, detail: str, error: str | None) -> str:
 
 
 @dataclass(frozen=True, slots=True, repr=False)
-class Fact:
+class FactResult(Shown):
     value: object
     score: float | None
     settled: bool
@@ -235,12 +286,12 @@ class Fact:
     status: str = "uncertain"
     members: Mapping = EMPTY
     prediction: Prediction | None = None
-    presentations: tuple = ()
+    _shown: tuple = ()
 
     def __repr__(self):
         shown = repr(self.value) if self.settled else "?"
         extra = f", {self.why}" if self.why else ""
-        return f"Fact({shown}, {_num(self.score)}, {self.source or 'not scored'}{extra})"
+        return f"FactResult({shown}, {_num(self.score)}, {self.source or 'not scored'}{extra})"
 
     def as_dict(self, verbose: bool = False) -> dict:
         value = list(self.value) if isinstance(self.value, tuple) else self.value
@@ -253,7 +304,7 @@ class Fact:
                 {"cards": thaw(self.cards), "superseded": dict(self.superseded),
                  "members": {key: member.as_dict(verbose) for key, member in self.members.items()}}
         return out | {"scores": dict(self.scores), "requests": requested(self.requests),
-                      "presentations": thaw(self.presentations)} if verbose else out
+                      "presentations": shown(self._shown)} if verbose else out
 
 
 @dataclass(frozen=True, slots=True)
@@ -267,7 +318,7 @@ class Trace:
 class SwitchResult(Result):
     status: str
     answer: object = None
-    case: object = None
+    rule: object = None
     missing: tuple = ()
     invalid: tuple = ()
     uncertain: tuple = ()
@@ -281,11 +332,11 @@ class SwitchResult(Result):
 
     def __repr__(self):
         ms = f" · {self.cost['elapsed_ms']:.0f} ms" if self.cost.get("elapsed_ms") is not None else ""
-        if self.status in ("ok", "none") and not self._cased:
+        if self.status in ("ok", "none") and not self._ruled:
             return f"<{self.status} · {self._settled_facts()}{ms}>"
         if self.status == "ok":
             judged = self.cost.get("judge", 0)
-            return f"<ok · {self.answer!r} · case {self.case}{f' · {judged} judged' if judged else ''}{ms}>"
+            return f"<ok · {self.answer!r} · rule {self.rule}{f' · {judged} judged' if judged else ''}{ms}>"
         if self.status == "needs_input":
             return f"<needs_input · {self._input_reason()} · blocked at {self.blocked_by}{ms}>"
         if self.status == "uncertain":
@@ -294,8 +345,8 @@ class SwitchResult(Result):
         return f"<failed · {detail}>"
 
     @property
-    def _cased(self) -> bool:
-        return self._trace is None or bool(self._trace.plan.cases)
+    def _ruled(self) -> bool:
+        return self._trace is None or bool(self._trace.plan.rules)
 
     def _settled_facts(self) -> str:
         return ", ".join(f"{k}={v.value!r}" for k, v in self.facts.items() if v.settled)
@@ -307,10 +358,10 @@ class SwitchResult(Result):
                          if not fact.settled) or "insufficient evidence"
 
     def __str__(self):
-        if self.status in ("ok", "none") and not self._cased:
+        if self.status in ("ok", "none") and not self._ruled:
             return self._settled_facts() or self.status
         if self.status == "ok":
-            return f"{self.answer}  (case {self.case})"
+            return f"{self.answer}  (rule {self.rule})"
         if self.status == "needs_input":
             return f"needs input: {self._input_reason()}  (blocked at {self.blocked_by})"
         if self.status == "uncertain":
@@ -322,28 +373,28 @@ class SwitchResult(Result):
         return "failed: " + "; ".join(f"{k}: {v}" for k, v in self.errors.items())
 
     def as_dict(self, verbose: bool = False) -> dict:
-        out = {"status": self.status, "answer": self.answer, "case": self.case, "missing": list(self.missing),
+        out = {"status": self.status, "answer": self.answer, "rule": self.rule, "missing": list(self.missing),
                "invalid": list(self.invalid), "uncertain": list(self.uncertain), "blocked_by": self.blocked_by,
                "errors": self.errors, "facts": {k: f.as_dict(verbose) for k, f in self.facts.items()},
                "truncated": list(self.truncated)}
-        return out | {"partial": list(self.partial), "cost": self.cost} if verbose else out
+        return out | {"partial": list(self.partial), "cost": thaw(self.cost)} if verbose else out
 
     def explain(self, raw: bool = False) -> str:
         if self._trace is None:
             return repr(self)
         plan, st = self._trace.plan, list(self._trace.states)
-        width = max([len(c.id) for c in plan.cases] + [len(f.name) for f in plan.visible] + [9])
+        width = max([len(c.id) for c in plan.rules] + [len(f.name) for f in plan.visible] + [9])
         lines = [f"{plan.name} → {self!r}"]
-        if plan.cases:
-            lines.append("cases")
+        if plan.rules:
+            lines.append("rules")
             reached = True
-            for case in plan.cases:
-                v = evaluate(case.expr, st)
+            for rule in plan.rules:
+                v = evaluate(rule.expr, st)
                 mark = MARK[v] if reached else "·"
-                lines.append(f"  {mark} {case.id:<{width}}  {case.when}")
+                lines.append(f"  {mark} {rule.id:<{width}}  {rule.when}")
                 if plan.first and v != F:
                     reached = False
-            lines.append(f"  {'✓' if self.case == 'otherwise' else '·'} {'otherwise':<{width}}  → {plan.otherwise!r}")
+            lines.append(f"  {'✓' if self.rule == 'otherwise' else '·'} {'otherwise':<{width}}  → {plan.otherwise!r}")
         lines.append("facts")
         for f in plan.visible:
             fact = self.facts.get(f.name)
@@ -362,3 +413,57 @@ class SwitchResult(Result):
                 reason = self._trace.reasons.get(i)
                 lines.append(f"  {STATE_NAMES[st[i]]} {key}{'  (' + reason[0] + ')' if reason else ''}")
         return "\n".join(lines)
+
+
+@dataclass(frozen=True, slots=True)
+class Target:
+    path: tuple
+    criterion: str
+    binding: str | None
+    source: str | None
+    dist: tuple | None
+    mass: float | None
+    eligible: tuple | None
+    pending: frozenset
+    missing: tuple
+    error: str | None
+    status: str
+    accepted: int | None
+    settled: bool
+    selected: tuple | None
+    complete: bool | None
+    observed_models: tuple
+    requests: tuple
+    result: FactResult
+
+
+@dataclass(frozen=True, slots=True)
+class Row:
+    error: str | None
+    targets: Mapping
+    conditions: Mapping
+    decision: SwitchResult | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class Stage:
+    target: tuple
+    binding: str
+    stage: str
+    presentation: object
+    eligible: tuple | None
+    conditional: bool
+
+    def as_dict(self) -> dict:
+        return {"target": list(self.target), "binding": self.binding, "stage": self.stage, "conditional": self.conditional,
+                "question": self.presentation.question.text, **self.presentation.as_dict()}
+
+
+@dataclass(frozen=True, slots=True)
+class Preview:
+    error: str | None
+    stages: tuple
+    requests: tuple
+
+    def as_dict(self) -> dict:
+        return {"error": self.error, "stages": [stage.as_dict() for stage in self.stages], "requests": [dict(request) for request in self.requests]}

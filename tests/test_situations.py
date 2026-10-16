@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-import hashlib
-import json
-
 import pytest
 
 from semantic_switch import ConfigError, Runtime, files, tools
 from semantic_switch.artifacts import export_identity, read_export
 
-from .conftest import FakeScorer, envelopes
+from semantic_testkit.labels import envelopes, republish
+from semantic_testkit.scoring import FakeScorer
 
 
 def definition(tmp_path):
@@ -21,8 +19,8 @@ def definition(tmp_path):
 
 def exported(tmp_path, records, **options):
     path = definition(tmp_path)
-    files.append(path.with_suffix('.test.jsonl'), envelopes(records))
-    with Runtime({'judge': FakeScorer()}) as rt:
+    files.append(path.with_suffix('.test.jsonl'), files.jsonl(envelopes(records)))
+    with Runtime(FakeScorer()) as rt:
         report = tools.export(rt, path, split='all', **options)
     return report, *read_export(report['path'], fitting=False)
 
@@ -55,26 +53,72 @@ def test_partial_gold_is_not_complete_and_identical_public_inputs_share_one_situ
 def test_export_identity_binds_header_and_rows_and_ignores_locations(tmp_path):
     report, manifest, rows = exported(tmp_path, [
         {'input': {'message': 'refund my order', 'channel': 'email'}, 'facts': {'refund': True, 'urgent': False}, 'group': 'a'}])
-    assert manifest['export_id'] == export_identity(manifest) == report['export_id']
+    assert manifest['export_id'] == export_identity(manifest, [row['digest'] for row in rows], manifest['situations']) == report['export_id']
     commit = tmp_path / 'support.export.jsonl.manifest.json'
-    payload = commit.with_name(manifest['payloads']['support.export.jsonl']['file'])
     moved = tmp_path / 'elsewhere'
     moved.mkdir()
-    payload.rename(moved / payload.name)
+    for entry in manifest['payloads'].values():
+        (tmp_path / entry['file']).rename(moved / entry['file'])
     commit.rename(moved / 'any-name.manifest.json')
     assert read_export(moved / 'any-name.manifest.json', fitting=False)[0]['export_id'] == manifest['export_id']
-    header = {k: v for k, v in manifest.items() if k not in ('payloads', 'export_id')}
-    lines = [json.dumps(row, ensure_ascii=False, sort_keys=True, allow_nan=False) + '\n' for row in rows]
+    assert republish(tmp_path / 'copy.jsonl.manifest.json', manifest, rows)['export_id'] == manifest['export_id']
     for change, match in (({'scope': [['refund']]}, 'targets differ from the declared scope'),
-                          ({'situations': [{**manifest['situations'][0], 'complete': False}]}, 'gold-completeness'),
-                          ({'export_id': 'f' * 64}, 'export identity mismatch')):
-        tampered = {**header, **change}
-        tampered['export_id'] = change.get('export_id', export_identity(tampered))
-        files.publish(tmp_path / 'bad.jsonl.manifest.json', tampered, {'bad.jsonl': lines})
+                          ({'situations': [{**manifest['situations'][0], 'complete': False}]}, 'gold-completeness')):
+        republish(tmp_path / 'bad.jsonl.manifest.json', manifest, rows, **change)
         with pytest.raises(ConfigError, match=match):
             read_export(tmp_path / 'bad.jsonl.manifest.json', fitting=False)
-    edited = [lines[0].replace('"taught": false', '"taught": true')]
-    files.publish(tmp_path / 'edited.jsonl.manifest.json', {**header, 'export_id': manifest['export_id']}, {'edited.jsonl': edited})
-    with pytest.raises(ConfigError, match='row bytes differ'):
-        read_export(tmp_path / 'edited.jsonl.manifest.json', fitting=False)
-    assert hashlib.sha256(lines[0].encode()).hexdigest() == manifest['rows'][0]['sha256']
+    taught = republish(tmp_path / 'taught.jsonl.manifest.json', manifest, [{**rows[0], 'taught': True}, *rows[1:]])
+    assert taught['export_id'] != manifest['export_id']
+    forged = {**files.read_published(tmp_path / 'taught.jsonl.manifest.json'), 'export_id': manifest['export_id']}
+    files.publish(tmp_path / 'taught.jsonl.manifest.json', forged)
+    with pytest.raises(ConfigError, match='export identity mismatch'):
+        read_export(tmp_path / 'taught.jsonl.manifest.json', fitting=False)
+    copied = tmp_path / files.read_published(tmp_path / 'copy.jsonl.manifest.json')['payloads']['copy.observations.jsonl']['file']
+    copied.write_text(copied.read_text().replace('"taught": false', '"taught": true', 1))
+    with pytest.raises(ConfigError, match='incomplete publication'):
+        read_export(tmp_path / 'copy.jsonl.manifest.json', fitting=False)
+    stale = {**files.read_published(moved / 'any-name.manifest.json'), 'schema': 13}
+    files.publish(moved / 'any-name.manifest.json', stale)
+    with pytest.raises(ConfigError, match='unsupported export manifest'):
+        read_export(moved / 'any-name.manifest.json', fitting=False)
+
+
+def test_envelope_merge_unions_lineage_and_partial_targets_and_never_keeps_the_last_conflicting_label(tmp_path):
+    from semantic_switch.training import Actor, LabelSource, Task
+    path = tmp_path / 'support.yaml'
+    files.publish(path, {'name': 'support', 'fields': {'message': {'type': 'text', 'required': True}}, 'reads': ['message'],
+                         'facts': {'refund': {'check': 'The customer asks to receive money back for a charge.'},
+                                   'issues': {'select': 'Which issues does the customer raise?', 'max_claims': 1,
+                                              'labels': {'refund': 'Money back for a charge', 'billing': 'A billing or invoice error'}}}})
+    with Runtime() as runtime:
+        task = Task(runtime.load(path, draft=True))
+    teacher, other = LabelSource('judged', 'teacher-a'), LabelSource('judged', 'teacher-b')
+    first = task.label({'message': 'refund it'}, {'refund': True}, sources={'refund': [teacher]}, groups=['thread:t1'],
+                       selections=[{'selected_by': 'random', 'inclusion_probability': .5, 'selection_id': 's1'}], created='2026-01-02T00:00:00+00:00')
+    second = task.label({'message': 'refund it'}, {'issues': {'billing': False}, 'refund': True}, sources={'issues': {'billing': [other]}, 'refund': [other]},
+                        groups=['entity:e1'], pairs=['p'], tags=['seen'], created='2026-01-01T00:00:00+00:00')
+    captured = task.situation({'message': 'refund it'}, groups=['thread:t2'], selections=[{'selected_by': 'random', 'inclusion_probability': 1., 'selection_id': 's2'}])
+    forward = task.merge(task.merge(first, second), captured)
+    backward = task.merge(captured, task.merge(second, first))
+    for merged in (forward, backward):
+        assert merged['facts'] == {'refund': True, 'issues': {'billing': False}} and set(merged['groups']) == {'thread:t1', 'thread:t2', 'entity:e1'}
+        assert merged['pairs'] == ['p'] and merged['tags'] == ['seen'] and {s['selection_id'] for s in merged['selections']} == {'s1', 's2'}
+        assert {s['producer'] for s in merged['label_sources']['refund']} == {'teacher-a', 'teacher-b'} and merged['created'] == '2026-01-02T00:00:00+00:00'
+        assert [s['producer'] for s in merged['label_sources']['issues']['billing']] == ['teacher-b']
+    contrary = task.label({'message': 'refund it'}, {'refund': False, 'issues': {'refund': True}}, sources={'refund': [other], 'issues': {'refund': [other]}})
+    with pytest.raises(ConfigError, match='refund: competing labels'):
+        task.merge(forward, contrary)
+    held = task.accumulator(max_situations=1, max_claims=10, max_bytes=1 << 20)
+    for record in (forward, contrary, first):
+        held.add(task.unit(record))
+    kept, unresolved = held.settle(task.key({'message': 'refund it'}), strict=False)
+    assert set(unresolved) == {'refund'} and kept['facts'] == {'issues': {'billing': False, 'refund': True}}
+    assert sorted(claim.value for claim in unresolved['refund'].alternatives) == [False, True]
+    corrected = task.label({'message': 'refund it'}, {'refund': False},
+                           sources={'refund': [teacher, LabelSource('authored', 'reviewer', actor=Actor('human'), replaces=True)]})
+    for merged in (task.merge(first, corrected), task.merge(corrected, first)):
+        assert merged['facts'] == {'refund': False} and merged['label_sources']['refund'][-1]['derivation'] == 'authored'
+    with pytest.raises(ConfigError, match='roles check and None'):
+        task.merge(task.situation({'message': 'refund it'}, role='check'), captured)
+    with pytest.raises(ConfigError, match='one decision input'):
+        task.merge(captured, task.situation({'message': 'other'}))

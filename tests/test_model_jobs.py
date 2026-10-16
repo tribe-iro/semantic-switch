@@ -10,8 +10,9 @@ import time
 
 import pytest
 
-from semantic_switch import ConfigError, Model, Runtime, api, backend, model_job
-from tests.conftest import FakeScorer
+from semantic_switch import ConfigError, Model, Runtime, api, backend
+from semantic_switch.training import model_job
+from semantic_testkit.scoring import FakeScorer
 
 GiB = 1 << 30
 
@@ -40,18 +41,45 @@ def test_model_job_lock_exclusive_across_processes(lock, monkeypatch):
         assert job.diagnostics()["admitted_bytes"] == api.HOST_RESERVE
 
 
-def test_admission_fails_before_load(lock, tmp_path, monkeypatch):
+def test_explicit_job_admission_refuses_but_default_runtime_never_admits(lock, tmp_path, monkeypatch):
+    from .test_native_resources import LoadedScorer
     weights = tmp_path / "base.gguf"
     weights.write_bytes(b"gguf")
-    constructed = []
-    monkeypatch.setattr(backend, "LlamaScorer", lambda *args, **kwargs: constructed.append(args))
-    monkeypatch.setattr(Model, "_host_bytes", lambda self: {"weights": 1 << 50})
-    monkeypatch.setattr(api, "available_host_bytes", lambda: 8 * GiB)
-    model = Model(str(weights), device="cpu")
+    admitted = []
+    monkeypatch.setenv("SEMANTIC_SWITCH_CACHE", str(tmp_path / "cache"))
+    monkeypatch.setattr(backend, "LlamaScorer", LoadedScorer)
+    monkeypatch.setattr(Model, "resources", lambda self: {"weights": api.Resources(1 << 50)})
+    monkeypatch.setattr(api, "available_host_bytes", lambda: admitted.append(1) or 8 * GiB)
+    model = Model(str(weights), adapter="qwen3", device="cpu")
     with pytest.raises(ConfigError, match=r"requires \d+ bytes.*8589934592 bytes are available.*systemd-run --user --scope -q -p MemoryMax=\d+G -p MemorySwapMax=0"):
-        with Runtime({"judge": model}) as runtime:
-            runtime.judge()
-    assert constructed == []
+        with model_job(model):
+            pass
+    admitted.clear()
+    with Runtime(model) as runtime:
+        runtime.judge()
+        assert runtime.job is None and not admitted
+
+
+def test_default_runtimes_in_separate_processes_load_concurrently(lock, tmp_path, monkeypatch):
+    from .test_native_resources import LoadedScorer
+    weights = tmp_path / "base.gguf"
+    weights.write_bytes(b"gguf")
+    monkeypatch.setenv("SEMANTIC_SWITCH_CACHE", str(tmp_path / "cache"))
+    monkeypatch.setattr(backend, "LlamaScorer", LoadedScorer)
+    code = ("import time; from semantic_switch import Model, Runtime, backend; from tests.test_native_resources import LoadedScorer\n"
+            "backend.LlamaScorer = LoadedScorer\n"
+            f"with Runtime(Model({str(weights)!r}, adapter='qwen3', device='cpu')) as rt:\n"
+            "    rt.judge()\n    print('held', flush=True)\n    time.sleep(60)")
+    child = subprocess.Popen([sys.executable, "-c", code], stdout=subprocess.PIPE, text=True, env={**os.environ, "SEMANTIC_SWITCH_CACHE": str(tmp_path / "child")})
+    try:
+        assert child.stdout.readline().strip() == "held"
+        with Runtime(Model(str(weights), adapter="qwen3", device="cpu")) as first, Runtime(Model(str(weights), adapter="qwen3", device="cpu")) as second:
+            first.judge()
+            second.judge()
+            assert first.job is None and second.job is None
+    finally:
+        child.kill()
+        child.wait()
 
 
 def test_admission_uses_lower_cgroup_limit(lock, tmp_path, monkeypatch):
@@ -114,7 +142,7 @@ def test_slow_fixtures_single_resident_model(monkeypatch):
 @pytest.fixture
 def roomy(lock, monkeypatch):
     monkeypatch.setattr(api, "available_host_bytes", lambda: 1 << 50)
-    monkeypatch.setattr(Model, "_host_bytes", lambda self: {"weights": GiB})
+    monkeypatch.setattr(Model, "resources", lambda self: {"weights": api.Resources(GiB)})
 
 
 def test_independent_threads_contend_and_path_never_implies_participation(roomy):
@@ -189,7 +217,7 @@ def test_forked_handle_and_over_budget_child_reject_before_construction(roomy, t
     monkeypatch.setattr(backend, "LlamaScorer", lambda *args, **kwargs: constructed.append(args))
     with model_job(extra={"envelope": GiB // 2}) as job:
         with pytest.raises(ConfigError, match="declared envelope"):
-            with Runtime({"judge": Model(str(weights), device="cpu")}, job=job) as runtime:
+            with Runtime(Model(str(weights), device="cpu"), job=job) as runtime:
                 runtime.judge()
         real = os.getpid()
         monkeypatch.setattr(os, "getpid", lambda: real + 1)
@@ -207,14 +235,14 @@ def test_load_failure_releases_owned_job_and_hosted_takes_no_lease(roomy, tmp_pa
     def failing(*args, **kwargs):
         raise RuntimeError("load failed")
     monkeypatch.setattr(backend, "LlamaScorer", failing)
-    runtime = Runtime({"judge": Model(str(weights), device="cpu")})
+    runtime = Runtime(Model(str(weights), device="cpu"))
     with pytest.raises(ConfigError, match="load failed"):
         runtime.judge()
     assert runtime.job is None
     with model_job():
         pass
     runtime.close()
-    with Runtime({"judge": FakeScorer()}) as hosted:
+    with Runtime(FakeScorer()) as hosted:
         hosted.judge()
         assert hosted.job is None
         with model_job():
@@ -226,7 +254,7 @@ def test_cli_sessions_admit_lazily(lock, monkeypatch):
     admitted = []
     monkeypatch.setattr(api, "available_host_bytes", lambda: admitted.append(1) or 1 << 50)
     monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
-    with cli.session({"judge": "openrouter:m", "provider": "p"}) as rt:
+    with cli.session({"judge": "openrouter:m", "provider": "p", "settings": {"codec": "chat"}}) as rt:
         assert rt.job is None and not admitted
     proc = subprocess.run([sys.executable, "-m", "semantic_switch", "check", "x", "--each"], input="not json\n", capture_output=True, text=True,
                           env={**os.environ, "SEMANTIC_MODEL_LOCK": str(lock)})

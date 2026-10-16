@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from bisect import bisect
 from collections import Counter
 import json
 import math
@@ -8,11 +9,8 @@ import os
 from pathlib import Path
 import shutil
 import statistics
-import subprocess
 import sys
 import tarfile
-import time
-import urllib.request
 import venv
 
 COMMIT = "39f122bd51d42d21e4ee1ae95974e462fd09a58d"
@@ -21,10 +19,6 @@ DATASET = "hotchpotch/s1mb-dataset"
 REVISION = "b8dc678ecefb471c6d37311d8c93f65249622842"
 CHECKSUMS_SHA256 = "1db098a52dc4174d4224587fa446b2bb2476d646fb5942d6f65b4460b0cd7983"
 CATEGORY = "english-v1"
-CACHE = Path(__file__).resolve().parents[1] / ".cache" / "s1mb"
-SOURCE = CACHE / "src" / f"S1MB-{COMMIT}"
-DATA = SOURCE / "evaluator" / "data"
-PYTHON = CACHE / "venv" / "bin" / "python"
 MAX_OPTIONS = 20
 TOLERANCE = 1e-5
 OUT_OF_SCOPE = ("gsm8k", "aqua-rat", "fol-nli", "logical-entailment", "ruletaker", "robust-lr", "nlsat", "cladder", "corr2cause", "babi-nli",
@@ -113,38 +107,58 @@ class InferenceFailure(Exception):
 FAILURES = {"unsupported": UnsupportedMapping, "needs_input": NeedsInput, "failed": InferenceFailure}
 
 
-def evaluator(*args):
-    subprocess.run([str(PYTHON), "-I", str(Path(__file__).resolve()), *map(str, args)], check=True, cwd=CACHE,
-                   env={**os.environ, "HF_HUB_CACHE": str(CACHE / "hub")}, stdout=sys.stderr)
+def source(root):
+    return Path(root) / "src" / f"S1MB-{COMMIT}"
 
 
-def install():
+def data(root):
+    return source(root) / "evaluator" / "data"
+
+
+def python(root):
+    return Path(root) / "venv" / "bin" / "python"
+
+
+def evaluator(root, *args):
+    from bench.outcomes import process
+    root = Path(root).resolve()
+    process([python(root), "-I", Path(__file__).resolve(), args[0], root, *args[1:]], cwd=root, capture=False, check=True,
+            env={**os.environ, "HF_HUB_CACHE": str(root / "hub")})
+
+
+def install(root):
+    from bench.evidence import download
+    from bench.outcomes import process
     from semantic_switch.files import sha256_file
-    archive = CACHE / f"s1mb-{COMMIT}.tar.gz"
-    CACHE.mkdir(parents=True, exist_ok=True)
-    if not archive.exists():
-        urllib.request.urlretrieve(f"https://codeload.github.com/hotchpotch/S1MB/tar.gz/{COMMIT}", archive)
-    if sha256_file(archive) != ARCHIVE_SHA256:
-        raise RuntimeError(f"{archive}: digest differs from the pinned S1MB evaluator {ARCHIVE_SHA256}")
-    if not SOURCE.exists():
+    root = Path(root).resolve()
+    archive = root / f"s1mb-{COMMIT}.tar.gz"
+    download(f"https://codeload.github.com/hotchpotch/S1MB/tar.gz/{COMMIT}", archive, ARCHIVE_SHA256)
+    if not source(root).exists():
         with tarfile.open(archive) as tar:
-            tar.extractall(CACHE / "src", filter="data")
-    if not PYTHON.exists():
-        venv.create(CACHE / "venv", with_pip=True)
-        subprocess.run([str(PYTHON), "-m", "pip", "install", "-q", str(SOURCE / "evaluator")], check=True)
-    (CACHE / "source.json").write_text(json.dumps({"repo_id": DATASET, "revision": REVISION, "repo_type": "dataset"}))
-    evaluator("materialize")
-    checksums = sha256_file(DATA / "datasets" / "checksums.json")
+            tar.extractall(root / "src", filter="data")
+    if not python(root).exists():
+        venv.create(root / "venv", with_pip=True)
+        process([python(root), "-m", "pip", "install", "-q", source(root) / "evaluator"], check=True)
+    (root / "source.json").write_text(json.dumps({"repo_id": DATASET, "revision": REVISION, "repo_type": "dataset"}))
+    evaluator(root, "materialize")
+    checksums = sha256_file(data(root) / "datasets" / "checksums.json")
     if checksums != CHECKSUMS_SHA256:
         raise RuntimeError(f"S1MB checksums.json digest {checksums} differs from the pinned {CHECKSUMS_SHA256}")
-    receipt = json.loads((DATA / "datasets" / "hub-source.json").read_text())
+    receipt = json.loads((data(root) / "datasets" / "hub-source.json").read_text())
     if receipt["revision"] != REVISION:
         raise RuntimeError(f"installed S1MB dataset {receipt['revision']} is not the pinned {REVISION}")
-    packages = subprocess.run([str(PYTHON), "-m", "pip", "freeze"], check=True, capture_output=True, text=True).stdout.split()
+    packages = process([python(root), "-m", "pip", "freeze"], check=True)["stdout"].split()
     return {"evaluator": {"repository": "https://github.com/hotchpotch/S1MB", "commit": COMMIT, "archive_sha256": ARCHIVE_SHA256,
                           "packages": packages},
             "dataset": {"repo_id": DATASET, "revision": REVISION, "checksums_sha256": checksums, "category": CATEGORY,
                         "subsets": len(receipt["subsets"])}}
+
+
+def cases(root, limit=None):
+    provenance = install(root)
+    path = Path(root) / f"cases-{limit or 'all'}.jsonl"
+    evaluator(root, "cases", limit or "all", path)
+    return provenance, path
 
 
 def unsupported(question):
@@ -261,10 +275,15 @@ def arm(rows, scored):
     return tasks
 
 
+def latency_of(rows):
+    from bench.outcomes import latency
+    return latency(row["ms"] for row in rows)
+
+
 def summarize(rows, scored, provenance, info, limit):
     return {"schema": 2, "boundary": f"first {limit} cases of every {CATEGORY} benchmark (the evaluator's --limit); partial, not leaderboard-comparable"
             if limit else f"complete {CATEGORY}", "provenance": provenance, "model": info, "tasks": arm(rows, scored),
-            "evaluator": scored, "case_ms_p50": statistics.median(case["ms"] for case in rows)}
+            "evaluator": scored, "case_ms": latency_of(rows)}
 
 
 def questions(key, case):
@@ -339,65 +358,149 @@ def recorded(path):
     return journal(path)
 
 
-def matched(header, rows, keys, stem):
-    model = header["configuration"]["models"][0]
-    predictions, info, scored = (CACHE / f"{stem}-matched.{suffix}" for suffix in ("predictions.jsonl", "model.json", "scored.json"))
+THRESHOLDS = (.5, .9, .95, .99, .999)
+GROUPS = ("all", "noul", "choice", "score", "in_scope", "out_of_scope",
+          *(f"{task}/{scope}" for task in ("noul", "choice", "score") for scope in ("in_scope", "out_of_scope")))
+LENGTHS = (1000, 4000, 16000)
+BOUNDARY = (f"cases recorded by every arm within the first N cases of every {CATEGORY} benchmark of S1MB, a community benchmark whose overlap with "
+            "any arm's training data is unknown; pooled judgment counts, not benchmark means, leaderboard scores or independent samples; several "
+            "questions per case and first-N selection make pooled counts dependent")
+
+
+def accepted_at(question, theta):
+    from semantic_switch.judgment import MIN_MASS
+    probabilities = question["probabilities"]
+    answer = top(probabilities)
+    return answer if probabilities[answer] >= theta and (question["mass"] is None or question["mass"] >= MIN_MASS) else None
+
+
+def curve(hard, column):
+    rows = {}
+    for theta in THRESHOLDS:
+        answer = lambda q, theta=theta: accepted_at(q, theta)
+        found = counts(hard, column, answer)
+        rows[str(theta)] = {**found, "coverage": found["accepted"] / len(hard) if hard else None,
+                            "benchmarks": len({i[0] for i in hard if answer(i[column]) is not None})}
+    return rows
+
+
+def failed_request(request):
+    return request["status"] is None or not 200 <= request["status"] < 300
+
+
+def worked(row):
+    return bool(row["requests"]) if "requests" in row else any(p["status"] not in ("unsupported", "needs_input") for p in row["predictions"])
+
+
+def timing(rows):
+    from bench.outcomes import latency
+    requests = [request for row in rows for request in row.get("requests", ())]
+    usage = Counter()
+    for request in requests:
+        usage.update({name: value for name, value in (request["usage"] or {}).items() if type(value) is int})
+    return {"cases": len(rows), "questions": sum(len(row["predictions"]) for row in rows), "case_ms": latency_of(rows),
+            "non_failed_case_ms": latency_of([row for row in rows if all(p["status"] != "failed" for p in row["predictions"])]),
+            "model_work_case_ms": latency_of([row for row in rows if worked(row)]),
+            **({"requests": len(requests), "failed_requests": sum(map(failed_request, requests)), "attempts": sum(r["attempts"] for r in requests),
+                "request_ms": latency(r["seconds"] * 1000 for r in requests), "usage": dict(usage),
+                "returned_models": dict(Counter(model for r in requests for model in r["models"]))} if any("requests" in row for row in rows) else {})}
+
+
+def strata(rows, key):
+    found = {}
+    for row in rows:
+        found.setdefault(key(row), []).append(row)
+    return {str(name): timing(group) for name, group in sorted(found.items())}
+
+
+def analyze(arms):
+    names = list(arms)
+    inputs = shared_inputs([arms[name][0] for name in names])
+    keys, items = aligned(*(arms[name][1] for name in names))
+    rows = {name: {key: arms[name][1][key] for key in keys} for name in names}
+    columns = {name: 3 + index for index, name in enumerate(names)}
+    joint = [item for item in items if all(item[column]["probabilities"] is not None for column in columns.values())]
+    hard, soft = [item for item in joint if max(item[2].values()) == 1], [item for item in joint if max(item[2].values()) < 1]
+    return {"boundary": BOUNDARY, "inputs": inputs,
+            "configuration_digests": {name: arms[name][0]["digest"] for name in names},
+            "matched_cases": len(keys), "judgments": len(items), "jointly_scored": len(joint), "jointly_scored_hard": len(hard),
+            "availability": {name: dict(sorted(Counter(item[column]["status"] for item in items).items())) for name, column in columns.items()},
+            "unscored": {name: sum(item[column]["probabilities"] is None for item in items) for name, column in columns.items()},
+            "acceptance_replay_mismatches_at_0.9": {name: sum(accepted_at(item[column], .9) != item[column]["accepted"] for item in joint)
+                                                    for name, column in columns.items()},
+            "hard_label": {group: {"items": len(values), "benchmarks": len({i[0] for i in values}),
+                                   **{name: {"raw_correct": sum(i[2][top(i[column]["probabilities"])] == 1 for i in values), "curve": curve(values, column)}
+                                      for name, column in columns.items()}}
+                           for group in GROUPS for values in [[item for item in hard if member(item, group)]]},
+            "soft_target": {name: agreement([(item[2], accepted_at(item[column], .9)) for item in soft]) for name, column in columns.items()},
+            "paired": {f"{a}->{b}": paired(rows[a], rows[b]) for i, a in enumerate(names) for b in names[i + 1:]},
+            "timing": {name: {"all": timing(list(rows[name].values())),
+                              "question_count": strata(rows[name].values(), lambda row: len(row["predictions"])),
+                              "input_characters_from": strata(rows[name].values(), lambda row: (0, *LENGTHS)[bisect(LENGTHS, row["input_characters"])])
+                              if all("input_characters" in row for row in rows[name].values()) else None}
+                       for name in names}}
+
+
+def matched(root, header, rows, keys, stem):
+    model = header["configuration"]["models"][0] if header["configuration"]["models"] else {"source": header["configuration"]["args"].get("judge"), "sha256": None}
+    predictions, info, scored = (Path(root) / f"{stem}-matched.{suffix}" for suffix in ("predictions.jsonl", "model.json", "scored.json"))
     predictions.write_text("".join(json.dumps({"benchmark": rows[key]["benchmark"], "case_id": rows[key]["case_id"],
                                                "predictions": rows[key]["predictions"]}) + "\n" for key in keys))
-    info.write_text(json.dumps({"id": model["source"], "adapter": "semantic-switch-check-pick-rate", "revision": model["sha256"],
+    info.write_text(json.dumps({"id": model["source"], "adapter": "semantic-switch-check-pick-rate", "revision": model["sha256"] or model["source"],
                                 "settings": {"journal_configuration_digest": header["digest"], "args": header["configuration"]["args"]}}))
-    evaluator("score", predictions, info, f"{stem}-matched", scored)
+    evaluator(root, "score", predictions, info, f"{stem}-matched", scored)
     return json.loads(scored.read_text())
 
 
-def compare(base, other, output):
-    from semantic_switch import files
-    arms = {name: (path, *recorded(path)) for name, path in (("base", base), ("other", other))}
-    inputs = shared_inputs([arms[name][1] for name in arms])
-    pairs = paired(arms["base"][2], arms["other"][2])
-    keys = [key for key in arms["base"][2] if key in arms["other"][2]]
+def compare(paths, output, work):
+    from bench.outcomes import report as publish
+    arms = {name: recorded(path) for name, path in paths.items()}
+    analysis = analyze(arms)
+    keys = aligned(*(rows for _, rows in arms.values()))[0]
     summaries = {}
-    for name, (path, header, rows) in arms.items():
-        scored = matched(header, rows, keys, Path(path).stem)
-        summaries[name] = {"artifact": str(path), "configuration_digest": header["digest"], "model": header["configuration"]["models"][0]["source"],
+    for name, (header, rows) in arms.items():
+        scored = matched(work, header, rows, keys, f"{name}-{Path(paths[name]).stem}")
+        summaries[name] = {"artifact": str(paths[name]), "configuration_digest": header["digest"], "model": header["configuration"]["args"].get("judge"),
                            "tasks": arm([rows[key] for key in keys], scored), "evaluator": scored}
-    report = {"schema": 3, "boundary": f"cases recorded by both arms within the first 25 cases of every {CATEGORY} benchmark; several questions "
-              "per case and first-N selection make pooled counts neither leaderboard scores nor independent samples",
-              "inputs": inputs, "arms": summaries, "paired": pairs}
-    files.publish(output, report)
-    return report
+    return publish(output, {"schema": 4, **analysis, "arms": summaries})
 
 
 def scope(benchmark):
     return "out" if any(name in benchmark for name in OUT_OF_SCOPE) else "in"
 
 
-def recording():
-    from semantic_switch import Runtime, judge_from
-    from semantic_switch.hosted import TransportError
-    bodies = []
-
-    async def record(url, body, timeout):
-        bodies.append(body)
-        raise TransportError("recording only")
-    return Runtime({"judge": judge_from("openrouter:recording", transport=record)}, own_judges=True), bodies
+def leaves(value):
+    if isinstance(value, dict):
+        return [text for item in value.values() for text in leaves(item)]
+    if isinstance(value, list):
+        return [text for item in value for text in leaves(item)]
+    return [value] if isinstance(value, str) and value.strip() else []
 
 
-def reconstruct(rt, bodies, case, question):
-    from semantic_switch.inline import rendered
-    rt.ask(state(case), {question["id"]: primitive(question)})
-    system, user = (message["content"] for message in bodies[-1]["messages"])
+def previewing():
+    import semantic_switch as ss
+    return ss.Runtime(ss.judge("openrouter:preview/request", codec="chat", key="unused"), own_judges=True)
+
+
+def reconstruct(rt, case, question):
+    preview = rt.preview(state(case), {question["id"]: primitive(question)})
+    if preview.error is not None or len(preview.requests) != 1:
+        return {"system": None, "user": None, "transport": None, "error": preview.error or f"{len(preview.requests)} initial requests prepared"}
+    (request,) = preview.requests
+    system, user = (message["content"] for message in request["body"]["messages"])
     position = 1
     for option in question["options"]:
         position = position and user.find(option["description"], position - 1) + 1
+    evidence = state(case)
     return {"system": system, "user": user, "transport": {"instructions": question["instructions"] in user, "options_in_authored_order": position > 0,
-                                                          "input": rendered(state(case)) in user}}
+                                                          "input": all(text in user for text in leaves(evidence if not isinstance(evidence, str) else [evidence]))}}
 
 
-def audit(base, other, output):
+def audit(base, other, output, work):
     from semantic_switch import files
+    from bench.outcomes import report as publish
     arms = {"e2b": recorded(base)[1], "e4b": recorded(other)[1]}
-    cases = {f"{row['benchmark']}/{row['case']['case_id']}": row["case"] for row in files.read_jsonl(CACHE / "cases-25.jsonl")}
+    cases = {f"{row['benchmark']}/{row['case']['case_id']}": row["case"] for row in files.read_jsonl(Path(work) / "cases-25.jsonl")}
     counts, keys = {name: {} for name in arms}, aligned(*arms.values())[0]
     for name, rows in arms.items():
         for row in map(rows.get, keys):
@@ -407,8 +510,7 @@ def audit(base, other, output):
                     entry["accepted"] += 1
                     entry["errors"] += wrong(row["targets"][q["question_id"]], q["accepted"])
     reviewed = []
-    rt, bodies = recording()
-    with rt:
+    with previewing() as rt:
         for group, key, qid, name, finding, note in REVIEW:
             row = arms[name][key]
             question = next(q for q in cases[key]["questions"] if q["id"] == qid)
@@ -419,82 +521,83 @@ def audit(base, other, output):
             contrast = min(correct, key=lambda c: c[1]["accepted"] != max(target, key=target.get), default=None)
             reviewed.append({"group": group, "source": key, "question_id": qid, "arm": name, "finding": finding, "note": note, "target": target,
                              "accepted": saved["accepted"], "scores": saved["probabilities"], "question": question,
-                             **reconstruct(rt, bodies, cases[key], question),
+                             **reconstruct(rt, cases[key], question),
                              "contrast": contrast and {"source": contrast[0], "accepted": contrast[1]["accepted"], "target": contrast[2],
-                                                       "transport": reconstruct(rt, bodies, cases[contrast[0]], next(
+                                                       "transport": reconstruct(rt, cases[contrast[0]], next(
                                                            q for q in cases[contrast[0]]["questions"] if q["id"] == qid))["transport"]}})
-    report = {"schema": 2, "boundary": "cases recorded by both saved E2B/E4B first-25-case S1MB checkpoints; an accepted error is an accepted answer "
-              "with target mass below .5", "matched_cases": len(keys),
-              "out_of_scope": list(OUT_OF_SCOPE),
-              "accepted_errors": {name: {"in_scope": sum(e["errors"] for e in benchmarks.values() if e["scope"] == "in"),
-                                         "out_of_scope": sum(e["errors"] for e in benchmarks.values() if e["scope"] == "out"),
-                                         "benchmarks": dict(sorted(benchmarks.items()))} for name, benchmarks in counts.items()},
-              "unsupported_catalogues": sorted({row["benchmark"] for row in arms["e2b"].values() for q in row["predictions"]
-                                                if q["status"] == "unsupported" and "options exceed" in q["error"]}),
-              "findings": dict(Counter(case["finding"] for case in reviewed)), "cases": reviewed,
-              "cohort_patterns": [{"kind": kind, "pattern": pattern, "sources": [f"{REVIEW[i][1]}#{REVIEW[i][2]}@{REVIEW[i][3]}" for i in sources]}
-                                  for kind, pattern, sources in PATTERNS]}
-    files.publish(output, report)
-    return report
+    return publish(output, {
+        "schema": 3, "boundary": "cases recorded by both saved E2B/E4B first-25-case S1MB checkpoints; an accepted error is an accepted answer "
+        "with target mass below .5; request text from the public preview of an unsent hosted chat request", "matched_cases": len(keys),
+        "out_of_scope": list(OUT_OF_SCOPE),
+        "accepted_errors": {name: {"in_scope": sum(e["errors"] for e in benchmarks.values() if e["scope"] == "in"),
+                                   "out_of_scope": sum(e["errors"] for e in benchmarks.values() if e["scope"] == "out"),
+                                   "benchmarks": dict(sorted(benchmarks.items()))} for name, benchmarks in counts.items()},
+        "unsupported_catalogues": sorted({row["benchmark"] for row in arms["e2b"].values() for q in row["predictions"]
+                                          if q["status"] == "unsupported" and "options exceed" in q["error"]}),
+        "findings": dict(Counter(case["finding"] for case in reviewed)), "cases": reviewed,
+        "cohort_patterns": [{"kind": kind, "pattern": pattern, "sources": [f"{REVIEW[i][1]}#{REVIEW[i][2]}@{REVIEW[i][3]}" for i in sources]}
+                            for kind, pattern, sources in PATTERNS]})
 
 
-def run(args):
+RECEIPT = ("id", "seconds", "attempts", "status", "usage", "models")
+
+
+def run(args, work):
+    import time
     from semantic_switch import DEFAULT_JUDGE, PRECISE_JUDGE, Model, files
     from semantic_switch.artifacts import artifact_digest
-    from bench.outcomes import configuration, finish, judge_spec, resumable, runtime, work_key
-    provenance = install()
+    from bench.outcomes import Receipts, configuration, finish, judge_spec, resumable, runtime, work_key
+    provenance, cases_path = cases(work, args.limit)
     judge = PRECISE_JUDGE if args.precise else args.judge or DEFAULT_JUDGE
-    cases_path = CACHE / f"cases-{args.limit or 'all'}.jsonl"
-    evaluator("cases", args.limit or "all", cases_path)
-    cases = files.read_jsonl(cases_path)
-    model, recording = judge_spec(judge, provider=args.provider, key_file=args.key_file, device=args.device, max_input_tokens=args.max_input_tokens)
-    keyed = {work_key(row['benchmark'], row['case']['case_id']): row for row in cases}
+    hosted = judge.startswith("openrouter:")
+    model = judge_spec(judge, provider=args.provider, key_file=args.key_file, device=args.device, max_input_tokens=args.max_input_tokens)
+    keyed = {work_key(row['benchmark'], row['case']['case_id']): row for row in files.read_jsonl(cases_path)}
     if args.matched:
         common = set(recorded(args.matched[0])[1]) & set(recorded(args.matched[1])[1])
         keyed = {key: row for key, row in keyed.items() if key in common}
     config = configuration("bench.external_primitives", args, *[model] if isinstance(model, Model) else [],
                            provenance=provenance, cases=files.sha256_file(cases_path), keys=artifact_digest(sorted(keyed)))
+    receipts = Receipts()
     with resumable(args.output, config, fresh=args.fresh) as journal:
-        with runtime(model) as rt:
+        with runtime(model, receipts=receipts) as rt:
             info = model_info(rt, judge)
             for key in journal.pending(keyed):
                 row = keyed[key]
-                first = len(recording.records) if recording else 0
+                first = len(receipts)
                 started = time.perf_counter()
                 predictions = predict(rt, row["case"])
-                receipts = recording.records[first:] if recording else []
                 journal.commit([(key, {"benchmark": row["benchmark"], "task": row["task"], "case_id": row["case"]["case_id"],
-                                        "ms": (time.perf_counter() - started) * 1000, "predictions": predictions,
-                                        "input_characters": len(json.dumps(state(row["case"]), ensure_ascii=False)), "targets": row["targets"],
-                                        **({"requests": [{name: receipt[name] for name in ("elapsed_ms", "usage", "returned_model", "response_id", "completion", "error")}
-                                                         for receipt in receipts]} if recording else {})})])
-        predictions_path, model_path, scored_path = (CACHE / f"{Path(args.output).stem}.{suffix}" for suffix in ("predictions.jsonl", "model.json", "scored.json"))
+                                       "ms": (time.perf_counter() - started) * 1000, "predictions": predictions,
+                                       "input_characters": len(json.dumps(state(row["case"]), ensure_ascii=False)), "targets": row["targets"],
+                                       **({"requests": [{name: receipt[name] for name in RECEIPT} for receipt in receipts.since(first)]} if hosted else {})})])
+        stem = Path(args.output).stem
+        predictions_path, model_path, scored_path = (Path(work) / f"{stem}.{suffix}" for suffix in ("predictions.jsonl", "model.json", "scored.json"))
         predictions_path.write_text("".join(json.dumps({"benchmark": row["benchmark"], "case_id": row["case_id"],
                                                          "predictions": row["predictions"]}) + "\n" for row in journal.payloads()))
         model_path.write_text(json.dumps(info))
-        evaluator("score", predictions_path, model_path, Path(args.output).stem, scored_path)
+        evaluator(work, "score", predictions_path, model_path, stem, scored_path)
         scored = json.loads(scored_path.read_text())
         artifact = finish(journal, args.output, lambda rows: summarize(rows, scored, provenance, info, args.limit))
     for task, summary in artifact["tasks"].items():
         print(task, json.dumps(summary), flush=True)
 
 
-def materialize():
+def materialize(root):
     from s1mb.dataset_source import ensure_dataset
-    ensure_dataset(DATA, CACHE / "source.json")
+    ensure_dataset(data(root), Path(root) / "source.json")
 
 
-def export(limit, output):
+def export(root, limit, output):
     from s1mb.data import load_benchmark, load_cases, load_category
     with open(output, "w") as out:
-        for name in load_category(DATA, CATEGORY).benchmarks:
-            benchmark = load_benchmark(DATA, name)
-            for case in load_cases(DATA, benchmark)[:None if limit == "all" else int(limit)]:
+        for name in load_category(data(root), CATEGORY).benchmarks:
+            benchmark = load_benchmark(data(root), name)
+            for case in load_cases(data(root), benchmark)[:None if limit == "all" else int(limit)]:
                 out.write(json.dumps({"benchmark": name, "task": benchmark.task, "case": case.inference().model_dump(),
                                       "targets": {key: target.probabilities for key, target in case.targets.items()}}) + "\n")
 
 
-def score(predictions, model, run_id, output):
+def score(root, predictions, model, run_id, output):
     from s1mb.data import ModelInfo, Prediction, load_benchmark, load_category
     from s1mb.runner import evaluate
     from s1mb.submission_report import TASKS, Measurement, task_score
@@ -520,9 +623,9 @@ def score(predictions, model, run_id, output):
         def close(self):
             pass
 
-    shutil.rmtree(CACHE / "runs" / run_id, ignore_errors=True)
-    benchmarks = [load_benchmark(DATA, name) for name in load_category(DATA, CATEGORY).benchmarks]
-    results = {b.id: evaluate(Replay(b.id), DATA, b, CACHE / "runs", run_id, len(stored[b.id])) for b in benchmarks if b.id in stored}
+    shutil.rmtree(Path(root) / "runs" / run_id, ignore_errors=True)
+    benchmarks = [load_benchmark(data(root), name) for name in load_category(data(root), CATEGORY).benchmarks]
+    results = {b.id: evaluate(Replay(b.id), data(root), b, Path(root) / "runs", run_id, len(stored[b.id])) for b in benchmarks if b.id in stored}
     Path(output).write_text(json.dumps({
         "benchmarks": {b.id: {"task": b.task, "primary_metric": b.primary_metric, **results[b.id].model_dump(include={"status", "counts", "metrics"}),
                               "failures": dict(Counter(p.error for p in results[b.id].predictions if p.error))} for b in benchmarks if b.id in results},
@@ -534,8 +637,9 @@ def main():
     commands = {"materialize": materialize, "cases": export, "score": score}
     if len(sys.argv) > 1 and sys.argv[1] in commands:
         return commands[sys.argv[1]](*sys.argv[2:])
+    from bench.outcomes import output_argument, work_argument, work_directory
     parser = argparse.ArgumentParser(description="Pinned S1MB external baseline through public Check/Pick/Rate and the original S1MB evaluator.")
-    parser.add_argument("--judge", help="judge source for semantic_switch.judge_from (default: DEFAULT_JUDGE)")
+    parser.add_argument("--judge", help="judge source for semantic_switch.judge (default: DEFAULT_JUDGE)")
     parser.add_argument("--precise", action="store_true", help="use PRECISE_JUDGE")
     parser.add_argument("--provider", help="OpenRouter provider route for openrouter:MODEL")
     parser.add_argument("--key-file", type=Path, help="OpenRouter API key file (default: OPENROUTER_API_KEY)")
@@ -543,16 +647,22 @@ def main():
     parser.add_argument("--max-input-tokens", type=int, default=4096)
     parser.add_argument("--limit", type=int, help="first N cases of every benchmark, as the evaluator's --limit")
     parser.add_argument("--matched", nargs=2, metavar=("BASE", "OTHER"), help="run only the cases recorded in both saved arms' checkpoints")
-    parser.add_argument("--compare", nargs=2, metavar=("BASE", "OTHER"), help="model-free matched analysis of two saved arms' checkpoints")
+    parser.add_argument("--compare", nargs="+", metavar="NAME=ARTIFACT", help="model-free matched analysis of two or more saved arms' checkpoints")
     parser.add_argument("--audit", nargs=2, metavar=("E2B", "E4B"), help="model-free accepted-error audit of two saved arms' checkpoints")
-    parser.add_argument("--output", required=True)
+    output_argument(parser)
+    work_argument(parser)
     parser.add_argument("--fresh", action="store_true")
     args = parser.parse_args()
+    work = work_directory(args.output, args.work)
+    work.mkdir(parents=True, exist_ok=True)
     if args.compare:
-        return compare(*args.compare, args.output)
+        arms = dict(arm.split("=", 1) for arm in args.compare)
+        if len(arms) < 2 or len(arms) != len(args.compare):
+            parser.error("--compare needs two or more distinct NAME=ARTIFACT arms")
+        return compare(arms, args.output, work)
     if args.audit:
-        return audit(*args.audit, args.output)
-    run(args)
+        return audit(*args.audit, args.output, work)
+    run(args, work)
 
 
 if __name__ == "__main__":

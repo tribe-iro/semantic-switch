@@ -1,0 +1,245 @@
+{
+ "utc": "2026-10-13T20:32:39.517043+00:00",
+ "command": [
+  ".artifacts/ga-completion/reduction-measure.py"
+ ],
+ "provenance": {
+  "schema": 2,
+  "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+  "sources": "50d3e0b8892a6c8341c754cb161bb1709e6549fa446b0a479aedcadc31e19fd2",
+  "dataset": "9f370c942e9236e206104635c523584cad88821feb9d9669d961218e3c38a877",
+  "execution": {
+   "identity": {
+    "presentation": {
+     "evidence": "named-fields@2",
+     "choices": "full-criteria@3"
+    },
+    "file": "Q8_0.gguf",
+    "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+    "template": "chat@3:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb"
+   },
+   "requested_device": "gpu",
+   "threads": null,
+   "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+   "loaded": true,
+   "observed_models": [],
+   "accelerated": true,
+   "batch_inputs": 1,
+   "max_slots": 20,
+   "capabilities": {
+    "shared": true,
+    "conformance": true,
+    "counters": {
+     "prefix_hits": 0,
+     "prefix_misses": 1,
+     "state_hits": 0,
+     "state_misses": 1,
+     "state_tokens": 31,
+     "suffix_tokens": 37,
+     "failures": 0,
+     "prefix_tokens": 40,
+     "prefix_evictions": 0,
+     "adapter_switches": 0,
+     "submissions": 3,
+     "submitted_tokens": 108
+    }
+   },
+   "requested_capacity": {
+    "n_ctx": 8192,
+    "n_batch": 512,
+    "n_seq_max": 6
+   },
+   "configuration": {
+    "max_input_tokens": 1024,
+    "prefix_slots": 4
+   },
+   "capacity": {
+    "n_ctx": 8192,
+    "n_batch": 512,
+    "n_seq_max": 6,
+    "prefix_slots": 4,
+    "scheduling": "resident-prefix-cache@2",
+    "n_outputs_max": 6,
+    "swa_full": true,
+    "kv_unified": true,
+    "n_ubatch": 512,
+    "flash_attn": "enabled",
+    "type_k": "f16",
+    "type_v": "f16",
+    "device": "gpu",
+    "tensor_types": [
+     "f16",
+     "f32",
+     "q8_0"
+    ],
+    "use_extra_bufts": true,
+    "repacked": [],
+    "buffers": {
+     "Vulkan0 model": 2456069079,
+     "Vulkan_Host model": 2923429888,
+     "Vulkan_Host output": 6291456,
+     "Vulkan0 KV": 150994944,
+     "Vulkan0 compute": 126300979,
+     "Vulkan_Host compute": 41796239
+    },
+    "shared": true
+   },
+   "binding": {
+    "representation": "base",
+    "adapter": "46d948811e74e1258598480660c423b1b0f121b3ef6f2d68df9ae1d02da80a5e",
+    "pool": {
+     "loads": 0,
+     "hits": 0,
+     "evictions": 0,
+     "underestimates": 0,
+     "unestimated": 0,
+     "max_adapters": 4,
+     "resident": {}
+    }
+   }
+  },
+  "boundary": "public SDK"
+ },
+ "native_logits": {
+  "entries": 262144,
+  "dtype": "float32",
+  "bytes": 1048576
+ },
+ "scratch": {
+  "dtype": "float64",
+  "bytes": 2097152,
+  "allocated_once": true,
+  "full_buffer_writes_per_reduction": 2
+ },
+ "slot_log_probabilities": {
+  "bytes": 8,
+  "dtype": "float32"
+ },
+ "judge_probability_conversion": {
+  "bytes": 16,
+  "dtype": "float64",
+  "renormalizes": true
+ },
+ "reduction": {
+  "unit": "ms",
+  "samples": 50,
+  "interpolation": "linear between closest ranks",
+  "p50": 0.7802405016263947,
+  "p95": 1.860492248306399
+ },
+ "conversion": {
+  "unit": "ms",
+  "samples": 50,
+  "interpolation": "linear between closest ranks",
+  "p50": 0.004765501216752455,
+  "p95": 0.010514450696064158
+ },
+ "rows": {
+  "reduction_ms": [
+   2.662106999196112,
+   2.0304099962231703,
+   1.3630700050271116,
+   1.373672996123787,
+   1.4026940043549985,
+   1.550469001813326,
+   2.0782840001629665,
+   1.454495002690237,
+   1.3788430005661212,
+   1.290382002480328,
+   1.224311999976635,
+   1.1622729944065213,
+   1.65281500085257,
+   1.0480040000402369,
+   0.9702650058898143,
+   0.911800998437684,
+   0.8753389993216842,
+   0.8251019971794449,
+   0.7864080034778453,
+   0.7614360001753084,
+   0.9429339988855645,
+   1.013593006064184,
+   0.7580040037282743,
+   0.7469859992852435,
+   0.7464279988198541,
+   0.7475269958376884,
+   0.7452990030287765,
+   0.7464129957952537,
+   0.7510739960707724,
+   0.7489229974453337,
+   0.7627780069014989,
+   0.770634003856685,
+   1.2587870005518198,
+   0.774072999774944,
+   0.7497219994547777,
+   0.7535379991168156,
+   0.7503590022679418,
+   0.7460929991793819,
+   0.7449090044246987,
+   0.7458510008291341,
+   0.7517310004914179,
+   0.8205310004996136,
+   0.978067000687588,
+   0.7993260005605407,
+   0.7458390027750283,
+   0.7468820040230639,
+   0.7519729988416657,
+   0.7497129990952089,
+   0.7425599978887476,
+   0.7406660006381571
+  ],
+  "conversion_ms": [
+   0.03473700053291395,
+   0.01674000668572262,
+   0.010240000847261399,
+   0.010240000847261399,
+   0.009368995961267501,
+   0.010739000572357327,
+   0.009718001820147038,
+   0.009334005881100893,
+   0.008148002962116152,
+   0.007172995537985116,
+   0.008192997484002262,
+   0.007485999958589673,
+   0.008552000508643687,
+   0.005957001121714711,
+   0.0054060001275502145,
+   0.005405003321357071,
+   0.004941000952385366,
+   0.004464003723114729,
+   0.004469999112188816,
+   0.004633002390619367,
+   0.007538998033851385,
+   0.005726004019379616,
+   0.004560999514069408,
+   0.004401998012326658,
+   0.004337001882959157,
+   0.005456000508274883,
+   0.004308996722102165,
+   0.0043520049075596035,
+   0.004292996891308576,
+   0.004153000190854073,
+   0.005214998964220285,
+   0.004845998773816973,
+   0.0058919977163895965,
+   0.004384004569146782,
+   0.004447996616363525,
+   0.0043100008042529225,
+   0.004654000804293901,
+   0.0042959945858456194,
+   0.0043050022213719785,
+   0.004205998266115785,
+   0.004685003659687936,
+   0.006217000191099942,
+   0.006271002348512411,
+   0.004574998456519097,
+   0.004307999915909022,
+   0.004465000529307872,
+   0.0043670006562024355,
+   0.004360001184977591,
+   0.004212000931147486,
+   0.004369001544546336
+  ]
+ },
+ "scope": "CPU reduction of one real native logits row; excludes decode and GPU-to-host synchronization; no precision change"
+}

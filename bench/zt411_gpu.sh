@@ -6,174 +6,136 @@ cd "$ROOT"
 
 PACK_KIND="${PACK_KIND:-zt411}"
 case "$PACK_KIND" in
-  zt411) BUILDER=bench.procedures; DEFINITION=printer.yaml; SOURCES=(bench/procedures.py bench/evidence.py bench/data/zt411) ;;
-  support) BUILDER=bench.support; DEFINITION=support.yaml; SOURCES=(bench/support.py bench/evidence.py bench/data/support) ;;
+  zt411|support) ;;
   *) echo "PACK_KIND must be zt411 or support" >&2; exit 2 ;;
 esac
-STEM="${DEFINITION%.yaml}"
 PACK="${PACK:-packs/$PACK_KIND}"
 WORK="${WORK:-work/$PACK_KIND}"
-REVIEWS="${REVIEWS:-}"
 KEY_FILE="${KEY_FILE:-$ROOT/../keys/openrouter.txt}"
 MODEL="${MODEL:-google/gemma-4-E2B-it}"
 REVISION="${REVISION:-3e22461f65e89153144f8adb70e3b8c2cc9845a7}"
 MARGIN="${MARGIN:-0}"
 EPOCHS="${EPOCHS:-4}"
+MIN_EPOCHS="${MIN_EPOCHS:-}"
+DEFINITION="${DEFINITION:-}"
 EVAL_EVERY_EXAMPLES="${EVAL_EVERY_EXAMPLES:-}"
 PROFILE="${PROFILE:-}"
-PROFILE_STEPS="${PROFILE_STEPS:-3}"
+PROFILE_STEPS="${PROFILE_STEPS:-}"
 PROFILE_WARMUP="${PROFILE_WARMUP:-1}"
 PROFILE_CADENCES="${PROFILE_CADENCES:-}"
-PROVISIONAL_CADENCE=1000000
-MAX_TOKENS="${MAX_TOKENS:-2000000}"
-MAX_MONITOR_TOKENS="${MAX_MONITOR_TOKENS:-20000000}"
+MAX_TOKENS="${MAX_TOKENS:-}"
+MAX_MONITOR_TOKENS="${MAX_MONITOR_TOKENS:-}"
 MAX_SECONDS="${MAX_SECONDS:-18000}"
 FEASIBILITY_UPDATES="${FEASIBILITY_UPDATES:-8}"
 FIT_MEMORY="${FIT_MEMORY:-22G}"
-FIT_MIN_AVAILABLE_GIB="${FIT_MIN_AVAILABLE_GIB:-16}"
 GUARD_GIB="${GUARD_GIB:-1.5}"
 UNTIL="${UNTIL:-}"
+ATTEMPT="${ATTEMPT:-}"
+SMOKE="${SMOKE:-}"
+REFERENCE="${REFERENCE:-}"
+EVALUATION_BATCH_SIZE="${EVALUATION_BATCH_SIZE:-1}"
+RESULTS="${RESULTS:-$WORK/results}"
 
 PY="$ROOT/.venv/bin"
 XPU="$ROOT/.venv-xpu/bin"
-DONE="$WORK/done"
-LOGS="$WORK/logs"
-mkdir -p "$DONE" "$LOGS"
+if [[ ! -f "$PACK/benchmark.json" ]]; then
+  echo "training requires an existing published pack: $PACK/benchmark.json; corpus construction is a separate operation" >&2; exit 2
+fi
+mkdir -p "$WORK"
 
 available_gib() { awk '/MemAvailable/ {printf "%.1f", $2 / 1048576}' /proc/meminfo; }
-
 guarded() {
   "$@" &
   local pid=$!
+  trap 'kill -TERM "$pid" 2>/dev/null || true; wait "$pid" || true; trap - INT TERM; return 130' INT TERM
   while kill -0 "$pid" 2>/dev/null; do
     if awk -v a="$(available_gib)" -v g="$GUARD_GIB" 'BEGIN {exit !(a < g)}'; then
       echo "MemAvailable below ${GUARD_GIB} GiB; stopping $1 to protect the desktop" >&2
-      kill -TERM "$pid"; wait "$pid" || true; return 99
+      kill -TERM "$pid"; wait "$pid" || true; trap - INT TERM; return 99
     fi
     sleep 2
   done
-  wait "$pid"
+  local result=0
+  wait "$pid" || result=$?
+  trap - INT TERM
+  return "$result"
 }
-
-identity() { printf '%s\n' "$@" | sha256sum | cut -c1-16; }
-tree() { find "$@" -type f -not -path '*/__pycache__/*' -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -c1-16; }
-sha() { sha256sum "$1" | cut -c1-16; }
-fresh() { if [[ -e "$1" ]]; then mv "$1" "$1.interrupted.$(date +%s)"; fi; }
-require_memory() {
-  local free; free=$(available_gib)
-  if awk -v a="$free" -v m="$FIT_MIN_AVAILABLE_GIB" 'BEGIN {exit !(a < m)}'; then
-    echo "$1 needs ${FIT_MIN_AVAILABLE_GIB} GiB available (the iGPU shares host memory); ${free} GiB now. Close browsers/apps and rerun." >&2; return 1
-  fi
-}
-scoped() { guarded systemd-run --user --scope -q -p MemoryMax="$FIT_MEMORY" -p MemorySwapMax=0 "$@"; }
-
-step() {
-  local name=$1 id=$2; shift 2
-  if [[ "$(cat "$DONE/$name" 2>/dev/null)" == "$id" ]]; then echo "== $name $id: done"; return; fi
-  echo "== $name $id ($(date +%H:%M:%S), MemAvailable $(available_gib) GiB)"
-  "$@" 2>&1 | tee "$LOGS/$name-$id.log"
-  echo "$id" > "$DONE/$name"
-  if [[ "$UNTIL" == "$name" ]]; then echo "stopped after $name"; exit 0; fi
-}
-
-json() { "$PY/python" -c "import json,sys; d=json.load(open(sys.argv[1])); print(eval(sys.argv[2], {'d': d}))" "$@"; }
+field() { "$PY/python" -c 'import functools, json, sys; print(functools.reduce(lambda v, k: v[k], sys.argv[2:], json.load(open(sys.argv[1]))))' "$@"; }
 
 if [[ -e "$WORK/margin" && "$(cat "$WORK/margin")" != "$MARGIN" ]]; then
   echo "required improvement $(cat "$WORK/margin") was predeclared for $WORK; a different MARGIN needs a new WORK directory" >&2; exit 2
 fi
 echo "$MARGIN" > "$WORK/margin"
 
-pack() { "$PY/python" -m "$BUILDER" pack --output "$PACK" ${REVIEWS:+--reviews "$REVIEWS"}; }
-step pack "$(identity "$(tree "${SOURCES[@]}")" "${REVIEWS:+$(sha "$REVIEWS")}")" pack
-
-STAGE="$WORK/stages/$(sha "$PACK/benchmark.json")"
-LABELS="$STAGE/$STEM.test.jsonl"
-EVIDENCE="$STAGE/$STEM.dataset.json"
-stage() { fresh "$STAGE"; "$PY/python" -m bench.evidence stage "$PACK" --to "$STAGE"; }
-step stage "$(basename "$STAGE")" stage
-
-ASSETS="$WORK/assets-$(identity "$MODEL" Q8_0 "$REVISION").json"
-assets() { "$PY/semantic-trainer" assets --model "$MODEL" --quant Q8_0 --revision "$REVISION" | tail -n 1 > "$ASSETS"; cat "$ASSETS"; }
-step assets "$(basename "$ASSETS" .json)" assets
-base() { "$PY/python" -c "import json,sys; m=json.load(open(sys.argv[1] + '/manifests/' + sys.argv[2] + '.json')); print(sys.argv[1] + '/' + m['gguf']['Q8_0']['path'])" \
-  "$(json "$ASSETS" "d['root']")" "$(json "$ASSETS" "d['manifest']")"; }
-
-PRESENTATION="$("$PY/python" -c "import json; from semantic_switch.presentation import identity; print(json.dumps(identity(), sort_keys=True))")"
-EXPORT="$WORK/exports/$(identity "$(basename "$STAGE")" "$(json "$ASSETS" "d['manifest']")" "$PRESENTATION")"
-export_native() {
-  fresh "$EXPORT"; mkdir -p "$EXPORT"
-  "$PY/ss" --judge "$(base)" --device gpu export "$STAGE/$DEFINITION" --native --task-family "bench:$PACK_KIND" --labels "$LABELS" --to "$EXPORT/$STEM.export.jsonl"
-}
-step export "$(basename "$EXPORT")" export_native
-
-CONTRACT="$("$XPU/python" -c "import json; from semantic_trainer.jobs import FAMILIES, FITTING, IDENTITY, LOSS, PROFILE_SCHEMA, RESOLVED_SCHEMA, SCHEMA; print(json.dumps([LOSS, SCHEMA, RESOLVED_SCHEMA, FAMILIES, FITTING, IDENTITY, PROFILE_SCHEMA], sort_keys=True))")"
-SHARED=(--quant Q8_0 --device xpu:0 --native-device gpu --fit-situations 100
-  --recipe selection_unit=complete_situation --recipe seed=0 --recipe "epochs=$EPOCHS"
-  --budget "max_tokens=$MAX_TOKENS" --budget "max_monitor_tokens=$MAX_MONITOR_TOKENS" --budget "max_seconds=$MAX_SECONDS"
-  --budget "feasibility_updates=$FEASIBILITY_UPDATES")
-prepare_job() {
-  local to=$1; shift
-  fresh "$to"
-  "$XPU/semantic-trainer" prepare "$STAGE/$DEFINITION" "$EXPORT/$STEM.export.jsonl.manifest.json" --assets "$(json "$ASSETS" "d['manifest']")" \
-    "${SHARED[@]}" "$@" --to "$to"
-}
-cadences() {
-  "$PY/python" -c "
-import json, sys
-d = json.load(open(sys.argv[1]))
-print(f\"profile {d['id'][:16]} on {d['device']}: update {d['costs']['update_seconds_per_token'] * 1e3:.3f} ms/token, point {d['costs']['point_seconds_per_token'] * 1e3:.3f} ms/token, checkpoint {d['costs']['checkpoint_seconds']:.1f} s\")
-for c in d['cadences']:
-    print(f\"  eval_every_examples={c['eval_every_examples']:>6}  points={c['evaluation_points']:>3}  monitor_tokens={c['monitor_tokens']:>10}  hours={c['seconds'] / 3600:6.2f}  feasible={c['feasible']}\")
-" "$1"
-}
-
-if [[ -z "$PROFILE" ]]; then
-  PROVISIONAL="$WORK/provisional/$(identity "$(basename "$EXPORT")" "$CONTRACT" "${SHARED[@]}" "$PROVISIONAL_CADENCE")"
-  step provisional "$(basename "$PROVISIONAL")" prepare_job "$PROVISIONAL" --recipe "eval_every_examples=$PROVISIONAL_CADENCE"
-  PROFILE="$WORK/profiles/$(identity "$(sha "$PROVISIONAL/job.yaml")" "$PROFILE_STEPS" "$PROFILE_WARMUP" "$PROFILE_CADENCES").json"
-  profile_fit() {
-    require_memory profiling
-    fresh "$PROFILE"; mkdir -p "$(dirname "$PROFILE")"
-    local flags=(); for cadence in $PROFILE_CADENCES; do flags+=(--cadence "$cadence"); done
-    scoped "$XPU/semantic-trainer" profile "$PROVISIONAL/job.yaml" --to "$PROFILE" --steps "$PROFILE_STEPS" --warmup "$PROFILE_WARMUP" "${flags[@]}" > /dev/null
-    cadences "$PROFILE"
-  }
-  step profile "$(basename "$PROFILE" .json)" profile_fit
+"$PY/python" -m bench.evidence stage "$PACK" --under "$WORK/stages" --binding "$WORK/stage.json" > /dev/null
+CORPUS="$(field "$WORK/stage.json" manifest_sha256)"
+STAGED="$(field "$WORK/stage.json" definition)"
+LABELS="$(field "$WORK/stage.json" labels)"
+EVIDENCE="$(field "$WORK/stage.json" evidence)"
+STAGE="$(dirname "$STAGED")"
+TASK="$STAGED"
+if [[ -n "$DEFINITION" ]]; then
+  TASK="$WORK/definitions/$("$PY/python" -c 'import sys; from semantic_switch import files; print(files.sha256_file(sys.argv[1])[:16])' "$DEFINITION")/$(basename "$DEFINITION")"
+  mkdir -p "$(dirname "$TASK")"
+  [[ -f "$TASK" ]] || cp "$DEFINITION" "$TASK"
 fi
-if [[ ! -f "$PROFILE" ]]; then echo "PROFILE $PROFILE does not exist" >&2; exit 2; fi
-if [[ -z "$EVAL_EVERY_EXAMPLES" ]]; then
-  cadences "$PROFILE"
-  echo "choose the monitoring cadence from this measured profile and rerun with EVAL_EVERY_EXAMPLES=N PROFILE=$PROFILE" >&2; exit 3
+
+SPECIALIZATION="${SPECIALIZATION:-$WORK/specializations/$(basename "$STAGE")}"
+SPECIALIZED="$WORK/specialization.json"
+PROFILING=()
+if [[ -n "$PROFILE_STEPS" ]]; then PROFILING+=(--profile-steps "$PROFILE_STEPS" --profile-warmup "$PROFILE_WARMUP"); fi
+BUDGET_ARGS=(--budget "max_seconds=$MAX_SECONDS" --budget "feasibility_updates=$FEASIBILITY_UPDATES")
+if [[ -n "$MAX_TOKENS" ]]; then BUDGET_ARGS+=(--budget "max_tokens=$MAX_TOKENS"); fi
+if [[ -n "$MAX_MONITOR_TOKENS" ]]; then BUDGET_ARGS+=(--budget "max_monitor_tokens=$MAX_MONITOR_TOKENS"); fi
+for cadence in $PROFILE_CADENCES; do PROFILING+=(--profile-cadence "$cadence"); done
+SPECIALIZE_ARGS=("$PY/ss" --json specialize "$TASK" --examples "$LABELS" --to "$SPECIALIZATION" --trainer "$XPU/semantic-trainer"
+  --device xpu:0 --native-device gpu --model "$MODEL" --revision "$REVISION" --quant Q8_0 --task-family "bench:$PACK_KIND" --fit-situations 100
+  --recipe selection_unit=complete_situation --recipe seed=0 --recipe "epochs=$EPOCHS" --recipe "evaluation_batch_size=$EVALUATION_BATCH_SIZE"
+  "${BUDGET_ARGS[@]}" "${PROFILING[@]}")
+if [[ -n "$MIN_EPOCHS" ]]; then SPECIALIZE_ARGS+=(--recipe "min_epochs=$MIN_EPOCHS"); fi
+if [[ -n "$PROFILE" ]]; then SPECIALIZE_ARGS+=(--profile "$PROFILE"); fi
+if [[ -n "$EVAL_EVERY_EXAMPLES" ]]; then SPECIALIZE_ARGS+=(--cadence "$EVAL_EVERY_EXAMPLES"); fi
+if [[ -n "$ATTEMPT" ]]; then SPECIALIZE_ARGS+=(--attempt "$ATTEMPT"); fi
+status=0
+if [[ "$UNTIL" == freeze ]]; then
+  guarded "${SPECIALIZE_ARGS[@]}" --until freeze > "$SPECIALIZED"
+  exit 0
 fi
-SETTINGS=(--recipe "eval_every_examples=$EVAL_EVERY_EXAMPLES" --profile "$PROFILE")
-JOB="$WORK/jobs/$(identity "$(basename "$EXPORT")" "$CONTRACT" "${SHARED[@]}" "$EVAL_EVERY_EXAMPLES" "$(sha "$PROFILE")")"
-step prepare "$(basename "$JOB")" prepare_job "$JOB" "${SETTINGS[@]}"
+guarded "${SPECIALIZE_ARGS[@]}" --until assets > "$SPECIALIZED"
+BASE="$(field "$SPECIALIZED" base path)"
+guarded "$PY/python" -m bench.snapshots "$PACK_KIND" --pack "$PACK" --evidence "$EVIDENCE" --baseline "base=$BASE" \
+  --role model_select --kind workflow --condition structured --corpus "$CORPUS" --native device=gpu --native threads=4 --margin "$MARGIN" --results "$RESULTS"
+if [[ "$UNTIL" == assets ]]; then exit 0; fi
+guarded systemd-run --user --scope -q -p MemoryMax="$FIT_MEMORY" -p MemorySwapMax=0 \
+  "${SPECIALIZE_ARGS[@]}" ${UNTIL:+--until "$UNTIL"} > "$SPECIALIZED" || status=$?
+if [[ ! -s "$SPECIALIZED" ]]; then echo "ss specialize failed before the trainer produced a result" >&2; exit "$status"; fi
+STATE="$(field "$SPECIALIZED" state)"
+case "$STATE" in
+  completed) ;;
+  awaiting_configuration)
+    "$PY/python" -c 'import json, sys
+for c in json.load(open(sys.argv[1]))["choices"]:
+    print("  eval_every_examples=%(eval_every_examples)6d  points=%(evaluation_points)3d  monitor_tokens=%(monitor_tokens)10d  seconds=%(seconds)8.0f  feasible=%(feasible)s" % c)' "$SPECIALIZED"
+    echo "choose the monitoring cadence from this measured profile and rerun with EVAL_EVERY_EXAMPLES=N" >&2; exit 3 ;;
+  stopped) echo "stopped after $(field "$SPECIALIZED" stage): $SPECIALIZED"; exit 0 ;;
+  *) echo "specialization $STATE at $(field "$SPECIALIZED" stage): $(field "$SPECIALIZED" error)" >&2; exit "$(( status ? status : 1 ))" ;;
+esac
+RECEIPT="$(field "$SPECIALIZED" receipt)"
+BASE="$(field "$SPECIALIZED" base path)"
 
-RUN="$JOB/runs/$(sha "$JOB/job.yaml")"
-RECEIPT="$RUN/deployment/receipt.json"
-fit() {
-  require_memory fitting
-  fresh "$RUN"
-  "$XPU/semantic-trainer" lora "$JOB/job.yaml" --to "$RUN" --dry-run
-  scoped "$XPU/semantic-trainer" lora "$JOB/job.yaml" --to "$RUN"
-}
-step fit "$(basename "$RUN")" fit
+ARMS=(--baseline base="$BASE" --specialist specialist="$RECEIPT")
+REFERENCE_ARGS=()
+if [[ -n "$REFERENCE" ]]; then
+  REFERENCE_ARGS+=(--reference "$REFERENCE")
+  if [[ -n "$KEY_FILE" ]]; then REFERENCE_ARGS+=(--key-file "$KEY_FILE"); fi
+fi
+if [[ -n "$SMOKE" ]]; then
+  guarded "$PY/python" -m bench.snapshots "$PACK_KIND" --pack "$PACK" --evidence "$EVIDENCE" "${ARMS[@]}" --role model_select --kind workflow \
+    --corpus "$CORPUS" --native device=gpu --native threads=4 --margin "$MARGIN" --results "$RESULTS"
+fi
 
-select_deployment() { guarded "$XPU/semantic-trainer" select "$JOB/job.yaml" --run "$RUN"; }
-step select "$(basename "$RUN")" select_deployment
+guarded "$PY/python" -m bench.snapshots "$PACK_KIND" --pack "$PACK" --evidence "$EVIDENCE" "${ARMS[@]}" \
+  "${REFERENCE_ARGS[@]}" --condition structured --kind workflow --corpus "$CORPUS" --native device=gpu --native threads=4 --margin "$MARGIN" --results "$RESULTS" --check "$WORK/checks"
 
-CHECK="$WORK/checks/$(identity "$(sha "$RECEIPT")" "$(sha "$EVIDENCE")")"
-check() { fresh "$CHECK"; guarded "$PY/semantic-trainer" check "$RECEIPT" "$LABELS" --evidence "$EVIDENCE" --to "$CHECK"; }
-step check "$(basename "$CHECK")" check
-
-SNAPSHOTS="$("$PY/python" -c "from bench.snapshots import SCHEMA, DECISION; from semantic_switch.metrics import METRICS; print(SCHEMA, DECISION, METRICS)")"
-COMPARE="$(identity "$(basename "$CHECK")" "$(sha "$PACK/benchmark.json")" "$(base)" "$MARGIN" "$SNAPSHOTS")"
-RESULT="bench/results/$PACK_KIND-specialist-$COMPARE.json"
-compare() {
-  guarded "$PY/python" -m bench.snapshots "$PACK_KIND" --pack "$PACK" --evidence "$EVIDENCE" --baseline base="$(base)" --specialist specialist="$RECEIPT" \
-    --reference jev=openrouter:typesafe/jev-1.13 --native device=gpu --key-file "$KEY_FILE" --margin "$MARGIN" --output "$RESULT"
-}
-step compare "$COMPARE" compare
-
-echo "== finished: progress $RUN/progress.jsonl, check $CHECK, comparison $RESULT"
-echo "pack review status: $(json "$PACK/benchmark.json" "d.get('review')")"
+echo "== finished: specialization $SPECIALIZED; comparison and derived check are named by the experiment plan in $RESULTS and $WORK/checks"
+echo "corpus $CORPUS review status: $(field "$WORK/stage.json" review)"

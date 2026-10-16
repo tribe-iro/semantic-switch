@@ -1,0 +1,80 @@
+{
+ "source": {
+  "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+  "sources": "49459cb55239ae1a3ff9030469be73641c52dce3d058b70b8ad94d580c544916"
+ },
+ "command": [
+  "PYTHONPATH=.",
+  ".venv/bin/python",
+  ".artifacts/ga-implementation/teacher-scale.py"
+ ],
+ "scope": "complete collection publication/resume with deterministic fake teacher; input storage included, model memory excluded",
+ "runs": [
+  {
+   "records": 256,
+   "payload_characters_each": 4096,
+   "input_file_bytes": 1068836,
+   "seconds": 0.7368372670025565,
+   "traced_retained_bytes": 3378228,
+   "traced_peak_bytes": 9350279,
+   "judge_attempts": 256,
+   "resume_judge_attempts": 0,
+   "same_publication_hashes": true,
+   "output_bytes": {
+    "labels": 1212452,
+    "unresolved": 0
+   },
+   "counts": {
+    "situations": 256,
+    "targets": 256,
+    "settled": 256,
+    "complete_situations": 256,
+    "unresolved": {
+     "unexamined": 0,
+     "missing": 0,
+     "failed": 0,
+     "rule": 0,
+     "unstated": 0,
+     "uncertain": 0,
+     "drift": 0
+    },
+    "requests": 0,
+    "usage_known": 0
+   },
+   "peak_rss_bytes": 68984832
+  },
+  {
+   "records": 256,
+   "payload_characters_each": 65536,
+   "input_file_bytes": 16797476,
+   "seconds": 0.929625518998364,
+   "traced_retained_bytes": 181094,
+   "traced_peak_bytes": 34281587,
+   "judge_attempts": 256,
+   "resume_judge_attempts": 0,
+   "same_publication_hashes": true,
+   "output_bytes": {
+    "labels": 16941092,
+    "unresolved": 0
+   },
+   "counts": {
+    "situations": 256,
+    "targets": 256,
+    "settled": 256,
+    "complete_situations": 256,
+    "unresolved": {
+     "unexamined": 0,
+     "missing": 0,
+     "failed": 0,
+     "rule": 0,
+     "unstated": 0,
+     "uncertain": 0,
+     "drift": 0
+    },
+    "requests": 0,
+    "usage_known": 0
+   },
+   "peak_rss_bytes": 107401216
+  }
+ ]
+}

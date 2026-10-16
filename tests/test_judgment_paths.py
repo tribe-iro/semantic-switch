@@ -13,7 +13,7 @@ from semantic_switch.compiler import compile_spec
 from semantic_switch.executor import Executor
 from semantic_switch.heads import LexicalHead
 
-from .conftest import FakeScorer, letters_of
+from semantic_testkit.scoring import FakeScorer, letters_of
 
 
 def marked(state, question, width):
@@ -79,7 +79,7 @@ def test_inline_saved_compiled_share_questions_and_statuses(tmp_path, shape):
                 lambda rt: rt.load(compiled)({"message": text}).facts["f"]]
     for arm in arms:
         scorer = FakeScorer(marked)
-        with Runtime({"judge": scorer}) as rt:
+        with Runtime(scorer) as rt:
             result = arm(rt)
         runs.append((scorer.requests, result.status, result.value))
     assert all(run == runs[0] for run in runs)
@@ -101,7 +101,7 @@ def test_compiled_pick_rate_transmit_excludes(tmp_path):
     for fact in ({"pick": "Which topic?", "options": {"a": "billing", "b": "login"}, "excludes": ["refund requests"]},
                  {"rate": "How urgent?", "levels": ["low", "high"], "excludes": ["refund requests"]}):
         scorer = FakeScorer(marked)
-        with Runtime({"judge": scorer}) as rt:
+        with Runtime(scorer) as rt:
             rt.load(switch_file(tmp_path, fact))({"message": "x"})
         assert len(scorer.requests) == 1 and "Except: refund requests." in scorer.requests[0][1]
 
@@ -116,15 +116,15 @@ def test_select_card_guided_insufficient_evidence_needs_input(tmp_path):
             "facts": {"leak": {"check": "There is a visible leak.", "unstated": True},
                       "procs": {"select": "Which procedures apply?", "cards": [
                           {"id": "hot", "applies_when": ["The unit overheats."], "excludes": ["There is a visible leak."]}]}},
-            "cases": [{"id": "go", "when": 'procs has "hot"', "then": "go"}], "otherwise": "nothing"}
+            "rules": [{"id": "go", "when": 'procs has "hot"', "then": "go"}], "otherwise": "nothing"}
     path = tmp_path / "cards.yaml"
     files.publish(path, spec)
-    with Runtime({"judge": FakeScorer(oracle)}) as rt:
+    with Runtime(FakeScorer(oracle)) as rt:
         sw = rt.load(path)
         result = sw({"report": "it runs hot"})
         assert result.status == "needs_input"
         assert result.facts["procs"].status == "needs_input"
-        files.publish(path, {**spec, "cases": [{"id": "go", "when": "leak", "then": "go"}]})
+        files.publish(path, {**spec, "rules": [{"id": "go", "when": "leak", "then": "go"}]})
         assert rt.load(path)({"report": "it runs hot"}).facts["leak"].status == "needs_input"
 
 
@@ -135,7 +135,7 @@ def test_focus_none_requires_full_stage(tmp_path):
     for arm in (lambda rt: pick({"message": "AX-1 is fine #none #another"}, rt),
                 lambda rt: rt.load(path)({"message": "AX-1 is fine #none #another"}).facts["f"]):
         scorer = FakeScorer(marked)
-        with Runtime({"judge": scorer}) as rt:
+        with Runtime(scorer) as rt:
             result = arm(rt)
         (_, focused), (_, full) = scorer.requests
         assert "none of the above" not in focused and "another one, not listed above" in focused
@@ -147,7 +147,7 @@ def test_no_eligible_options_is_none_everywhere(tmp_path):
                "login": {"description": "login problems", "requires": "enabled == true"}}
     for allow_none in (False, True):
         scorer = FakeScorer(marked)
-        with Runtime({"judge": scorer}) as rt:
+        with Runtime(scorer) as rt:
             inline = rt.pick("#login", "Which topic?", ["billing", "login"], eligible=lambda option: False,
                              allow_none=allow_none)
             path = switch_file(tmp_path, {"pick": "Which topic?", "options": options, "allow_none": allow_none},
@@ -159,7 +159,7 @@ def test_no_eligible_options_is_none_everywhere(tmp_path):
 
 def test_save_invalid_definition_writes_nothing(tmp_path):
     path = tmp_path / "bad.yaml"
-    with Runtime({"judge": FakeScorer()}) as rt, pytest.raises(ConfigError):
+    with Runtime(FakeScorer()) as rt, pytest.raises(ConfigError):
         Pick("Which?", {"none": "nothing", "a": "A"}, allow_none=True).save(path, rt=rt)
     assert not path.exists()
 
@@ -175,7 +175,7 @@ def test_switch_rev_tracks_dependency_meanings():
         return compile_spec({"name": "s", "fields": {"m": {"type": "text"}}, "reads": ["m"],
                              "facts": {"refund": {"check": claim},
                                        "procs": {"select": "Which apply?", "cards": [{"id": "hot", "applies_when": [applies]}]}},
-                             "cases": [{"id": "r", "when": 'refund and procs has "hot"', "then": 1}],
+                             "rules": [{"id": "r", "when": 'refund and procs has "hot"', "then": 1}],
                              "otherwise": 0}).switch_rev
     base = rev("Wants money back.", "The unit overheats.")
     assert rev("Wants a refund.", "The unit overheats.") != base
@@ -183,7 +183,7 @@ def test_switch_rev_tracks_dependency_meanings():
 
 
 def test_cost_counts_discarded_classifier_and_escape_rounds(tmp_path):
-    with Runtime({"judge": FakeScorer(marked)}) as rt:
+    with Runtime(FakeScorer(marked)) as rt:
         path = switch_file(tmp_path, {"pick": "Which machine failed?", "options": MACHINES, "allow_none": True,
                                       "focus": "mentions"})
         cost = rt.load(path)({"message": "AX-1 is fine #another #beta"}).cost
@@ -204,7 +204,7 @@ def test_switch_elapsed_includes_materialization(tmp_path, monkeypatch):
         return built(self, snap, call, requested)
 
     monkeypatch.setattr(Executor, "result", slow)
-    with Runtime({"judge": FakeScorer(marked)}) as rt:
+    with Runtime(FakeScorer(marked)) as rt:
         result = rt.load(switch_file(tmp_path, {"check": "The customer wants money back."}))({"message": "#yes"})
     assert result.cost["elapsed_ms"] >= 50
 
@@ -223,11 +223,11 @@ class CountingScorer(FakeScorer):
 
 def test_batch_native_work_not_multiplied(tmp_path):
     scorer = CountingScorer()
-    with Runtime({"judge": scorer}) as rt:
+    with Runtime(scorer) as rt:
         sw = rt.load(switch_file(tmp_path, {"check": "The customer wants money back."}))
         results = sw.run([{"message": f"#yes {n}"} for n in range(3)]) + sw.run([{"message": "#no"}])
-    batches = {id(r.cost["batch_native_work"]): r.cost["batch_native_work"] for r in results}
-    assert [r.cost["batch_inputs"] for r in results] == [3, 3, 3, 1]
+    batches = {id(r.cost["operation"]["native_work"]): r.cost["operation"]["native_work"] for r in results}
+    assert [r.cost["operation"]["inputs"] for r in results] == [3, 3, 3, 1] and len(batches) == 2
     assert sum(work["submissions"] for work in batches.values()) == scorer.ctx.submissions
     assert sum(work["submitted_tokens"] for work in batches.values()) == scorer.ctx.submitted_tokens
 
@@ -241,7 +241,7 @@ def test_runtime_calls_forward_excludes(kind):
     for call in (lambda rt: typed("Refund me, says my friend.", rt),
                  lambda rt: getattr(rt, kind)("Refund me, says my friend.", "What applies?", options, excludes=excludes)):
         scorer = FakeScorer(marked)
-        with Runtime({"judge": scorer}) as rt:
+        with Runtime(scorer) as rt:
             result = call(rt)
         runs.append((scorer.requests, result.status, result.value))
     assert runs[0] == runs[1] and "Except: a request quoted from someone else." in runs[0][0][0][1]

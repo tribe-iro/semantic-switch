@@ -11,15 +11,24 @@ import numpy as np
 import pytest
 
 from semantic_switch import Model, Runtime, backend
+from semantic_switch.api import estimate as api_estimate
+from semantic_switch.resident import Resources
 from semantic_switch.adapters.qwen3 import Qwen3Adapter
 from semantic_switch.errors import ConfigError
 from semantic_switch.guidance import REVISION, Guidance
 from semantic_switch.protocols import Question, ScoreRequest
+from semantic_switch.training import Engine
 
-from .conftest import FakeScorer
+from semantic_testkit.scoring import FakeScorer
 
 QWEN3 = "unsloth/Qwen3-0.6B-GGUF:Qwen3-0.6B-Q4_K_M.gguf"
 VOCAB = 16
+
+
+class Batch(ctypes.Structure):
+    _fields_ = [("n_tokens", ctypes.c_int32), ("token", ctypes.POINTER(ctypes.c_int32)), ("embd", ctypes.POINTER(ctypes.c_float)),
+                ("pos", ctypes.POINTER(ctypes.c_int32)), ("n_seq_id", ctypes.POINTER(ctypes.c_int32)),
+                ("seq_id", ctypes.POINTER(ctypes.POINTER(ctypes.c_int32))), ("logits", ctypes.POINTER(ctypes.c_int8))]
 
 
 class FakeLlama:
@@ -64,11 +73,17 @@ class FakeLlama:
         return ctx
 
     def llama_batch_init(self, n, embd, sequences):
-        return SimpleNamespace(token=[0] * n, pos=[0] * n, n_seq_id=[0] * n, seq_id=[[0] * sequences for _ in range(n)],
-                               logits=[False] * n, n_tokens=0)
+        rows = [(ctypes.c_int32 * sequences)() for _ in range(n)]
+        arrays = ((ctypes.c_int32 * n)(), (ctypes.c_int32 * n)(), (ctypes.c_int32 * n)(), (ctypes.POINTER(ctypes.c_int32) * n)(*rows), (ctypes.c_int8 * n)())
+        self.buffers = (rows, arrays)
+        token, pos, n_seq_id, seq_id, logits = arrays
+        return Batch(0, token, None, pos, n_seq_id, seq_id, logits)
 
     def llama_n_ctx(self, ctx):
         return self.params.n_ctx
+
+    def llama_n_ctx_seq(self, ctx):
+        return self.params.n_ctx // self.params.n_seq_max
 
     def llama_n_batch(self, ctx):
         return self.params.n_batch
@@ -141,7 +156,7 @@ def request(prefix, state, *suffixes):
 
 
 def untracked_sequences_empty(s):
-    tracked = ({0} if s._prefix is not None else set()) | set(s._states) | set(s._resident.values())
+    tracked = ({0} if s._prefix is not None else set()) | ({1} if s._state is not None else set()) | set(s._resident.values())
     return all(s.ctx.L.llama_memory_seq_pos_max(s.ctx.mem, sequence) == -1
                for sequence in range(s.ctx.n_seq_max) if sequence not in tracked)
 
@@ -258,16 +273,22 @@ def test_close_concurrent_with_score(fake_llama):
     s.invalidate()
 
 
-def test_run_never_exceeds_outputs_per_decode(fake_llama):
+def test_decode_writer_chunks_outputs_and_refreshes_memberships(fake_llama):
     library = fake_llama()
-    s = scorer(n_batch=512, n_ctx=1024, inputs=2, grouping="batched")
+    s = scorer(n_batch=8, n_ctx=1024)
     seen = []
-    s.ctx.run([(1, k, 1, k) for k in range(100)], lambda out, j, sequence: seen.append(out))
-    assert library.params.n_outputs_max == s.ctx.n_outputs_max == s.ctx.n_seq_max == 4 + 2 + backend.BRANCHES
-    assert max(library.decodes) <= s.ctx.outputs_per_decode == backend.BRANCHES and seen == list(range(100))
+    s.ctx.decode([((1,), k, 1 + k % 2, k) for k in range(5)], lambda key, j: seen.append((key, j)))
+    assert library.params.n_outputs_max == s.ctx.n_outputs_max == s.ctx.n_seq_max == 4 + 2
+    assert library.decodes == [1] * 5 and seen == [(k, 0) for k in range(5)] and s.ctx.outputs_per_decode == 1
+    assert [library.memories[s.ctx.mem][1 + k % 2][k] for k in range(5)] == [1] * 5
     library.decodes.clear()
-    s.ctx.run([(1, k, 1, k if k % 50 == 0 else None) for k in range(600)], lambda *a: None)
-    assert len(library.decodes) == 2
+    s.ctx.decode([(tuple(range(20)), 0, 3, "end")], lambda key, j: seen.append((key, j)))
+    assert library.decodes == [0, 0, 1] and seen[-1] == ("end", 3) and s.ctx.submissions == 8
+    assert sorted(library.memories[s.ctx.mem][3]) == list(range(20))
+    writer = s.ctx.writer
+    assert writer.flags[:4].tolist() == [0, 0, 0, 1] and (writer.member[:4] == 3).all()
+    s.ctx.decode([((9, 9), 30, 3, None)])
+    assert writer.flags[:2].tolist() == [0, 0] and library.decodes[-1] == 0
     s.close()
 
 
@@ -281,12 +302,12 @@ def test_realized_config_records_capacity_and_repack(fake_llama, monkeypatch):
                             "llama_kv_cache:        CPU KV buffer size =   448.00 MiB\n",
                             "llama_kv_cache:        CPU KV buffer size =   448.00 MiB\n",
                             "sched_reserve:        CPU compute buffer size =   352.45 MiB\n"])
-    monkeypatch.setattr(adapters, "adapter_for", lambda name, s: SimpleNamespace(name="fake"))
-    with scorer() as native, Runtime({"judge": native}) as rt:
+    monkeypatch.setattr(adapters, "adapter_for", lambda name, s, context=None: SimpleNamespace(name="fake"))
+    with scorer() as native, Runtime(native) as rt:
         rt.judge()
         realized = rt.info()["capacity"]
     assert {key: realized[key] for key in ("n_outputs_max", "swa_full", "kv_unified", "use_extra_bufts", "repacked")} == \
-        {"n_outputs_max": realized["n_seq_max"], "swa_full": True, "kv_unified": True, "use_extra_bufts": True, "repacked": ["q4_K_8x8"]}
+        {"n_outputs_max": realized["n_seq_max"], "swa_full": True, "kv_unified": False, "use_extra_bufts": True, "repacked": ["q4_K_8x8"]}
     assert realized["buffers"] == {"CPU model": round(167.90 * 2 ** 20), "CPU_REPACK model": round(204.75 * 2 ** 20),
                                    "CPU output": round(21.44 * 2 ** 20), "CPU KV": 896 * 2 ** 20,
                                    "CPU compute": round(352.45 * 2 ** 20)}
@@ -296,7 +317,7 @@ def test_suffix_cache_ignores_guidance():
     adapter = Qwen3Adapter(FakeScorer())
     plain = Question("check", "The customer wants a refund.")
     guided = Question("check", "The customer wants a refund.", guidance=Guidance("Refunds include store credit."))
-    assert adapter.suffix(plain) == adapter.suffix(guided) and len(adapter._cache) == 1
+    assert adapter.suffix(plain) == adapter.suffix(guided) and len(adapter._suffixes) == 1
 
 
 def profile_file(tmp_path, **changes):
@@ -337,7 +358,7 @@ def test_load_failure_closes_scorer(tmp_path, monkeypatch, failure):
     weights.write_bytes(b"weights")
     profile = profile_file(tmp_path)
     spec = Model(str(weights), adapter="qwen3", device="cpu", quality_profile=str(profile))
-    monkeypatch.setattr(Model, "_host_bytes", lambda self: {"weights": 1})
+    monkeypatch.setattr(Model, "resources", lambda self: {"weights": api.Resources(1)})
     monkeypatch.setattr(api, "available_host_bytes", lambda: 1 << 50)
     if failure == "fingerprint":
         def stat_failure(spec):
@@ -345,7 +366,7 @@ def test_load_failure_closes_scorer(tmp_path, monkeypatch, failure):
         monkeypatch.setattr(api, "_file_fingerprint", stat_failure)
     else:
         profile.write_text("{}")
-    rt = Runtime({"judge": spec})
+    rt = Runtime(spec)
     with pytest.raises((OSError, ConfigError)):
         rt.judge()
     assert [s.closed for s in LoadedScorer.built] == [1]
@@ -355,7 +376,7 @@ def test_load_failure_closes_scorer(tmp_path, monkeypatch, failure):
 
 def test_score_native_orders_and_validates():
     fake = FakeScorer(lambda state, question, width: [0.9, 0.1] if "first" in question else [0.2, 0.8])
-    with Runtime({"judge": fake}) as rt:
+    with Engine(fake) as rt:
         first, second, state = fake.tokenize("first"), fake.tokenize("second"), fake.tokenize("case")
         block = rt.score_native([ScoreRequest((), state, (first, second), (((1,), (2,)), ((1,), (2,)))),
                                  ScoreRequest((), state, (second,), (((1,), (2,)),))])
@@ -409,40 +430,36 @@ def test_n_outputs_max_preserves_logits(monkeypatch):
 @pytest.mark.parametrize("source", [QWEN3, "ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf"])
 def test_capacity_reports_native_buffers(source):
     spec = Model(source, device="cpu")
-    estimate = spec._host_bytes()
-    with Runtime({"judge": spec}) as rt:
+    estimate = {use: value.host for use, value in spec.resources().items()}
+    assert all(not value.devices for value in spec.resources().values())
+    with Runtime(spec) as rt:
         rt.judge()
         buffers = rt.info()["capacity"]["buffers"]
     measured = {kind: sum(v for k, v in buffers.items() if k.endswith(" " + kind)) for kind in ("KV", "output")}
     assert abs(measured["KV"] - estimate["kv"]) <= 0.05 * estimate["kv"]
     assert abs(measured["output"] - estimate["output"] / 2) <= 0.05 * estimate["output"] / 2
-    assert spec.estimated_host_bytes() == sum(estimate.values())
+    assert sum(api_estimate(spec).values(), Resources()).host == sum(estimate.values())
 
 
-def test_runtime_owns_the_model_job_from_first_load_until_close(tmp_path, monkeypatch):
-    from semantic_switch import api, model_job
+def test_default_runtime_loads_without_a_model_job_and_explicit_jobs_charge(tmp_path, monkeypatch):
+    from semantic_switch import api
+    from semantic_switch.training import model_job
     monkeypatch.setenv("SEMANTIC_SWITCH_CACHE", str(tmp_path))
     monkeypatch.setenv("SEMANTIC_MODEL_LOCK", str(tmp_path / "model-job.lock"))
     monkeypatch.setattr(backend, "LlamaScorer", LoadedScorer)
-    monkeypatch.setattr(Model, "_host_bytes", lambda self: {"weights": 1})
+    monkeypatch.setattr(Model, "resources", lambda self: {"weights": api.Resources(1)})
     monkeypatch.setattr(api, "available_host_bytes", lambda: 1 << 50)
     LoadedScorer.built = []
     weights = tmp_path / "model.gguf"
     weights.write_bytes(b"weights")
-    rt = Runtime({"judge": Model(str(weights), adapter="qwen3", device="cpu")})
-    assert rt.job is None
-    rt.judge()
-    job = rt.job
-    assert job.state == "open" and job.diagnostics()["participants"] == 1
-    with pytest.raises(ConfigError, match="locked by"):
-        with model_job():
-            pass
-    rt.close()
-    assert job.state == "closed" and [s.closed for s in LoadedScorer.built] == [1]
     spec = Model(str(weights), adapter="qwen3", device="cpu")
+    with model_job() as held, Runtime(spec) as first, Runtime(spec) as second:
+        first.judge()
+        second.judge()
+        assert first.job is None and second.job is None and held.diagnostics()["participants"] == 0
+    assert [s.closed for s in LoadedScorer.built] == [1, 1]
     with model_job(spec) as parent:
-        with Runtime({"judge": spec}, job=parent) as joined:
+        with Runtime(spec, job=parent) as joined:
             joined.judge()
             assert parent.diagnostics()["participants"] == 1
         assert parent.state == "open" and parent.diagnostics()["participants"] == 0
-

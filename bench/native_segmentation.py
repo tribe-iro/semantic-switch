@@ -9,10 +9,11 @@ import numpy as np
 from semantic_switch import ConfigError, Model, files
 from semantic_switch.artifacts import artifact_digest
 from semantic_switch.backend import reduce_row
-from bench.outcomes import runtime
+from bench.outcomes import destination, runtime
 
 
 def probe(fixture, model, output, indices=None):
+    destination(output)
     fixture = files.read_json(Path(fixture))
     presentations = fixture['presentations']
     selected = list(range(len(presentations))) if indices is None else indices
@@ -32,9 +33,8 @@ def probe(fixture, model, output, indices=None):
                 scorer.invalidate()
                 position, answers = 0, []
                 for chunk in chunks:
-                    entries = [(token, position + offset, 1, 'answer' if position + offset == len(tokens) - 1 else None)
-                               for offset, token in enumerate(chunk)]
-                    context.run(entries, lambda out, row, sequence: answers.append(context.logits(row).copy()))
+                    span = (chunk, position, 1, 'answer' if position + len(chunk) == len(tokens) else None)
+                    context.decode((span,), lambda key, j: answers.append(context.logits(j).copy()))
                     position += len(chunk)
                 if len(answers) != 1:
                     raise ConfigError('native segmentation returned incomplete answer positions')

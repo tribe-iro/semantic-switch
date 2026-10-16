@@ -8,14 +8,12 @@ from __future__ import annotations
 
 import argparse
 import json
-import statistics
 import tempfile
 from pathlib import Path
 
 from semantic_switch import DEFAULT_JUDGE, PRECISE_JUDGE, files
-from bench import diagnostics
-from bench.outcomes import JEV, failure, judged, measure
-from semantic_switch.metrics import Progress
+from bench.outcomes import JEV, destination, failure, judged, latency, measure, output_argument, provenance
+from bench.outcomes import Progress
 from semantic_switch.results import thaw
 
 NONE, MISSING, REVIEW = "NO_PROCEDURE", "NEEDS_INPUT", "REVIEW"
@@ -216,13 +214,12 @@ def outcome(r) -> str:
 
 def summarize(rows) -> dict:
     act = [r for r in rows if r["got"] not in (REVIEW, MISSING, "FAILED")]
-    ms = sorted(r["ms"] for r in rows)
     return {"items": len(rows), "correct": sum(r["got"] == r["expected"] for r in rows),
             "wrong_actions": sum(r["got"] != r["expected"] for r in act),
             "abstained": sum(r["got"] in (REVIEW, "FAILED") for r in rows), "failed": sum(r.get("outcome") == "failed" for r in rows),
             "needs_input_correct": sum(r["got"] == r["expected"] == MISSING for r in rows),
             "no_model_call": sum(r["judged"] == 0 for r in rows),
-            "median_ms": round(statistics.median(ms), 1), "p90_ms": round(ms[int(0.9 * (len(ms) - 1))], 1),
+            "latency": latency(r["ms"] for r in rows),
             "by_trap": {t: f"{sum(r['got'] == r['expected'] for r in rows if r['trap'] == t)}/"
                            f"{sum(r['trap'] == t for r in rows)}" for t in sorted({r["trap"] for r in rows})}}
 
@@ -319,8 +316,9 @@ def main():
     ap.add_argument("--thetas", default="0.6,0.7,0.8,0.9,0.95,0.99")
     ap.add_argument("--direct", action="store_true", help="also let the judge choose from the whole catalogue")
     ap.add_argument("--jev-consent", action="store_true")
-    ap.add_argument("--output", type=Path, default=Path("bench/results/equipment-v2.json"))
+    output_argument(ap)
     args = ap.parse_args()
+    destination(args.output)
     judges = args.judge or [DEFAULT_JUDGE, PRECISE_JUDGE]
     if JEV in judges and not args.jev_consent:
         ap.error("Jev runs need TypeSafe's consent: pass --jev-consent once it is given")
@@ -330,11 +328,11 @@ def main():
     thetas = [float(x) for x in args.thetas.split(",") if x.strip()]
     report = {"boundary": "completed public Switch operations; fictional development cohort",
               "threshold_sweep": "exploratory; not held-out deployed-policy selection", "fictional": True, "reports": len({r["input"]["report"] for r in rows}), "items": len(rows),
-              "schema": 1, "facts": list(CLAIMS), "cards": len(shapes["catalogue_facts"]["facts"]["procedures"]["cards"]),
+              "schema": 2, "facts": list(CLAIMS), "cards": len(shapes["catalogue_facts"]["facts"]["procedures"]["cards"]),
               "requested_device": args.device, "results": {}}
     with tempfile.TemporaryDirectory(prefix="equipment-") as tmp:
         for model in judges:
-            with judged(model, provider=args.provider, key_file=args.key_file, device=args.device) as (rt, recording):
+            with judged(model, provider=args.provider, key_file=args.key_file, device=args.device) as (rt, receipts):
                 results = report["results"].setdefault(model, {})
                 for shape, spec in shapes.items():
                     sweep = {}
@@ -354,12 +352,10 @@ def main():
                     got, progress = run_direct(rt, rows)
                     results["direct"] = {"default": summarize(got), "rows": got, "sweep": {"default": summarize(got)}, "progress": progress}
                     print(model, "direct", json.dumps(results["direct"]["default"]), flush=True)
-                report.setdefault("provenance", {})[model] = diagnostics.provenance(rt, rows, boundary="public SDK")
+                report.setdefault("provenance", {})[model] = provenance(rt, rows)
                 files.publish(args.output, report)
-                if recording is not None:
-                    report.setdefault("returned_models", {})[model] = sorted(rt.judge().observed_models)
-                    report.setdefault("requests", {})[model] = recording.summary()
-                    files.publish(args.output, report)
+                report.setdefault("requests", {})[model] = receipts.summary()
+                files.publish(args.output, report)
     budget = min(s["wrong_actions"] for m in report["results"].values() for sh in m.values()
                  for s in sh["sweep"].values())
     for m in report["results"].values():

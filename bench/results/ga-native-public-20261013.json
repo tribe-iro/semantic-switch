@@ -1,0 +1,2824 @@
+{
+ "utc": "2026-10-13T20:19:55.660092+00:00",
+ "command": [
+  ".artifacts/ga-completion/native-public.py"
+ ],
+ "cold_load_ms": 2584.331188998476,
+ "provenance": {
+  "schema": 2,
+  "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+  "sources": "d7c768d5ad718fe47869b4f861faa57100f46903df748982dd3769f2d76c3802",
+  "dataset": "b8c29ca0e4755e0384ea5b6442f19141dac5e4282397bc74e524f4ff016ff7df",
+  "execution": {
+   "identity": {
+    "presentation": {
+     "evidence": "named-fields@2",
+     "choices": "full-criteria@3"
+    },
+    "file": "Q8_0.gguf",
+    "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+    "template": "chat@3:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb"
+   },
+   "requested_device": "gpu",
+   "threads": null,
+   "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+   "loaded": true,
+   "observed_models": [],
+   "accelerated": true,
+   "batch_inputs": 1,
+   "max_slots": 20,
+   "capabilities": {
+    "shared": true,
+    "conformance": true,
+    "counters": {
+     "prefix_hits": 35,
+     "prefix_misses": 1,
+     "state_hits": 3,
+     "state_misses": 33,
+     "state_tokens": 1008,
+     "suffix_tokens": 2160,
+     "failures": 0,
+     "prefix_tokens": 40,
+     "prefix_evictions": 0,
+     "adapter_switches": 0,
+     "submissions": 82,
+     "submitted_tokens": 3208
+    }
+   },
+   "requested_capacity": {
+    "n_ctx": 8192,
+    "n_batch": 512,
+    "n_seq_max": 6
+   },
+   "configuration": {
+    "max_input_tokens": 1024,
+    "prefix_slots": 4
+   },
+   "capacity": {
+    "n_ctx": 8192,
+    "n_batch": 512,
+    "n_seq_max": 6,
+    "prefix_slots": 4,
+    "scheduling": "resident-prefix-cache@2",
+    "n_outputs_max": 6,
+    "swa_full": true,
+    "kv_unified": true,
+    "n_ubatch": 512,
+    "flash_attn": "enabled",
+    "type_k": "f16",
+    "type_v": "f16",
+    "device": "gpu",
+    "tensor_types": [
+     "f16",
+     "f32",
+     "q8_0"
+    ],
+    "use_extra_bufts": true,
+    "repacked": [],
+    "buffers": {
+     "Vulkan0 model": 2456069079,
+     "Vulkan_Host model": 2923429888,
+     "Vulkan_Host output": 6291456,
+     "Vulkan0 KV": 150994944,
+     "Vulkan0 compute": 126300979,
+     "Vulkan_Host compute": 41796239
+    },
+    "shared": true
+   },
+   "binding": {
+    "representation": "base",
+    "adapter": "46d948811e74e1258598480660c423b1b0f121b3ef6f2d68df9ae1d02da80a5e",
+    "pool": {
+     "loads": 0,
+     "hits": 0,
+     "evictions": 0,
+     "underestimates": 0,
+     "unestimated": 0,
+     "max_adapters": 4,
+     "resident": {}
+    }
+   }
+  },
+  "boundary": "public SDK"
+ },
+ "rows": [
+  {
+   "primitive": "check",
+   "mode": "first",
+   "ms": 234.87814699910814,
+   "native_work": {
+    "prefix_hits": 0,
+    "prefix_misses": 1,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 29,
+    "suffix_tokens": 37,
+    "failures": 0,
+    "prefix_tokens": 40,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 3,
+    "submitted_tokens": 106
+   },
+   "peak_rss_bytes": 218873856,
+   "results": {
+    "status": "ok",
+    "value": true,
+    "prediction": {
+     "kind": "value",
+     "key": "true",
+     "value": true,
+     "score": 0.9999999999956541
+    },
+    "p_true": 0.9999999999956541,
+    "mass": 1.0,
+    "error": null,
+    "guidance": [],
+    "observed_models": [],
+    "scores": {
+     "true": 0.9999999999956541,
+     "false": 4.345764349260926e-12
+    },
+    "requests": [],
+    "presentations": [
+     {
+      "stage": "full",
+      "answers": [
+       {
+        "answer": "true",
+        "key": "true",
+        "option": null
+       },
+       {
+        "answer": "false",
+        "key": "false",
+        "option": null
+       }
+      ]
+     }
+    ]
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "check",
+   "mode": "warm",
+   "ms": 64.04971599840792,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 1,
+    "state_misses": 0,
+    "state_tokens": 0,
+    "suffix_tokens": 37,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 1,
+    "submitted_tokens": 37
+   },
+   "peak_rss_bytes": 218873856,
+   "results": {
+    "status": "ok",
+    "value": true,
+    "prediction": {
+     "kind": "value",
+     "key": "true",
+     "value": true,
+     "score": 0.9999999999956541
+    },
+    "p_true": 0.9999999999956541,
+    "mass": 1.0,
+    "error": null,
+    "guidance": [],
+    "observed_models": [],
+    "scores": {
+     "true": 0.9999999999956541,
+     "false": 4.345764349260926e-12
+    },
+    "requests": [],
+    "presentations": [
+     {
+      "stage": "full",
+      "answers": [
+       {
+        "answer": "true",
+        "key": "true",
+        "option": null
+       },
+       {
+        "answer": "false",
+        "key": "false",
+        "option": null
+       }
+      ]
+     }
+    ]
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "check",
+   "mode": "warm",
+   "ms": 127.0268579974072,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 31,
+    "suffix_tokens": 37,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 2,
+    "submitted_tokens": 68
+   },
+   "peak_rss_bytes": 218877952,
+   "results": {
+    "status": "ok",
+    "value": false,
+    "prediction": {
+     "kind": "value",
+     "key": "false",
+     "value": false,
+     "score": 1.0
+    },
+    "p_true": 6.417356303785165e-20,
+    "mass": 1.0,
+    "error": null,
+    "guidance": [],
+    "observed_models": [],
+    "scores": {
+     "true": 6.417356303785165e-20,
+     "false": 1.0
+    },
+    "requests": [],
+    "presentations": [
+     {
+      "stage": "full",
+      "answers": [
+       {
+        "answer": "true",
+        "key": "true",
+        "option": null
+       },
+       {
+        "answer": "false",
+        "key": "false",
+        "option": null
+       }
+      ]
+     }
+    ]
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "check",
+   "mode": "warm",
+   "ms": 131.33185900369426,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 32,
+    "suffix_tokens": 37,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 2,
+    "submitted_tokens": 69
+   },
+   "peak_rss_bytes": 218882048,
+   "results": {
+    "status": "ok",
+    "value": false,
+    "prediction": {
+     "kind": "value",
+     "key": "false",
+     "value": false,
+     "score": 1.0
+    },
+    "p_true": 5.734121323751864e-20,
+    "mass": 1.0,
+    "error": null,
+    "guidance": [],
+    "observed_models": [],
+    "scores": {
+     "true": 5.734121323751864e-20,
+     "false": 1.0
+    },
+    "requests": [],
+    "presentations": [
+     {
+      "stage": "full",
+      "answers": [
+       {
+        "answer": "true",
+        "key": "true",
+        "option": null
+       },
+       {
+        "answer": "false",
+        "key": "false",
+        "option": null
+       }
+      ]
+     }
+    ]
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "check",
+   "mode": "warm",
+   "ms": 135.25213099637767,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 29,
+    "suffix_tokens": 37,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 2,
+    "submitted_tokens": 66
+   },
+   "peak_rss_bytes": 218886144,
+   "results": {
+    "status": "ok",
+    "value": true,
+    "prediction": {
+     "kind": "value",
+     "key": "true",
+     "value": true,
+     "score": 0.9999999999956541
+    },
+    "p_true": 0.9999999999956541,
+    "mass": 1.0,
+    "error": null,
+    "guidance": [],
+    "observed_models": [],
+    "scores": {
+     "true": 0.9999999999956541,
+     "false": 4.345764349260926e-12
+    },
+    "requests": [],
+    "presentations": [
+     {
+      "stage": "full",
+      "answers": [
+       {
+        "answer": "true",
+        "key": "true",
+        "option": null
+       },
+       {
+        "answer": "false",
+        "key": "false",
+        "option": null
+       }
+      ]
+     }
+    ]
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "check",
+   "mode": "warm",
+   "ms": 124.46027700207196,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 31,
+    "suffix_tokens": 37,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 2,
+    "submitted_tokens": 68
+   },
+   "peak_rss_bytes": 218890240,
+   "results": {
+    "status": "ok",
+    "value": false,
+    "prediction": {
+     "kind": "value",
+     "key": "false",
+     "value": false,
+     "score": 1.0
+    },
+    "p_true": 6.417356303785165e-20,
+    "mass": 1.0,
+    "error": null,
+    "guidance": [],
+    "observed_models": [],
+    "scores": {
+     "true": 6.417356303785165e-20,
+     "false": 1.0
+    },
+    "requests": [],
+    "presentations": [
+     {
+      "stage": "full",
+      "answers": [
+       {
+        "answer": "true",
+        "key": "true",
+        "option": null
+       },
+       {
+        "answer": "false",
+        "key": "false",
+        "option": null
+       }
+      ]
+     }
+    ]
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "check",
+   "mode": "serial",
+   "ms": 404.2873779981164,
+   "native_work": {
+    "prefix_hits": 3,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 3,
+    "state_tokens": 92,
+    "suffix_tokens": 111,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 6,
+    "submitted_tokens": 203
+   },
+   "peak_rss_bytes": 218890240,
+   "results": [
+    {
+     "status": "ok",
+     "value": true,
+     "prediction": {
+      "kind": "value",
+      "key": "true",
+      "value": true,
+      "score": 0.9999999999956541
+     },
+     "p_true": 0.9999999999956541,
+     "mass": 1.0,
+     "error": null,
+     "guidance": [],
+     "observed_models": [],
+     "scores": {
+      "true": 0.9999999999956541,
+      "false": 4.345764349260926e-12
+     },
+     "requests": [],
+     "presentations": [
+      {
+       "stage": "full",
+       "answers": [
+        {
+         "answer": "true",
+         "key": "true",
+         "option": null
+        },
+        {
+         "answer": "false",
+         "key": "false",
+         "option": null
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "status": "ok",
+     "value": false,
+     "prediction": {
+      "kind": "value",
+      "key": "false",
+      "value": false,
+      "score": 1.0
+     },
+     "p_true": 6.417356303785165e-20,
+     "mass": 1.0,
+     "error": null,
+     "guidance": [],
+     "observed_models": [],
+     "scores": {
+      "true": 6.417356303785165e-20,
+      "false": 1.0
+     },
+     "requests": [],
+     "presentations": [
+      {
+       "stage": "full",
+       "answers": [
+        {
+         "answer": "true",
+         "key": "true",
+         "option": null
+        },
+        {
+         "answer": "false",
+         "key": "false",
+         "option": null
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "status": "ok",
+     "value": false,
+     "prediction": {
+      "kind": "value",
+      "key": "false",
+      "value": false,
+      "score": 1.0
+     },
+     "p_true": 5.734121323751864e-20,
+     "mass": 1.0,
+     "error": null,
+     "guidance": [],
+     "observed_models": [],
+     "scores": {
+      "true": 5.734121323751864e-20,
+      "false": 1.0
+     },
+     "requests": [],
+     "presentations": [
+      {
+       "stage": "full",
+       "answers": [
+        {
+         "answer": "true",
+         "key": "true",
+         "option": null
+        },
+        {
+         "answer": "false",
+         "key": "false",
+         "option": null
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "check",
+   "mode": "batch",
+   "ms": 401.53188899421366,
+   "native_work": {
+    "prefix_hits": 3,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 3,
+    "state_tokens": 92,
+    "suffix_tokens": 111,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 6,
+    "submitted_tokens": 203
+   },
+   "peak_rss_bytes": 218890240,
+   "results": [
+    {
+     "status": "ok",
+     "value": true,
+     "prediction": {
+      "kind": "value",
+      "key": "true",
+      "value": true,
+      "score": 0.9999999999956541
+     },
+     "p_true": 0.9999999999956541,
+     "mass": 1.0,
+     "error": null,
+     "guidance": [],
+     "observed_models": [],
+     "scores": {
+      "true": 0.9999999999956541,
+      "false": 4.345764349260926e-12
+     },
+     "requests": [],
+     "presentations": [
+      {
+       "stage": "full",
+       "answers": [
+        {
+         "answer": "true",
+         "key": "true",
+         "option": null
+        },
+        {
+         "answer": "false",
+         "key": "false",
+         "option": null
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "status": "ok",
+     "value": false,
+     "prediction": {
+      "kind": "value",
+      "key": "false",
+      "value": false,
+      "score": 1.0
+     },
+     "p_true": 6.417356303785165e-20,
+     "mass": 1.0,
+     "error": null,
+     "guidance": [],
+     "observed_models": [],
+     "scores": {
+      "true": 6.417356303785165e-20,
+      "false": 1.0
+     },
+     "requests": [],
+     "presentations": [
+      {
+       "stage": "full",
+       "answers": [
+        {
+         "answer": "true",
+         "key": "true",
+         "option": null
+        },
+        {
+         "answer": "false",
+         "key": "false",
+         "option": null
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "status": "ok",
+     "value": false,
+     "prediction": {
+      "kind": "value",
+      "key": "false",
+      "value": false,
+      "score": 1.0
+     },
+     "p_true": 5.734121323751864e-20,
+     "mass": 1.0,
+     "error": null,
+     "guidance": [],
+     "observed_models": [],
+     "scores": {
+      "true": 5.734121323751864e-20,
+      "false": 1.0
+     },
+     "requests": [],
+     "presentations": [
+      {
+       "stage": "full",
+       "answers": [
+        {
+         "answer": "true",
+         "key": "true",
+         "option": null
+        },
+        {
+         "answer": "false",
+         "key": "false",
+         "option": null
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "pick",
+   "mode": "first",
+   "ms": 128.71742399875075,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 29,
+    "suffix_tokens": 64,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 2,
+    "submitted_tokens": 93
+   },
+   "peak_rss_bytes": 219230208,
+   "results": {
+    "status": "ok",
+    "value": "charges, invoices or payments",
+    "index": 0,
+    "prediction": {
+     "kind": "value",
+     "key": 0,
+     "value": "charges, invoices or payments",
+     "score": 0.9999999999999178
+    },
+    "score": 0.9999999999999178,
+    "error": null,
+    "complete": true,
+    "guidance": [],
+    "observed_models": [],
+    "scores": {
+     "0": 0.9999999999999178,
+     "1": 3.4339911756975815e-14,
+     "2": 4.7948736158478534e-14
+    },
+    "removed": {
+     "ineligible": [],
+     "not_examined": []
+    },
+    "mass": 1.0,
+    "focus": "full",
+    "presentations": [
+     {
+      "stage": "full",
+      "answers": [
+       {
+        "answer": "A",
+        "key": 0,
+        "option": "charges, invoices or payments"
+       },
+       {
+        "answer": "B",
+        "key": 1,
+        "option": "the product is broken, erroring or unavailable"
+       },
+       {
+        "answer": "C",
+        "key": 2,
+        "option": "login, profile or account access"
+       }
+      ]
+     }
+    ],
+    "requests": []
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "pick",
+   "mode": "warm",
+   "ms": 68.23656999767991,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 1,
+    "state_misses": 0,
+    "state_tokens": 0,
+    "suffix_tokens": 64,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 1,
+    "submitted_tokens": 64
+   },
+   "peak_rss_bytes": 219230208,
+   "results": {
+    "status": "ok",
+    "value": "charges, invoices or payments",
+    "index": 0,
+    "prediction": {
+     "kind": "value",
+     "key": 0,
+     "value": "charges, invoices or payments",
+     "score": 0.9999999999999178
+    },
+    "score": 0.9999999999999178,
+    "error": null,
+    "complete": true,
+    "guidance": [],
+    "observed_models": [],
+    "scores": {
+     "0": 0.9999999999999178,
+     "1": 3.4339911756975815e-14,
+     "2": 4.7948736158478534e-14
+    },
+    "removed": {
+     "ineligible": [],
+     "not_examined": []
+    },
+    "mass": 1.0,
+    "focus": "full",
+    "presentations": [
+     {
+      "stage": "full",
+      "answers": [
+       {
+        "answer": "A",
+        "key": 0,
+        "option": "charges, invoices or payments"
+       },
+       {
+        "answer": "B",
+        "key": 1,
+        "option": "the product is broken, erroring or unavailable"
+       },
+       {
+        "answer": "C",
+        "key": 2,
+        "option": "login, profile or account access"
+       }
+      ]
+     }
+    ],
+    "requests": []
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "pick",
+   "mode": "warm",
+   "ms": 138.67518400365952,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 31,
+    "suffix_tokens": 64,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 2,
+    "submitted_tokens": 95
+   },
+   "peak_rss_bytes": 219254784,
+   "results": {
+    "status": "ok",
+    "value": "the product is broken, erroring or unavailable",
+    "index": 1,
+    "prediction": {
+     "kind": "value",
+     "key": 1,
+     "value": "the product is broken, erroring or unavailable",
+     "score": 0.9999999999999097
+    },
+    "score": 0.9999999999999097,
+    "error": null,
+    "complete": true,
+    "guidance": [],
+    "observed_models": [],
+    "scores": {
+     "0": 2.8941037374933534e-15,
+     "1": 0.9999999999999097,
+     "2": 8.738532606083721e-14
+    },
+    "removed": {
+     "ineligible": [],
+     "not_examined": []
+    },
+    "mass": 1.0,
+    "focus": "full",
+    "presentations": [
+     {
+      "stage": "full",
+      "answers": [
+       {
+        "answer": "A",
+        "key": 0,
+        "option": "charges, invoices or payments"
+       },
+       {
+        "answer": "B",
+        "key": 1,
+        "option": "the product is broken, erroring or unavailable"
+       },
+       {
+        "answer": "C",
+        "key": 2,
+        "option": "login, profile or account access"
+       }
+      ]
+     }
+    ],
+    "requests": []
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "pick",
+   "mode": "warm",
+   "ms": 143.139316001907,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 32,
+    "suffix_tokens": 64,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 2,
+    "submitted_tokens": 96
+   },
+   "peak_rss_bytes": 219262976,
+   "results": {
+    "status": "ok",
+    "value": "charges, invoices or payments",
+    "index": 0,
+    "prediction": {
+     "kind": "value",
+     "key": 0,
+     "value": "charges, invoices or payments",
+     "score": 0.9999993594988537
+    },
+    "score": 0.9999993594988537,
+    "error": null,
+    "complete": true,
+    "guidance": [],
+    "observed_models": [],
+    "scores": {
+     "0": 0.9999993594988537,
+     "1": 2.612599025992012e-07,
+     "2": 3.7924124368223587e-07
+    },
+    "removed": {
+     "ineligible": [],
+     "not_examined": []
+    },
+    "mass": 0.9999998807907104,
+    "focus": "full",
+    "presentations": [
+     {
+      "stage": "full",
+      "answers": [
+       {
+        "answer": "A",
+        "key": 0,
+        "option": "charges, invoices or payments"
+       },
+       {
+        "answer": "B",
+        "key": 1,
+        "option": "the product is broken, erroring or unavailable"
+       },
+       {
+        "answer": "C",
+        "key": 2,
+        "option": "login, profile or account access"
+       }
+      ]
+     }
+    ],
+    "requests": []
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "pick",
+   "mode": "warm",
+   "ms": 136.28458799939835,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 29,
+    "suffix_tokens": 64,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 2,
+    "submitted_tokens": 93
+   },
+   "peak_rss_bytes": 219262976,
+   "results": {
+    "status": "ok",
+    "value": "charges, invoices or payments",
+    "index": 0,
+    "prediction": {
+     "kind": "value",
+     "key": 0,
+     "value": "charges, invoices or payments",
+     "score": 0.9999999999999178
+    },
+    "score": 0.9999999999999178,
+    "error": null,
+    "complete": true,
+    "guidance": [],
+    "observed_models": [],
+    "scores": {
+     "0": 0.9999999999999178,
+     "1": 3.4339911756975815e-14,
+     "2": 4.7948736158478534e-14
+    },
+    "removed": {
+     "ineligible": [],
+     "not_examined": []
+    },
+    "mass": 1.0,
+    "focus": "full",
+    "presentations": [
+     {
+      "stage": "full",
+      "answers": [
+       {
+        "answer": "A",
+        "key": 0,
+        "option": "charges, invoices or payments"
+       },
+       {
+        "answer": "B",
+        "key": 1,
+        "option": "the product is broken, erroring or unavailable"
+       },
+       {
+        "answer": "C",
+        "key": 2,
+        "option": "login, profile or account access"
+       }
+      ]
+     }
+    ],
+    "requests": []
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "pick",
+   "mode": "warm",
+   "ms": 137.10554700082866,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 31,
+    "suffix_tokens": 64,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 2,
+    "submitted_tokens": 95
+   },
+   "peak_rss_bytes": 219262976,
+   "results": {
+    "status": "ok",
+    "value": "the product is broken, erroring or unavailable",
+    "index": 1,
+    "prediction": {
+     "kind": "value",
+     "key": 1,
+     "value": "the product is broken, erroring or unavailable",
+     "score": 0.9999999999999097
+    },
+    "score": 0.9999999999999097,
+    "error": null,
+    "complete": true,
+    "guidance": [],
+    "observed_models": [],
+    "scores": {
+     "0": 2.8941037374933534e-15,
+     "1": 0.9999999999999097,
+     "2": 8.738532606083721e-14
+    },
+    "removed": {
+     "ineligible": [],
+     "not_examined": []
+    },
+    "mass": 1.0,
+    "focus": "full",
+    "presentations": [
+     {
+      "stage": "full",
+      "answers": [
+       {
+        "answer": "A",
+        "key": 0,
+        "option": "charges, invoices or payments"
+       },
+       {
+        "answer": "B",
+        "key": 1,
+        "option": "the product is broken, erroring or unavailable"
+       },
+       {
+        "answer": "C",
+        "key": 2,
+        "option": "login, profile or account access"
+       }
+      ]
+     }
+    ],
+    "requests": []
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "pick",
+   "mode": "serial",
+   "ms": 423.95455399673665,
+   "native_work": {
+    "prefix_hits": 3,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 3,
+    "state_tokens": 92,
+    "suffix_tokens": 192,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 6,
+    "submitted_tokens": 284
+   },
+   "peak_rss_bytes": 219271168,
+   "results": [
+    {
+     "status": "ok",
+     "value": "charges, invoices or payments",
+     "index": 0,
+     "prediction": {
+      "kind": "value",
+      "key": 0,
+      "value": "charges, invoices or payments",
+      "score": 0.9999999999999178
+     },
+     "score": 0.9999999999999178,
+     "error": null,
+     "complete": true,
+     "guidance": [],
+     "observed_models": [],
+     "scores": {
+      "0": 0.9999999999999178,
+      "1": 3.4339911756975815e-14,
+      "2": 4.7948736158478534e-14
+     },
+     "removed": {
+      "ineligible": [],
+      "not_examined": []
+     },
+     "mass": 1.0,
+     "focus": "full",
+     "presentations": [
+      {
+       "stage": "full",
+       "answers": [
+        {
+         "answer": "A",
+         "key": 0,
+         "option": "charges, invoices or payments"
+        },
+        {
+         "answer": "B",
+         "key": 1,
+         "option": "the product is broken, erroring or unavailable"
+        },
+        {
+         "answer": "C",
+         "key": 2,
+         "option": "login, profile or account access"
+        }
+       ]
+      }
+     ],
+     "requests": []
+    },
+    {
+     "status": "ok",
+     "value": "the product is broken, erroring or unavailable",
+     "index": 1,
+     "prediction": {
+      "kind": "value",
+      "key": 1,
+      "value": "the product is broken, erroring or unavailable",
+      "score": 0.9999999999999097
+     },
+     "score": 0.9999999999999097,
+     "error": null,
+     "complete": true,
+     "guidance": [],
+     "observed_models": [],
+     "scores": {
+      "0": 2.8941037374933534e-15,
+      "1": 0.9999999999999097,
+      "2": 8.738532606083721e-14
+     },
+     "removed": {
+      "ineligible": [],
+      "not_examined": []
+     },
+     "mass": 1.0,
+     "focus": "full",
+     "presentations": [
+      {
+       "stage": "full",
+       "answers": [
+        {
+         "answer": "A",
+         "key": 0,
+         "option": "charges, invoices or payments"
+        },
+        {
+         "answer": "B",
+         "key": 1,
+         "option": "the product is broken, erroring or unavailable"
+        },
+        {
+         "answer": "C",
+         "key": 2,
+         "option": "login, profile or account access"
+        }
+       ]
+      }
+     ],
+     "requests": []
+    },
+    {
+     "status": "ok",
+     "value": "charges, invoices or payments",
+     "index": 0,
+     "prediction": {
+      "kind": "value",
+      "key": 0,
+      "value": "charges, invoices or payments",
+      "score": 0.9999993594988537
+     },
+     "score": 0.9999993594988537,
+     "error": null,
+     "complete": true,
+     "guidance": [],
+     "observed_models": [],
+     "scores": {
+      "0": 0.9999993594988537,
+      "1": 2.612599025992012e-07,
+      "2": 3.7924124368223587e-07
+     },
+     "removed": {
+      "ineligible": [],
+      "not_examined": []
+     },
+     "mass": 0.9999998807907104,
+     "focus": "full",
+     "presentations": [
+      {
+       "stage": "full",
+       "answers": [
+        {
+         "answer": "A",
+         "key": 0,
+         "option": "charges, invoices or payments"
+        },
+        {
+         "answer": "B",
+         "key": 1,
+         "option": "the product is broken, erroring or unavailable"
+        },
+        {
+         "answer": "C",
+         "key": 2,
+         "option": "login, profile or account access"
+        }
+       ]
+      }
+     ],
+     "requests": []
+    }
+   ],
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "pick",
+   "mode": "batch",
+   "ms": 397.0295929975691,
+   "native_work": {
+    "prefix_hits": 3,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 3,
+    "state_tokens": 92,
+    "suffix_tokens": 192,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 6,
+    "submitted_tokens": 284
+   },
+   "peak_rss_bytes": 219271168,
+   "results": [
+    {
+     "status": "ok",
+     "value": "charges, invoices or payments",
+     "index": 0,
+     "prediction": {
+      "kind": "value",
+      "key": 0,
+      "value": "charges, invoices or payments",
+      "score": 0.9999999999999178
+     },
+     "score": 0.9999999999999178,
+     "error": null,
+     "complete": true,
+     "guidance": [],
+     "observed_models": [],
+     "scores": {
+      "0": 0.9999999999999178,
+      "1": 3.4339911756975815e-14,
+      "2": 4.7948736158478534e-14
+     },
+     "removed": {
+      "ineligible": [],
+      "not_examined": []
+     },
+     "mass": 1.0,
+     "focus": "full",
+     "presentations": [
+      {
+       "stage": "full",
+       "answers": [
+        {
+         "answer": "A",
+         "key": 0,
+         "option": "charges, invoices or payments"
+        },
+        {
+         "answer": "B",
+         "key": 1,
+         "option": "the product is broken, erroring or unavailable"
+        },
+        {
+         "answer": "C",
+         "key": 2,
+         "option": "login, profile or account access"
+        }
+       ]
+      }
+     ],
+     "requests": []
+    },
+    {
+     "status": "ok",
+     "value": "the product is broken, erroring or unavailable",
+     "index": 1,
+     "prediction": {
+      "kind": "value",
+      "key": 1,
+      "value": "the product is broken, erroring or unavailable",
+      "score": 0.9999999999999097
+     },
+     "score": 0.9999999999999097,
+     "error": null,
+     "complete": true,
+     "guidance": [],
+     "observed_models": [],
+     "scores": {
+      "0": 2.8941037374933534e-15,
+      "1": 0.9999999999999097,
+      "2": 8.738532606083721e-14
+     },
+     "removed": {
+      "ineligible": [],
+      "not_examined": []
+     },
+     "mass": 1.0,
+     "focus": "full",
+     "presentations": [
+      {
+       "stage": "full",
+       "answers": [
+        {
+         "answer": "A",
+         "key": 0,
+         "option": "charges, invoices or payments"
+        },
+        {
+         "answer": "B",
+         "key": 1,
+         "option": "the product is broken, erroring or unavailable"
+        },
+        {
+         "answer": "C",
+         "key": 2,
+         "option": "login, profile or account access"
+        }
+       ]
+      }
+     ],
+     "requests": []
+    },
+    {
+     "status": "ok",
+     "value": "charges, invoices or payments",
+     "index": 0,
+     "prediction": {
+      "kind": "value",
+      "key": 0,
+      "value": "charges, invoices or payments",
+      "score": 0.9999993594988537
+     },
+     "score": 0.9999993594988537,
+     "error": null,
+     "complete": true,
+     "guidance": [],
+     "observed_models": [],
+     "scores": {
+      "0": 0.9999993594988537,
+      "1": 2.612599025992012e-07,
+      "2": 3.7924124368223587e-07
+     },
+     "removed": {
+      "ineligible": [],
+      "not_examined": []
+     },
+     "mass": 0.9999998807907104,
+     "focus": "full",
+     "presentations": [
+      {
+       "stage": "full",
+       "answers": [
+        {
+         "answer": "A",
+         "key": 0,
+         "option": "charges, invoices or payments"
+        },
+        {
+         "answer": "B",
+         "key": 1,
+         "option": "the product is broken, erroring or unavailable"
+        },
+        {
+         "answer": "C",
+         "key": 2,
+         "option": "login, profile or account access"
+        }
+       ]
+      }
+     ],
+     "requests": []
+    }
+   ],
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "select",
+   "mode": "first",
+   "ms": 206.21534500241978,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 29,
+    "suffix_tokens": 79,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 3,
+    "submitted_tokens": 108
+   },
+   "peak_rss_bytes": 219271168,
+   "results": {
+    "status": "ok",
+    "value": [
+     "refund"
+    ],
+    "complete": true,
+    "settled": true,
+    "states": {
+     "refund": "applicable",
+     "legal": "rejected"
+    },
+    "unresolved": {},
+    "members": {
+     "refund": {
+      "status": "ok",
+      "value": true,
+      "prediction": {
+       "kind": "value",
+       "key": "true",
+       "value": true,
+       "score": 0.9999999789104477
+      },
+      "p_true": 0.9999999789104477,
+      "mass": 1.0,
+      "error": null,
+      "guidance": [],
+      "observed_models": [],
+      "scores": {
+       "true": 0.9999999789104477,
+       "false": 2.1089552365889035e-08
+      },
+      "requests": [],
+      "presentations": [
+       {
+        "stage": "full",
+        "answers": [
+         {
+          "answer": "yes",
+          "key": "true",
+          "option": null
+         },
+         {
+          "answer": "no",
+          "key": "false",
+          "option": null
+         }
+        ]
+       }
+      ]
+     },
+     "legal": {
+      "status": "ok",
+      "value": false,
+      "prediction": {
+       "kind": "value",
+       "key": "false",
+       "value": false,
+       "score": 0.9999999999999989
+      },
+      "p_true": 1.1908409357039732e-15,
+      "mass": 1.0,
+      "error": null,
+      "guidance": [],
+      "observed_models": [],
+      "scores": {
+       "true": 1.1908409357039732e-15,
+       "false": 0.9999999999999989
+      },
+      "requests": [],
+      "presentations": [
+       {
+        "stage": "full",
+        "answers": [
+         {
+          "answer": "yes",
+          "key": "true",
+          "option": null
+         },
+         {
+          "answer": "no",
+          "key": "false",
+          "option": null
+         }
+        ]
+       }
+      ]
+     }
+    },
+    "error": null,
+    "guidance": [],
+    "observed_models": [],
+    "requests": []
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "select",
+   "mode": "warm",
+   "ms": 130.02160700125387,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 1,
+    "state_misses": 0,
+    "state_tokens": 0,
+    "suffix_tokens": 79,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 2,
+    "submitted_tokens": 79
+   },
+   "peak_rss_bytes": 219271168,
+   "results": {
+    "status": "ok",
+    "value": [
+     "refund"
+    ],
+    "complete": true,
+    "settled": true,
+    "states": {
+     "refund": "applicable",
+     "legal": "rejected"
+    },
+    "unresolved": {},
+    "members": {
+     "refund": {
+      "status": "ok",
+      "value": true,
+      "prediction": {
+       "kind": "value",
+       "key": "true",
+       "value": true,
+       "score": 0.9999999789104477
+      },
+      "p_true": 0.9999999789104477,
+      "mass": 1.0,
+      "error": null,
+      "guidance": [],
+      "observed_models": [],
+      "scores": {
+       "true": 0.9999999789104477,
+       "false": 2.1089552365889035e-08
+      },
+      "requests": [],
+      "presentations": [
+       {
+        "stage": "full",
+        "answers": [
+         {
+          "answer": "yes",
+          "key": "true",
+          "option": null
+         },
+         {
+          "answer": "no",
+          "key": "false",
+          "option": null
+         }
+        ]
+       }
+      ]
+     },
+     "legal": {
+      "status": "ok",
+      "value": false,
+      "prediction": {
+       "kind": "value",
+       "key": "false",
+       "value": false,
+       "score": 0.9999999999999989
+      },
+      "p_true": 1.1908409357039732e-15,
+      "mass": 1.0,
+      "error": null,
+      "guidance": [],
+      "observed_models": [],
+      "scores": {
+       "true": 1.1908409357039732e-15,
+       "false": 0.9999999999999989
+      },
+      "requests": [],
+      "presentations": [
+       {
+        "stage": "full",
+        "answers": [
+         {
+          "answer": "yes",
+          "key": "true",
+          "option": null
+         },
+         {
+          "answer": "no",
+          "key": "false",
+          "option": null
+         }
+        ]
+       }
+      ]
+     }
+    },
+    "error": null,
+    "guidance": [],
+    "observed_models": [],
+    "requests": []
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "select",
+   "mode": "warm",
+   "ms": 189.7876869988977,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 31,
+    "suffix_tokens": 79,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 3,
+    "submitted_tokens": 110
+   },
+   "peak_rss_bytes": 219271168,
+   "results": {
+    "status": "none",
+    "value": [],
+    "complete": true,
+    "settled": true,
+    "states": {
+     "refund": "rejected",
+     "legal": "rejected"
+    },
+    "unresolved": {},
+    "members": {
+     "refund": {
+      "status": "ok",
+      "value": false,
+      "prediction": {
+       "kind": "value",
+       "key": "false",
+       "value": false,
+       "score": 0.9999999999999822
+      },
+      "p_true": 1.7780380388516052e-14,
+      "mass": 1.0,
+      "error": null,
+      "guidance": [],
+      "observed_models": [],
+      "scores": {
+       "true": 1.7780380388516052e-14,
+       "false": 0.9999999999999822
+      },
+      "requests": [],
+      "presentations": [
+       {
+        "stage": "full",
+        "answers": [
+         {
+          "answer": "yes",
+          "key": "true",
+          "option": null
+         },
+         {
+          "answer": "no",
+          "key": "false",
+          "option": null
+         }
+        ]
+       }
+      ]
+     },
+     "legal": {
+      "status": "ok",
+      "value": false,
+      "prediction": {
+       "kind": "value",
+       "key": "false",
+       "value": false,
+       "score": 0.9999999999999996
+      },
+      "p_true": 3.3633959015070397e-16,
+      "mass": 1.0,
+      "error": null,
+      "guidance": [],
+      "observed_models": [],
+      "scores": {
+       "true": 3.3633959015070397e-16,
+       "false": 0.9999999999999996
+      },
+      "requests": [],
+      "presentations": [
+       {
+        "stage": "full",
+        "answers": [
+         {
+          "answer": "yes",
+          "key": "true",
+          "option": null
+         },
+         {
+          "answer": "no",
+          "key": "false",
+          "option": null
+         }
+        ]
+       }
+      ]
+     }
+    },
+    "error": null,
+    "guidance": [],
+    "observed_models": [],
+    "requests": []
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "select",
+   "mode": "warm",
+   "ms": 213.77079100057017,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 32,
+    "suffix_tokens": 79,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 3,
+    "submitted_tokens": 111
+   },
+   "peak_rss_bytes": 219271168,
+   "results": {
+    "status": "ok",
+    "value": [
+     "legal"
+    ],
+    "complete": true,
+    "settled": true,
+    "states": {
+     "refund": "rejected",
+     "legal": "applicable"
+    },
+    "unresolved": {},
+    "members": {
+     "refund": {
+      "status": "ok",
+      "value": false,
+      "prediction": {
+       "kind": "value",
+       "key": "false",
+       "value": false,
+       "score": 0.9999999999999998
+      },
+      "p_true": 1.4727819773750233e-16,
+      "mass": 1.0,
+      "error": null,
+      "guidance": [],
+      "observed_models": [],
+      "scores": {
+       "true": 1.4727819773750233e-16,
+       "false": 0.9999999999999998
+      },
+      "requests": [],
+      "presentations": [
+       {
+        "stage": "full",
+        "answers": [
+         {
+          "answer": "yes",
+          "key": "true",
+          "option": null
+         },
+         {
+          "answer": "no",
+          "key": "false",
+          "option": null
+         }
+        ]
+       }
+      ]
+     },
+     "legal": {
+      "status": "ok",
+      "value": true,
+      "prediction": {
+       "kind": "value",
+       "key": "true",
+       "value": true,
+       "score": 0.9999999944104072
+      },
+      "p_true": 0.9999999944104072,
+      "mass": 1.0,
+      "error": null,
+      "guidance": [],
+      "observed_models": [],
+      "scores": {
+       "true": 0.9999999944104072,
+       "false": 5.589592836549415e-09
+      },
+      "requests": [],
+      "presentations": [
+       {
+        "stage": "full",
+        "answers": [
+         {
+          "answer": "yes",
+          "key": "true",
+          "option": null
+         },
+         {
+          "answer": "no",
+          "key": "false",
+          "option": null
+         }
+        ]
+       }
+      ]
+     }
+    },
+    "error": null,
+    "guidance": [],
+    "observed_models": [],
+    "requests": []
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "select",
+   "mode": "warm",
+   "ms": 195.0458819992491,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 29,
+    "suffix_tokens": 79,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 3,
+    "submitted_tokens": 108
+   },
+   "peak_rss_bytes": 219271168,
+   "results": {
+    "status": "ok",
+    "value": [
+     "refund"
+    ],
+    "complete": true,
+    "settled": true,
+    "states": {
+     "refund": "applicable",
+     "legal": "rejected"
+    },
+    "unresolved": {},
+    "members": {
+     "refund": {
+      "status": "ok",
+      "value": true,
+      "prediction": {
+       "kind": "value",
+       "key": "true",
+       "value": true,
+       "score": 0.9999999789104477
+      },
+      "p_true": 0.9999999789104477,
+      "mass": 1.0,
+      "error": null,
+      "guidance": [],
+      "observed_models": [],
+      "scores": {
+       "true": 0.9999999789104477,
+       "false": 2.1089552365889035e-08
+      },
+      "requests": [],
+      "presentations": [
+       {
+        "stage": "full",
+        "answers": [
+         {
+          "answer": "yes",
+          "key": "true",
+          "option": null
+         },
+         {
+          "answer": "no",
+          "key": "false",
+          "option": null
+         }
+        ]
+       }
+      ]
+     },
+     "legal": {
+      "status": "ok",
+      "value": false,
+      "prediction": {
+       "kind": "value",
+       "key": "false",
+       "value": false,
+       "score": 0.9999999999999989
+      },
+      "p_true": 1.1908409357039732e-15,
+      "mass": 1.0,
+      "error": null,
+      "guidance": [],
+      "observed_models": [],
+      "scores": {
+       "true": 1.1908409357039732e-15,
+       "false": 0.9999999999999989
+      },
+      "requests": [],
+      "presentations": [
+       {
+        "stage": "full",
+        "answers": [
+         {
+          "answer": "yes",
+          "key": "true",
+          "option": null
+         },
+         {
+          "answer": "no",
+          "key": "false",
+          "option": null
+         }
+        ]
+       }
+      ]
+     }
+    },
+    "error": null,
+    "guidance": [],
+    "observed_models": [],
+    "requests": []
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "select",
+   "mode": "warm",
+   "ms": 199.17572700069286,
+   "native_work": {
+    "prefix_hits": 1,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 1,
+    "state_tokens": 31,
+    "suffix_tokens": 79,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 3,
+    "submitted_tokens": 110
+   },
+   "peak_rss_bytes": 219271168,
+   "results": {
+    "status": "none",
+    "value": [],
+    "complete": true,
+    "settled": true,
+    "states": {
+     "refund": "rejected",
+     "legal": "rejected"
+    },
+    "unresolved": {},
+    "members": {
+     "refund": {
+      "status": "ok",
+      "value": false,
+      "prediction": {
+       "kind": "value",
+       "key": "false",
+       "value": false,
+       "score": 0.9999999999999822
+      },
+      "p_true": 1.7780380388516052e-14,
+      "mass": 1.0,
+      "error": null,
+      "guidance": [],
+      "observed_models": [],
+      "scores": {
+       "true": 1.7780380388516052e-14,
+       "false": 0.9999999999999822
+      },
+      "requests": [],
+      "presentations": [
+       {
+        "stage": "full",
+        "answers": [
+         {
+          "answer": "yes",
+          "key": "true",
+          "option": null
+         },
+         {
+          "answer": "no",
+          "key": "false",
+          "option": null
+         }
+        ]
+       }
+      ]
+     },
+     "legal": {
+      "status": "ok",
+      "value": false,
+      "prediction": {
+       "kind": "value",
+       "key": "false",
+       "value": false,
+       "score": 0.9999999999999996
+      },
+      "p_true": 3.3633959015070397e-16,
+      "mass": 1.0,
+      "error": null,
+      "guidance": [],
+      "observed_models": [],
+      "scores": {
+       "true": 3.3633959015070397e-16,
+       "false": 0.9999999999999996
+      },
+      "requests": [],
+      "presentations": [
+       {
+        "stage": "full",
+        "answers": [
+         {
+          "answer": "yes",
+          "key": "true",
+          "option": null
+         },
+         {
+          "answer": "no",
+          "key": "false",
+          "option": null
+         }
+        ]
+       }
+      ]
+     }
+    },
+    "error": null,
+    "guidance": [],
+    "observed_models": [],
+    "requests": []
+   },
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "select",
+   "mode": "serial",
+   "ms": 623.794072002056,
+   "native_work": {
+    "prefix_hits": 3,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 3,
+    "state_tokens": 92,
+    "suffix_tokens": 237,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 9,
+    "submitted_tokens": 329
+   },
+   "peak_rss_bytes": 219271168,
+   "results": [
+    {
+     "status": "ok",
+     "value": [
+      "refund"
+     ],
+     "complete": true,
+     "settled": true,
+     "states": {
+      "refund": "applicable",
+      "legal": "rejected"
+     },
+     "unresolved": {},
+     "members": {
+      "refund": {
+       "status": "ok",
+       "value": true,
+       "prediction": {
+        "kind": "value",
+        "key": "true",
+        "value": true,
+        "score": 0.9999999789104477
+       },
+       "p_true": 0.9999999789104477,
+       "mass": 1.0,
+       "error": null,
+       "guidance": [],
+       "observed_models": [],
+       "scores": {
+        "true": 0.9999999789104477,
+        "false": 2.1089552365889035e-08
+       },
+       "requests": [],
+       "presentations": [
+        {
+         "stage": "full",
+         "answers": [
+          {
+           "answer": "yes",
+           "key": "true",
+           "option": null
+          },
+          {
+           "answer": "no",
+           "key": "false",
+           "option": null
+          }
+         ]
+        }
+       ]
+      },
+      "legal": {
+       "status": "ok",
+       "value": false,
+       "prediction": {
+        "kind": "value",
+        "key": "false",
+        "value": false,
+        "score": 0.9999999999999989
+       },
+       "p_true": 1.1908409357039732e-15,
+       "mass": 1.0,
+       "error": null,
+       "guidance": [],
+       "observed_models": [],
+       "scores": {
+        "true": 1.1908409357039732e-15,
+        "false": 0.9999999999999989
+       },
+       "requests": [],
+       "presentations": [
+        {
+         "stage": "full",
+         "answers": [
+          {
+           "answer": "yes",
+           "key": "true",
+           "option": null
+          },
+          {
+           "answer": "no",
+           "key": "false",
+           "option": null
+          }
+         ]
+        }
+       ]
+      }
+     },
+     "error": null,
+     "guidance": [],
+     "observed_models": [],
+     "requests": []
+    },
+    {
+     "status": "none",
+     "value": [],
+     "complete": true,
+     "settled": true,
+     "states": {
+      "refund": "rejected",
+      "legal": "rejected"
+     },
+     "unresolved": {},
+     "members": {
+      "refund": {
+       "status": "ok",
+       "value": false,
+       "prediction": {
+        "kind": "value",
+        "key": "false",
+        "value": false,
+        "score": 0.9999999999999822
+       },
+       "p_true": 1.7780380388516052e-14,
+       "mass": 1.0,
+       "error": null,
+       "guidance": [],
+       "observed_models": [],
+       "scores": {
+        "true": 1.7780380388516052e-14,
+        "false": 0.9999999999999822
+       },
+       "requests": [],
+       "presentations": [
+        {
+         "stage": "full",
+         "answers": [
+          {
+           "answer": "yes",
+           "key": "true",
+           "option": null
+          },
+          {
+           "answer": "no",
+           "key": "false",
+           "option": null
+          }
+         ]
+        }
+       ]
+      },
+      "legal": {
+       "status": "ok",
+       "value": false,
+       "prediction": {
+        "kind": "value",
+        "key": "false",
+        "value": false,
+        "score": 0.9999999999999996
+       },
+       "p_true": 3.3633959015070397e-16,
+       "mass": 1.0,
+       "error": null,
+       "guidance": [],
+       "observed_models": [],
+       "scores": {
+        "true": 3.3633959015070397e-16,
+        "false": 0.9999999999999996
+       },
+       "requests": [],
+       "presentations": [
+        {
+         "stage": "full",
+         "answers": [
+          {
+           "answer": "yes",
+           "key": "true",
+           "option": null
+          },
+          {
+           "answer": "no",
+           "key": "false",
+           "option": null
+          }
+         ]
+        }
+       ]
+      }
+     },
+     "error": null,
+     "guidance": [],
+     "observed_models": [],
+     "requests": []
+    },
+    {
+     "status": "ok",
+     "value": [
+      "legal"
+     ],
+     "complete": true,
+     "settled": true,
+     "states": {
+      "refund": "rejected",
+      "legal": "applicable"
+     },
+     "unresolved": {},
+     "members": {
+      "refund": {
+       "status": "ok",
+       "value": false,
+       "prediction": {
+        "kind": "value",
+        "key": "false",
+        "value": false,
+        "score": 0.9999999999999998
+       },
+       "p_true": 1.4727819773750233e-16,
+       "mass": 1.0,
+       "error": null,
+       "guidance": [],
+       "observed_models": [],
+       "scores": {
+        "true": 1.4727819773750233e-16,
+        "false": 0.9999999999999998
+       },
+       "requests": [],
+       "presentations": [
+        {
+         "stage": "full",
+         "answers": [
+          {
+           "answer": "yes",
+           "key": "true",
+           "option": null
+          },
+          {
+           "answer": "no",
+           "key": "false",
+           "option": null
+          }
+         ]
+        }
+       ]
+      },
+      "legal": {
+       "status": "ok",
+       "value": true,
+       "prediction": {
+        "kind": "value",
+        "key": "true",
+        "value": true,
+        "score": 0.9999999944104072
+       },
+       "p_true": 0.9999999944104072,
+       "mass": 1.0,
+       "error": null,
+       "guidance": [],
+       "observed_models": [],
+       "scores": {
+        "true": 0.9999999944104072,
+        "false": 5.589592836549415e-09
+       },
+       "requests": [],
+       "presentations": [
+        {
+         "stage": "full",
+         "answers": [
+          {
+           "answer": "yes",
+           "key": "true",
+           "option": null
+          },
+          {
+           "answer": "no",
+           "key": "false",
+           "option": null
+          }
+         ]
+        }
+       ]
+      }
+     },
+     "error": null,
+     "guidance": [],
+     "observed_models": [],
+     "requests": []
+    }
+   ],
+   "error": null,
+   "unavailable": {}
+  },
+  {
+   "primitive": "select",
+   "mode": "batch",
+   "ms": 566.8396179971751,
+   "native_work": {
+    "prefix_hits": 3,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 3,
+    "state_tokens": 92,
+    "suffix_tokens": 237,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 9,
+    "submitted_tokens": 329
+   },
+   "peak_rss_bytes": 219271168,
+   "results": [
+    {
+     "status": "ok",
+     "value": [
+      "refund"
+     ],
+     "complete": true,
+     "settled": true,
+     "states": {
+      "refund": "applicable",
+      "legal": "rejected"
+     },
+     "unresolved": {},
+     "members": {
+      "refund": {
+       "status": "ok",
+       "value": true,
+       "prediction": {
+        "kind": "value",
+        "key": "true",
+        "value": true,
+        "score": 0.9999999789104477
+       },
+       "p_true": 0.9999999789104477,
+       "mass": 1.0,
+       "error": null,
+       "guidance": [],
+       "observed_models": [],
+       "scores": {
+        "true": 0.9999999789104477,
+        "false": 2.1089552365889035e-08
+       },
+       "requests": [],
+       "presentations": [
+        {
+         "stage": "full",
+         "answers": [
+          {
+           "answer": "yes",
+           "key": "true",
+           "option": null
+          },
+          {
+           "answer": "no",
+           "key": "false",
+           "option": null
+          }
+         ]
+        }
+       ]
+      },
+      "legal": {
+       "status": "ok",
+       "value": false,
+       "prediction": {
+        "kind": "value",
+        "key": "false",
+        "value": false,
+        "score": 0.9999999999999989
+       },
+       "p_true": 1.1908409357039732e-15,
+       "mass": 1.0,
+       "error": null,
+       "guidance": [],
+       "observed_models": [],
+       "scores": {
+        "true": 1.1908409357039732e-15,
+        "false": 0.9999999999999989
+       },
+       "requests": [],
+       "presentations": [
+        {
+         "stage": "full",
+         "answers": [
+          {
+           "answer": "yes",
+           "key": "true",
+           "option": null
+          },
+          {
+           "answer": "no",
+           "key": "false",
+           "option": null
+          }
+         ]
+        }
+       ]
+      }
+     },
+     "error": null,
+     "guidance": [],
+     "observed_models": [],
+     "requests": []
+    },
+    {
+     "status": "none",
+     "value": [],
+     "complete": true,
+     "settled": true,
+     "states": {
+      "refund": "rejected",
+      "legal": "rejected"
+     },
+     "unresolved": {},
+     "members": {
+      "refund": {
+       "status": "ok",
+       "value": false,
+       "prediction": {
+        "kind": "value",
+        "key": "false",
+        "value": false,
+        "score": 0.9999999999999822
+       },
+       "p_true": 1.7780380388516052e-14,
+       "mass": 1.0,
+       "error": null,
+       "guidance": [],
+       "observed_models": [],
+       "scores": {
+        "true": 1.7780380388516052e-14,
+        "false": 0.9999999999999822
+       },
+       "requests": [],
+       "presentations": [
+        {
+         "stage": "full",
+         "answers": [
+          {
+           "answer": "yes",
+           "key": "true",
+           "option": null
+          },
+          {
+           "answer": "no",
+           "key": "false",
+           "option": null
+          }
+         ]
+        }
+       ]
+      },
+      "legal": {
+       "status": "ok",
+       "value": false,
+       "prediction": {
+        "kind": "value",
+        "key": "false",
+        "value": false,
+        "score": 0.9999999999999996
+       },
+       "p_true": 3.3633959015070397e-16,
+       "mass": 1.0,
+       "error": null,
+       "guidance": [],
+       "observed_models": [],
+       "scores": {
+        "true": 3.3633959015070397e-16,
+        "false": 0.9999999999999996
+       },
+       "requests": [],
+       "presentations": [
+        {
+         "stage": "full",
+         "answers": [
+          {
+           "answer": "yes",
+           "key": "true",
+           "option": null
+          },
+          {
+           "answer": "no",
+           "key": "false",
+           "option": null
+          }
+         ]
+        }
+       ]
+      }
+     },
+     "error": null,
+     "guidance": [],
+     "observed_models": [],
+     "requests": []
+    },
+    {
+     "status": "ok",
+     "value": [
+      "legal"
+     ],
+     "complete": true,
+     "settled": true,
+     "states": {
+      "refund": "rejected",
+      "legal": "applicable"
+     },
+     "unresolved": {},
+     "members": {
+      "refund": {
+       "status": "ok",
+       "value": false,
+       "prediction": {
+        "kind": "value",
+        "key": "false",
+        "value": false,
+        "score": 0.9999999999999998
+       },
+       "p_true": 1.4727819773750233e-16,
+       "mass": 1.0,
+       "error": null,
+       "guidance": [],
+       "observed_models": [],
+       "scores": {
+        "true": 1.4727819773750233e-16,
+        "false": 0.9999999999999998
+       },
+       "requests": [],
+       "presentations": [
+        {
+         "stage": "full",
+         "answers": [
+          {
+           "answer": "yes",
+           "key": "true",
+           "option": null
+          },
+          {
+           "answer": "no",
+           "key": "false",
+           "option": null
+          }
+         ]
+        }
+       ]
+      },
+      "legal": {
+       "status": "ok",
+       "value": true,
+       "prediction": {
+        "kind": "value",
+        "key": "true",
+        "value": true,
+        "score": 0.9999999944104072
+       },
+       "p_true": 0.9999999944104072,
+       "mass": 1.0,
+       "error": null,
+       "guidance": [],
+       "observed_models": [],
+       "scores": {
+        "true": 0.9999999944104072,
+        "false": 5.589592836549415e-09
+       },
+       "requests": [],
+       "presentations": [
+        {
+         "stage": "full",
+         "answers": [
+          {
+           "answer": "yes",
+           "key": "true",
+           "option": null
+          },
+          {
+           "answer": "no",
+           "key": "false",
+           "option": null
+          }
+         ]
+        }
+       ]
+      }
+     },
+     "error": null,
+     "guidance": [],
+     "observed_models": [],
+     "requests": []
+    }
+   ],
+   "error": null,
+   "unavailable": {}
+  }
+ ],
+ "warm": {
+  "check": {
+   "unit": "ms",
+   "samples": 5,
+   "interpolation": "linear between closest ranks",
+   "p50": 127.0268579974072,
+   "p95": 134.468076597841
+  },
+  "pick": {
+   "unit": "ms",
+   "samples": 5,
+   "interpolation": "linear between closest ranks",
+   "p50": 137.10554700082866,
+   "p95": 142.2464896022575
+  },
+  "select": {
+   "unit": "ms",
+   "samples": 5,
+   "interpolation": "linear between closest ranks",
+   "p50": 195.0458819992491,
+   "p95": 210.8517782005947
+  }
+ },
+ "baseline": true,
+ "matched_previous": null
+}

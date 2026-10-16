@@ -6,11 +6,12 @@ from types import SimpleNamespace
 import pytest
 
 from semantic_switch import ConfigError, Runtime, files
-from semantic_switch.metrics import (Progress, comparison_identity, membership, paired, precision_report, reconcile, resample, success)
+from semantic_switch.metrics import (Counts, Progress, comparison_identity, correctness, membership, paired, reconcile, resample, success)
 from semantic_switch.presentation import identity as presentation_identity
-from bench.diagnostics import fingerprint
+from bench.outcomes import fingerprint
 from bench.outcomes import resumable, work_key
-from tests.conftest import FakeScorer, classify
+from semantic_testkit.scoring import FakeScorer
+from tests.conftest import classify
 
 
 def scope(n=4, families=None, condition="workflow"):
@@ -70,11 +71,33 @@ def test_identical_arms_have_zero_difference_and_bootstrap_keeps_canonical_compo
     assert one["difference"]["interval"] is None and one["difference"]["support"] == "insufficient"
 
 
-def test_resample_draws_whole_families():
-    rows = [{"family": "a", "v": 1}, {"family": "a", "v": 1}, {"family": "b", "v": 0}]
-    sizes = set()
-    resample(rows, lambda sample: sizes.add(len(sample)) or 0, seed=1, count=50)
-    assert sizes <= {2, 3, 4} and len(sizes) > 1
+def _row_bootstrap(rows, statistic, seed, count):
+    import random
+    groups = {}
+    for row in rows:
+        groups.setdefault(row["family"], []).append(row)
+    names, values = sorted(groups), []
+    import numpy as np
+    draws = np.random.Generator(np.random.PCG64(seed)).integers(len(names), size=(count, len(names)), dtype=np.int64)
+    for draw in draws:
+        value = statistic([row for index in draw for row in groups[names[index]]])
+        if value is not None:
+            values.append(value)
+    return values
+
+
+def test_resample_of_family_sufficient_statistics_matches_the_row_reference():
+    import random
+    rnd = random.Random(7)
+    rows = [{"family": f"f{rnd.randrange(9)}", "accepted": rnd.random() < .7, "correct": rnd.random() < .6} for _ in range(80)]
+    def precision(sample):
+        chosen = [row["correct"] for row in sample if row["accepted"]]
+        return sum(chosen) / len(chosen) if chosen else None
+    found = resample(rows, lambda row: (row["accepted"] and row["correct"], row["accepted"]), seed=5, count=300)
+    reference = sorted(_row_bootstrap(rows, precision, 5, 300))
+    assert found["estimate"] == precision(rows) and found["valid_replicates"] == len(reference) and found["rows"] == 80
+    from semantic_switch.metrics import percentile
+    assert found["interval"] == [percentile(reference, .025), percentile(reference, .975)]
 
 
 def test_mostly_negative_membership_exposes_positive_precision_and_soft_gold():
@@ -86,13 +109,17 @@ def test_mostly_negative_membership_exposes_positive_precision_and_soft_gold():
     assert report["soft_or_unlabelled"] == 3 and report["hard"] == 100 and report["accepted_outcomes"]["false_positive"] == 4
 
 
-def test_precision_report_marks_sparse_identical_and_empty_support():
-    empty = precision_report([{"family": "a", "accepted": False, "correct": False}], seed=0, count=10)
-    assert empty["precision"] is None and empty["evidence"] == "insufficient"
-    perfect = precision_report([{"family": f"f{i}", "accepted": True, "correct": True} for i in range(12)], seed=0, count=50, target=.9, sampling="random")
-    assert perfect["precision"] == 1 and perfect["observed_target"] == "met" and {"all_identical_outcomes", "sparse_accepted"} <= set(perfect["flags"])
-    mixed = precision_report([{"family": f"f{i}", "accepted": i % 3 != 0, "correct": i % 2 == 0} for i in range(6)], seed=0, count=200)
-    assert mixed["interval"]["empty_replicates"] + mixed["interval"]["valid_replicates"] == 200 and "sampling_unidentified" in mixed["flags"]
+def test_one_count_reducer_serves_correctness_success_and_progress():
+    rows = [(True, True, "predicted"), (False, True, "predicted"), (True, False, "predicted"), (None, False, "failed"), (None, False, "unavailable")]
+    counts = Counts(rows).counts
+    assert counts == {"submitted": 5, "predicted": 3, "raw_correct": 2, "raw_wrong": 1, "accepted": 2, "correct_accepted": 1, "wrong_accepted": 1,
+                      "correct_rejected": 1, "wrong_rejected": 0, "failed": 1, "unavailable": 1}
+    assert correctness((c, a) for c, a, _ in rows) == Counts(rows).rates()
+    found = success({"correct": c, "outcome": o} for c, _, o in rows)
+    assert (found["expected"], found["submitted"], found["predicted"], found["correct"], found["failed"]) == (5, 4, 3, 2, 1)
+    with pytest.raises(ConfigError, match="accepted answer needs a prediction"):
+        Counts([(None, True)])
+    assert Counts([(None, True)], strict=False).counts["accepted"] == 1
 
 
 def test_progress_formatter_separates_fresh_and_resumed_counts():
@@ -110,6 +137,8 @@ def test_progress_formatter_separates_fresh_and_resumed_counts():
     assert final["completed"] == 6 and final["fresh"] == 2 and final["resumed"] == 4
     with pytest.raises(ConfigError, match="unknown progress"):
         progress.add(accuracy=1)
+    progress.add(submitted=2, failed=1)
+    assert progress.counts["completed"] == 8 and progress.counts["failed"] == 3
 
 
 def test_fit_report_persists_support_and_disables_unsupported_search():
@@ -129,7 +158,7 @@ def test_fit_report_persists_support_and_disables_unsupported_search():
 
 def test_latency_reports_nonzero_logical_work():
     from bench.latency import logical_tokens
-    rt = Runtime({"judge": FakeScorer()})
+    rt = Runtime(FakeScorer())
     sw = rt.load("switches/refund.yaml", draft=True)
     results = [sw({"message": "please refund my last charge"}), sw({"message": "hello"})]
     assert logical_tokens(results) > 0
@@ -172,7 +201,7 @@ def test_exact_sets_require_complete_reference_and_successful_complete_predictio
             exact(selected=["a"], gold=["a"], reference_unresolved=["b"], complete_gold=False)]
     report = exact_sets(rows)
     assert report["exact"] == 3 and report["gold_complete"] == 9 and report["incomplete_reference"] == 1 and report["failed"] == 2
-    assert report["version"] == METRICS == 3 and report["exact_rate"] == 3 / 9
+    assert report["version"] == METRICS == 5 and report["exact_rate"] == 3 / 9
     for bad in (exact(selected=["a", "a"]), exact(selected=["z"]), exact(selected=["a"], unresolved=["a"], prediction_complete=False),
                 exact(unresolved=["a"]), exact(outcome="failed"), exact(prediction_complete=None), exact(gold=["c"]),
                 exact(complete_gold=False), exact(reference_unresolved=["a"]), exact(gold=["a"], reference_unresolved=["a"], complete_gold=False),

@@ -14,54 +14,33 @@ import os
 import re
 from pathlib import Path
 
-import numpy as np
-
 from semantic_switch import Model
 from semantic_switch.judgment import Policy
 from semantic_switch.artifacts import artifact_digest
+from semantic_switch.metrics import percentile
+from bench.outcomes import Progress
 from bench import quality
-from bench import diagnostics
-from semantic_switch.metrics import Progress
-from bench.outcomes import configuration, failure, finish, measure, resumable, resumed, runtime, work_key
-
-OUT = Path("bench/results/judges.json")
-GRID = np.round(np.arange(0.50, 1.0, 0.01), 2)
+from bench.model_comparison import suite
+from bench.outcomes import configuration, failure, finish, measure, output_argument, resumable, resumed, runtime, work_key
 
 
 def run(rt, model: Model) -> dict:
     load = measure(lambda: bool(rt.judge()), runtime=rt)
     if load.error:
         return failure(load, source=model.source, stage="load")
-    scored = measure(lambda: quality.run(rt), runtime=rt)
+    scored = measure(lambda: suite(rt), runtime=rt)
     if scored.error:
         return failure(scored, source=model.source, stage="score")
-    return {"outcome": "predicted", "provenance": diagnostics.provenance(rt, list(quality.check_items()), boundary="public SDK"), "source": model.source,
+    return {"outcome": "predicted", "source": model.source,
             "adapter": rt.info()["identity"]["template"], "shared": rt.info()["capabilities"]["shared"],
             "file_mb": round(os.path.getsize(model.path()) / 2**20), "load_peak_rss_mb": round(load.peak_rss_bytes / 2**20),
             "peak_rss_mb": round(scored.peak_rss_bytes / 2**20), "load_s": round(load.ms / 1000, 1),
             "threads": model.threads or os.cpu_count(), **scored.output}
 
 
-def _best_threshold(rows, target: float, min_settled: int = 10):
-    return next((float(t) for t in GRID if (s := quality.selective(rows, float(t)))["accepted"] >= min_settled and s["precision"] >= target), None)
-
-
-def coverage_at(rows, target: float = 0.95) -> dict:
-    names = sorted({r["fact"] for r in rows})
-    halves = (set(names[0::2]), set(names[1::2]))
-    settled = correct = 0
-    for tune, test in (halves, halves[::-1]):
-        t = _best_threshold([r for r in rows if r["fact"] in tune], target)
-        if t is None:
-            continue
-        s = quality.selective([r for r in rows if r["fact"] in test], t)
-        settled, correct = settled + s["accepted"], correct + s["correct"]
-    return {"coverage": round(settled / len(rows), 3), "precision": round(correct / settled, 3) if settled else None}
-
-
 def summarize(res: dict) -> dict:
     return {"model": Path(res["source"].split(":")[-1]).stem, "adapter": res["adapter"], "file_mb": res["file_mb"],
-            "peak_rss_mb": res["peak_rss_mb"], **quality.summarize(res), "at_95": coverage_at(res["checks"])}
+            "peak_rss_mb": res["peak_rss_mb"], **res["summary"]}
 
 
 def family(name: str) -> str:
@@ -69,12 +48,12 @@ def family(name: str) -> str:
 
 
 def shift(a: dict, b: dict) -> dict:
-    pa = np.array([r["p"] if r["p"] is not None else np.nan for r in a["checks"]])
-    pb = np.array([r["p"] if r["p"] is not None else np.nan for r in b["checks"]])
-    return {"mean_abs_dp": round(float(np.nanmean(np.abs(pa - pb))), 3),
-            "p95_abs_dp": round(float(np.nanpercentile(np.abs(pa - pb), 95)), 3),
-            "flips_0.5": int(((pa >= 0.5) != (pb >= 0.5)).sum()),
-            "settle_changes_0.9": sum(quality.decision(x, Policy(.9, .9)) != quality.decision(y, Policy(.9, .9)) for x, y in zip(a["checks"], b["checks"]))}
+    rows = list(zip(a["raw"]["checks"], b["raw"]["checks"], strict=True))
+    shifts = sorted(abs(x["p"] - y["p"]) for x, y in rows if x["p"] is not None and y["p"] is not None)
+    return {"pairs": len(shifts), "mean_abs_dp": round(sum(shifts) / len(shifts), 3) if shifts else None,
+            "p95_abs_dp": round(percentile(shifts, .95), 3) if shifts else None,
+            "flips_0.5": sum((x["p"] >= .5) != (y["p"] >= .5) for x, y in rows if x["p"] is not None and y["p"] is not None),
+            "settle_changes_0.9": sum(quality.decision(x, Policy(.9, .9)) != quality.decision(y, Policy(.9, .9)) for x, y in rows)}
 
 
 def analyze(rows: list) -> dict:
@@ -93,7 +72,7 @@ def main():
     ap.add_argument("--judges", required=True)
     ap.add_argument("--adapter", default="chat")
     ap.add_argument("--threads", type=int, default=None)
-    ap.add_argument("--output", type=Path, default=OUT)
+    output_argument(ap, help="published summary; the resumable journal is OUTPUT.journal.jsonl")
     ap.add_argument("--fresh", action="store_true")
     args = ap.parse_args()
     models = {Path(source.split(":")[-1]).stem + ("" if args.adapter == "chat" else f"@{args.adapter}"): Model(source, adapter=args.adapter, threads=args.threads)

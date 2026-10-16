@@ -1,0 +1,212 @@
+{
+ "schema": 8,
+ "kind": "lora-candidates",
+ "state": "ready",
+ "job_id": "6f239986fb143504c89d5a5c58c9a9885a5db405292ef1444bb2645e61f756e9",
+ "fit_id": "2a0224d1d8f454b7a33219e8e92c25774291a55b7db77184502370b159a76a04",
+ "monitor_id": "989fbe8762884e56233f167412b0e068603984b80c6db2bcbb6d9919e62a01d4",
+ "loss": {
+  "name": "full_vocabulary_group_nll",
+  "version": 2,
+  "reduction": "float32"
+ },
+ "fitted_job_id": "1003480dac513eceedac49eb2eb36924606e4182a60762671896d00761036a61",
+ "assets": {
+  "manifest": "f6bdeb193f522a844500e42b1a4963f15a8e19e3722fa63f36e0db2d9a568f9e",
+  "quant": "Q8_0"
+ },
+ "base_sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+ "unit": "observation",
+ "rule": {
+  "unit": "observation",
+  "order": [
+   "correct",
+   "regressions",
+   "nll",
+   "base",
+   "step"
+  ],
+  "nll": "available"
+ },
+ "stop": {
+  "reason": "epoch_cap",
+  "convergence": "not_demonstrated",
+  "steps_trained": 2,
+  "examples_trained": 4,
+  "max_optimizer_steps": 2,
+  "evaluation_points": 2,
+  "last_evaluation": {
+   "step": 2,
+   "examples_seen": 4
+  },
+  "unevaluated": {
+   "steps": 0,
+   "examples": 0
+  },
+  "best_monitored": {
+   "name": "step-2",
+   "step": 2,
+   "examples_seen": 4
+  },
+  "best_at_boundary": true,
+  "deadline": null,
+  "work": {
+   "updates": 2,
+   "points": 2,
+   "checkpoints": 2,
+   "training_tokens": 1008,
+   "monitor_tokens": 4538,
+   "tasks": {
+    "1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6": {
+     "observations": 4,
+     "tokens": 1008
+    }
+   },
+   "seconds": {
+    "update": [
+     1.9796853649968398,
+     0.7426730869992753
+    ],
+    "point": [
+     3.324135759001365,
+     1.3029382230015472
+    ],
+    "checkpoint": [
+     0.02283191699825693,
+     0.025207275997672696
+    ]
+   }
+  },
+  "inputs": {
+   "rows": 9,
+   "presentations": 9,
+   "bytes": 18152,
+   "seconds": 8.646999776829034e-05,
+   "device": "cpu"
+  }
+ },
+ "candidates": [
+  {
+   "name": "zero",
+   "step": 0,
+   "examples_seen": 0,
+   "correct": {
+    "observation": 5,
+    "complete_situation": 5,
+    "situations": 5,
+    "observations": 5,
+    "macro": {
+     "observation": 1.0,
+     "complete_situation": 1.0
+    },
+    "tasks": {
+     "1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6": {
+      "observation": 5,
+      "complete_situation": 5,
+      "situations": 5,
+      "observations": 5
+     }
+    }
+   },
+   "nll": 1.1534657886613787e-07,
+   "completed_after_deadline": false,
+   "predictions": {
+    "f58c242869e7730a27146bc7c6973663efceb675942c648eb254a8c3a82b7557": {
+     "answer": 1,
+     "stages": {
+      "full": 1
+     }
+    },
+    "dc6cf17331b904c31b1ed51359b652bda62f3357fff2e9401096825e8e9ae0b0": {
+     "answer": 0,
+     "stages": {
+      "full": 0
+     }
+    },
+    "a5a980f263711f8f0b0d5b1fd229d903284a9721bff673bf895f7377a1049833": {
+     "answer": 0,
+     "stages": {
+      "full": 0
+     }
+    },
+    "fcf4d84dc48d7e08e97286234c02f7fc561113c23c52f3687651025d0dcd07fb": {
+     "answer": 0,
+     "stages": {
+      "full": 0
+     }
+    },
+    "a6689cb0b6074e6c930344509c2449c986c5893a0dee601470bb43863001b79b": {
+     "answer": 0,
+     "stages": {
+      "full": 0
+     }
+    }
+   },
+   "peft": "candidates/zero",
+   "peft_sha256": "0d5ba816fffe7ae47e43cbe234a1ad2d6c08e64aa230f7fe2ead3d368852247b",
+   "config_sha256": "55d05f2dfe6241fd1dc2a9faaaa2f87f441a7b2912fc8d8e16b8ca7f59d9f3b6",
+   "config_digest": "d660c7b2fffa59e46fa3fd5d47690988547c3c82f09b630bf0a3a33fa177931f"
+  },
+  {
+   "name": "step-2",
+   "step": 2,
+   "examples_seen": 4,
+   "correct": {
+    "observation": 5,
+    "complete_situation": 5,
+    "situations": 5,
+    "observations": 5,
+    "macro": {
+     "observation": 1.0,
+     "complete_situation": 1.0
+    },
+    "tasks": {
+     "1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6": {
+      "observation": 5,
+      "complete_situation": 5,
+      "situations": 5,
+      "observations": 5
+     }
+    }
+   },
+   "nll": 1.0983850629031622e-07,
+   "completed_after_deadline": false,
+   "predictions": {
+    "f58c242869e7730a27146bc7c6973663efceb675942c648eb254a8c3a82b7557": {
+     "answer": 1,
+     "stages": {
+      "full": 1
+     }
+    },
+    "dc6cf17331b904c31b1ed51359b652bda62f3357fff2e9401096825e8e9ae0b0": {
+     "answer": 0,
+     "stages": {
+      "full": 0
+     }
+    },
+    "a5a980f263711f8f0b0d5b1fd229d903284a9721bff673bf895f7377a1049833": {
+     "answer": 0,
+     "stages": {
+      "full": 0
+     }
+    },
+    "fcf4d84dc48d7e08e97286234c02f7fc561113c23c52f3687651025d0dcd07fb": {
+     "answer": 0,
+     "stages": {
+      "full": 0
+     }
+    },
+    "a6689cb0b6074e6c930344509c2449c986c5893a0dee601470bb43863001b79b": {
+     "answer": 0,
+     "stages": {
+      "full": 0
+     }
+    }
+   },
+   "peft": "candidates/step-2",
+   "peft_sha256": "ad815d85ccb3897886b0fa71fe0789894e22974ea5ed53aa33f71179b255a438",
+   "config_sha256": "55d05f2dfe6241fd1dc2a9faaaa2f87f441a7b2912fc8d8e16b8ca7f59d9f3b6",
+   "config_digest": "d660c7b2fffa59e46fa3fd5d47690988547c3c82f09b630bf0a3a33fa177931f"
+  }
+ ]
+}

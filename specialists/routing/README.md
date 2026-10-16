@@ -4,9 +4,9 @@ Data for the single-task Gemma 4 E2B specialist (TODO: "Single-task E2B speciali
 
 ## Frozen task
 
-`routing.yaml` holds the task: the `routing_v1` guidance and the five options copied verbatim from `tests/fixtures/small-context-cohort.json`.
+`acquire.py` owns the one task definition (`definition()`): the `routing_v1` guidance and the five options copied verbatim from `tests/fixtures/small-context-cohort.json`. `acquire.py define` emits it as `routing.yaml`; every other step refuses a `routing.yaml` that differs from the generator.
 
-A fact never reads a missing field, so the one judgment has two facts that differ only in what they read:
+A fact never reads a missing field, so the generator emits the one judgment as two concrete facts that differ only in what they read:
 
 | Fact | Reads | Meaning revision |
 | --- | --- | --- |
@@ -73,28 +73,33 @@ Families are named `routing-NNNN` (plan index) and `routing-check-NNNN`. The rol
 ## Pipeline (`acquire.py`, explicit and checkpointed)
 
 ```
+python specialists/routing/acquire.py define                                 # routing.yaml from the generator definition
 python specialists/routing/acquire.py plan                                   # data/plan.jsonl: 540 families (400 fit, 80 model_select, 60 acceptance_fit)
-python specialists/routing/acquire.py plan --base clarify --fit 60 --model-select 12 --acceptance-fit 8   # appended clarify-based families (teachers rarely kept generated clarify variants)
+python specialists/routing/acquire.py plan --base clarify --fit 60 --model-select 12 --acceptance-fit 8   # appended clarify-based families
 python specialists/routing/acquire.py generate --provider Alibaba Parasail Novita Phala DeepInfra   # qwen/qwen3.5-397b-a17b (Apache-2.0) → data/generated.jsonl, appended per family; rerun resumes
-python specialists/routing/acquire.py check                                  # check/authored.yaml → check/situations.jsonl (role check)
+python specialists/routing/acquire.py check                                  # check/authored.yaml → check/situations.jsonl, check/collect/<fact>.jsonl (role check)
 python specialists/routing/acquire.py situations                             # near-duplicate and leakage filter → data/situations.jsonl, data/collect/<fact>.jsonl
-python specialists/routing/acquire.py label --pool fit --teacher openrouter:google/gemma-4-31b-it --provider Parasail --name gemma-4-31b
-python specialists/routing/acquire.py label --pool fit --teacher openrouter:google/gemma-4-26b-a4b-it --provider Parasail --name gemma-4-26b
-python specialists/routing/acquire.py label --pool check ...                 # same two teachers on the check pool (drafts only)
-python specialists/routing/acquire.py review                                 # data/review/disagreements.jsonl, sample.jsonl (10% per class of agreed labels)
-python specialists/routing/acquire.py check-draft                            # check/check.draft.jsonl for human labelling
+python specialists/routing/acquire.py label --pool fit --teacher openrouter:google/gemma-4-31b-it --provider Parasail --training-use use-31b.yaml --name gemma-4-31b
+python specialists/routing/acquire.py label --pool fit --teacher openrouter:google/gemma-4-26b-a4b-it --provider Parasail --training-use use-26b.yaml --name gemma-4-26b
+python specialists/routing/acquire.py review --pool fit --name disagreements --size 400 --audit 100 --stratum conflict --stratum teacher_uncertain
+python specialists/routing/acquire.py review --pool check --name check --teachers gemma-4-31b --size 1000 --audit 1000
 python specialists/routing/acquire.py assemble [--reviewed FILE ...]         # data/sets/fit-{100,300,1000}.jsonl (+ model_select and acceptance_fit records)
-python specialists/routing/acquire.py report                                 # non-native export + prepare's support check → data/report.json
+python specialists/routing/acquire.py report                                 # assigned roles, families and round coverage per set → data/report.json
 ```
 
 Details of the steps:
 
-- **Labelling.** `label` runs `semantic-trainer collect` per 150-situation shard, so an interruption loses at most one shard.
+- **Collect envelopes.** `situations` and `check` write schema-3 situation envelopes (`data/collect/<fact>.jsonl`) carrying each family's group, pairs, role and tags.
+- **Labelling.** `label` runs `semantic-learn collect` once per fact under the declared training use; `labels/<name>/<fact>.collection.json` names the published labels and `<fact>.journal.jsonl` resumes an interrupted run (`--retry-failed` repeats transport failures).
+- **Review.** `review` is `semantic-learn review` over the named teachers' collections: a seeded random audit plus declared triage strata. Two teachers that disagree leave the target unresolved (`conflict` stratum); `claims.jsonl` lists both alternatives for an explicit resolution.
 - **Filtering.** `situations` drops whole families when either holds:
   - a message's word-trigram Jaccard reaches 0.6 against an earlier family;
   - it reaches 0.5 against the check pool or the small-context cohort.
-- **Nested sets.** `assemble` orders fit families once (`data/sets/order.json`, greedy cover of fact × answer × phenomenon), so the 100, 300 and 1,000 sets are nested.
-- **Receipts.** `data/receipts.jsonl` records generation cost from the OpenRouter usage receipts, and the key's cumulative usage after each labelling shard.
+- **Nested sets.** `assemble` accumulates one teacher's collection with the reviewed files through the correction-history accumulator, excludes unresolved situations, and orders fit families once (`data/sets/order.json`, greedy cover of fact × answer × phenomenon), so the 100, 300 and 1,000 sets are nested.
+- **Receipts.** `data/receipts.jsonl` records generation cost from the OpenRouter usage receipts, and the key's cumulative usage plus collection counts after each labelling run.
+- **Fitting.** Each set is fitted by `semantic-learn round specialists/routing/routing.yaml --labels data/sets/fit-N.jsonl --request RECIPE.json --to WORK --cutoff ... --serving ... --min-reviewed ... --min-per-class ...`, where `RECIPE.json` is a specialization request (task family `customer:routing_v1`).
+
+Label files collected before schema-3 envelopes (`*/labels/*.jsonl`, `*/collect/shards/`, `check/check.draft*.jsonl`) are an unsupported schema and are not read; rerun `check`, `situations` and `label` to regenerate them. `plan.jsonl`, `generated.jsonl`, `situations.jsonl` and `receipts.jsonl` remain readable.
 
 ## State (2026-10-10)
 
@@ -113,22 +118,4 @@ Details of the steps:
 
 ## Gate: human review (pending)
 
-Nothing here is human-labelled yet. All labels are `synthetic`, with teacher attribution. Do not fit or select until these three reviews are done:
-
-1. **Check pool.** Run `ss label specialists/routing/routing.yaml specialists/routing/check/check.draft.jsonl --to specialists/routing/check/check.reviewed.jsonl`.
-   - A value is supplied only where both teachers and the author agree. Every other record asks for a label.
-   - `check/check.draft.detail.jsonl` shows the author's intended answer and both teachers' answers.
-   - The check is then exported with `ss export specialists/routing/routing.yaml --split check --labels specialists/routing/check/check.reviewed.jsonl` and is never inspected during tuning.
-2. **Disagreements.** Run `ss label specialists/routing/routing.yaml specialists/routing/data/review/disagreements.jsonl --to specialists/routing/data/review/disagreements.reviewed.jsonl`. `disagreements.detail.jsonl` lists both teachers' answers in the same order.
-3. **Sample.** Run `ss label specialists/routing/routing.yaml specialists/routing/data/review/sample.jsonl --to specialists/routing/data/review/sample.reviewed.jsonl`.
-
-After the reviews, finish the sets and fit:
-
-1. Run `acquire.py assemble --reviewed data/review/disagreements.reviewed.jsonl data/review/sample.reviewed.jsonl`, then `acquire.py report`.
-2. For each size, run:
-   - `ss export --native --labels data/sets/fit-N.jsonl --task-family customer:routing_v1` with the pipeline-built base;
-   - `semantic-trainer prepare` (the 1,000 set needs `--max-tokens 4000000`; `data/report.json` estimates about 3.6M tokens, and the default budget is 2M);
-   - `lora`;
-   - `select --check`.
-
-When review changes a label, update the translations of that situation the same way.
+Nothing here is verified yet. Do not fit or select until the check pool and the fit-pool review queue are labelled with `ss label specialists/routing/routing.yaml QUEUE --to REVIEWED`, conflicts are resolved from `claims.jsonl`, and `assemble --reviewed REVIEWED ...` plus `report` show feasible coverage. When review changes a label, update the translations of that situation the same way.

@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "semantic-learn"
+version = "0.1.0"
+description = "Optional explicit capture, teacher acquisition, review export and refitting rounds over semantic-switch; invokes the configured semantic-trainer program."
+requires-python = ">=3.12"
+dependencies = ["semantic-switch>=0.26,<0.27"]
+
+[project.scripts]
+semantic-learn = "semantic_learn.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

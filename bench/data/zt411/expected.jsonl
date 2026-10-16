@@ -5,7 +5,7 @@
 {"template": "ribbon_out", "variant": "base", "justified": ["load_ribbon"], "prohibited": ["resume_printing"], "unresolved": []}
 {"template": "ribbon_out", "variant": "commanded_load", "justified": ["verify_loading", "request_observation"], "prohibited": [], "unresolved": ["load_ribbon", "resume_printing"]}
 {"template": "ribbon_out", "variant": "verified_load", "condition": "prose", "justified": ["resume_printing"], "prohibited": [], "unresolved": []}
-{"template": "ribbon_out", "variant": "contradiction", "justified": ["request_observation"], "prohibited": [], "unresolved": ["load_ribbon", "resume_printing"]}
+{"template": "ribbon_out", "variant": "contradiction", "justified": ["request_observation"], "prohibited": ["resume_printing"], "unresolved": ["load_ribbon", "start_calibration", "verify_loading"]}
 {"template": "detection", "variant": "base", "justified": ["start_calibration", "verify_loading"], "prohibited": ["resume_printing"], "unresolved": []}
 {"template": "detection", "variant": "other_asset_symptom", "justified": ["resume_printing"], "prohibited": [], "unresolved": []}
 {"template": "calibration_step", "variant": "reported_step", "justified": ["verify_loading"], "prohibited": ["calibration_next", "resume_printing"], "unresolved": []}

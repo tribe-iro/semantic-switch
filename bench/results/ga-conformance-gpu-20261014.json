@@ -1,0 +1,183 @@
+{
+ "source": {
+  "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+  "sources": "7ff17cc3635fa62b27d474dcab6108150302d197a3cf6bbea00f6df0ceef607c"
+ },
+ "source_unchanged": true,
+ "command": [
+  ".artifacts/ga-implementation/conformance.py",
+  "gpu"
+ ],
+ "roles": {
+  "judge": {
+   "role": "judge",
+   "model": {
+    "presentation": {
+     "evidence": "named-fields@2",
+     "choices": "full-criteria@3"
+    },
+    "file": "Q8_0.gguf",
+    "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+    "template": "chat@3:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb"
+   },
+   "requested_device": "gpu",
+   "boundary": "renderer/readout/execution conformance; not domain accuracy",
+   "status": "failed",
+   "ok": false,
+   "checks": {
+    "D1 shared = reference": {
+     "ok": true,
+     "max_diff": 0.0,
+     "includes_mass": true
+    },
+    "D2 batching": {
+     "ok": true,
+     "after_diff": 0.0,
+     "batched_diff": 0.0,
+     "includes_mass": true
+    },
+    "D3 no leakage": {
+     "ok": true,
+     "max_diff": 0.0
+    },
+    "D4 answer tokens": {
+     "ok": true
+    },
+    "D5 template": {
+     "ok": true,
+     "median_mass": 1.0
+    },
+    "D6 chunking": {
+     "ok": false,
+     "max_diff": 0.0006982684135437012
+    },
+    "D7 residency": {
+     "ok": true,
+     "max_diff": 0.0,
+     "includes_mass": true
+    }
+   },
+   "cached": false,
+   "shared_prefix": true
+  },
+  "A": {
+   "role": "A",
+   "model": {
+    "presentation": {
+     "evidence": "named-fields@2",
+     "choices": "full-criteria@3"
+    },
+    "file": "Q8_0.gguf",
+    "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+    "template": "chat@3:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+    "lora": {
+     "sha256": "ae1822714aebce11ae139208962f02f3d555a4d0a37e98ea0ec39c3bd7f75e95",
+     "rank": 16,
+     "alpha": 32.0,
+     "targets": "da8dfdea81c8ede98d5656bb20c8bed8b4a6f39f62ed20c70d41bc896067bbe5",
+     "scale": 1.0
+    }
+   },
+   "requested_device": "gpu",
+   "boundary": "renderer/readout/execution conformance; not domain accuracy",
+   "status": "failed",
+   "ok": false,
+   "checks": {
+    "D1 shared = reference": {
+     "ok": false,
+     "max_diff": 1.1524980188942768e-12,
+     "includes_mass": true
+    },
+    "D2 batching": {
+     "ok": true,
+     "after_diff": 0.0,
+     "batched_diff": 0.0,
+     "includes_mass": true
+    },
+    "D3 no leakage": {
+     "ok": true,
+     "max_diff": 0.0
+    },
+    "D4 answer tokens": {
+     "ok": true
+    },
+    "D5 template": {
+     "ok": true,
+     "median_mass": 1.0
+    },
+    "D6 chunking": {
+     "ok": false,
+     "max_diff": 0.0007473230361938477
+    },
+    "D7 residency": {
+     "ok": true,
+     "max_diff": 0.0,
+     "includes_mass": true
+    }
+   },
+   "cached": false,
+   "shared_prefix": true
+  },
+  "B": {
+   "role": "B",
+   "model": {
+    "presentation": {
+     "evidence": "named-fields@2",
+     "choices": "full-criteria@3"
+    },
+    "file": "Q8_0.gguf",
+    "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+    "template": "chat@3:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+    "lora": {
+     "sha256": "bdf482919cb88cc2e7852975e0bfdc02b751f28e9316d04e7dd118b9adebc67b",
+     "rank": 16,
+     "alpha": 32.0,
+     "targets": "da8dfdea81c8ede98d5656bb20c8bed8b4a6f39f62ed20c70d41bc896067bbe5",
+     "scale": 1.0
+    }
+   },
+   "requested_device": "gpu",
+   "boundary": "renderer/readout/execution conformance; not domain accuracy",
+   "status": "failed",
+   "ok": false,
+   "checks": {
+    "D1 shared = reference": {
+     "ok": false,
+     "max_diff": 4.174340994395065e-14,
+     "includes_mass": true
+    },
+    "D2 batching": {
+     "ok": true,
+     "after_diff": 0.0,
+     "batched_diff": 0.0,
+     "includes_mass": true
+    },
+    "D3 no leakage": {
+     "ok": true,
+     "max_diff": 0.0
+    },
+    "D4 answer tokens": {
+     "ok": true
+    },
+    "D5 template": {
+     "ok": true,
+     "median_mass": 1.0
+    },
+    "D6 chunking": {
+     "ok": false,
+     "max_diff": 0.00032317638397216797
+    },
+    "D7 residency": {
+     "ok": true,
+     "max_diff": 0.0,
+     "includes_mass": true
+    }
+   },
+   "cached": false,
+   "shared_prefix": true
+  }
+ }
+}

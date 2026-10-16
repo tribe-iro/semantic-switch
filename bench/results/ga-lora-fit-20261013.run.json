@@ -1,0 +1,115 @@
+{
+ "schema": 4,
+ "state": "ready",
+ "at": "2026-10-13T20:28:15+00:00",
+ "loss": {
+  "name": "full_vocabulary_group_nll",
+  "version": 2,
+  "reduction": "float32"
+ },
+ "job_id": "6f239986fb143504c89d5a5c58c9a9885a5db405292ef1444bb2645e61f756e9",
+ "fit_id": "2a0224d1d8f454b7a33219e8e92c25774291a55b7db77184502370b159a76a04",
+ "monitor_id": "989fbe8762884e56233f167412b0e068603984b80c6db2bcbb6d9919e62a01d4",
+ "stop": {
+  "reason": "epoch_cap",
+  "convergence": "not_demonstrated",
+  "steps_trained": 2,
+  "examples_trained": 4,
+  "max_optimizer_steps": 2,
+  "evaluation_points": 2,
+  "last_evaluation": {
+   "step": 2,
+   "examples_seen": 4
+  },
+  "unevaluated": {
+   "steps": 0,
+   "examples": 0
+  },
+  "best_monitored": {
+   "name": "step-2",
+   "step": 2,
+   "examples_seen": 4
+  },
+  "best_at_boundary": true,
+  "deadline": null,
+  "work": {
+   "updates": 2,
+   "points": 2,
+   "checkpoints": 2,
+   "training_tokens": 1008,
+   "monitor_tokens": 4538,
+   "tasks": {
+    "1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6": {
+     "observations": 4,
+     "tokens": 1008
+    }
+   },
+   "seconds": {
+    "update": [
+     1.9796853649968398,
+     0.7426730869992753
+    ],
+    "point": [
+     3.324135759001365,
+     1.3029382230015472
+    ],
+    "checkpoint": [
+     0.02283191699825693,
+     0.025207275997672696
+    ]
+   }
+  },
+  "inputs": {
+   "rows": 9,
+   "presentations": 9,
+   "bytes": 18152,
+   "seconds": 8.646999776829034e-05,
+   "device": "cpu"
+  }
+ },
+ "feasibility": {
+  "kind": "feasibility",
+  "feasible": true,
+  "elapsed_seconds": 18.050265626996406,
+  "completed": {
+   "updates": 2,
+   "points": 1,
+   "checkpoints": 1,
+   "training_tokens": 1008,
+   "monitor_tokens": 2269,
+   "tasks": {
+    "1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6": {
+     "observations": 4,
+     "tokens": 1008
+    }
+   }
+  },
+  "remaining": {
+   "updates": 0,
+   "points": 1,
+   "checkpoints": 1
+  },
+  "measured": {
+   "update_seconds": 1.3611792259980575,
+   "point_seconds": 3.324135759001365,
+   "checkpoint_seconds": 0.02283191699825693,
+   "point_tokens": 2269,
+   "updates_measured": 2,
+   "points_measured": 1,
+   "checkpoints_measured": 1
+  },
+  "projection": {
+   "seconds": 21.397233302996028,
+   "training_seconds": 0.0,
+   "monitoring_seconds": 3.324135759001365,
+   "checkpoint_seconds": 0.02283191699825693,
+   "max_seconds": 1200,
+   "training_tokens": 1008,
+   "max_tokens": 200000,
+   "monitor_tokens": 4538,
+   "max_monitor_tokens": 200000,
+   "evaluation_points": 2,
+   "optimizer_steps": 2
+  }
+ }
+}

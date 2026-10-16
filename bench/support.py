@@ -1,56 +1,58 @@
 from __future__ import annotations
 
-import argparse
 import json
 from pathlib import Path
 import random
 import sys
 
 from semantic_switch import ConfigError, files
-from semantic_switch.metrics import identity
+from semantic_switch.compiler import digest
 from bench import evidence
 from bench.evidence import Assertion, Decision, Frame, Gold, Prose
 
 DATA = Path(__file__).parent / "data" / "support"
-PACK, DEFINITION = DATA / "pack.json", DATA / "support.yaml"
-REVISION, CATALOGUE = "support-reference-1", "support-catalogue-1"
+PACK, DEFINITION = DATA / "pack.json", Path(__file__).parents[1] / "examples" / "data" / "support.yaml"
+REVISION, CATALOGUE = "support-reference-3", "support-catalogue-3"
 TEXT = {
     "en": {"size_mismatch": ("the size", ["the shoes I got are two sizes too small", "the jacket does not fit, it is the wrong size"]),
            "color_mismatch": ("the color", ["the sweater came in green instead of the navy I ordered", "the color is not the one I picked"]),
            "stain_damage": ("damage", ["the shirt arrived with a big stain on it", "the box was crushed and the lamp is cracked"]),
            "missing_delivery": ("the delivery", ["my package never arrived", "half of the order is missing"]),
-           "disputed_charge": ("the charges", ["I was charged twice for this order", "there is a charge on my card for this order I do not recognize"]),
+           "disputed_charge": ("the charges", ["I was charged twice", "there is a charge on my card I do not recognize"]),
            "refund_initiate": ("a refund", ["please refund me", "I want my money back"]),
-           "refund_status": ("a refund update", ["can you tell me where my refund is", "has my refund gone through yet"]),
+           "refund_status": ("a refund status check", ["can you tell me where my refund is?", "has my refund gone through yet?"]),
            "refund_update": ("changes to the refund", ["please send the refund to my other card instead", "the refund amount is wrong, please correct it"]),
-           "return_item": ("a return", ["I would like to send it back", "how do I return it"]),
+           "return_item": ("a return", ["I would like to send it back", "how do I return it?"]),
            "replacement": ("a replacement", ["please send me a replacement", "I would like a new one sent out"]),
-           "delivery_change": ("a delivery change", ["please deliver it to my office instead", "can you move the delivery to Friday"]),
+           "delivery_change": ("a delivery change", ["please deliver it to my office instead", "can you move the delivery to Friday?"]),
            "order_change": ("an order change", ["please remove the hat from my order before it ships", "I want to cancel one item that has not shipped"])},
     "pt": {"size_mismatch": ("o tamanho", ["os sapatos que recebi são dois números menores", "a jaqueta não serve, o tamanho está errado"]),
            "color_mismatch": ("a cor", ["o suéter veio verde em vez do azul-marinho que pedi", "a cor não é a que eu escolhi"]),
            "stain_damage": ("o dano", ["a camisa chegou com uma mancha grande", "a caixa veio amassada e a luminária está rachada"]),
            "missing_delivery": ("a entrega", ["meu pacote nunca chegou", "metade do pedido está faltando"]),
-           "disputed_charge": ("as cobranças", ["fui cobrado duas vezes por este pedido", "há uma cobrança no meu cartão por este pedido que não reconheço"]),
+           "disputed_charge": ("as cobranças", ["fui cobrado duas vezes", "há uma cobrança no meu cartão que não reconheço"]),
            "refund_initiate": ("um reembolso", ["por favor, me reembolsem", "quero meu dinheiro de volta"]),
-           "refund_status": ("notícias do reembolso", ["podem me dizer onde está meu reembolso", "meu reembolso já foi processado"]),
+           "refund_status": ("uma consulta do status do reembolso", ["podem me dizer onde está meu reembolso?", "meu reembolso já foi processado?"]),
            "refund_update": ("mudanças no reembolso", ["por favor, mandem o reembolso para meu outro cartão", "o valor do reembolso está errado, corrijam por favor"]),
-           "return_item": ("uma devolução", ["quero mandar de volta", "como faço para devolver"]),
+           "return_item": ("uma devolução", ["quero mandar de volta", "como faço para devolver?"]),
            "replacement": ("uma troca", ["por favor, me enviem um substituto", "quero que mandem um novo"]),
-           "delivery_change": ("uma mudança na entrega", ["por favor, entreguem no meu escritório", "podem mudar a entrega para sexta-feira"]),
+           "delivery_change": ("uma mudança na entrega", ["por favor, entreguem no meu escritório", "podem mudar a entrega para sexta-feira?"]),
            "order_change": ("uma mudança no pedido", ["por favor, tirem o chapéu do meu pedido antes do envio", "quero cancelar um item que ainda não foi enviado"])}}
 TEMPLATES = {
-    "en": {"other": "On my other order {other}, {text}.", "negated_issue": "There is no problem with {topic}.", "negated_request": "I do not want {topic}.",
-           "resolved": "The earlier problem with {topic} was already sorted out.", "hypothetical": 'My friend said to write "{text}", but I am only asking.',
+    "en": {"other": "On my other order {other}, {text}", "this": "Regarding this order {order}, {text}",
+           "negated_issue": "There is no problem with {topic}.", "negated_request": "I do not want {topic}.",
+           "resolved": "The earlier problem with {topic} was already sorted out.", "hypothetical": 'My friend said to write "{text}", but I am not asking for that.',
            "ambiguous": "Great, just great, {topic}, I suppose.", "retain": "Also keep {topic} in place.", "unsupported": "Also, please change my account password. ",
            "hazard": "The cleaner leaked and burned my hand.", "forget": "Actually, forget that. "},
-    "pt": {"other": "No meu outro pedido {other}, {text}.", "negated_issue": "Não há problema com {topic}.", "negated_request": "Não quero {topic}.",
-           "resolved": "O problema anterior com {topic} já foi resolvido.", "hypothetical": 'Um amigo disse para escrever "{text}", mas só estou perguntando.',
+    "pt": {"other": "No meu outro pedido {other}, {text}", "this": "Sobre este pedido {order}, {text}",
+           "negated_issue": "Não há problema com {topic}.", "negated_request": "Não quero {topic}.",
+           "resolved": "O problema anterior com {topic} já foi resolvido.", "hypothetical": 'Um amigo disse para escrever "{text}", mas não estou pedindo isso.',
            "ambiguous": "Ótimo, simplesmente ótimo, {topic}, imagino.", "retain": "Mantenha também {topic}.",
            "unsupported": "Além disso, troquem a senha da minha conta. ", "hazard": "O produto de limpeza vazou e queimou minha mão.",
            "forget": "Na verdade, esqueçam isso. "}}
 ISSUES = ("size_mismatch", "color_mismatch", "stain_damage", "missing_delivery", "disputed_charge")
 REQUESTS = ("refund_initiate", "refund_status", "refund_update", "return_item", "replacement", "delivery_change", "order_change")
+UNDELIVERED = frozenset({"size_mismatch", "color_mismatch", "stain_damage", "return_item", "order_change"})
 LANGUAGES = ("en", "pt")
 TRAINED = "message"
 CONDITIONS = ("message", "message_permuted")
@@ -61,19 +63,26 @@ RULE_OF = {"current": "S-CURRENT", "negated": "S-NEGATED", "resolved": "S-RESOLV
            "ambiguous": "S-AMBIGUOUS"}
 
 
-def statement(prop, status, phrase, other_order=None, language="en"):
+def closed(text: str) -> str:
+    return text if text.endswith("?") else f"{text}."
+
+
+def statement(prop, status, phrase, other_order=None, language="en", order=None):
     kind, key = prop.split(":")
     topic, phrases = TEXT[language][key]
     text, t = phrases[phrase % 2], TEMPLATES[language]
     if other_order:
-        return t["other"].format(other=other_order, text=text)
+        return closed(t["other"].format(other=other_order, text=text))
+    if order:
+        return closed(t["this"].format(order=order, text=text))
     if status in ("current", "superseded"):
-        return f"{text[0].upper()}{text[1:]}."
+        return closed(f"{text[0].upper()}{text[1:]}")
     return t[f"negated_{kind}" if status == "negated" else status].format(topic=topic, text=text)
 
 
 def render(scenario, statements, account, *, frame_id, family, order, tags=(), seeds=(), pairs=(), condition="message", language="en") -> Frame:
-    prose, assertions, t = Prose("message"), [], TEMPLATES[language]
+    prose, t = Prose("message"), TEMPLATES[language]
+    retracted = [f"s{n}" for n, s in enumerate(statements) if s["status"] == "superseded"]
     for n, s in enumerate(statements):
         key = f"s{n}"
         if s.get("retain"):
@@ -85,12 +94,15 @@ def render(scenario, statements, account, *, frame_id, family, order, tags=(), s
             prose.add(t["hazard"], key)
         else:
             if s["status"] == "superseded_by":
-                prose.add(t["forget"])
-            prose.add(statement(s["property"], s["status"] if s["status"] != "superseded_by" else "current", s.get("phrase", 0), s.get("other"), language), key)
+                prose.add(t["forget"], key)
+                for earlier in retracted:
+                    prose.spans.setdefault(earlier, []).append(prose.spans[key][-1])
+            prose.add(statement(s["property"], s["status"] if s["status"] != "superseded_by" else "current", s.get("phrase", 0), s.get("other"), language,
+                                order if s.get("explicit") else None), key)
         prose.add(" ")
-        status = "current" if s["status"] == "superseded_by" else s["status"]
-        indication = "quoted" if status == "hypothetical" else "customer_statement"
-        assertions.append(Assertion(key, s.get("other") or order, s["property"], True, f"m{n}", n, indication, status, spans=tuple(prose.spans[key])))
+    assertions = [Assertion(f"s{n}", s.get("other") or order, s["property"], True, f"m{n}", n, "quoted" if s["status"] == "hypothetical" else "customer_statement",
+                            "current" if s["status"] == "superseded_by" else s["status"], spans=tuple(prose.spans[f"s{n}"]))
+                  for n, s in enumerate(statements) if s["property"] != "unsupported"]
     data = {"order": order, **{k: v for k, v in account.items() if v is not None}, "message": prose.text.rstrip()}
     return Frame(frame_id, family, scenario, condition, data, tuple(assertions), tuple(sorted(tags)), tuple(seeds), tuple(pairs))
 
@@ -181,19 +193,24 @@ def response(frame: Frame, gold: Gold) -> Decision:
         assessed += [f"issues/{k}" for k in ISSUES]
     for value, keys in (("refund_desk", ("refund_status", "refund_update")), ("return_or_replace", ("return_item", "replacement")),
                         ("change_order", ("delivery_change", "order_change"))):
-        hit = tuple(f"requests/{k}" for k in keys if v[f"requests/{k}"])
+        group = tuple(f"requests/{k}" for k in keys)
+        hit = tuple(t for t in group if v[t])
         if hit:
-            return composed(value, f"{value}:{'+'.join(t.split('/')[1] for t in hit)}", ("S-RESPONSE",), gold, (*assessed, *hit))
-        assessed += [f"requests/{k}" for k in keys]
+            return composed(value, f"{value}:{'+'.join(t.split('/')[1] for t in hit)}", ("S-RESPONSE",), gold, (*assessed, *group))
+        assessed += group
     return composed("no_action", "no_action", ("S-RESPONSE",), gold, tuple(assessed))
 
 
 def authored() -> dict:
-    return {"catalogue": identity({"text": TEXT, "templates": TEMPLATES, "issues": ISSUES, "requests": REQUESTS, "levels": LEVELS, "id": CATALOGUE})}
+    return {"catalogue": digest({"text": TEXT, "templates": TEMPLATES, "issues": ISSUES, "requests": REQUESTS, "levels": LEVELS, "id": CATALOGUE})}
 
 
 def stratum(frame: Frame, gold: Gold, role: str) -> tuple:
     return (frame.condition, role, next((tag for tag in frame.tags if tag in LANGUAGES), "abcd"), "hazard" if gold.values()["hazard"] else "no_hazard")
+
+
+def plausible(*members) -> bool:
+    return "missing_delivery" not in members or not UNDELIVERED & set(members)
 
 
 def contrasts(rng, issue, request, other_request, phrase, other_order):
@@ -206,8 +223,8 @@ def contrasts(rng, issue, request, other_request, phrase, other_order):
             ("quoted_request", [base[0], s(f"request:{request}", "hypothetical")], {"quoted_suggestion"}),
             ("latest_request", [base[0], s(f"request:{request}", "superseded"), s(f"request:{other_request}", "superseded_by")], {"latest_request"}),
             ("retained_request", [base[0], base[1], s(f"request:{other_request}"), s(f"request:{request}", retain=True)], {"retained_priority"}),
-            ("other_order", [s(f"issue:{issue}", other=other_order), base[1]], {"entity_change"}),
-            ("multiple_issues", [*base, s(f"issue:{rng.choice([k for k in ISSUES if k != issue])}")], {"multiple_issues"}),
+            ("other_order", [s(f"issue:{issue}", other=other_order), s(f"request:{request}", explicit=True)], {"entity_change"}),
+            ("multiple_issues", [*base, s(f"issue:{rng.choice([k for k in ISSUES if k != issue and plausible(issue, request, k)])}")], {"multiple_issues"}),
             ("unsupported", [base[0], {"property": "unsupported", "status": "current"}], {"unsupported_request"}),
             ("ambiguous", [base[0], s(f"request:{request}", "ambiguous")], {"ambiguous"})]
 
@@ -216,8 +233,9 @@ def scenarios(seed: int, count: int, variants: int | None = None) -> list[dict]:
     rng = random.Random(seed)
     out = []
     for k in range(count):
-        issue, request = rng.choice(list(ISSUES)), rng.choice(list(REQUESTS))
-        other_request = rng.choice([r for r in REQUESTS if r != request])
+        issue = rng.choice(ISSUES)
+        request = rng.choice([r for r in REQUESTS if plausible(issue, r)])
+        other_request = rng.choice([r for r in REQUESTS if r != request and plausible(issue, r)])
         order, other = (f"A{n:05d}" for n in rng.sample(range(10000, 99999), 2))
         account = {"delivered_days_ago": rng.choice((5, 12, 45)), "amount": rng.choice((40.0, 120.0, 800.0)), "refund_blocked": rng.random() < .15}
         sid = f"support-{seed}-{k}"
@@ -239,12 +257,12 @@ def frames(planned, conditions=CONDITIONS, languages=LANGUAGES) -> list[Frame]:
     return out
 
 
+def standard() -> evidence.Reference:
+    return evidence.Reference(reference, REVISION, SCOPE, FIELDS, {condition: evidence.criterion(definition(condition)) for condition in CONDITIONS}, response)
+
+
 def build(built):
-    for frame in built:
-        evidence.validate_frame(frame, FIELDS)
-    golds = {frame.id: evidence.validate_gold(frame, reference(frame), SCOPE, REVISION) for frame in built}
-    evidence.invariant(reference, built)
-    return golds
+    return evidence.references(standard(), built)
 
 
 def abcd(data_path, annotations_path) -> list[Frame]:
@@ -276,6 +294,8 @@ def abcd(data_path, annotations_path) -> list[Frame]:
 
 
 def pack_command(args):
+    if bool(args.abcd) != bool(args.abcd_annotations):
+        raise ConfigError("--abcd and --abcd-annotations go together")
     pack = evidence.load_pack(PACK)
     planned = scenarios(args.seed, args.scenarios, args.variants)
     built = frames(planned)
@@ -285,44 +305,24 @@ def pack_command(args):
         built += realism
         extra["abcd"] = {"data_sha256": files.sha256_file(args.abcd), "annotations_sha256": files.sha256_file(args.abcd_annotations),
                          "frames": len(realism), "slice": "check realism slice, reported separately"}
-    reviews = evidence.load_reviews(args.reviews) if args.reviews else ()
-    built, applied = evidence.apply_reviews(built, reviews)
-    golds = build(built)
-    assignment = evidence.assign(built, {"fit": args.fit, "model_select": args.model_select, "check": args.check}, seed=args.seed,
-                                 counted=evidence.situation_frames(built, golds, TRAINED), families_minimum={"fit": 30, "model_select": 40, "check": 60} if args.fit == 100 else None,
-                                 check_only=lambda frame: "abcd_realism" in frame.tags)
-    return evidence.publish(args.output, pack, scenarios=planned, frames=built, golds=golds, definition=files.read_yaml(DEFINITION), name=DEFINITION.name, condition=TRAINED, assignment=assignment,
-                            reviews=reviews, applied=applied, producer="bench.support.reference", producer_digest=evidence.code_digest(sys.modules[__name__], evidence),
-                            reference=reference, fields=FIELDS, composition={f.id: response(f, golds[f.id]) for f in built}, stratum=stratum,
-                            slices=("abcd",) if args.abcd else (), authored=authored(), seed=args.seed, extra=extra)
+    ref = standard()
+    reviewed = evidence.reviewed_pack(args, sys.modules[__name__], pack, built, ref, slices=("abcd",) if args.abcd else ())
+    assignment = evidence.quota_assignment(reviewed.frames, args, counted=evidence.situation_frames(reviewed.frames, reviewed.golds, TRAINED),
+                                           check_only=lambda frame: "abcd_realism" in frame.tags)
+    return evidence.publish_domain(args, sys.modules[__name__], pack, reviewed, ref, scenarios=planned, assignment=assignment, producer="bench.support.reference", extra=extra)
+
+
+def options(parser):
+    evidence.pack_arguments(parser)
+    parser.add_argument("--scenarios", type=int, default=200)
+    parser.add_argument("--abcd", type=Path, help="locally downloaded, pinned ABCD conversations JSON")
+    parser.add_argument("--abcd-annotations", type=Path, help="hand-authored per-prefix evidence annotations JSONL")
+    parser.add_argument("--reviews", type=Path, help="reviewer decisions JSONL; every decision names its worksheet binding")
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="bench.support", description="support classification pack: explicit offline construction; no model or network use")
-    commands = parser.add_subparsers(dest="command", required=True)
-    p = commands.add_parser("pack")
-    p.add_argument("--seed", type=int, default=0)
-    p.add_argument("--scenarios", type=int, default=200)
-    p.add_argument("--variants", type=int, default=3, help="per scenario: base plus a seeded sample of up to N-1 contrast variants, keeping families small")
-    p.add_argument("--fit", type=int, default=100)
-    p.add_argument("--model-select", type=int, default=150)
-    p.add_argument("--check", type=int, default=200)
-    p.add_argument("--abcd", type=Path, help="locally downloaded, pinned ABCD conversations JSON")
-    p.add_argument("--abcd-annotations", type=Path, help="hand-authored per-prefix evidence annotations JSONL")
-    p.add_argument("--reviews", type=Path, help="reviewer decisions JSONL (confirm with a worksheet binding; replace/skip with content digests)")
-    p.add_argument("--output", type=Path, required=True)
-    commands.add_parser("pin-authored", help="record the reviewed authored rule and catalogue digests in the pack manifest")
-    args = parser.parse_args()
-    try:
-        if args.command == "pin-authored":
-            print(json.dumps(evidence.pin_authored(PACK, authored()), indent=1))
-            return
-        if bool(args.abcd) != bool(args.abcd_annotations):
-            parser.error("--abcd and --abcd-annotations go together")
-        manifest = pack_command(args)
-    except ConfigError as error:
-        parser.exit(2, f"{error}\n")
-    print(json.dumps({"assignment": manifest["assignment"], "review_plan": manifest["review_plan"], "review": manifest["review"]["status"]}, indent=1))
+    evidence.pack_main(sys.modules[__name__], "support classification pack: explicit offline construction; no model or network use",
+                       {"pack": ("plan scenarios, build frames/reference and publish the benchmark artifacts", pack_command, options)})
 
 
 if __name__ == "__main__":

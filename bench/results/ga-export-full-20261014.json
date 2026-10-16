@@ -1,0 +1,134 @@
+{
+ "command": [
+  ".artifacts/ga-implementation/export-full.py"
+ ],
+ "source": {
+  "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+  "sources": "14f14fab4c0f32ac00dbb2683515b8afdd4faff5347fbdcc1d253ba15a26b4e0"
+ },
+ "execution": {
+  "identity": {
+   "presentation": {
+    "evidence": "named-fields@2",
+    "choices": "full-criteria@3"
+   },
+   "file": "Q8_0.gguf",
+   "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+   "template": "chat@3:0a2c8073",
+   "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb"
+  },
+  "requested_device": "gpu",
+  "threads": null,
+  "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+  "loaded": true,
+  "observed_models": [],
+  "accelerated": true,
+  "batch_inputs": 1,
+  "max_slots": 20,
+  "capabilities": {
+   "shared": true,
+   "conformance": true,
+   "counters": {
+    "prefix_hits": 0,
+    "prefix_misses": 0,
+    "state_hits": 0,
+    "state_misses": 0,
+    "state_tokens": 0,
+    "suffix_tokens": 0,
+    "failures": 0,
+    "prefix_tokens": 0,
+    "prefix_evictions": 0,
+    "adapter_switches": 0,
+    "submissions": 0,
+    "submitted_tokens": 0
+   }
+  },
+  "requested_capacity": {
+   "n_ctx": 21504,
+   "n_ctx_seq": 3584,
+   "n_batch": 512,
+   "n_seq_max": 6
+  },
+  "configuration": {
+   "max_input_tokens": 1024,
+   "max_prefix_tokens": 1024,
+   "prefix_slots": 4
+  },
+  "capacity": {
+   "n_ctx": 21504,
+   "n_ctx_seq": 3584,
+   "sequence_limit": 3584,
+   "n_batch": 512,
+   "n_seq_max": 6,
+   "prefix_slots": 4,
+   "scheduling": "resident-prefix-streams@3",
+   "n_outputs_max": 6,
+   "swa_full": true,
+   "kv_unified": false,
+   "n_ubatch": 512,
+   "flash_attn": "enabled",
+   "type_k": "f16",
+   "type_v": "f16",
+   "device": "gpu",
+   "tensor_types": [
+    "f16",
+    "f32",
+    "q8_0"
+   ],
+   "use_extra_bufts": true,
+   "repacked": [],
+   "buffers": {
+    "Vulkan0 model": 2456069079,
+    "Vulkan_Host model": 2923429888,
+    "Vulkan_Host output": 6291456,
+    "Vulkan0 KV": 396361728,
+    "Vulkan0 compute": 116790395,
+    "Vulkan_Host compute": 32285655
+   },
+   "shared": true
+  },
+  "binding": {
+   "representation": "base",
+   "adapter": null,
+   "pool": {
+    "loads": 0,
+    "hits": 0,
+    "evictions": 0,
+    "underestimates": 0,
+    "unestimated": 0,
+    "max_adapters": 4,
+    "resident": {}
+   }
+  }
+ },
+ "export": {
+  "rows": 3000,
+  "skipped_rule": 0,
+  "path": "bench/results/ga-printer-full-20261014.export.jsonl.manifest.json",
+  "export_id": "0f4013d488b65da2423ade16a4bbe85480848ac4273e73be3eda6c8b04cfcd32",
+  "situations": 250,
+  "complete_situations": 250,
+  "dataset_id": "3bb9b8ed00734682240403212b52a647fe139bb444ddca9f511d26eaebca6ff3",
+  "split": "tune"
+ },
+ "counts": {
+  "observations": 3000,
+  "situations": 250,
+  "inputs": 250,
+  "families": 70,
+  "segments": 298,
+  "answers": 47
+ },
+ "encode_seconds": 6.600777751998976,
+ "read_seconds": 0.36016014000051655,
+ "after_load_high_water_bytes": 223305728,
+ "after_export_read_high_water_bytes": 360480768,
+ "payload_bytes": {
+  "ga-printer-full-20261014.export.observations.jsonl": 4440510,
+  "ga-printer-full-20261014.export.inputs.jsonl": 335696,
+  "ga-printer-full-20261014.export.families.jsonl": 605058,
+  "ga-printer-full-20261014.export.segments.jsonl": 273708,
+  "ga-printer-full-20261014.export.answers.jsonl": 22479,
+  "ga-printer-full-20261014.export.situations.jsonl": 396000
+ }
+}

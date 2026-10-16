@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+from functools import cached_property
 from pathlib import Path
 
 from .. import files
@@ -117,11 +118,6 @@ def evaluation_plan(arms, *, scope, conditions=(), acceptance=None, metrics=None
     return {**plan, 'id': digest(plan)}
 
 
-def _legacy(record):
-    return isinstance(record, dict) and record.get('schema') == 1 and isinstance(record.get('candidate_id'), str) \
-        and isinstance(record.get('families'), list) and all(isinstance(f, str) for f in record['families'])
-
-
 def _consultation(record):
     return isinstance(record, dict) and record.get('schema') == AUDIT_SCHEMA and isinstance(record.get('plan'), dict) \
         and isinstance(record['plan'].get('id'), str) and all(isinstance(record.get(k), list) for k in ('families', 'aliases', 'seeds'))
@@ -143,7 +139,7 @@ class EvidenceContext:
 
     @classmethod
     def of(cls, labels) -> EvidenceContext:
-        return cls(labels.sw.paths.dataset, labels.manifest, labels.families)
+        return cls(labels.committed(), labels.manifest, labels.families)
 
     @property
     def dataset_id(self) -> str:
@@ -177,38 +173,41 @@ class EvidenceContext:
     def role(self, family) -> str:
         return _role(self.manifest['families'][family])
 
+    @cached_property
+    def aliases(self) -> dict:
+        return {alias: family for family, record in self.manifest['families'].items() for alias in record['aliases']}
+
+    def resolve(self, name) -> str:
+        return self.aliases.get(name) or (self.index.name(('group', name)) if ('group', name) in self.index else name)
+
     def consult(self, plan, families) -> dict:
         if not isinstance(plan, Mapping) or plan.get('id') != digest({k: v for k, v in plan.items() if k != 'id'}):
             raise ConfigError('consult a frozen evaluation_plan(...)')
-        aliases = {alias: family for family, record in self.manifest['families'].items() for alias in record['aliases']}
-        def resolve(name):
-            return aliases.get(name) or (self.index.name(('group', name)) if ('group', name) in self.index else name)
-        intended = sorted(map(resolve, set(families)))
+        intended = sorted(map(self.resolve, set(families)))
         if not intended:
             return {'state': 'empty', 'plan': plan['id'], 'consulted_families': [], 'independent': False, 'scope': DISCLOSURE}
         records = {family: self.manifest['families'].get(family, {'aliases': [family], 'seeds': []}) for family in intended}
         with files.locked(self.audit):
             existed = self.audit.exists()
             history = files.read_jsonl(self.audit)
-            if any(not _legacy(r) and not _consultation(r) for r in history):
+            if any(not _consultation(r) for r in history):
                 raise ConfigError(f'{self.audit}: malformed audit exposure record')
             missing = not existed or any(r.get('history_missing') for r in history)
             consulted, covered = set(), set()
             for record in history:
-                if _consultation(record) and record['plan']['id'] == plan['id']:
-                    covered.update(map(resolve, record['families']))
+                if record['plan']['id'] == plan['id']:
+                    covered.update(map(self.resolve, record['families']))
                     continue
-                touched = set(map(resolve, (*record['families'], *record.get('aliases', ())))) \
+                touched = set(map(self.resolve, (*record['families'], *record.get('aliases', ())))) \
                     | {self.index.name(node) for node in record.get('seeds', ()) if tuple(node) in self.index}
                 consulted |= touched & set(intended)
             repeat = set(intended) <= covered
             if not repeat:
-                files.append(self.audit, [{'schema': AUDIT_SCHEMA, 'plan': thaw(plan), 'dataset_id': self.dataset_id, 'families': intended,
-                                           'aliases': sorted({a for r in records.values() for a in r['aliases']}),
-                                           'seeds': sorted({tuple(n) for r in records.values() for n in r['seeds']}),
-                                           **({'history_missing': True} if missing else {}), 'created': files.now()}])
-        legacy = sum(map(_legacy, history))
+                files.append(self.audit, files.jsonl([{'schema': AUDIT_SCHEMA, 'plan': thaw(plan), 'dataset_id': self.dataset_id, 'manifest': self.path.name,
+                                                       'families': intended, 'aliases': sorted({a for r in records.values() for a in r['aliases']}),
+                                                       'seeds': sorted({tuple(n) for r in records.values() for n in r['seeds']}),
+                                                       **({'history_missing': True} if missing else {}), 'created': files.now()}]))
         state = 'unknown_history' if missing else 'consulted' if consulted else 'repeat' if repeat else 'fresh'
         return {'state': state, 'plan': plan['id'], 'families': len(intended), 'independent': state in ('fresh', 'repeat'),
                 'consulted_families': intended if missing else sorted(consulted),
-                'history': 'missing' if missing else 'imported' if legacy else 'recorded', 'imported_records': legacy, 'scope': DISCLOSURE}
+                'history': 'missing' if missing else 'recorded', 'scope': DISCLOSURE}

@@ -3,10 +3,10 @@ import shutil
 
 import pytest
 
-from semantic_switch import files, tools
+from semantic_switch import Actor, files, tools
 
 from .test_switch import ROOT, edit, t
-from .conftest import envelopes
+from semantic_testkit.labels import envelopes
 
 
 @pytest.fixture
@@ -21,15 +21,15 @@ def write_test_file(path, n=60):
     for i in range(n):
         if i % 3 == 0:
             items.append({"input": t(f"my lawyer will file a lawsuit {i}"), "facts": {"legal_threat": True},
-                          "case": "legal"})
+                          "rule": "legal"})
         elif i % 3 == 1:
             items.append({"input": t(f"please refund charge {i}", payment={"status": "pending"}),
-                          "facts": {"legal_threat": False, "refund_requested": True}, "case": "refund_other"})
+                          "facts": {"legal_threat": False, "refund_requested": True}, "rule": "refund_other"})
         else:
             items.append({"input": t(f"just saying hi {i}"), "facts": {"legal_threat": False,
                                                                         "refund_requested": False},
-                          "case": "otherwise"})
-    files.append(path.with_name("route_ticket.test.jsonl"), envelopes(items))
+                          "rule": "otherwise"})
+    files.append(path.with_name("route_ticket.test.jsonl"), files.jsonl(envelopes(items)))
     return items
 
 
@@ -54,7 +54,7 @@ def test_lock_tunes_and_test_never_counts_tuning_inputs_as_unseen(rt, path):
     assert report["used_by"]["tuned"] == len(data["tuned_keys"]) and report["used_by"]["validated"] > 0
     assert report["used"]["ok"] == report["used"]["correct"] > 0
     assert "Used by the lock (60" in tools.explain_test(report)
-    files.append(path.with_name("route_ticket.test.jsonl"), envelopes([{"input": t("brand new"), "case": "otherwise"}]))
+    files.append(path.with_name("route_ticket.test.jsonl"), files.jsonl(envelopes([{"input": t("brand new"), "rule": "otherwise"}])))
     again = tools.run_test(rt, path)
     assert again["used"]["items"] == report["used"]["items"] and again["fresh"]["items"] == \
         report["fresh"]["items"] + 1
@@ -64,7 +64,7 @@ def test_lock_tunes_and_test_never_counts_tuning_inputs_as_unseen(rt, path):
 def test_test_separates_taught_inputs(rt, path):
     items = write_test_file(path, 9)
     sw = rt.load(path)
-    sw.correct(items[2]["input"], fact="legal_threat", value=False)
+    sw.correct(items[2]["input"], fact="legal_threat", value=False, actor=Actor('human'))
     report = tools.run_test(rt, path)
     assert report["taught"]["items"] == 1 and report["fresh"]["items"] == 8
 
@@ -77,16 +77,16 @@ def test_diff_lists_changed_answers(rt, path):
     assert report["changed"] >= 3 and all(c["new"][1] == "other" for c in report["changes"])
 
 
-def test_specialize_supplied_folds_do_not_leak(rt, path, fake, head_bundle):
+def test_analyze_head_supplied_folds_do_not_leak(rt, path, fake, head_bundle):
     sw = rt.load(path)
     texts = []
     for i in range(10):
         texts.append((t(f"please refund my charge alpha{i}"), True))
         texts.append((t(f"hello there beta{i}"), False))
     for d, v in texts:
-        sw.correct(d, fact="refund_requested", value=v)
+        sw.correct(d, fact="refund_requested", value=v, actor=Actor('human'))
     fake.requests.clear()
-    report = tools.specialize(rt, path, "refund_requested", head_bundle=head_bundle(rt, path))
+    report = tools.analyze_head(rt, path, "refund_requested", head_bundle=head_bundle(rt, path))
     assert report["judge"]["settled"] <= 20 and "judge_calls_avoided" in report["lexical"]
     assert "admit" not in report and report["bundle"]
     for state, q in fake.requests:
@@ -97,8 +97,8 @@ def test_specialize_supplied_folds_do_not_leak(rt, path, fake, head_bundle):
 
 def test_label_writes_examples(rt, path, tmp_path):
     inputs = tmp_path / "inputs.jsonl"
-    files.append(inputs, [{"schema": 2, "input": t("refund please")}, {"schema": 2, "input": t("hello")}])
+    files.append(inputs, files.jsonl([{"schema": 3, "input": t("refund please")}, {"schema": 3, "input": t("hello")}]))
     answers = iter(["y", "", "", "", "", "n", "", "", "", ""])
-    n = tools.label(rt, path, str(inputs), ask=lambda _: next(answers), show=lambda _: None)
+    n = tools.label(rt, path, str(inputs), ask=lambda _: next(answers), show=lambda _: None, actor=Actor('human'))
     recs = files.read_jsonl(path.with_name("route_ticket.examples.jsonl"))
     assert n == 2 and [r["value"] for r in recs] == [True, False] and {r["fact"] for r in recs} == {"legal_threat"}

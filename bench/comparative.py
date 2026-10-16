@@ -1,41 +1,23 @@
-"""Comparative choice: does the pick follow the stated goal, and survive option reordering?
-
-python -m bench.comparative
-"""
 from __future__ import annotations
 
+import argparse
 import json
-import sys
-from pathlib import Path
 
-from semantic_switch import DEFAULT_JUDGE, Model, files
-from bench.outcomes import runtime
-from bench.quality import SCENARIOS
+from semantic_switch import DEFAULT_JUDGE, Model
+from bench.outcomes import destination, output_argument, report, runtime
+from bench import quality
 
 
 def main():
-    rows = []
-    with runtime(Model(sys.argv[1] if len(sys.argv) > 1 else DEFAULT_JUDGE)) as rt:
-        for state, options, *goals in SCENARIOS:
-            for question, want in goals:
-                for order in (list(options), list(reversed(options))):
-                    r = rt.pick(state, question, {k: options[k] for k in order})
-                    top = max(r.scores, key=r.scores.get)
-                    rows.append({"q": question, "want": want, "top": top, "p": round(r.scores[top], 3),
-                                 "status": r.status, "value": r.value})
-    correct = sum(r["top"] == r["want"] for r in rows)
-    settled = [r for r in rows if r["status"] == "ok"]
-    stable = sum(rows[i]["top"] == rows[i + 1]["top"] for i in range(0, len(rows), 2))
-    report = {"items": len(rows), "top1_correct": correct, "settled": len(settled),
-              "settled_wrong": sum(r["value"] != r["want"] for r in settled), "order_stable_pairs": stable,
-              "pairs": len(rows) // 2,
-              "goal_sensitive_scenarios": sum(rows[i]["top"] != rows[i + 2]["top"] for i in range(0, len(rows), 4)),
-              "scenarios": len(SCENARIOS)}
-    print(json.dumps(report, indent=1))
-    for r in rows:
-        if r["top"] != r["want"]:
-            print("miss", r)
-    files.publish(Path(f"bench/results/comparative{'-' + sys.argv[1].split(':')[-1] if len(sys.argv) > 1 else ''}.json"), {"report": report, "rows": rows})
+    parser = argparse.ArgumentParser(description="comparative choice: does the pick follow the stated goal, and survive option reordering?")
+    parser.add_argument("--judge", default=DEFAULT_JUDGE)
+    output_argument(parser)
+    args = parser.parse_args()
+    destination(args.output)
+    with runtime(Model(args.judge)) as rt:
+        found = quality.comparative(rt)
+    print(json.dumps({key: value for key, value in found.items() if key != "rows"}, indent=1))
+    report(args.output, {"judge": args.judge, **found})
 
 
 if __name__ == "__main__":

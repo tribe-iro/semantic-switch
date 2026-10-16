@@ -1,14 +1,11 @@
-"""Matched hosted Jev (OpenRouter System One) / local CPU timing. Run: python -m bench.compare_jev --help."""
 from __future__ import annotations
 
 import argparse
 import random
-import statistics
 from pathlib import Path
 
-from semantic_switch import Check, DEFAULT_JUDGE, Model, Runtime, files
-from bench import diagnostics
-from bench.outcomes import JEV, failure, judge_spec, measure, runtime
+from semantic_switch import Check, DEFAULT_JUDGE, Model, files
+from bench.outcomes import JEV, Receipts, destination, failure, judge_spec, latency, measure, output_argument, provenance, runtime
 
 QWEN3 = "unsloth/Qwen3-0.6B-GGUF:Qwen3-0.6B-Q4_K_M.gguf"
 
@@ -38,52 +35,44 @@ def run(label, call, repeats, records):
         records.append(failure(m, **known) if m.error else dict(known, ms=round(m.ms, 3), result=m.output, outcome="predicted"))
     for name, _, count in CELLS:
         measured = [r for r in records if r["engine"] == label and r["cell"] == name and r["questions"] == count and not r["warmup"]]
-        values = sorted(r["ms"] for r in measured if r["outcome"] != "failed")
-        failed = len(measured) - len(values)
-        if not values:
+        timing = latency(r["ms"] for r in measured if r["outcome"] != "failed")
+        failed = len(measured) - timing["samples"]
+        if not timing["samples"]:
             print(f"{label:12} {name:5} {count}q  all {failed} calls failed", flush=True)
             continue
-        p95 = values[max(0, int(len(values) * .95 + .999999) - 1)]
-        print(f"{label:12} {name:5} {count}q  median {statistics.median(values):8.1f} ms"
-              f"  p95 {p95:8.1f} ms  n={len(values)} failed={failed}", flush=True)
+        print(f"{label:12} {name:5} {count}q  p50 {timing['p50']:8.1f} ms  p95 {timing['p95']:8.1f} ms  n={timing['samples']} failed={failed}", flush=True)
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description="Matched hosted Jev (OpenRouter System One) / local CPU timing")
     parser.add_argument("--key-file", type=Path, help="OpenRouter API key file (default: OPENROUTER_API_KEY)")
     parser.add_argument("--provider", help="OpenRouter provider route for Jev")
     parser.add_argument("--repeats", type=int, default=15, help="Measured calls per cell and engine")
-    parser.add_argument("--output", type=Path, default=Path("/tmp/semantic-switch-jev-paired.json"))
+    output_argument(parser)
     parser.add_argument("--threads", type=int, default=16)
     args = parser.parse_args()
     if args.repeats < 1:
         parser.error("--repeats must be positive")
-    records = []
-    identities = {}
-    judge, transport = judge_spec(JEV, provider=args.provider, key_file=args.key_file)
-    hosted = Runtime({"judge": judge}, own_judges=True)
+    destination(args.output)
+    records, identities, receipts = [], {}, Receipts()
 
-    def jev(state, count):
-        return {name: result.as_dict() for name, result in hosted.ask(state,
-            {f"q{i}": Check(question) for i, question in enumerate(QUESTIONS[:count])}).items()}
-
+    def asked(rt):
+        return lambda state, count: {name: result.as_dict() for name, result in rt.ask(
+            state, {f"q{i}": Check(question) for i, question in enumerate(QUESTIONS[:count])}).items()}
     try:
-        run("jev", jev, args.repeats, records)
-        identities["jev"] = diagnostics.provenance(hosted, CELLS, boundary="public SDK")
+        with runtime(judge_spec(JEV, provider=args.provider, key_file=args.key_file), receipts=receipts) as hosted:
+            run("jev", asked(hosted), args.repeats, records)
+            identities["jev"] = provenance(hosted, CELLS)
         for label, source in (("qwen-0.6b", QWEN3), ("gemma-e2b", DEFAULT_JUDGE)):
             with runtime(Model(source, device="cpu", threads=args.threads)) as rt:
-                def local(state, count):
-                    results = rt.ask(state, {f"q{i}": Check(q) for i, q in enumerate(QUESTIONS[:count])})
-                    return {k: v.as_dict() for k, v in results.items()}
-                run(label, local, args.repeats, records)
-                identities[label] = diagnostics.provenance(rt, CELLS, boundary="public SDK")
+                run(label, asked(rt), args.repeats, records)
+                identities[label] = provenance(rt, CELLS)
                 files.publish(args.output, {"partial": True, "provenance": identities, "records": records})
     finally:
-        hosted.close()
-        requests = transport.summary()
+        requests = receipts.summary()
         usage = requests['usage'].get('prompt_tokens', requests['usage'].get('input_tokens')) if requests['usage']['reported'] == requests['requests'] else None
         files.publish(args.output, {
-            "provenance": identities, "schema": 1,
+            "provenance": identities, "schema": 2,
             "boundary": "call entry to parsed result and JSON serialization; warm models/connections",
             "threads": args.threads, "device": "cpu", "questions": QUESTIONS,
             "inputs": {"short": SHORT, "long": LONG}, "local_models": [QWEN3, DEFAULT_JUDGE],

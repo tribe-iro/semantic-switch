@@ -50,7 +50,62 @@ def bind_input(fields: Mapping, data):
     return {next(iter(fields)): data} if isinstance(data, str) and len(fields) == 1 else data
 
 
+@dataclass(frozen=True, slots=True, eq=False, init=False)
+class OwnedMapping(Mapping):
+    _values: Mapping
+
+    def __init__(self, values):
+        from .results import freeze
+        object.__setattr__(self, '_values', MappingProxyType({k: freeze(v) for k, v in values.items()}))
+
+    @classmethod
+    def _normalized(cls, values):
+        result = object.__new__(cls)
+        object.__setattr__(result, '_values', MappingProxyType(values))
+        return result
+
+    def __getitem__(self, key):
+        return self._values[key]
+
+    def __iter__(self):
+        return iter(self._values)
+
+    def __len__(self):
+        return len(self._values)
+
+
+class OwnedJSON(OwnedMapping):
+    __slots__ = ()
+
+    def __init__(self, values):
+        owned = json_value(values)
+        object.__setattr__(self, '_values', owned._values)
+
+
+class JSONArray(tuple):
+    __slots__ = ()
+
+    def __new__(cls, values=()):
+        return tuple.__new__(cls, (json_value(value) for value in values))
+
+    def __eq__(self, other):
+        return tuple.__eq__(self, tuple(other)) if isinstance(other, (list, tuple)) else False
+
+    def __ne__(self, other):
+        return not self == other
+
+    __hash__ = tuple.__hash__
+
+
+def json_default(value):
+    if isinstance(value, Mapping):
+        return dict(value)
+    raise TypeError(f'{type(value).__name__} is not JSON serializable')
+
+
 def json_value(value, path: str = "input", seen: set | None = None):
+    if type(value) in (OwnedJSON, JSONArray):
+        return value
     if value is None or isinstance(value, (str, bool, int)):
         return value
     if isinstance(value, float) and math.isfinite(value):
@@ -64,8 +119,8 @@ def json_value(value, path: str = "input", seen: set | None = None):
             if isinstance(value, Mapping):
                 if not all(isinstance(k, str) for k in value):
                     raise ContextError("invalid_context", path, "JSON keys must be strings")
-                return {k: json_value(v, f"{path}.{k}", seen) for k, v in value.items()}
-            return [json_value(v, f"{path}[{i}]", seen) for i, v in enumerate(value)]
+                return OwnedJSON._normalized({k: json_value(v, f"{path}.{k}", seen) for k, v in value.items()})
+            return tuple.__new__(JSONArray, (json_value(v, f"{path}[{i}]", seen) for i, v in enumerate(value)))
         finally:
             seen.remove(id(value))
     raise ContextError("invalid_context", path, "expected finite JSON value")
@@ -101,7 +156,7 @@ def truncate(text: str, limit: int | None, mode: str) -> str:
 
 
 def as_text(v) -> str:
-    return v if isinstance(v, str) else json.dumps(json_value(v), ensure_ascii=False, sort_keys=True, allow_nan=False)
+    return v if isinstance(v, str) else json.dumps(json_value(v), ensure_ascii=False, sort_keys=True, allow_nan=False, default=json_default)
 
 
 def render(fields: Mapping, values: Mapping, reads: tuple) -> str:

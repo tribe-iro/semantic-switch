@@ -1,0 +1,25 @@
+{
+ "utc": "2026-10-13T20:29:12.063321+00:00",
+ "source": "23abd6c04c28c9caee23f3142b7b83d57f20095a8e8806daf4f635527c7d09b0",
+ "rows": [
+  {
+   "claims": 500,
+   "seconds": 0.011046450003050268,
+   "peak_python_bytes": 482506,
+   "resolved_sources": 500
+  },
+  {
+   "claims": 1000,
+   "seconds": 0.021337174002837855,
+   "peak_python_bytes": 939606,
+   "resolved_sources": 1000
+  },
+  {
+   "claims": 2000,
+   "seconds": 0.0463069700053893,
+   "peak_python_bytes": 1945638,
+   "resolved_sources": 2000
+  }
+ ],
+ "scope": "independent same-valued roots; source construction excluded"
+}

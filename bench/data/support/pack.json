@@ -1,9 +1,9 @@
 {
  "schema": 2,
  "name": "support-classification",
- "version": "1.0",
+ "version": "1.2",
  "subject": {
-  "policy": "benchmark support catalogue support-catalogue-1",
+  "policy": "benchmark support catalogue support-catalogue-3",
   "scope": [
    "orders",
    "returns",
@@ -12,8 +12,7 @@
   ],
   "abcd": "unused by the authored primary pack; a realism slice must first pin the repository commit, conversation/guideline/ontology file hashes and annotation provenance"
  },
- "author": "unassigned",
- "extraction": "authored-catalogue-1",
+ "extraction": "authored-catalogue-3",
  "created": "2026-10-11T00:00:00Z",
  "sources": [
   {
@@ -50,12 +49,12 @@
   },
   {
    "id": "S-QUOTED",
-   "text": "A quoted suggestion or hypothetical is not the customer's request.",
+   "text": "A quoted suggestion or hypothetical that the customer does not adopt is not the customer's request.",
    "source": "benchmark convention"
   },
   {
    "id": "S-LATEST",
-   "text": "A later request replaces an earlier conflicting request unless the customer explicitly retains the earlier one.",
+   "text": "A request the customer explicitly retracts (such as \"forget that\") is not a member; without a retraction a later request does not replace an earlier one, and a retained request stays a member.",
    "source": "benchmark convention"
   },
   {
@@ -85,17 +84,17 @@
   },
   {
    "id": "S-REFUND",
-   "text": "Refund eligibility: a current refund request with a current issue, not blocked, amount at most 500 and delivered within 30 days unless the delivery is missing.",
+   "text": "Refund eligibility applies only to a current request to start a refund (refund_initiate); refund status and refund update requests are not subject to it. Such a request is ineligible when the account is refund-blocked, the amount exceeds 500, or delivery was more than 30 days ago unless the delivery is missing; otherwise it is eligible when the customer reports a current issue. A refund request with no current issue and no ineligibility condition is neither eligible nor ineligible and does not decide the response.",
    "source": "benchmark convention"
   },
   {
    "id": "S-RESPONSE",
-   "text": "Operational response follows the first applicable of refund eligibility, refund status/update, return/replacement, order/delivery change, otherwise no action; unresolved memberships require clarification.",
+   "text": "Operational response follows the first applicable of refund ineligibility, refund eligibility, refund status/update, return/replacement, order/delivery change, otherwise no action; a refund request that is neither eligible nor ineligible falls through to the later branches. Unresolved memberships require clarification.",
    "source": "benchmark convention"
   }
  ],
  "authored": {
-  "rules": "6ddaaa0bb71d5739f4e8064e3f73cc26e5b2668d5caa9ea438dd3c40f11ee15b",
-  "catalogue": "1b9674303ccb0534cc20251f1eaa88f38116d9cd8fae69d27d0195d7e58b5187"
+  "rules": "0fb752925ca02e07eb0bdccb6e5375988d3f31f09109a02469f996b3ecc1cc7d",
+  "catalogue": "26042e9eebee014156614c3f84e0739f55b13871086c20a218bb61350d588c5b"
  }
 }

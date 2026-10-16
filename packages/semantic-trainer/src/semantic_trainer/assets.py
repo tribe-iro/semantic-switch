@@ -9,9 +9,8 @@ import sys
 import tempfile
 from pathlib import Path
 
-from semantic_switch import files, model_job
-from semantic_switch.artifacts import artifact_digest
-from semantic_switch.errors import ConfigError
+from semantic_switch import ConfigError
+from semantic_switch.training import artifact_digest, files, model_job
 
 SCHEMA = 1
 REPOSITORY, TOOLCHAIN = 'https://github.com/ggml-org/llama.cpp', 'a4cb4c61fd9d9c2066c7c1747821d3d65b8943bd'
@@ -46,6 +45,13 @@ def revision_of(repo, revision):
         raise ConfigError(f'cannot resolve {repo}@{revision} ({error}); pass --revision with a 40-hex commit') from None
 
 
+def link(source, destination):
+    try:
+        os.link(source, destination)
+    except OSError:
+        shutil.copyfile(source, destination)
+
+
 def download(repo, commit, destination):
     from huggingface_hub import snapshot_download
     snapshot = Path(snapshot_download(repo, revision=commit, allow_patterns=HF_PATTERNS))
@@ -53,10 +59,7 @@ def download(repo, commit, destination):
         if source.is_file():
             target = destination / source.relative_to(snapshot)
             target.parent.mkdir(parents=True, exist_ok=True)
-            try:
-                os.link(source.resolve(), target)
-            except OSError:
-                shutil.copyfile(source.resolve(), target)
+            link(source.resolve(), target)
 
 
 def toolchain(destination, source):

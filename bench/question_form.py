@@ -4,10 +4,11 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from semantic_switch import ConfigError, DEFAULT_JUDGE, files
+from semantic_switch import ConfigError, DEFAULT_JUDGE
 from bench import quality
 from bench.fresh import FRESH
-from bench.outcomes import judged
+from bench.model_comparison import suite
+from bench.outcomes import destination, judged, output_argument, report
 
 QUESTIONS = {
     "refund": "Is the customer asking to get money back for a charge?",
@@ -38,10 +39,10 @@ def asked(spec: dict) -> dict:
 
 def run(rt) -> dict:
     out = {}
-    for suite, spec in SUITES.items():
+    for name, spec in SUITES.items():
         for form, checks in (("claim", spec), ("question", asked(spec))):
-            result = quality.run(rt, checks_spec=checks, picks_spec=[])
-            out[f"{suite}:{form}"] = {"summary": quality.summarize(result), "checks": result["checks"]}
+            result = suite(rt, checks_spec=checks, picks_spec=[])
+            out[f"{name}:{form}"] = {"summary": result["summary"], "checks": result["raw"]["checks"]}
     return out
 
 
@@ -69,18 +70,19 @@ def main():
     parser.add_argument("--provider", help="OpenRouter provider route for openrouter:MODEL")
     parser.add_argument("--key-file", type=Path, help="OpenRouter API key file (default: OPENROUTER_API_KEY)")
     parser.add_argument("--device")
-    parser.add_argument("--output", default="bench/results/question-form.json")
+    output_argument(parser)
     args = parser.parse_args()
-    with judged(args.judge, provider=args.provider, key_file=args.key_file, device=args.device) as (rt, recording):
+    destination(args.output)
+    with judged(args.judge, provider=args.provider, key_file=args.key_file, device=args.device) as (rt, receipts):
         arms = run(rt)
-        files.publish(args.output, {"schema": 3, "judge": args.judge, "model": rt.identity(), "execution": rt.execution(),
+        report(args.output, {"schema": 3, "judge": args.judge, "model": rt.identity(), "execution": rt.execution(),
                                     "returned_models": sorted(getattr(rt.judge(), "observed_models", ())),
-                                    "requests": recording.summary() if recording else None, "arms": arms,
+                                    "requests": receipts.summary(), "arms": arms,
                                     "paired": {suite: paired(arms[f"{suite}:claim"]["checks"], arms[f"{suite}:question"]["checks"]) for suite in SUITES}})
     for name, arm in arms.items():
         s = arm["summary"]
         print(f"{name:18} acc|predicted {s['accuracy_given_prediction']}  auc {s['auc']}  cov@.9 {s['coverage_0.9']}  prec@.9 {s['precision_0.9']}  "
-              f"low_mass {s['low_mass']}  ms {s['ms_p50']}")
+              f"low_mass {s['low_mass']}  ms {s['latency']['p50']}")
 
 
 if __name__ == "__main__":

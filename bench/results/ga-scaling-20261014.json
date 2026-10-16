@@ -1,0 +1,183 @@
+{
+ "source": {
+  "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+  "sources": "02ed0ff6c51dc9ab62c133592981e93eb077b13695d778f33826977af37b31cb"
+ },
+ "command": [
+  ".venv/bin/python",
+  ".artifacts/ga-implementation/scaling.py"
+ ],
+ "scope": "CPU algorithms and integration with deterministic fake judge; not native throughput",
+ "mentions": [
+  {
+   "aliases": 250,
+   "build_ms": 0.3979699977207929,
+   "scans": {
+    "none": {
+     "median_ms": 0.5374149914132431,
+     "hits": 0
+    },
+    "sparse": {
+     "median_ms": 0.0058349978644400835,
+     "hits": 1
+    },
+    "all": {
+     "median_ms": 0.6432099908124655,
+     "hits": 250
+    }
+   }
+  },
+  {
+   "aliases": 500,
+   "build_ms": 0.862207991303876,
+   "scans": {
+    "none": {
+     "median_ms": 0.41089199658017606,
+     "hits": 0
+    },
+    "sparse": {
+     "median_ms": 0.00544199428986758,
+     "hits": 1
+    },
+    "all": {
+     "median_ms": 1.2993980053579435,
+     "hits": 500
+    }
+   }
+  },
+  {
+   "aliases": 1000,
+   "build_ms": 1.3313939998624846,
+   "scans": {
+    "none": {
+     "median_ms": 0.3880099975503981,
+     "hits": 0
+    },
+    "sparse": {
+     "median_ms": 0.004825997166335583,
+     "hits": 1
+    },
+    "all": {
+     "median_ms": 2.6794270088430494,
+     "hits": 1000
+    }
+   }
+  },
+  {
+   "aliases": 2000,
+   "build_ms": 2.8001600003335625,
+   "scans": {
+    "none": {
+     "median_ms": 0.3892230015480891,
+     "hits": 0
+    },
+    "sparse": {
+     "median_ms": 0.005485009751282632,
+     "hits": 1
+    },
+    "all": {
+     "median_ms": 5.674175001331605,
+     "hits": 2000
+    }
+   }
+  }
+ ],
+ "journals": [
+  {
+   "records": 256,
+   "payload_bytes_each": 64,
+   "file_bytes": 67653,
+   "index_retained_traced_bytes": 120585,
+   "replay_peak_traced_bytes": 256326,
+   "stream_peak_traced_bytes": 256326,
+   "seconds": 0.007873794995248318
+  },
+  {
+   "records": 256,
+   "payload_bytes_each": 4096,
+   "file_bytes": 1099845,
+   "index_retained_traced_bytes": 120499,
+   "replay_peak_traced_bytes": 272370,
+   "stream_peak_traced_bytes": 272370,
+   "seconds": 0.01080156399984844
+  },
+  {
+   "records": 256,
+   "payload_bytes_each": 65536,
+   "file_bytes": 16828485,
+   "index_retained_traced_bytes": 120472,
+   "replay_peak_traced_bytes": 518104,
+   "stream_peak_traced_bytes": 518104,
+   "seconds": 0.05667481599084567
+  }
+ ],
+ "reuse": [
+  {
+   "rows": 128,
+   "chunk": 128,
+   "max_entries": 128,
+   "retained_after_clear_traced_bytes": 26976,
+   "peak_traced_bytes": 56576
+  },
+  {
+   "rows": 1024,
+   "chunk": 128,
+   "max_entries": 128,
+   "retained_after_clear_traced_bytes": 30112,
+   "peak_traced_bytes": 60657
+  },
+  {
+   "rows": 8192,
+   "chunk": 128,
+   "max_entries": 128,
+   "retained_after_clear_traced_bytes": 30072,
+   "peak_traced_bytes": 60617
+  }
+ ],
+ "locks": [
+  {
+   "rows": 128,
+   "seconds": 0.16287888000078965,
+   "physical_questions": 128,
+   "distinct_prepared_texts": 128,
+   "lock_id": "a0be37c292c8"
+  },
+  {
+   "rows": 512,
+   "seconds": 0.273359739992884,
+   "physical_questions": 512,
+   "distinct_prepared_texts": 512,
+   "lock_id": "3dacb306b8fa"
+  }
+ ],
+ "bootstrap": {
+  "seconds": 0.16301843900873791,
+  "traced_peak_bytes": 10193675,
+  "result": {
+   "method": "family percentile bootstrap",
+   "implementation": "family-pcg64-int64-v1",
+   "weighting": "row",
+   "scope": "within-pack family-resampling interval: each draw resamples whole canonical families with all their rows; it does not certify production precision or representative sampling of real customer or equipment populations",
+   "seed": 17,
+   "replicates": 2000,
+   "level": 0.95,
+   "families": 10000,
+   "rows": 10000,
+   "estimate": 0.6666,
+   "interval": [
+    0.6577,
+    0.6755025
+   ],
+   "valid_replicates": 2000,
+   "empty_replicates": 0,
+   "support": "reported",
+   "flags": []
+  }
+ },
+ "tokens": {
+  "count": 100000,
+  "payload_bytes": 400000,
+  "array_additional_payload_bytes": 0
+ },
+ "peak_rss_bytes": 77455360
+}

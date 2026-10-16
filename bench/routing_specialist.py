@@ -3,32 +3,29 @@ from __future__ import annotations
 import argparse
 from collections import Counter, defaultdict
 import json
-import os
 from pathlib import Path
 import re
 import time
 import unicodedata
 
-import numpy as np
-
-from semantic_switch import ConfigError, Model, Runtime, files, judge_from
+from semantic_switch import ConfigError, Model, Runtime, files, judge
 from semantic_switch.artifacts import read_export
-from semantic_switch.examples import LABEL_SCHEMA, LabelSource, each_target
-from semantic_switch.metrics import Progress, comparison_identity, paired
+from semantic_switch.compiler import compile_spec
+from semantic_switch.examples import LABEL_SCHEMA
+from semantic_switch.metrics import comparison_identity, paired, per_class as reduce_classes
+from bench.outcomes import Progress
 from semantic_switch.tools import score_observations
 from semantic_switch.tools.evaluate import contrast_pairs
 from semantic_switch.tools.export import export
-from semantic_switch.presentation import identity as presentation_identity
-from bench.diagnostics import fingerprint
-from bench.outcomes import finish, judge_spec, recorded, resumable, resumed, runtime, work_key
+from bench import outcomes
+from bench.outcomes import fingerprint, finish, judge_spec, latency, recorded, resumable, resumed, runtime, work_key
+from bench.policy_adaptation import criterion, fixture_sources
 
 ROOT = Path(__file__).resolve().parents[1]
 TASK = ROOT / 'specialists' / 'routing'
 DEFINITION = TASK / 'routing.yaml'
 COHORT = ROOT / 'tests' / 'fixtures' / 'small-context-cohort-v2.json'
-WORK = Path(os.environ.get('XDG_CACHE_HOME', Path.home() / '.cache')) / 'semantic-switch' / 'routing-specialist'
-SETS = {'provisional_check': WORK / 'exports' / 'check-provisional.export.jsonl.manifest.json',
-        'cohort_v2_routing': WORK / 'exports' / 'cohort-routing.export.jsonl.manifest.json'}
+SETS = {'provisional_check': 'check-provisional', 'cohort_v2_routing': 'cohort-routing'}
 FACT = {False: 'routing', True: 'routing_reference'}
 
 
@@ -58,6 +55,7 @@ def provisional_check():
 
 def cohort_routing():
     cohort, out = json.loads(COHORT.read_text()), []
+    plan = compile_spec(files.read_yaml(DEFINITION), DEFINITION.name, DEFINITION.parent)
     for situation in cohort['situations']:
         if situation['domain'] != 'customer_routing':
             continue
@@ -74,8 +72,17 @@ def cohort_routing():
                 facts = {FACT['reference' in text]: variant['gold']}
                 out.append({'schema': LABEL_SCHEMA, 'input': dict(text), 'facts': facts, 'groups': [family], 'pairs': pairs,
                             'tags': sorted({*variant['tags'], *(('pt',) if language == 'pt' else ())}), 'role': 'check',
-                            'label_sources': each_target(facts, [LabelSource('synthetic', 'bench.routing_specialist').record()])})
+                            'label_sources': fixture_sources(plan, {'input': dict(text), 'facts': facts}, COHORT, f"{situation['id']}:{variant['id']}:{language}",
+                                                             criterion(cohort, 'routing_v1'))})
     return out
+
+
+def manifests(work):
+    return {name: Path(work) / 'exports' / f'{stem}.export.jsonl.manifest.json' for name, stem in SETS.items()}
+
+
+def scores(work, arm):
+    return Path(work) / 'scores' / f'{arm}.json'
 
 
 def exported(rows):
@@ -83,20 +90,20 @@ def exported(rows):
 
 
 def build(args):
-    labels = WORK / 'labels'
+    labels, paths = args.work / 'labels', manifests(args.work)
     labels.mkdir(parents=True, exist_ok=True)
     made = {'provisional_check': provisional_check(), 'cohort_v2_routing': cohort_routing()}
     out = {}
-    with Runtime({'judge': judge_from('openrouter:google/gemma-4-31b-it', key='export-only')}, own_judges=True) as rt:
+    with Runtime(judge('openrouter:google/gemma-4-31b-it', key='export-only'), own_judges=True) as rt:
         for name, records in made.items():
             path = labels / f'{name}.jsonl'
             files.publish(path, ''.join(json.dumps(r, ensure_ascii=False, sort_keys=True) + '\n' for r in records))
-            result = export(rt, DEFINITION, str(SETS[name]).removesuffix('.manifest.json'), 'check', labels=path)
+            result = export(rt, DEFINITION, str(paths[name]).removesuffix('.manifest.json'), 'check', labels=path)
             out[name] = {'labels': len(records), 'rows': result['rows'], 'dataset_id': result['dataset_id']}
     held = [row for row in read_export(args.fit, fitting=True)[1]]
     seeds = {tuple(seed) for row in held for seed in row['family_seeds']} | {('group', row['group']) for row in held}
     shingles = [words(' '.join(row['bound_input'].values())) for row in held]
-    for name, path in SETS.items():
+    for name, path in paths.items():
         rows = list(exported(path).values())
         crossing = sorted({row['group'] for row in rows if row['split'] != 'check' or seeds & ({tuple(s) for s in row['family_seeds']} | {('group', row['group'])})})
         near = [max(jaccard(words(' '.join(row['bound_input'].values())), other) for other in shingles) for row in rows]
@@ -104,32 +111,25 @@ def build(args):
                       'crossing_fit_select_acceptance_families': crossing, 'max_trigram_jaccard_vs_fit1000_tune': round(max(near), 3),
                       'rows_at_or_above_0.5': sum(n >= .5 for n in near)}
     out['tune_reference'] = {'export': str(args.fit), 'rows': len(held), 'families': len({row['group'] for row in held})}
-    files.publish(WORK / 'eval-sets.json', out)
+    files.publish(args.work / 'eval-sets.json', out)
     return out
 
 
-def answer(result):
-    prediction = result['prediction']
-    return None if prediction is None else prediction['key'] if prediction['kind'] == 'value' else prediction['kind']
-
-
 def score(args):
-    sets = {name: exported(path) for name, path in SETS.items()}
+    paths = manifests(args.work)
+    sets = {name: exported(path) for name, path in paths.items()}
     hosted = args.judge.startswith('openrouter:')
+    if not hosted and args.native is None:
+        raise ConfigError('a local arm names --native RESOLVED-JOB whose native execution settings every local arm shares')
     native = None if hosted else {**files.read_json(args.native)['native'], 'source': args.judge, 'threads': args.threads}
-    config = {'native': native, 'script': 'bench.routing_specialist', 'code': fingerprint(), 'presentation': presentation_identity(),
+    config = {'native': native, 'script': 'bench.routing_specialist', 'code': fingerprint(),
               'definition': files.sha256_file(DEFINITION), 'arm': args.arm, 'judge': args.judge, 'provider': args.provider,
-              'sets': {name: files.sha256_file(path) for name, path in SETS.items()},
+              'sets': {name: files.sha256_file(path) for name, path in paths.items()},
               'model_sha256': None if hosted else files.sha256_file(args.judge)}
-    with resumable(WORK / 'scores' / f'{args.arm}.json', config, fresh=args.fresh) as journal:
+    with resumable(scores(args.work, args.arm), config, fresh=args.fresh) as journal:
         keys = {work_key(name, key): (name, row) for name, rows in sets.items() for key, row in rows.items()}
         todo = journal.pending(keys, (lambda row: row['answer'] is None) if args.retry_failed else None)
-        if hosted:
-            judge, recording = judge_spec(args.judge, provider=args.provider, key_file=args.key_file, batch_inputs=args.batch_inputs)
-            context = runtime(judge)
-        else:
-            recording, context = None, runtime(Model(**native))
-        with context as bound:
+        with runtime(judge_spec(args.judge, provider=args.provider, key_file=args.key_file, batch_inputs=args.batch_inputs) if hosted else Model(**native)) as bound:
             switch = bound.load(DEFINITION, draft=True)
             identity = bound.identity()
             progress = Progress(f'bench.routing_specialist {args.arm}', len(keys), unit='observations', resumed=resumed(journal, keys, todo))
@@ -142,31 +142,23 @@ def score(args):
                 except Exception as failure:
                     result, error = {'result': {'prediction': None, 'status': 'failed'}, 'correct': None, 'accepted': False}, f'{type(failure).__name__}: {failure}'
                 ms = (time.perf_counter() - started) * 1000
-                committed = {'set': name, 'id': row['id'], 'answer': answer(result['result']), 'correct': result['correct'], 'accepted': result['accepted'],
+                committed = {'set': name, 'id': row['id'], 'answer': result['answer'], 'correct': result['correct'], 'accepted': result['accepted'],
                              'status': result['result']['status'], 'result': result['result'], 'error': error, 'ms': ms, 'outcome': 'failed' if error else 'predicted'}
                 journal.commit([(key, committed)])
                 progress.record([committed])
             progress.finish()
-        return finish(journal, WORK / 'scores' / f'{args.arm}.json', lambda rows: {'arm': args.arm, 'judge': args.judge, 'provider': args.provider, 'identity': identity,
+        return finish(journal, scores(args.work, args.arm), lambda rows: {'arm': args.arm, 'judge': args.judge, 'provider': args.provider, 'identity': identity,
                                                'rows': len(rows), 'failed': sum(row['answer'] is None for row in rows)})
-
-
-def quantile(values, q):
-    return round(float(np.percentile(values, q)), 1) if values else None
 
 
 def summarize(rows, scored, base=None):
     present = [i for i in rows if i in scored]
     classes = next(iter(rows.values()))['classes']
-    per_class = {key: {'gold': 0, 'predicted': 0, 'correct': 0} for key in classes}
+    per_class = reduce_classes((((), classes, classes[rows[i]['label']], scored[i]['answer'], scored[i]['correct']) for i in present)).get((), {})
+    per_class = {key: per_class.get(key, {'gold': 0, 'predicted': 0, 'correct': 0, 'recall': None}) for key in classes}
     confusion = defaultdict(Counter)
     for i in present:
-        gold, guess = classes[rows[i]['label']], scored[i]['answer']
-        per_class[gold]['gold'] += 1
-        per_class[gold]['correct'] += bool(scored[i]['correct'])
-        confusion[gold][guess or 'failed'] += 1
-        if guess in per_class:
-            per_class[guess]['predicted'] += 1
+        confusion[classes[rows[i]['label']]][scored[i]['answer'] or 'failed'] += 1
     families = defaultdict(list)
     for i in present:
         families[rows[i]['group']].append(bool(scored[i]['correct']))
@@ -181,7 +173,7 @@ def summarize(rows, scored, base=None):
            'contrast_pairs': {'pairs': len(pairs), 'both_correct': sum(all(p) for p in pairs)},
            'languages': {lang: {'raw_correct': sum(bool(scored[i]['correct']) for i in ids), 'submitted': len(ids)} for lang, ids in language.items()},
            'families_all_correct': sum(all(v) for v in families.values()), 'families': len(families),
-           'p50_ms': quantile(ms, 50), 'p95_ms': quantile(ms, 95),
+           'latency': latency(ms),
            'failure_examples': [{'id': i, 'error': scored[i].get('error'), 'status': scored[i]['status']} for i in present if scored[i]['answer'] is None][:10]}
     if base is not None:
         before = {f: all(v) for f, v in base['families'].items()}
@@ -212,8 +204,8 @@ def families_by_class(rows, scored, base, present):
     return {k: sorted(v) for k, v in sorted(out.items())}
 
 
-def curve(size):
-    run = WORK / 'runs' / size
+def curve(work, size):
+    run = Path(work) / 'runs' / size
     metrics, resolved = files.read_json(run / 'metrics.json'), files.read_json(run / 'resolved-job.json')
     receipt = files.read_json(run / 'deployment' / 'specialist.gguf.receipt.json') if (run / 'deployment').exists() else None
     steps = [e['steps'] - (metrics['epochs'][i - 1]['steps'] if i else 0) for i, e in enumerate(metrics['epochs'])]
@@ -242,11 +234,12 @@ def curve(size):
 
 
 def report(args):
-    sets = {name: exported(path) for name, path in SETS.items()}
+    outcomes.destination(args.output)
+    sets = {name: exported(path) for name, path in manifests(args.work).items()}
     arms = {}
     for name in args.arms:
-        artifact = files.read_json(WORK / 'scores' / f'{name}.json')
-        header, rows = recorded(WORK / 'scores' / f'{name}.json')
+        artifact = files.read_json(scores(args.work, name))
+        header, rows = recorded(scores(args.work, name))
         arms[name] = {'meta': {**{k: artifact[k] for k in ('judge', 'provider', 'identity')}, 'native': header['configuration'].get('native')}, 'rows': list(rows.values())}
     out = {'arms': {}, 'matched': {}}
     for set_name, rows in sets.items():
@@ -262,13 +255,13 @@ def report(args):
             out['arms'].setdefault(name, {'judge': arm['meta']['judge'], 'provider': arm['meta']['provider'],
                                           'identity': {k: arm['meta']['identity'].get(k) for k in ('source', 'sha256', 'model', 'provider', 'protocol') if k in arm['meta']['identity']},
                                           'native': arm['meta']['native'], 'sets': {}})['sets'][set_name] = {**full, 'matched_raw_correct': on_matched['raw_correct'], 'matched_submitted': on_matched['submitted']}
-    out['curve'] = {size: curve(size) for size in args.runs}
-    files.publish(args.output, out)
+    out['curve'] = {size: curve(args.work, size) for size in args.runs}
+    outcomes.report(args.output, out)
     return {name: {s: (v['raw_correct'], v['submitted'], v['failures']) for s, v in arm['sets'].items()} for name, arm in out['arms'].items()}
 
 
 def markdown(args):
-    d, lines = files.read_json(args.output), []
+    d, lines = files.read_json(args.report), []
     names = {'provisional_check': 'Provisional check (200 rows, 62 families)', 'cohort_v2_routing': 'Cohort v2 routing_v1 (82 rows, 11 families)'}
     for set_name, title in names.items():
         lines += [f'**{title}**', '', '| Arm | Raw correct / submitted | Failed | vs base fixes / regressions | Families all correct | Families regressed vs base | Contrast pairs both correct | en | pt | p50 / p95 ms |',
@@ -278,7 +271,7 @@ def markdown(args):
             vb = x.get('vs_base')
             lines.append(f"| {name} | {x['raw_correct']} / {x['submitted']} | {x['failures']} | {str(vb['fixes']) + ' / ' + str(vb['regressions']) if vb else '—'} | {x['families_all_correct']} / {x['families']} | "
                          f"{len(vb['family_regressions']) if vb else '—'} | {x['contrast_pairs']['both_correct']} / {x['contrast_pairs']['pairs']} | "
-                         f"{x['languages']['en']['raw_correct']} / {x['languages']['en']['submitted']} | {x['languages']['pt']['raw_correct']} / {x['languages']['pt']['submitted']} | {x['p50_ms']:.0f} / {x['p95_ms']:.0f} |")
+                         f"{x['languages']['en']['raw_correct']} / {x['languages']['en']['submitted']} | {x['languages']['pt']['raw_correct']} / {x['languages']['pt']['submitted']} | {x['latency']['p50']:.0f} / {x['latency']['p95']:.0f} |")
         lines += ['', 'Per class, correct / gold (predicted):', '', '| Arm | ' + ' | '.join(next(iter(d['arms'].values()))['sets'][set_name]['per_class']) + ' | Classes below base (families newly wrong) |', '|---|' + '---|' * 6]
         for name, arm in d['arms'].items():
             x = arm['sets'][set_name]
@@ -299,6 +292,7 @@ def markdown(args):
 
 def main():
     parser = argparse.ArgumentParser(prog='bench.routing_specialist')
+    parser.add_argument('--work', type=Path, required=True, help='work root: labels/, exports/, scores/ and runs/ live under it')
     commands = parser.add_subparsers(dest='command', required=True)
     p = commands.add_parser('sets', help='provisional check (teachers and author agree) and cohort v2 routing_v1 items as check exports, with overlap verification')
     p.add_argument('--fit', type=Path, required=True, help='largest native tune export manifest (fit + model_select + acceptance_fit families)')
@@ -308,16 +302,16 @@ def main():
     p.add_argument('--provider')
     p.add_argument('--key-file', type=Path)
     p.add_argument('--batch-inputs', type=int)
-    p.add_argument('--native', type=Path, default=WORK / 'runs' / 'fit-100' / 'resolved-job.json', help='resolved job whose native execution settings local arms share')
+    p.add_argument('--native', type=Path, help='resolved job whose native execution settings local arms share (required for local arms)')
     p.add_argument('--threads', type=int, default=16)
     p.add_argument('--retry-failed', action='store_true')
     p.add_argument('--fresh', action='store_true')
     p = commands.add_parser('report', help='per-arm summaries; the first arm is the base for regressions')
     p.add_argument('--arms', nargs='+', required=True)
     p.add_argument('--runs', nargs='*', default=[], help='fitted run names under the work directory, e.g. fit-100')
-    p.add_argument('--output', type=Path, required=True)
+    outcomes.output_argument(p)
     p = commands.add_parser('markdown', help='README tables from a published report')
-    p.add_argument('--output', type=Path, required=True)
+    p.add_argument('report', type=Path)
     args = parser.parse_args()
     if args.command == 'markdown':
         print(markdown(args))

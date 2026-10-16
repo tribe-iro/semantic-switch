@@ -7,22 +7,23 @@ from pathlib import Path
 
 import pytest
 
-from semantic_switch import Runtime, files, judge_from
+import semantic_switch as ss
+from semantic_switch import Runtime, files
 from semantic_switch.artifacts import artifact_digest, read_export
 from semantic_switch.errors import ConfigError
 from semantic_switch.tools.data import Labels
 from bench.policy_adaptation import ROLES, SMALL_CONTEXT, cohort_pilot, materialize_cohort
 from bench import policy_workflow
 from bench.policy_workflow import CHUNK, chunks, cohort_cases, cohort_summary, judge_cases, primitive, run_cohort
-from bench.receipts import RecordingTransport
-from .conftest import FakeScorer
+from bench.outcomes import Receipts
+from semantic_testkit.scoring import FakeScorer
 from .test_openrouter_judge import Provider
 
 
 @pytest.fixture
 def cohort(tmp_path):
     fake = FakeScorer()
-    with Runtime({'judge': fake}) as runtime:
+    with Runtime(fake) as runtime:
         yield runtime, fake, tmp_path, *cohort_cases(runtime, tmp_path / 'cohort')
 
 
@@ -38,7 +39,7 @@ def test_cohort_maps_authored_gold_and_freezes_one_family_assignment(cohort):
     assert expected[('duplicate', '"unstated"')] == {'value': None, 'raw_value': None, 'status': 'needs_input'}
     assert expected[('duplicate', 'false')]['raw_value'] is False
     assert expected[('routing_v1', '"clarify"')] == {'value': 'clarify', 'raw_value': 'clarify', 'status': 'ok'}
-    assert all(('[retrieved] reference:' in case['evidence']) == ('reference' in case['input']) for case in cases)
+    assert all(set(case['evidence']) == {'message', *({'reference'} & set(case['input']))} for case in cases)
     assert materialize_cohort(runtime, tmp_path / 'cohort')[0] == assignment
     data = json.loads(SMALL_CONTEXT.read_text())
     data['situations'][0]['variants'][0]['gold'] = 'technical'
@@ -59,7 +60,7 @@ def test_revised_cohort_records_adjudication_and_directories_keep_their_frozen_s
     assert chain[1] >= {'routing-10:unstated', 'security-09:contradictory', 'invoice-01:boundary', 'invoice-09:procedure'}
     adjudication = json.loads(SMALL_CONTEXT.read_text())['adjudication']
     superseded = root / adjudication['supersedes']['source']
-    with Runtime({'judge': FakeScorer()}) as runtime:
+    with Runtime(FakeScorer()) as runtime:
         old = materialize_cohort(runtime, tmp_path / 'old', superseded)[0]
         assert materialize_cohort(runtime, tmp_path / 'old')[0] == old and old['source_sha256'] == adjudication['supersedes']['source_sha256']
         assert materialize_cohort(runtime, tmp_path / 'new')[0]['source_sha256'] == artifact_digest(json.loads(SMALL_CONTEXT.read_text()))
@@ -69,22 +70,22 @@ def test_inline_cases_present_the_saved_fact(cohort):
     runtime, fake, _, assignment, cases = cohort
     switch = runtime.load(assignment['definition'], draft=True)
     for case in {case['fact']: case for case in cases}.values():
-        inline = primitive(case['authored'], case['guidance'])(case['evidence'], runtime)
+        inline = primitive(case['authored'], case['guidance'])(case['rendered_input'], runtime)
         asked = fake.requests[-1]
         saved = switch.score_facts([case['input']], sources=('judge',), facts=[case['fact']])[0][case['fact']]
         assert fake.requests[-1] == asked and dict(saved.scores) == dict(inline.scores)
 
 
-def test_raised_chunk_becomes_failed_submitted_rows_with_elapsed_time(cohort):
-    from types import SimpleNamespace
+def test_raised_chunk_becomes_failed_submitted_rows_with_elapsed_time(cohort, monkeypatch):
     from bench.policy_workflow import evaluated
     runtime, _, _, _, cases = cohort
     _, item, members = next(chunks(cases, 'guided', CHUNK))
 
-    def broken(evidence, runtime):
+    def broken(self, evidence, runtime):
         raise RuntimeError('backend exploded')
-    rows, record = judge_cases(runtime, SimpleNamespace(run=broken, guidance=item.guidance, describe=item.describe), members)
-    assert len(rows) == len(members) and record['error'] == {'type': 'RuntimeError', 'stage': 'execute'} and record['requests'] == []
+    monkeypatch.setattr(type(item), 'run', broken)
+    rows, record = judge_cases(runtime, item, members)
+    assert len(rows) == len(members) and record['error'] == {'type': 'RuntimeError', 'stage': 'execute'} and record['receipts'] == []
     assert all(row['outcome'] == 'failed' and row['ms'] >= 0 and row['error']['type'] == 'RuntimeError' and row['result']['status'] == 'failed' for row in rows)
     scored = [evaluated({**row, 'condition': 'guided'}) for row in rows]
     assert all(row['outcome'] == 'failed' and row['correct'] is None and not row['accepted'] for row in scored)
@@ -96,15 +97,15 @@ def test_guidance_blind_judge_fails_exactly_the_procedure_contrasts(cohort):
     switch = runtime.load(assignment['definition'], draft=True)
     first = {}
     for case in cases:
-        first.setdefault(case['evidence'], case)
+        first.setdefault(json.dumps(case['evidence'], sort_keys=True), case)
 
     def oracle(state, question, width):
-        case = first[max((evidence for evidence in first if evidence in state), key=len)]
+        case = max((case for case in first.values() if all(value in state for value in case['evidence'].values())), key=lambda case: len(json.dumps(case['evidence'])))
         top = switch.plan.fact(case['fact']).index(case['gold'])
         return [.97 if k == top else .03 / (width - 1) for k in range(width)]
     fake.oracle = oracle
     rows = [row for _, item, members in chunks(cases, 'guided', CHUNK) for row in judge_cases(runtime, item, members)[0]]
-    wrong = {case['case_id'] for case in cases if first[case['evidence']]['gold'] != case['gold']}
+    wrong = {case['case_id'] for case in cases if first[json.dumps(case['evidence'], sort_keys=True)]['gold'] != case['gold']}
     assert len(wrong) == 14 and all('procedure' in case['tags'] for case in cases if case['case_id'] in wrong)
     summary = cohort_summary(rows)
     assert summary['metrics']['raw_correct'] == 242 and summary['metrics']['wrong_accepted'] == 14 and summary['metrics']['families'] == 32
@@ -118,11 +119,11 @@ def test_guidance_blind_judge_fails_exactly_the_procedure_contrasts(cohort):
 
 
 def test_pilot_consumes_the_assignment_with_disjoint_family_roles(cohort, monkeypatch):
-    from .test_adaptation_contracts import pipeline_base
+    from semantic_testkit.assets import pipeline_base
     runtime, _, tmp_path, assignment, _ = cohort
     import bench.policy_adaptation as module
-    with pytest.raises(ConfigError, match='without fit support: routing_v1: clarify'):
-        cohort_pilot(runtime, tmp_path / 'pilot', tmp_path / 'cohort', assets=pipeline_base(tmp_path, monkeypatch))
+    diagnostic = cohort_pilot(runtime, tmp_path / 'diagnostic-pilot', tmp_path / 'cohort', assets=pipeline_base(tmp_path, monkeypatch))
+    assert diagnostic['jobs']
     prepared = []
     monkeypatch.setattr(module, 'lora_job', lambda definition, export, directory, **settings: prepared.append((export, settings)) or
                         {'job': str(directory / 'job.yaml'), 'commands': {'select': ['semantic-trainer', 'select']}})
@@ -153,14 +154,13 @@ def fake_judged(monkeypatch, bindings):
     @contextmanager
     def judged(spec, *, provider=None, key_file=None, batch_inputs=None):
         judge, recording = bindings[spec]()
-        with Runtime({'judge': judge}) as runtime:
+        with Runtime(judge, on_decision=recording) as runtime:
             yield runtime, recording
     monkeypatch.setattr(policy_workflow, 'judged', judged)
 
 
 def hosted(provider):
-    recording = RecordingTransport(send=provider)
-    return judge_from('openrouter:m', transport=recording), recording
+    return ss.judge('openrouter:m', codec='chat', transport=provider), Receipts()
 
 
 def logged(output):
@@ -190,7 +190,7 @@ def test_procedure_runner_groups_chunks_orders_and_selects_control(cohort, monke
         assert [row['case_id'] for row in arm['rows']] == order and 'control' not in arm
         assert arm['metrics']['submitted'] == len(cases) and arm['timing']['executed_cases'] == len(cases)
     local_arm, hosted_arm = artifact['arms']
-    assert local_arm['timing']['http_attempts'] is None and hosted_arm['timing']['http_attempts']['attempts'] == len(provider.bodies) > 0
+    assert local_arm['timing']['requests'] is None and hosted_arm['timing']['requests']['requests'] == len(provider.bodies) > 0
     assert hosted_arm['returned_models'] == ['m@p'] and artifact['paired'][0]['support']['matched'] + artifact['paired'][0]['support']['unmatched'] == len(cases)
     assert f'final: completed {2 * len(cases)}/{2 * len(cases)} (fresh {2 * len(cases)}, resumed 0)' in capsys.readouterr().err.splitlines()[-1]
     controlled = FakeScorer()
@@ -199,7 +199,7 @@ def test_procedure_runner_groups_chunks_orders_and_selects_control(cohort, monke
     arm, = artifact['arms']
     assert artifact['conditions'] == ['guided', 'omitted'] and len(controlled.requests) == 2 * len(cases)
     assert [row['case_id'] for row in arm['control']['rows']] == order
-    assert all(row['task']['guidance'] for row in arm['rows']) and not any(row['task']['guidance'] for row in arm['control']['rows'])
+    assert all(row['task']['definition']['guidance'] for row in arm['rows']) and not any(row['task']['definition']['guidance'] for row in arm['control']['rows'])
 
 
 class Interrupting(FakeScorer):
@@ -219,7 +219,7 @@ def test_procedure_runner_resumes_retries_failures_and_refuses_changed_configura
         run(Interrupting())
     done = {row['case_id'] for row in logged(output) if 'case_id' in row}
     assert 0 < len(done) < len(cases)
-    portuguese = [case['evidence'] for case in cases if case['language'] == 'pt']
+    portuguese = [case['evidence']['message'] for case in cases if case['language'] == 'pt']
     def oracle(state, question, width):
         if any(evidence in state for evidence in portuguese):
             raise RuntimeError('provider down')
@@ -247,12 +247,21 @@ def test_procedure_runner_resumes_retries_failures_and_refuses_changed_configura
             run_cohort(judges, tmp_path / 'cohort', output, **{'chunk': 8, **changed})
 
 
-def test_fingerprint_ignores_files_the_run_never_loaded(tmp_path):
-    from bench.diagnostics import fingerprint
+def test_new_fingerprint_includes_new_declared_source_files(tmp_path):
+    from bench.outcomes import fingerprint
     before = fingerprint()
     stray = Path(__file__).parents[1] / "bench" / f"unloaded_{tmp_path.name}.py"
     try:
         stray.write_text("X = 1\n")
-        assert fingerprint() == before
+        assert fingerprint() != before
     finally:
         stray.unlink()
+
+
+def test_cohort_latency_has_no_removed_item_failures(cohort):
+    from bench.latency import cohort_latency
+    runtime, _, tmp_path, _, _ = cohort
+    report = cohort_latency(runtime, tmp_path / 'cohort')
+    assert report['cohort_ms']['failed'] == 0
+    assert report['changed_guidance_ms']['failed'] == 0
+    assert report['repeated_guidance_ms']['failed'] == 0

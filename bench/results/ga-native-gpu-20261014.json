@@ -1,0 +1,657 @@
+{
+ "command": [
+  ".artifacts/ga-implementation/native-controls.py",
+  "gpu"
+ ],
+ "source": {
+  "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+  "sources": "5c97205efaa017367c259093b070311cfcd26e6d9b940e91f532faba44d1b4c5"
+ },
+ "roles": {
+  "judge": {
+   "controls": {
+    "repeat": {
+     "equal_logp": true,
+     "equal_mass": true,
+     "max_logp_delta": 0.0,
+     "max_probability_delta": 0.0,
+     "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    "residency": {
+     "equal_logp": true,
+     "equal_mass": true,
+     "max_logp_delta": 0.0,
+     "max_probability_delta": 0.0,
+     "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    "reference": {
+     "equal_logp": true,
+     "equal_mass": true,
+     "max_logp_delta": 0.0,
+     "max_probability_delta": 0.0,
+     "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   },
+   "execution": {
+    "identity": {
+     "presentation": {
+      "evidence": "named-fields@2",
+      "choices": "full-criteria@3"
+     },
+     "file": "Q8_0.gguf",
+     "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+     "template": "chat@3:0a2c8073",
+     "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb"
+    },
+    "requested_device": "gpu",
+    "threads": 8,
+    "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+    "loaded": true,
+    "observed_models": [],
+    "accelerated": true,
+    "batch_inputs": 1,
+    "max_slots": 20,
+    "capabilities": {
+     "shared": true,
+     "conformance": true,
+     "counters": {
+      "prefix_hits": 7,
+      "prefix_misses": 10,
+      "state_hits": 0,
+      "state_misses": 17,
+      "state_tokens": 520,
+      "suffix_tokens": 2006,
+      "failures": 0,
+      "prefix_tokens": 632,
+      "prefix_evictions": 6,
+      "adapter_switches": 0,
+      "submissions": 83,
+      "submitted_tokens": 4576
+     }
+    },
+    "requested_capacity": {
+     "n_ctx": 21504,
+     "n_ctx_seq": 3584,
+     "n_batch": 512,
+     "n_seq_max": 6
+    },
+    "configuration": {
+     "max_input_tokens": 1024,
+     "max_prefix_tokens": 1024,
+     "prefix_slots": 4
+    },
+    "capacity": {
+     "n_ctx": 21504,
+     "n_ctx_seq": 3584,
+     "sequence_limit": 3584,
+     "n_batch": 512,
+     "n_seq_max": 6,
+     "prefix_slots": 4,
+     "scheduling": "resident-prefix-streams@3",
+     "n_outputs_max": 6,
+     "swa_full": true,
+     "kv_unified": false,
+     "n_ubatch": 512,
+     "flash_attn": "enabled",
+     "type_k": "f16",
+     "type_v": "f16",
+     "device": "gpu",
+     "tensor_types": [
+      "f16",
+      "f32",
+      "q8_0"
+     ],
+     "use_extra_bufts": true,
+     "repacked": [],
+     "buffers": {
+      "Vulkan0 model": 2456069079,
+      "Vulkan_Host model": 2923429888,
+      "Vulkan_Host output": 6291456,
+      "Vulkan0 KV": 396361728,
+      "Vulkan0 compute": 116790395,
+      "Vulkan_Host compute": 32285655
+     },
+     "shared": true
+    },
+    "binding": {
+     "representation": "base",
+     "adapter": "04389ee1310b4a28ee1bb3f1ed802b4f89e6a6c61fc31b5db7e8ede862e5d3b9",
+     "pool": {
+      "loads": 0,
+      "hits": 0,
+      "evictions": 0,
+      "underestimates": 0,
+      "unestimated": 0,
+      "max_adapters": 4,
+      "resident": {}
+     }
+    }
+   }
+  },
+  "A": {
+   "controls": {
+    "repeat": {
+     "equal_logp": true,
+     "equal_mass": true,
+     "max_logp_delta": 0.0,
+     "max_probability_delta": 0.0,
+     "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    "residency": {
+     "equal_logp": true,
+     "equal_mass": true,
+     "max_logp_delta": 0.0,
+     "max_probability_delta": 0.0,
+     "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    "reference": {
+     "equal_logp": false,
+     "equal_mass": false,
+     "max_logp_delta": 0.3267250061035156,
+     "max_probability_delta": 0.017314910888671875,
+     "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   },
+   "execution": {
+    "identity": {
+     "presentation": {
+      "evidence": "named-fields@2",
+      "choices": "full-criteria@3"
+     },
+     "file": "Q8_0.gguf",
+     "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+     "template": "chat@3:0a2c8073",
+     "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+     "lora": {
+      "sha256": "ae1822714aebce11ae139208962f02f3d555a4d0a37e98ea0ec39c3bd7f75e95",
+      "rank": 16,
+      "alpha": 32.0,
+      "targets": "da8dfdea81c8ede98d5656bb20c8bed8b4a6f39f62ed20c70d41bc896067bbe5",
+      "scale": 1.0
+     }
+    },
+    "requested_device": "gpu",
+    "threads": 8,
+    "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+    "loaded": true,
+    "observed_models": [],
+    "accelerated": true,
+    "batch_inputs": 1,
+    "max_slots": 20,
+    "capabilities": {
+     "shared": true,
+     "conformance": true,
+     "counters": {
+      "prefix_hits": 14,
+      "prefix_misses": 20,
+      "state_hits": 0,
+      "state_misses": 34,
+      "state_tokens": 1040,
+      "suffix_tokens": 4012,
+      "failures": 0,
+      "prefix_tokens": 1264,
+      "prefix_evictions": 12,
+      "adapter_switches": 1,
+      "submissions": 166,
+      "submitted_tokens": 9152
+     }
+    },
+    "requested_capacity": {
+     "n_ctx": 21504,
+     "n_ctx_seq": 3584,
+     "n_batch": 512,
+     "n_seq_max": 6
+    },
+    "configuration": {
+     "max_input_tokens": 1024,
+     "max_prefix_tokens": 1024,
+     "prefix_slots": 4
+    },
+    "capacity": {
+     "n_ctx": 21504,
+     "n_ctx_seq": 3584,
+     "sequence_limit": 3584,
+     "n_batch": 512,
+     "n_seq_max": 6,
+     "prefix_slots": 4,
+     "scheduling": "resident-prefix-streams@3",
+     "n_outputs_max": 6,
+     "swa_full": true,
+     "kv_unified": false,
+     "n_ubatch": 512,
+     "flash_attn": "enabled",
+     "type_k": "f16",
+     "type_v": "f16",
+     "device": "gpu",
+     "tensor_types": [
+      "f16",
+      "f32",
+      "q8_0"
+     ],
+     "use_extra_bufts": true,
+     "repacked": [],
+     "buffers": {
+      "Vulkan0 model": 2456069079,
+      "Vulkan_Host model": 2923429888,
+      "Vulkan_Host output": 6291456,
+      "Vulkan0 KV": 396361728,
+      "Vulkan0 compute": 116790395,
+      "Vulkan_Host compute": 32285655
+     },
+     "shared": true
+    },
+    "binding": {
+     "representation": "runtime-adapter",
+     "adapter": "8d232abf0c8c9e99ff98df0249d79dd7629813da3ab8e4747cb4b2575c1220f4",
+     "pool": {
+      "loads": 1,
+      "hits": 11,
+      "evictions": 0,
+      "underestimates": 0,
+      "unestimated": 0,
+      "max_adapters": 4,
+      "resident": {
+       "ae1822714aebce11ae139208962f02f3d555a4d0a37e98ea0ec39c3bd7f75e95": {
+        "file_bytes": 50709312,
+        "tensor_bytes": 50675712,
+        "charged": {
+         "host": 51612480,
+         "devices": {
+          "Vulkan0": 50683904
+         }
+        },
+        "buffers": {
+         "Vulkan0 LoRA": 50677678
+        },
+        "users": 0
+       }
+      }
+     }
+    }
+   }
+  },
+  "B": {
+   "controls": {
+    "repeat": {
+     "equal_logp": true,
+     "equal_mass": true,
+     "max_logp_delta": 0.0,
+     "max_probability_delta": 0.0,
+     "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    "residency": {
+     "equal_logp": true,
+     "equal_mass": true,
+     "max_logp_delta": 0.0,
+     "max_probability_delta": 0.0,
+     "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    "reference": {
+     "equal_logp": false,
+     "equal_mass": false,
+     "max_logp_delta": 0.42481231689453125,
+     "max_probability_delta": 0.005641639232635498,
+     "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   },
+   "execution": {
+    "identity": {
+     "presentation": {
+      "evidence": "named-fields@2",
+      "choices": "full-criteria@3"
+     },
+     "file": "Q8_0.gguf",
+     "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+     "template": "chat@3:0a2c8073",
+     "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb",
+     "lora": {
+      "sha256": "bdf482919cb88cc2e7852975e0bfdc02b751f28e9316d04e7dd118b9adebc67b",
+      "rank": 16,
+      "alpha": 32.0,
+      "targets": "da8dfdea81c8ede98d5656bb20c8bed8b4a6f39f62ed20c70d41bc896067bbe5",
+      "scale": 1.0
+     }
+    },
+    "requested_device": "gpu",
+    "threads": 8,
+    "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+    "loaded": true,
+    "observed_models": [],
+    "accelerated": true,
+    "batch_inputs": 1,
+    "max_slots": 20,
+    "capabilities": {
+     "shared": true,
+     "conformance": true,
+     "counters": {
+      "prefix_hits": 21,
+      "prefix_misses": 30,
+      "state_hits": 0,
+      "state_misses": 51,
+      "state_tokens": 1560,
+      "suffix_tokens": 6018,
+      "failures": 0,
+      "prefix_tokens": 1896,
+      "prefix_evictions": 18,
+      "adapter_switches": 2,
+      "submissions": 249,
+      "submitted_tokens": 13728
+     }
+    },
+    "requested_capacity": {
+     "n_ctx": 21504,
+     "n_ctx_seq": 3584,
+     "n_batch": 512,
+     "n_seq_max": 6
+    },
+    "configuration": {
+     "max_input_tokens": 1024,
+     "max_prefix_tokens": 1024,
+     "prefix_slots": 4
+    },
+    "capacity": {
+     "n_ctx": 21504,
+     "n_ctx_seq": 3584,
+     "sequence_limit": 3584,
+     "n_batch": 512,
+     "n_seq_max": 6,
+     "prefix_slots": 4,
+     "scheduling": "resident-prefix-streams@3",
+     "n_outputs_max": 6,
+     "swa_full": true,
+     "kv_unified": false,
+     "n_ubatch": 512,
+     "flash_attn": "enabled",
+     "type_k": "f16",
+     "type_v": "f16",
+     "device": "gpu",
+     "tensor_types": [
+      "f16",
+      "f32",
+      "q8_0"
+     ],
+     "use_extra_bufts": true,
+     "repacked": [],
+     "buffers": {
+      "Vulkan0 model": 2456069079,
+      "Vulkan_Host model": 2923429888,
+      "Vulkan_Host output": 6291456,
+      "Vulkan0 KV": 396361728,
+      "Vulkan0 compute": 116790395,
+      "Vulkan_Host compute": 32285655
+     },
+     "shared": true
+    },
+    "binding": {
+     "representation": "runtime-adapter",
+     "adapter": "a3183d73533df9f051afad5c9f3fe2006a380e470cb6227765f7cbe293732f64",
+     "pool": {
+      "loads": 2,
+      "hits": 22,
+      "evictions": 0,
+      "underestimates": 0,
+      "unestimated": 0,
+      "max_adapters": 4,
+      "resident": {
+       "ae1822714aebce11ae139208962f02f3d555a4d0a37e98ea0ec39c3bd7f75e95": {
+        "file_bytes": 50709312,
+        "tensor_bytes": 50675712,
+        "charged": {
+         "host": 51612480,
+         "devices": {
+          "Vulkan0": 50683904
+         }
+        },
+        "buffers": {
+         "Vulkan0 LoRA": 50677678
+        },
+        "users": 0
+       },
+       "bdf482919cb88cc2e7852975e0bfdc02b751f28e9316d04e7dd118b9adebc67b": {
+        "file_bytes": 50709312,
+        "tensor_bytes": 50675712,
+        "charged": {
+         "host": 51612480,
+         "devices": {
+          "Vulkan0": 50683904
+         }
+        },
+        "buffers": {
+         "Vulkan0 LoRA": 50677678
+        },
+        "users": 0
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "grouped_experiment": {
+  "boundary": "explicit backend diagnostic; setup and decoding included, not public SDK throughput",
+  "runs": [
+   {
+    "changed_public_outcomes": [],
+    "serial_ms": 1743.6870819947217,
+    "grouped_ms": 2069.7639049903955,
+    "equal": false,
+    "max_probability_delta": 0.0037512779235839844,
+    "errors": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   {
+    "changed_public_outcomes": [],
+    "serial_ms": 2015.7284600136336,
+    "grouped_ms": 3006.002156995237,
+    "equal": false,
+    "max_probability_delta": 0.0037512779235839844,
+    "errors": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   {
+    "changed_public_outcomes": [],
+    "serial_ms": 2382.8449499997078,
+    "grouped_ms": 2943.1851739936974,
+    "equal": false,
+    "max_probability_delta": 0.0037512779235839844,
+    "errors": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   {
+    "changed_public_outcomes": [],
+    "serial_ms": 2394.753551998292,
+    "grouped_ms": 2990.049624990206,
+    "equal": false,
+    "max_probability_delta": 0.0037512779235839844,
+    "errors": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   {
+    "changed_public_outcomes": [],
+    "serial_ms": 2396.819590998348,
+    "grouped_ms": 2973.945760008064,
+    "equal": false,
+    "max_probability_delta": 0.0037512779235839844,
+    "errors": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   }
+  ]
+ }
+}

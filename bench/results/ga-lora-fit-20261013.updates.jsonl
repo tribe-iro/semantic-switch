@@ -1,0 +1,2 @@
+{"step": 1, "examples_seen": 2, "learning_rate": 0.0002, "loss": 5.042765769758262e-05, "gradient_norm": 0.002798752160742879, "tokens": 515, "presentations": 2, "padded_tokens": 515}
+{"step": 2, "examples_seen": 4, "learning_rate": 0.0002, "loss": 1.0331254429729597e-07, "gradient_norm": 3.3048913792299572e-06, "tokens": 493, "presentations": 2, "padded_tokens": 493}

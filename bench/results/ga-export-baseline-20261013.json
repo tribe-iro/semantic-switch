@@ -1,0 +1,159 @@
+{
+ "utc": "2026-10-13T20:20:57.549720+00:00",
+ "command": [
+  ".artifacts/ga-completion/export-measure.py"
+ ],
+ "provenance": {
+  "schema": 2,
+  "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+  "sources": "d7c768d5ad718fe47869b4f861faa57100f46903df748982dd3769f2d76c3802",
+  "dataset": "8abba39bc3acaa13948ef333d41d65e7c4a5d14675f7f6e2f8fd82684b546c89",
+  "execution": {
+   "identity": {
+    "presentation": {
+     "evidence": "named-fields@2",
+     "choices": "full-criteria@3"
+    },
+    "file": "Q8_0.gguf",
+    "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+    "template": "chat@3:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb"
+   },
+   "requested_device": "gpu",
+   "threads": null,
+   "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+   "loaded": true,
+   "observed_models": [],
+   "accelerated": true,
+   "batch_inputs": 1,
+   "max_slots": 20,
+   "capabilities": {
+    "shared": true,
+    "conformance": true,
+    "counters": {
+     "prefix_hits": 0,
+     "prefix_misses": 0,
+     "state_hits": 0,
+     "state_misses": 0,
+     "state_tokens": 0,
+     "suffix_tokens": 0,
+     "failures": 0,
+     "prefix_tokens": 0,
+     "prefix_evictions": 0,
+     "adapter_switches": 0,
+     "submissions": 0,
+     "submitted_tokens": 0
+    }
+   },
+   "requested_capacity": {
+    "n_ctx": 8192,
+    "n_batch": 512,
+    "n_seq_max": 6
+   },
+   "configuration": {
+    "max_input_tokens": 1024,
+    "prefix_slots": 4
+   },
+   "capacity": {
+    "n_ctx": 8192,
+    "n_batch": 512,
+    "n_seq_max": 6,
+    "prefix_slots": 4,
+    "scheduling": "resident-prefix-cache@2",
+    "n_outputs_max": 6,
+    "swa_full": true,
+    "kv_unified": true,
+    "n_ubatch": 512,
+    "flash_attn": "enabled",
+    "type_k": "f16",
+    "type_v": "f16",
+    "device": "gpu",
+    "tensor_types": [
+     "f16",
+     "f32",
+     "q8_0"
+    ],
+    "use_extra_bufts": true,
+    "repacked": [],
+    "buffers": {
+     "Vulkan0 model": 2456069079,
+     "Vulkan_Host model": 2923429888,
+     "Vulkan_Host output": 6291456,
+     "Vulkan0 KV": 150994944,
+     "Vulkan0 compute": 126300979,
+     "Vulkan_Host compute": 41796239
+    },
+    "shared": true
+   },
+   "binding": {
+    "representation": "base",
+    "adapter": null,
+    "pool": {
+     "loads": 0,
+     "hits": 0,
+     "evictions": 0,
+     "underestimates": 0,
+     "unestimated": 0,
+     "max_adapters": 4,
+     "resident": {}
+    }
+   }
+  },
+  "boundary": "public SDK"
+ },
+ "population": {
+  "rows": 9,
+  "skipped_rule": 0,
+  "path": "bench/results/ga-printer-tune.export.jsonl.manifest.json",
+  "export_id": "0b05d3bdb54933e6e43bc0ca76756e5ddda57e3edf745c919344db1d8a444924",
+  "situations": 9,
+  "complete_situations": 9,
+  "dataset_id": "0d2cb72ac4b269cf5c6462720b8b82d40a6c0d99a6bcb064bfa2776ca397b117",
+  "split": "tune"
+ },
+ "encode_seconds": 3.230707948001509,
+ "read_seconds": 0.0038323960034176707,
+ "peak_process_rss_bytes": 903516160,
+ "manifest_bytes": 5730,
+ "payloads": {
+  "ga-printer-tune.export.observations.jsonl": {
+   "bytes": 11828,
+   "file": "ga-printer-tune.export.observations.97fdc49f59a1d23e.jsonl",
+   "sha256": "97fdc49f59a1d23e8f33b38665c589839351f67f0d8258d5882fc1193e9ec730",
+   "count": 9
+  },
+  "ga-printer-tune.export.inputs.jsonl": {
+   "bytes": 12402,
+   "file": "ga-printer-tune.export.inputs.da29c433b270c597.jsonl",
+   "sha256": "da29c433b270c597613759513a3b1bb68df2126c7afccbbaf52f484c4bd2f657",
+   "count": 9
+  },
+  "ga-printer-tune.export.families.jsonl": {
+   "bytes": 67639,
+   "file": "ga-printer-tune.export.families.6086b28319744fc0.jsonl",
+   "sha256": "6086b28319744fc0aba526b311f1251546d230bccae3e6a41c3e42653ad7be8d",
+   "count": 9
+  },
+  "ga-printer-tune.export.segments.jsonl": {
+   "bytes": 9851,
+   "file": "ga-printer-tune.export.segments.1395c0fbbb12914c.jsonl",
+   "sha256": "1395c0fbbb12914c309a638f43da94ca709f179dd4426e4888c0b754d39848c9",
+   "count": 11
+  },
+  "ga-printer-tune.export.answers.jsonl": {
+   "bytes": 390,
+   "file": "ga-printer-tune.export.answers.194dd6fa39811003.jsonl",
+   "sha256": "194dd6fa39811003e4078df841b3edfadf657dfb8b745c78125437bdbbaa052c",
+   "count": 1
+  },
+  "ga-printer-tune.export.situations.jsonl": {
+   "bytes": 2754,
+   "file": "ga-printer-tune.export.situations.abff4d195c53e3cf.jsonl",
+   "sha256": "abff4d195c53e3cf375954943d34b3afc877e3202e0a908f54df29f148841527",
+   "count": 9
+  }
+ },
+ "retained_observations": 9,
+ "baseline": true,
+ "matched_previous": null
+}

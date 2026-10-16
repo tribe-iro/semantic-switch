@@ -52,7 +52,9 @@ Thumbs.db
 # Resumable benchmark checkpoints
 *.checkpoint.jsonl
 *.checkpoint.jsonl.*
-packs/
+# Preserve the printer benchmark's generated evidence and review history.
+/packs/*
+!/packs/zt411/
 work/
 
 # Fetched proprietary source documents and their extracted excerpts

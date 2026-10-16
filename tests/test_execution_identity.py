@@ -6,17 +6,17 @@ from semantic_switch import ConfigError, Runtime, api, files
 from semantic_switch.api import execution_identity
 from semantic_switch.backend import SCHEDULING
 from semantic_switch.compiler import digest
-from semantic_switch.snapshot import from_lock
+from semantic_switch.snapshot import from_lock, reconcile
 from semantic_switch.tools.lock import build_lock
 
-from .conftest import FakeScorer
+from semantic_testkit.scoring import FakeScorer
 from .test_artifact_pipeline import dataset, definition
 from .test_native_resources import fake_llama, scorer
 
 REALIZED = {"device": "cpu", "tensor_types": ["f32", "q8_0"], "flash_attn": "enabled", "type_k": "f16", "type_v": "f16",
-            "use_extra_bufts": True, "repacked": [], "n_ubatch": 64, "n_ctx": 8192, "n_batch": 64, "n_seq_max": 6,
-            "n_outputs_max": 1, "swa_full": True, "kv_unified": True, "prefix_slots": 4, "scheduling": SCHEDULING,
-            "buffers": {"CPU model": 1}, "shared": True, "grouping": "serial", "serial": 1, "fusion": False}
+            "use_extra_bufts": True, "repacked": [], "n_ubatch": 64, "n_ctx": 8192, "n_ctx_seq": 8192, "sequence_limit": 8192, "n_batch": 64, "n_seq_max": 6,
+            "n_outputs_max": 1, "swa_full": True, "kv_unified": False, "prefix_slots": 4, "scheduling": SCHEDULING,
+            "buffers": {"CPU model": 1}, "shared": True}
 
 
 class ExecutionScorer(FakeScorer):
@@ -31,7 +31,7 @@ class ExecutionScorer(FakeScorer):
 def locked(tmp_path):
     path = definition(tmp_path)
     dataset(path, 40)
-    with Runtime({"judge": ExecutionScorer()}) as rt:
+    with Runtime(ExecutionScorer()) as rt:
         data, _, _ = build_lock(rt, path)
     files.publish(tmp_path / "lock.json", data)
     data = files.read_json(tmp_path / "lock.json")
@@ -40,29 +40,29 @@ def locked(tmp_path):
 
 
 def admit(data, allow=False, **realized):
-    with Runtime({"judge": ExecutionScorer(**realized)}) as rt:
-        return from_lock(data, rt.identity, allow, "lock")
+    with Runtime(ExecutionScorer(**realized)) as rt:
+        return reconcile(from_lock(data, "lock"), rt, allow, "lock")
 
 
 def test_execution_identity_records_capacities_but_not_threads_or_buffers():
     same = execution_identity({**REALIZED, "threads": 8, "buffers": {}})
     assert same == execution_identity(REALIZED) == {**{key: REALIZED[key] for key in api.EXECUTION}, "build": api._build()}
-    for key, value in (("n_ubatch", 512), ("n_ctx", 16384), ("n_batch", 2048), ("n_seq_max", 40), ("n_outputs_max", 40),
-                       ("swa_full", False), ("kv_unified", False), ("prefix_slots", 1), ("scheduling", "other@1")):
+    for key, value in (("n_ubatch", 512), ("n_ctx", 16384), ("n_ctx_seq", 4096), ("sequence_limit", 4096), ("n_batch", 2048), ("n_seq_max", 40), ("n_outputs_max", 40),
+                       ("swa_full", False), ("kv_unified", True), ("prefix_slots", 1), ("scheduling", "other@1")):
         assert execution_identity({**REALIZED, key: value}) != same
     assert execution_identity({}) is None
 
 
 def test_lock_records_execution_identity(tmp_path):
     data = locked(tmp_path)
-    assert data["schema"] == 17 and data["execution"] == {"judge": execution_identity(REALIZED)}
+    assert data["schema"] == 20 and data["execution"] == {"judge": execution_identity(REALIZED)}
 
 
 def test_admission_rejects_material_execution_change(tmp_path):
     data = locked(tmp_path)
     with pytest.raises(ConfigError, match=r"judge execution changed \(device, n_ubatch\)"):
         admit(data, device="gpu", n_ubatch=512)
-    for key, value in (("n_batch", 2048), ("n_seq_max", 40), ("swa_full", False), ("kv_unified", False), ("prefix_slots", 1)):
+    for key, value in (("n_batch", 2048), ("n_seq_max", 40), ("swa_full", False), ("kv_unified", True), ("prefix_slots", 1)):
         with pytest.raises(ConfigError, match=rf"judge execution changed \({key}\)"):
             admit(data, **{key: value})
     assert admit(data, threads=8, buffers={}).policies.get("judge")
@@ -97,6 +97,6 @@ def test_context_sets_attention_and_kv_types_explicitly(fake_llama):
         (library.LLAMA_FLASH_ATTN_TYPE_ENABLED, library.GGML_TYPE_F16, library.GGML_TYPE_F16)
     assert execution_identity(realized) == {"device": "cpu", "tensor_types": ["f32", "q8_0"], "flash_attn": "enabled",
                                             "type_k": "f16", "type_v": "f16", "use_extra_bufts": True, "repacked": [],
-                                            "n_ctx": realized["n_ctx"], "n_batch": 64, "n_ubatch": 64, "n_seq_max": 6, "n_outputs_max": 6,
-                                            "swa_full": True, "kv_unified": True, "prefix_slots": 4, "scheduling": SCHEDULING,
-                                            "shared": True, "grouping": "serial", "serial": 1, "build": api._build()}
+                                            "n_ctx": realized["n_ctx"], "n_ctx_seq": realized["n_ctx_seq"], "sequence_limit": realized["sequence_limit"], "n_batch": 64, "n_ubatch": 64, "n_seq_max": 6, "n_outputs_max": 6,
+                                            "swa_full": True, "kv_unified": False, "prefix_slots": 4, "scheduling": SCHEDULING,
+                                            "shared": True, "build": api._build()}

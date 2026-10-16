@@ -17,7 +17,7 @@ facts:
     unstated: true
     reads: [report]
 
-cases:
+rules:
   - { id: emergency, when: 'procedures has "P09"', then: emergency_shutdown }
   - { id: leak_first, when: 'leak and not procedures has "P03"', then: inspect_leak }
   - { id: repair, when: not procedures is empty, then: follow_procedure }

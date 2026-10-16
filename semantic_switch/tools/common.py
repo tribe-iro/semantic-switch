@@ -4,24 +4,15 @@ from collections import Counter
 from pathlib import Path
 
 from .. import files
-from ..compiler import Plan, digest
+from ..compiler import Plan
 from ..errors import ConfigError
-from ..context import bind_input, canonical, project
-from ..examples import LABEL_SCHEMA, partial, removed_warnings
-from ..kernel import Exact
+from ..examples import LABEL_FIELDS, LABEL_SCHEMA, Frame, removed_warnings
 from ..snapshot import Snapshot
 from ..metrics import wilson
 
 
-def read_fields(plan: Plan) -> tuple[str, ...]:
-    used = {r for f in plan.facts for r in f.reads} | {a.field for a in plan.atoms if isinstance(a, Exact)}
-    return tuple(n for n in plan.fields if n in used)
-
-
 def input_key(plan: Plan, data) -> str:
-    data = project(plan.fields, bind_input(plan.fields, data))
-    reads = read_fields(plan)
-    return digest(canonical(partial(data, reads), reads))
+    return Frame(plan, data).family
 
 
 def current(plan: Plan, name: str, value, old: dict):
@@ -42,8 +33,10 @@ def test_items(paths: files.Paths, plan: Plan, data: str | None = None) -> tuple
     for line, it in files.iter_records(source, with_lines=True):
         if not isinstance(it, dict) or it.get("schema") != LABEL_SCHEMA:
             raise ConfigError(f"{source}:{line}: not a schema-{LABEL_SCHEMA} label envelope; re-encode it with per-target label_sources")
-        if "case" in it and it.get("switch_rev", plan.switch_rev) != plan.switch_rev:
-            it = {k: v for k, v in it.items() if k != "case"}
+        if set(it) - LABEL_FIELDS:
+            raise ConfigError(f"{source}:{line}: unsupported label fields {sorted(set(it) - LABEL_FIELDS)}; supported: {sorted(LABEL_FIELDS)}")
+        if "rule" in it and it.get("switch_rev", plan.switch_rev) != plan.switch_rev:
+            it = {k: v for k, v in it.items() if k != "rule"}
             stale["answer"] += 1
         old = it.get("revs", {})
         removed.update(n for n in it.get("facts", {}) if n not in visible)
@@ -56,23 +49,21 @@ def test_items(paths: files.Paths, plan: Plan, data: str | None = None) -> tuple
             raise ConfigError(f"{source}:{line}: label_sources must give a source history for every labelled fact and member") from None
         items.append({**it, "facts": facts, "label_sources": kept_sources})
     return items, tuple(f"{n}: {c} stale labels ignored (its meaning changed; relabel with `ss label --to test`)"
-                        if n != "answer" else f"{c} stale answer labels ignored (the cases changed since they were labelled)"
+                        if n != "answer" else f"{c} stale answer labels ignored (the rules changed since they were labelled)"
                         for n, c in stale.items()) + removed_warnings(removed)
 
 
 def taught(snap: Snapshot, data: dict) -> bool:
-    data = project(snap.plan.fields, bind_input(snap.plan.fields, data))
-    return any(snap.overrides.get(f.name) and canonical(partial(data, f.context_reads or f.reads), f.context_reads or f.reads) in snap.overrides[f.name]
-               for f in map(snap.plan.facts.__getitem__, snap.plan.observed))
+    frame = Frame(snap.plan, data)
+    return any(snap.overrides.get(f.name) and frame.read(f) in snap.overrides[f.name] for f in map(snap.plan.facts.__getitem__, snap.plan.observed))
 
 
 def uses(snap: Snapshot, data: dict, collector=None) -> tuple[str, ...]:
-    data = project(snap.plan.fields, bind_input(snap.plan.fields, data))
-    found = {use for f in map(snap.plan.facts.__getitem__, snap.plan.observed) for use, keys in snap.membership.get(f.name, {}).items()
-             if canonical(partial(data, f.context_reads or f.reads), f.context_reads or f.reads) in keys}
+    frame = Frame(snap.plan, data)
+    found = {use for f in map(snap.plan.facts.__getitem__, snap.plan.observed) for use, keys in snap.membership.get(f.name, {}).items() if frame.read(f) in keys}
     if collector is not None:
-        found.update(collector.family_uses(data))
-    if input_key(snap.plan, data) in snap.tuned_keys:
+        found.update(collector.family_uses(frame.values))
+    if frame.family in snap.tuned_keys:
         found.add("tuned")
     return tuple(sorted(found))
 

@@ -5,48 +5,25 @@ import json
 import time
 import tracemalloc
 from contextlib import contextmanager
-from dataclasses import asdict
-from pathlib import Path
 from unittest.mock import patch
 
 import numpy as np
 
 from semantic_switch import Check, Model, Pick, Rate, backend, files
-from semantic_switch.api import execution_identity
 from semantic_switch.judge import CONFORMANCE_PROBES, CONFORMANCE_QUESTIONS
 from bench import diagnostics
-from bench.execution_reproduction import EMOTION, TARGETS, Session, arms, cases, history
+from bench.execution_reproduction import EMOTION, cases
 from bench.model_comparison import timings
-from bench.outcomes import peak_rss, reset_peak, runtime
+from bench.outcomes import destination, latency, output_argument, provenance, report, runtime, work_argument, work_directory
 
-OUTPUT = Path("bench/results/native-layout.json")
-IMPLEMENTATION = Path("bench/results/implementation-v026.json")
-ORDER = ("right-sized", "reserved-37", "right-sized", "reserved-37")
 LONG = Check("The text expresses one dominant emotion, judged by these descriptions: " +
              " ".join(f"{name} means {text}." for _ in range(4) for name, text in EMOTION.options.items()))
-POPULATIONS = ("cold", "cold_repeat", "warm", "evicted", "one", "four", "seventeen", "mixed_guidance", "long_suffix")
-
-
-class Reserved(backend.Capacity):
-    @property
-    def n_seq_max(self) -> int:
-        return self.prefix_slots + self.states + backend.BRANCHES
-
-
-LAYOUTS = {"right-sized": backend.Capacity, "reserved-37": Reserved}
-
-
-@contextmanager
-def layout(name):
-    canonical = backend.capacity
-    with patch.object(backend, "capacity", lambda *args, **kwargs: LAYOUTS[name](**asdict(canonical(*args, **kwargs)))):
-        yield
 
 
 @contextmanager
 def phases(scorer):
     events = {"submissions": [], "logits": [], "reductions": [], "rows": []}
-    run, logits, reduce = scorer.ctx.run, scorer.ctx.logits, backend.reduce_row
+    run, logits, reduce = scorer.ctx.decode, scorer.ctx.logits, backend.reduce_row
 
     def timed(target, bucket):
         def call(*args):
@@ -61,7 +38,7 @@ def phases(scorer):
         events["rows"].append((np.array(row), slots))
         return timed(reduce, "reductions")(row, slots, scratch)
 
-    with patch.object(scorer.ctx, "run", timed(run, "submissions")), patch.object(scorer.ctx, "logits", timed(logits, "logits")), \
+    with patch.object(scorer.ctx, "decode", timed(run, "submissions")), patch.object(scorer.ctx, "logits", timed(logits, "logits")), \
             patch.object(backend, "reduce_row", reduction):
         yield events
 
@@ -70,10 +47,6 @@ def split(events):
     run, wait, reduce = (sum(events[key]) for key in ("submissions", "logits", "reductions"))
     return {"submissions": len(events["submissions"]), "outputs": len(events["reductions"]), "decode_ms": run - reduce,
             "logits_wait_ms": wait, "reduce_ms": reduce}
-
-
-def percentiles(values):
-    return {"n": len(values), "p50": float(np.percentile(values, 50)), "p95": float(np.percentile(values, 95))} if values else None
 
 
 def allocations(row, slots, scratch):
@@ -92,7 +65,7 @@ def reducer_cost(row, slots, repeats):
         begin = time.perf_counter()
         backend.reduce_row(row, slots, scratch)
         samples.append((time.perf_counter() - begin) * 1000)
-    return {"vocabulary": len(row), "slots": [len(ids) for ids in slots], "ms": percentiles(samples),
+    return {"vocabulary": len(row), "slots": [len(ids) for ids in slots], "latency": latency(samples),
             "peak_bytes": allocations(row, slots, scratch), "peak_bytes_without_scratch": allocations(row, slots, None)}
 
 
@@ -114,89 +87,164 @@ def profile(rt, data, repeats):
                 rt.ask(text, specs)
                 calls.append({"ask_ms": (time.perf_counter() - begin) * 1000, **split(events)})
             rows = events["rows"]
-        totals = {key: percentiles([call[key] for call in calls]) for key in ("ask_ms", "decode_ms", "logits_wait_ms", "reduce_ms")}
+        totals = {key: latency(call[key] for call in calls) for key in ("ask_ms", "decode_ms", "logits_wait_ms", "reduce_ms")}
         out[name] = {"questions": len(specs), "warm": True, "submissions": calls[0]["submissions"], "outputs": calls[0]["outputs"],
-                     **totals, "reduce_share": float(np.median([call["reduce_ms"] / call["ask_ms"] for call in calls])),
+                     **totals, "reduce_share": latency([call["reduce_ms"] / call["ask_ms"] for call in calls], unit="fraction")["p50"],
                      "reducer": reducer_cost(*rows[0], repeats=20 * repeats)}
     return out
 
 
-def answers(run):
-    found = {}
-    for group, items in (("case", run["cases"]), ("history", run["histories"])):
-        for item, measured in items.items():
-            for arm, call in measured.items():
-                for key, result in call["results"].items():
-                    found[f"{group} {item}/{arm}/{key}"] = result
-    return found
+class Counted:
+    def __init__(self, L):
+        self.L, self.calls, self.tokens = L, 0, []
+
+    def llama_decode(self, ctx, batch):
+        self.calls += 1
+        self.tokens.append(batch.n_tokens)
+        return self.L.llama_decode(ctx, batch)
+
+    def __getattr__(self, name):
+        return getattr(self.L, name)
 
 
-def top(result):
-    return None if not result["p"] else result["p"][0] >= .5 if len(result["p"]) == 1 else int(np.argmax(result["p"]))
+def native(rt):
+    scorer = rt.judge().scorer
+    return getattr(getattr(scorer, "resident", None), "scorer", scorer)
 
 
-def agreement(a, b):
-    x, y = answers(a), answers(b)
-    keys = sorted(x.keys() & y.keys())
-    dp = [max((abs(p - q) for p, q in zip(x[k]["p"], y[k]["p"])), default=0.) for k in keys]
-    flips = [{"answer": k, "a": x[k], "b": y[k]} for k in keys if (x[k]["value"], x[k]["status"]) != (y[k]["value"], y[k]["status"])]
-    return {"answers": len(keys), "unmatched": len(x.keys() ^ y.keys()), "identical": sum(x[k] == y[k] for k in keys),
-            "answer_changes": sum(top(x[k]) != top(y[k]) for k in keys),
-            "acceptance_changes": sum(x[k]["status"] != y[k]["status"] for k in keys), "accepted_changes": len(flips),
-            "max_dp": max(dp, default=0.), "mean_dp": float(np.mean(dp)) if dp else 0., "flips": flips}
+def captured(rt, switch, inputs, facts):
+    scorer, requests = native(rt), []
+    score = scorer.score
+
+    def record(batch, **kwargs):
+        requests.extend((request, kwargs) for request in batch)
+        return score(batch, **kwargs)
+    with patch.object(scorer, "score", record):
+        for data in inputs:
+            switch(data, facts=facts)
+    return requests
 
 
-def population(arm):
-    return arm.split(":")[0]
+def replay(scorer, request, kwargs, grouped):
+    from semantic_switch.protocols import ScoreBlock
+    width = max(len(slots) for slots in request.slots)
+    out, done = ScoreBlock.empty(len(request.suffixes), width), set()
+    with scorer.operation():
+        scorer._bind(kwargs.get("lora"), kwargs.get("binding"))
+        if not grouped:
+            scorer._shared(request, 0, out)
+            return out
+        c = scorer.ctx
+        scorer._ensure_prefix(request.prefix)
+        sequence = scorer._ensure_state(request.prefix, request.state)
+        branches = [c_ for c_ in range(scorer.layout.branch, c.n_seq_max) if c_ not in scorer._resident.values()]
+        base, write = len(request.prefix) + len(request.state), scorer._emit(out, done)
+        try:
+            for start in range(0, len(request.suffixes), len(branches)):
+                stop = min(start + len(branches), len(request.suffixes))
+                used = branches[:stop - start]
+                for branch in used:
+                    c.cp(sequence, branch)
+                c.outputs_per_decode = len(used)
+                c.decode(tuple((request.suffixes[row], base, branch, (row, request.slots[row])) for row, branch in zip(range(start, stop), used)), write)
+                for branch in used:
+                    c.rm(branch)
+        finally:
+            c.outputs_per_decode = scorer.layout.outputs_per_decode
+            for branch in branches:
+                c.rm(branch)
+        if done != set(range(len(request.suffixes))):
+            raise RuntimeError(f"grouped decode materialized outputs {sorted(done)}, not every suffix row")
+        return out
 
 
-def latency(runs):
-    found = {}
-    for run in runs:
-        for measured in run["cases"].values():
-            for arm, call in measured.items():
-                if population(arm) in POPULATIONS:
-                    found.setdefault(population(arm), []).append(call)
-    return {name: {"ms": percentiles([call["ms"] for call in calls]),
-                   "ms_per_question": percentiles([call["ms"] / len(call["questions"]) for call in calls]),
-                   "submissions": sum(call["work"]["submissions"] for call in calls) / len(calls)}
-            for name, calls in found.items()}
+def grouped_control(args):
+    from semantic_switch.artifacts import load_receipt
+    from semantic_switch.tools.deployment import fitted
+    from bench import evidence
+    from bench.snapshots import DOMAINS, requested
+    domain = DOMAINS["zt411"]
+    data = evidence.read(args.pack, args.corpus)
+    _, frames, meta = evidence.frames_of(data, args.pack)
+    inputs = [frame.input for frame in frames if meta[frame.id]["role"] == "check" and frame.condition == domain.module.TRAINED][:args.frames]
+    receipt = load_receipt(args.receipt)
+    with runtime(fitted(args.receipt, n_ctx=args.n_ctx, prefix_slots=args.prefix_slots)) as rt:
+        switch = rt.load(receipt.verified_task(), allow_model_change=True)
+        facts = requested(domain.scoped(files.read_yaml(receipt.verified_task())["facts"]))
+        requests = captured(rt, switch, inputs, facts)
+        scorer = native(rt)
+        counted = Counted(scorer.ctx.L)
+        scorer.ctx.L = counted
+        rows, stable = {"serial": [], "grouped": []}, True
+        for request, kwargs in requests:
+            replay(scorer, request, kwargs, False)
+            replay(scorer, request, kwargs, True)
+        for request, kwargs in requests:
+            blocks = {}
+            for name in (("serial", "grouped") if len(rows["serial"]) % 2 == 0 else ("grouped", "serial")):
+                samples = []
+                for _ in range(args.repeats):
+                    calls, tokens = counted.calls, len(counted.tokens)
+                    begin = time.perf_counter()
+                    block = replay(scorer, request, kwargs, name == "grouped")
+                    samples.append({"ms": (time.perf_counter() - begin) * 1000, "decode_calls": counted.calls - calls,
+                                    "submitted_tokens": sum(counted.tokens[tokens:])})
+                    stable = stable and (name not in blocks or np.array_equal(blocks[name].logp, block.logp))
+                    blocks[name] = block
+                rows[name].append({"suffixes": len(request.suffixes), "suffix_tokens": sum(map(len, request.suffixes)), "state_tokens": len(request.state),
+                                   "decode_calls": samples[-1]["decode_calls"], "submitted_tokens": samples[-1]["submitted_tokens"],
+                                   "latency": latency(sample["ms"] for sample in samples)})
+            serial, grouped = blocks["serial"], blocks["grouped"]
+            finite = np.isfinite(serial.logp) & np.isfinite(grouped.logp)
+            rows["grouped"][-1]["versus_serial"] = {"max_abs_logp": float(np.max(np.abs(serial.logp[finite] - grouped.logp[finite]))) if finite.any() else None,
+                                                    "argmax_changes": int(np.sum(np.argmax(serial.logp, 1) != np.argmax(grouped.logp, 1)))}
+        workflow = workflow_control(rt, switch, inputs, facts, scorer, counted, args.repeats)
+        return {"execution": rt.execution(), "requests": len(requests), "frames": len(inputs), "same_shape_bit_stable": stable,
+                'workflow': workflow,
+                "kv": {key: scorer.ctx.realized[key] for key in ("kv_unified", "n_ubatch")}, "n_batch": scorer.ctx.n_batch,
+                "totals": {name: {"decode_calls": sum(r["decode_calls"] for r in found), "submitted_tokens": sum(r["submitted_tokens"] for r in found),
+                                  "p50_ms_sum": sum(r["latency"]["p50"] for r in found)} for name, found in rows.items()},
+                "argmax_changes": sum(r["versus_serial"]["argmax_changes"] for r in rows["grouped"]),
+                "max_abs_logp": max((r["versus_serial"]["max_abs_logp"] or 0.) for r in rows["grouped"]),
+                "scope": "white-box development control on one context: same KV layout, same requests and tokens; serial is the production path, grouped "
+                         "uses currently free streams on this instance only; group width can change with prefix residency. Timings include production reduction",
+                "rows": rows}
 
 
-def measured_run(name, model, data):
-    with layout(name):
-        estimate = model._host_bytes()
-        reset_peak()
-        with runtime(model) as rt:
-            session = Session(rt)
-            session.ask("warm up", {"warm": Check("The text is about food.")})
-            out = {"layout": name, "execution": execution_identity(rt.judge().scorer.capacity()),
-                   "buffers": rt.judge().scorer.capacity()["buffers"], "estimated_host_bytes": estimate,
-                   "provenance": diagnostics.provenance(rt, [text for text, _ in data], boundary="public Runtime.ask; cache reset through LlamaScorer.invalidate"),
-                   "cases": {}, "histories": {}}
-            for index in range(len(data)):
-                found = arms(session, data, index)
-                session.cold()
-                found["long_suffix"] = session.ask(data[index][0], {**data[index][1], "long": LONG})
-                out["cases"][str(index)] = found
-                print(name, index, round(found["cold"]["ms"]), flush=True)
-            for index, target in (item for item in TARGETS if item[0] < len(data)):
-                out["histories"][f"{index}:{target}"] = history(session, data, index, target)["arms"]
-    out["peak_rss_bytes"] = peak_rss()[0]
-    return out
-
-
-def summarize(runs):
-    by = {name: [run for run in runs if run["layout"] == name] for name in LAYOUTS}
-    first, second = by.values()
-    return {"within": {name: agreement(*found[:2]) for name, found in by.items() if len(found) > 1},
-            "across": {f"run {n}": agreement(a, b) for n, (a, b) in enumerate(zip(first, second))},
-            "latency": {name: latency(found) for name, found in by.items()},
-            "memory": {name: {"estimated_host_bytes": found[0]["estimated_host_bytes"], "buffers": found[0]["buffers"],
-                              "peak_rss_bytes": [run["peak_rss_bytes"] for run in found],
-                              **{key: found[0]["execution"][key] for key in ("n_seq_max", "n_outputs_max")}}
-                       for name, found in by.items()},
-            "identity_changed": sorted(k for k in first[0]["execution"] if first[0]["execution"][k] != second[0]["execution"].get(k))}
+def workflow_control(rt, switch, inputs, facts, scorer, counted, repeats):
+    from semantic_switch.protocols import ScoreBlock
+    original = scorer.score
+    def grouped(requests, **kwargs):
+        blocks = [replay(scorer, request, kwargs, True) for request in requests]
+        result = ScoreBlock.empty(sum(len(block.logp) for block in blocks), max(block.logp.shape[1] for block in blocks))
+        start = 0
+        for block in blocks:
+            stop = start + len(block.logp)
+            result.logp[start:stop, :block.logp.shape[1]], result.log_mass[start:stop], result.error[start:stop] = block.logp, block.log_mass, block.error
+            start = stop
+        return result
+    def semantic(result):
+        out = {'status': result.status, 'answer': result.answer, 'rule': result.rule,
+                'facts': {name: {key: value for key, value in fact.as_dict().items() if key in ('status', 'value', 'settled', 'prediction', 'complete', 'states', 'unresolved')}
+                          for name, fact in result.facts.items()}}
+        for fact in out['facts'].values():
+            if fact.get('prediction') is not None:
+                fact['prediction'] = {key: value for key, value in fact['prediction'].items() if key != 'score'}
+        return out
+    rows, decisions = {'serial': [], 'grouped': []}, {}
+    for repeat in range(repeats):
+        for name in (('serial', 'grouped') if repeat % 2 == 0 else ('grouped', 'serial')):
+            calls, began = counted.calls, time.perf_counter()
+            with patch.object(scorer, 'score', grouped if name == 'grouped' else original):
+                found = [semantic(switch(data, facts=facts)) for data in inputs]
+            rows[name].append({'ms': (time.perf_counter() - began) * 1000, 'decode_calls': counted.calls - calls})
+            decisions.setdefault(name, []).append(found)
+    return {'unit': 'whole operation over fixed situations', 'situations': len(inputs),
+            'latency': {name: latency(row['ms'] for row in measured) for name, measured in rows.items()},
+            'decode_calls': {name: [row['decode_calls'] for row in measured] for name, measured in rows.items()},
+            'decision_changes': sum(left != right for a, b in zip(decisions['serial'], decisions['grouped']) for left, right in zip(a, b)),
+            'same_shape_decision_stable': all(found == runs[0] for runs in decisions.values() for found in runs),
+            'decisions': {name: runs[0] for name, runs in decisions.items()}}
 
 
 def model_of(args):
@@ -204,21 +252,16 @@ def model_of(args):
 
 
 def reducer(args):
-    data = cases(1)
+    data = cases(work_directory(args.output, args.work), 1)
     with runtime(model_of(args)) as rt:
         rt.ask("warm up", {"warm": Check("The text is about food.")})
-        return {"execution": execution_identity(rt.judge().scorer.capacity()), "n_vocab": rt.judge().scorer.weights.n_vocab,
+        return {"execution": rt.execution(), "n_vocab": rt.judge().scorer.weights.n_vocab,
                 "shapes": profile(rt, data, args.repeats)}
-
-
-def layouts(args):
-    model, data = model_of(args), cases(args.cases)
-    runs = [measured_run(name, model, data) for name in ORDER]
-    return {**summarize(runs), "order": ORDER, "cases": args.cases, "runs": runs}
 
 
 def implementation(args):
     output = {}
+    destination(args.output)
     for name, model in (("gpu", Model("ggml-org/gemma-4-E2B-it-GGUF:gemma-4-E2B-it-Q4_0.gguf", device="gpu")),
                         ("cpu", Model("unsloth/Qwen3-0.6B-GGUF:Qwen3-0.6B-Q4_K_M.gguf", adapter="qwen3", device="cpu"))):
         begin = time.perf_counter()
@@ -226,7 +269,7 @@ def implementation(args):
             judge, load = rt.judge(), (time.perf_counter() - begin) * 1000
             claim = CONFORMANCE_QUESTIONS[0].text
             rt.check(CONFORMANCE_PROBES[0], claim)
-            row = {"provenance": diagnostics.provenance(rt, CONFORMANCE_PROBES), "load_ms": load,
+            row = {"provenance": provenance(rt, CONFORMANCE_PROBES, boundary="explicit backend diagnostic"), "load_ms": load,
                    "cached_check": timings(lambda i: rt.check(CONFORMANCE_PROBES[0], claim), 10),
                    "new_check": timings(lambda i: rt.check(f"{CONFORMANCE_PROBES[0]} new-{i}", claim), 10)}
             for count in (1, 4, 7):
@@ -238,7 +281,6 @@ def implementation(args):
                 row[f"batch_{count}"] = timings(lambda i: rt.ask_many([f"{CONFORMANCE_PROBES[k % 3]} batch-{i}-{k}" for k in range(count)],
                                                                       {"check": Check(claim)}), 5)
             if name == "gpu":
-                row["fusion"] = diagnostics.fusion_comparison(rt, lambda i: [(f"{CONFORMANCE_PROBES[0]} arm-{i}", CONFORMANCE_QUESTIONS)], 10)
                 if args.cost_curves:
                     row["cost_curve"] = diagnostics.cost_curve(rt)
                 row["native_attribution"] = diagnostics.timing(rt, [(CONFORMANCE_PROBES[0], CONFORMANCE_QUESTIONS[:1])], 5)
@@ -246,25 +288,41 @@ def implementation(args):
                 row["embedding_control"] = {k: v for k, v in diagnostics.vectors(rt, [(CONFORMANCE_PROBES[0], CONFORMANCE_QUESTIONS[:1])]).items()
                                             if k not in ("vectors", "results")}
             output[name] = row
-            files.publish(IMPLEMENTATION, output)
+            files.publish(args.output, output)
             print(json.dumps({"finished": name, "load_ms": load, "cached": row["cached_check"], "new": row["new_check"]}), flush=True)
 
 
 def main():
     parser = argparse.ArgumentParser(description="Explicit development diagnostics; production settings remain unchanged.")
     commands = parser.add_subparsers(dest="command", required=True)
-    commands.add_parser("implementation").add_argument("--cost-curves", action="store_true")
-    for name in ("reducer", "layout"):
-        command = commands.add_parser(name)
-        command.add_argument("--model", required=True)
-        command.add_argument("--device", default="gpu")
-        command.add_argument("--repeats", type=int, default=10)
-        command.add_argument("--cases", type=int, default=5)
+    command = commands.add_parser("implementation")
+    command.add_argument("--cost-curves", action="store_true")
+    output_argument(command)
+    command = commands.add_parser("grouped")
+    command.add_argument("--receipt", required=True)
+    command.add_argument("--pack", required=True)
+    command.add_argument("--corpus")
+    command.add_argument("--frames", type=int, default=8)
+    command.add_argument("--repeats", type=int, default=5)
+    command.add_argument("--n-ctx", type=int)
+    command.add_argument("--prefix-slots", type=int, default=4)
+    output_argument(command)
+    command = commands.add_parser("reducer")
+    command.add_argument("--model", required=True)
+    command.add_argument("--device", default="gpu")
+    command.add_argument("--repeats", type=int, default=10)
+    output_argument(command)
+    work_argument(command)
     args = parser.parse_args()
     if args.command == "implementation":
         return implementation(args)
-    found = {"reducer": reducer, "layout": layouts}[args.command](args)
-    files.publish(OUTPUT, {**(files.read_json(OUTPUT) or {}), "schema": 1, "model": args.model, "device": args.device, args.command: found})
+    if args.command == "grouped":
+        found = grouped_control(args)
+        report(args.output, {"schema": 1, "receipt": args.receipt, "grouped": found})
+        print(json.dumps({k: v for k, v in found.items() if k != "rows"}, default=str))
+        return
+    found = reducer(args)
+    report(args.output, {"schema": 1, "model": args.model, "device": args.device, args.command: found})
     print(json.dumps({k: v for k, v in found.items() if k != "runs"}, default=str)[:4000])
 
 

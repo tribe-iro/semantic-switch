@@ -5,25 +5,50 @@ ENTERED_NS = time.perf_counter_ns()
 
 import argparse
 import json
-from pathlib import Path
-import subprocess
 import sys
 
-import numpy as np
 from semantic_switch import Pick, Rate, Check, DEFAULT_JUDGE, PRECISE_JUDGE, Model, files
 from bench import quality
-from bench.outcomes import failure, measure, runtime as model_runtime, task
+from bench.outcomes import failure, latency, measure, output_argument, process, provenance, report, runtime as model_runtime, task
 from bench.fresh import FRESH, FRESH_PICKS, FRESH_TOPICS, FRESH_QUESTION
+
+GRID = tuple(round(.5 + k / 100, 2) for k in range(50))
+FIXED = (.5, .8, .9, .95, .99)
+
+
+def threshold(rows, *, target, minimum):
+    return next((t for t in GRID if (s := quality.selective(rows, t))["accepted"] >= minimum and s["precision"] >= target), None)
+
+
+def tuned(rows, *, target=.95, minimum=10):
+    pairs = sorted({row["pair"] for row in rows})
+    halves = (set(pairs[0::2]), set(pairs[1::2]))
+    folds = []
+    for tune, held in (halves, halves[::-1]):
+        chosen = threshold([r for r in rows if r["pair"] in tune], target=target, minimum=minimum)
+        test = [r for r in rows if r["pair"] in held]
+        folds.append({"threshold": chosen, "held": quality.selective(test, chosen) if chosen is not None else
+                      {"threshold": None, "accepted": 0, "correct": 0, "total": len(test), "coverage": 0, "precision": None}})
+    accepted, correct = sum(f["held"]["accepted"] for f in folds), sum(f["held"]["correct"] for f in folds)
+    return {"target": target, "minimum_accepted": minimum, "grid": [GRID[0], GRID[-1], .01],
+            "split": "two-fold cross-fitting over whole contrast pairs; each threshold is tuned on one half and applied to the other",
+            "folds": folds, "coverage": accepted / len(rows) if rows else None, "precision": correct / accepted if accepted else None,
+            "fixed": [quality.selective(rows, t) for t in FIXED]}
+
+
+def suite(rt, *, checks_spec=None, picks_spec=None, topics=None, question=quality.TOPIC_QUESTION, target=.95, minimum=10):
+    raw = quality.run(rt, checks_spec=checks_spec, picks_spec=picks_spec, topics=topics, question=question)
+    return {"raw": raw, "summary": {**quality.summarize(raw), "tuned": tuned(raw["checks"], target=target, minimum=minimum)},
+            "provenance": provenance(rt, list(quality.check_items(checks_spec)))}
 
 
 def timings(operation, repeats=6):
     measured = [measure(lambda: operation(index)) for index in range(repeats)]
     done = [item for item in measured if item.error is None]
-    samples = [item.ms for item in done]
-    return {'samples_ms': samples, 'observations': [item.output for item in done], 'samples': repeats,
+    return {'observations': [item.output for item in done], 'submitted': repeats,
             'failed': [failure(item, index=index) for index, item in enumerate(measured) if item.error is not None],
             'peak_rss_bytes': max((item.peak_rss_bytes for item in done if item.peak_rss_bytes is not None), default=None),
-            'p50_ms': float(np.percentile(samples, 50)) if samples else None, 'p95_ms': float(np.percentile(samples, 95)) if samples else None}
+            'samples_ms': [item.ms for item in done], 'latency': latency(item.ms for item in done)}
 
 
 def heterogeneous_workload():
@@ -58,14 +83,13 @@ def run(source, *, device='auto', repeats=6, suites=True):
             questions = {str(k): Check('The customer asks for a refund.') for k in range(count)}
             timing[f'identical_question_branch_packing_{count}'] = timings(lambda n: runtime.ask(case + f' Questions {n}', questions), repeats)
             row = timings(lambda n: runtime.ask_many([case + f' Batch {n} item {k}' for k in range(count)], item), repeats)
-            row['inputs_per_second'] = count * 1000 / row['p50_ms'] if row['p50_ms'] else None
+            row['inputs_per_second'] = count * 1000 / row['latency']['p50'] if row['latency']['p50'] else None
             timing[f'finite_batch_{count}'] = row
         workload_case, guidance, questions, gold = heterogeneous_workload()
         heterogeneous = timings(lambda n: runtime.ask(workload_case + f' Record {n}.', questions, guidance=guidance), repeats)
         heterogeneous['expected'] = gold
         heterogeneous['input'] = workload_case
-        heterogeneous['tasks'] = {key: task(runtime, item, workload_case, guidance, heterogeneous['observations'][0][key]) for key, item in questions.items()} \
-            if heterogeneous['observations'] else None
+        heterogeneous['tasks'] = {key: task(runtime, item, workload_case, guidance) for key, item in questions.items()}
         timing['heterogeneous_shared_guidance'] = heterogeneous
         from bench.guidance_latency import alternation
         result = {'schema': 2, 'population': 'consulted regression cohorts; not independent domain evidence',
@@ -74,10 +98,7 @@ def run(source, *, device='auto', repeats=6, suites=True):
                 'device_memory': 'unmeasured', 'actual_offload': 'unmeasured',
                 'timings': timing, 'alternating_guidance': alternation(runtime, repeats)}
         if suites:
-            original = quality.run(runtime)
-            fresh = quality.run(runtime, checks_spec=FRESH, picks_spec=FRESH_PICKS, topics=FRESH_TOPICS, question=FRESH_QUESTION)
-            result.update(quality={'summary': quality.summarize(original), 'observations': original},
-                          fresh={'summary': quality.summarize(fresh), 'observations': fresh})
+            result.update(quality=suite(runtime), fresh=suite(runtime, checks_spec=FRESH, picks_spec=FRESH_PICKS, topics=FRESH_TOPICS, question=FRESH_QUESTION))
         result['operation_peak_rss_bytes'] = max((row['peak_rss_bytes'] for row in timing.values() if row['peak_rss_bytes'] is not None), default=None)
         return result
 
@@ -86,11 +107,9 @@ def isolated(source, output, *, device='auto', repeats=6, suites=True):
     started = time.perf_counter()
     command = [sys.executable, '-m', 'bench.model_comparison', '--model', source, '--device', device,
                '--repeats', str(repeats), '--output', str(output), '--launched-ns', str(time.perf_counter_ns())]
-    if not suites:
-        command.append('--skip-suites')
-    completed = subprocess.run(command, capture_output=True, text=True)
-    if completed.returncode:
-        raise RuntimeError(f'isolated native measurement failed: {completed.stderr[-4000:]}')
+    done = process([*command, *([] if suites else ['--skip-suites'])])
+    if done['exit_code']:
+        raise RuntimeError(f"isolated native measurement failed: {done['stderr'][-4000:]}")
     result = files.read_json(output)
     result['process_total_ms'] = (time.perf_counter() - started) * 1000
     result['memory_boundary'] = 'fresh subprocess for this model/device arm'
@@ -100,31 +119,26 @@ def isolated(source, output, *, device='auto', repeats=6, suites=True):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model')
+    parser.add_argument('--model', help='one isolated arm; without it both default judges run in fresh subprocesses')
     parser.add_argument('--device', default='auto')
     parser.add_argument('--repeats', type=int, default=6)
     parser.add_argument('--skip-suites', action='store_true')
-    parser.add_argument('--output', type=Path)
+    output_argument(parser, help='--model: the arm report; otherwise the directory receiving one report per default judge')
     parser.add_argument('--launched-ns', type=int)
     args = parser.parse_args()
     if args.repeats < 1:
         parser.error('--repeats must be positive')
     if args.model:
-        if not args.output:
-            parser.error('--output is required for an isolated arm')
         imports_ms = (time.perf_counter_ns() - ENTERED_NS) / 1e6
         result = run(args.model, device=args.device, repeats=args.repeats, suites=not args.skip_suites)
         result['process_startup_ms'] = (ENTERED_NS - args.launched_ns) / 1e6 if args.launched_ns is not None else None
         result['module_imports_and_argument_parsing_ms'] = imports_ms
-        files.publish(args.output, result)
-    else:
-        if args.output:
-            parser.error('--output requires --model')
-        for tag, source in (('e2b', DEFAULT_JUDGE), ('e4b', PRECISE_JUDGE)):
-            result = isolated(source, Path(f'bench/results/model-comparison-{tag}.json'), device=args.device,
-                              repeats=args.repeats, suites=not args.skip_suites)
-            print(json.dumps({'model': tag, 'preparation_ms': result['model_preparation_ms'],
-                              'operation_peak_rss_bytes': result['operation_peak_rss_bytes']}), flush=True)
+        report(args.output, result)
+        return
+    for tag, source in (('e2b', DEFAULT_JUDGE), ('e4b', PRECISE_JUDGE)):
+        result = isolated(source, args.output / f'{tag}.json', device=args.device, repeats=args.repeats, suites=not args.skip_suites)
+        print(json.dumps({'model': tag, 'preparation_ms': result['model_preparation_ms'],
+                          'operation_peak_rss_bytes': result['operation_peak_rss_bytes']}), flush=True)
 
 
 if __name__ == '__main__':

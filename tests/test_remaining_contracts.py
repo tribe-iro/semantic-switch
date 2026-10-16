@@ -5,13 +5,13 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from semantic_switch import Check, ConfigError, Guidance, Model, Pick, Runtime, files, tools
+from semantic_switch import Actor, Check, ConfigError, Guidance, Model, Pick, Runtime, files, tools
 from semantic_switch import backend
 from semantic_switch.cli import question_specs
 from semantic_switch.judge import Scored, Scores
 from semantic_switch.judgment import Policy
 from semantic_switch.tools.evaluate import contrasts
-from tests.conftest import FakeScorer
+from semantic_testkit.scoring import FakeScorer
 
 
 def definition(tmp_path, **changes):
@@ -56,7 +56,7 @@ def test_cli_question_guidance_matches_sdk(tmp_path):
     files.publish(path, {"refund": {"check": "Refund requested.", "guidance": "Store credit is not a refund.", "unstated": True}})
     item = question_specs(path)["refund"]
     sdk = Check("Refund requested.", unstated=True, guidance="Store credit is not a refund.")
-    with Runtime({"judge": FakeScorer(lambda *args: [.99, .005, .005])}) as rt:
+    with Runtime(FakeScorer(lambda *args: [.99, .005, .005])) as rt:
         assert rt.ask("case", {"refund": item})["refund"].as_dict() == rt.ask("case", {"refund": sdk})["refund"].as_dict()
 
 
@@ -83,7 +83,7 @@ def test_cli_question_rejects_callbacks_before_model_load(tmp_path, monkeypatch)
 def test_cli_explicit_empty_guidance_replaces_operation_binding(tmp_path):
     path = tmp_path / "questions.yaml"
     files.publish(path, {"inherit": {"check": "Claim."}, "empty": {"check": "Claim.", "guidance": []}})
-    with Runtime({"judge": FakeScorer(lambda *args: [.99, .01])}) as rt:
+    with Runtime(FakeScorer(lambda *args: [.99, .01])) as rt:
         results = rt.ask("case", question_specs(path), guidance="Definitions.")
     assert results["inherit"].guidance and not results["empty"].guidance
 
@@ -92,23 +92,23 @@ def test_cli_pick_focus_matches_sdk(tmp_path):
     path = tmp_path / "questions.yaml"
     options = {"AX-1": "first", "AX-2": "second"}
     files.publish(path, {"x": {"pick": "Choose.", "options": options, "focus": "mentions"}})
-    with Runtime({"judge": FakeScorer(lambda *args: [.99, .01])}) as rt:
+    with Runtime(FakeScorer(lambda *args: [.99, .01])) as rt:
         cli = rt.ask("AX-1", question_specs(path))["x"]
         sdk = rt.ask("AX-1", {"x": Pick("Choose.", options, focus="mentions")})["x"]
     assert cli.as_dict(True) == sdk.as_dict(True)
 
 
 def test_corrected_guided_fact_retains_binding(tmp_path):
-    with Runtime({"judge": FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         sw = rt.load(definition(tmp_path))
-        sw.correct("case", fact="refund", value=True)
+        sw.correct("case", fact="refund", value=True, actor=Actor('human'))
         result = sw("case")
         assert result.facts["refund"].source == "example"
         assert result.facts["refund"].guidance == sw.plan.fact("refund").judgment.guidance.references
 
 
 def test_admitted_head_guided_fact_retains_binding(tmp_path):
-    with Runtime({"judge": FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         sw = rt.load(definition(tmp_path))
         sw._snap = replace(sw.snapshot, heads={"refund": SimpleNamespace(probs_features=lambda _: [.99, .005, .005])},
                            policies={"classifier": {"refund": Policy()}})
@@ -117,34 +117,30 @@ def test_admitted_head_guided_fact_retains_binding(tmp_path):
 
 
 def test_immediate_inline_result_retains_guidance():
-    with Runtime({"judge": FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         result = rt.ask("case", {"x": Pick("Choose.", {"a": "first"}, eligible=lambda key: False, allow_none=True)}, guidance="Definitions.")["x"]
         assert result.status == "none" and result.guidance == Guidance("Definitions.").references
 
 
 def test_guidance_binding_event_parity(tmp_path):
     events = []
-    with Runtime({"judge": FakeScorer()}, on_decision=events.append) as rt:
+    with Runtime(FakeScorer(), on_decision=events.append) as rt:
         sw = rt.load(definition(tmp_path))
-        sw.correct("case", fact="refund", value=True)
+        sw.correct("case", fact="refund", value=True, actor=Actor('human'))
         result = sw("case")
     assert events[-1].facts["refund"]["guidance"] == result.facts["refund"].guidance
 
 
 def test_switch_insufficient_evidence_render_names_unresolved_fact(tmp_path):
-    with Runtime({"judge": FakeScorer(lambda *args: [.005, .005, .99])}) as rt:
+    with Runtime(FakeScorer(lambda *args: [.005, .005, .99])) as rt:
         result = rt.load(definition(tmp_path))("case")
     assert result.status == "needs_input" and not result.missing
     assert "refund" in str(result) and "insufficient" in str(result)
     assert "refund" in repr(result) and "missing " not in repr(result)
 
 
-def test_contrast_memberships_singular_plural_equivalent():
-    assert contrasts([(0, 0), (1, 1)], [{"pair": "p"}] * 2) == contrasts([(0, 0), (1, 1)], [{"pairs": ["p"]}] * 2)
-
-
 def test_contrast_multiple_memberships_count_once_per_membership():
-    result = contrasts([(0, 0), (1, 1)], [{"pair": "p", "pairs": ["p", "q", "q"]}] * 2)
+    result = contrasts([(0, 0), (1, 1)], [{"pairs": ["p", "q", "q"]}] * 2)
     assert result["pairs"] == result["pairs_both_correct"] == 2
 
 
@@ -184,13 +180,13 @@ class ReceiptJudge:
 
 def locked_switch(tmp_path, rt, **changes):
     sw = rt.load(definition(tmp_path, **changes))
-    sw._snap = replace(sw.snapshot, locked=True, returned_models=("old-v1",))
+    sw._snap = replace(sw.snapshot, locked=True, returned_models={"judge": ("old-v1",)})
     return sw
 
 
 @pytest.mark.parametrize("model,error", [("new-v2", "predictor_identity_changed"), (None, "predictor_identity_unverified")])
 def test_hosted_drift_blocks_old_lock_policy(tmp_path, model, error):
-    with Runtime({"judge": ReceiptJudge([model])}) as rt:
+    with Runtime(ReceiptJudge([model])) as rt:
         result = locked_switch(tmp_path, rt)("case")
     assert result.status == "failed" and result.errors["refund"] == error
     assert result.cost["logical_tokens"] == 17
@@ -198,13 +194,13 @@ def test_hosted_drift_blocks_old_lock_policy(tmp_path, model, error):
 
 
 def test_hosted_matching_receipt_preserves_acceptance(tmp_path):
-    with Runtime({"judge": ReceiptJudge(["old-v1"])}) as rt:
+    with Runtime(ReceiptJudge(["old-v1"])) as rt:
         assert locked_switch(tmp_path, rt)("case").status == "ok"
 
 
 def test_hosted_focus_fallback_checks_each_receipt(tmp_path):
     judge = ReceiptJudge(["old-v1", "new-v2"])
-    with Runtime({"judge": judge}) as rt:
+    with Runtime(judge) as rt:
         sw = locked_switch(tmp_path, rt, facts={"route": {"pick": "Choose.", "options": {"AX-1": "first", "AX-2": "second"}, "focus": "mentions"}})
         result = sw("AX-1")
     assert judge.calls == 2 and result.status == "failed"
@@ -213,8 +209,8 @@ def test_hosted_focus_fallback_checks_each_receipt(tmp_path):
 
 def test_unrelated_drift_preserves_exact_settled_action(tmp_path):
     judge = ReceiptJudge([])
-    with Runtime({"judge": judge}) as rt:
-        sw = locked_switch(tmp_path, rt, cases=[{"id": "exact", "when": "message == 'case'", "then": "accepted"},
+    with Runtime(judge) as rt:
+        sw = locked_switch(tmp_path, rt, rules=[{"id": "exact", "when": "message == 'case'", "then": "accepted"},
                                              {"id": "semantic", "when": "refund", "then": "other"}])
         result = sw("case")
     assert result.status == "ok" and result.answer == "accepted" and judge.calls == 0
@@ -222,7 +218,7 @@ def test_unrelated_drift_preserves_exact_settled_action(tmp_path):
 
 def test_allow_model_change_resets_receipt_baseline_and_policy(tmp_path):
     path = definition(tmp_path, guidance={}, facts={"refund": {"check": "Refund requested."}})
-    with Runtime({"judge": ReceiptJudge(['old-v1'])}) as rt:
+    with Runtime(ReceiptJudge(['old-v1'])) as rt:
         tools.lock(rt, path)
     payload = files.read_json(path.with_suffix(".lock.json"))
     payload["returned_models"] = {"judge": ["old-v1"]}
@@ -231,9 +227,9 @@ def test_allow_model_change_resets_receipt_baseline_and_policy(tmp_path):
     files.publish(path.with_suffix(".lock.json"), payload)
     changed = ReceiptJudge(["new-v2"])
     changed.identity = {**changed.identity, "model": "requested-v2"}
-    with Runtime({"judge": changed}) as rt:
+    with Runtime(changed) as rt:
         sw = rt.load(path, allow_model_change=True)
-        assert not sw.snapshot.returned_models and "judge" not in sw.snapshot.policies
+        assert sw.snapshot.returned_models == {"judge": ()} and "judge" not in sw.snapshot.policies
         assert sw.warnings and sw("case").status == "ok"
 
 
@@ -242,10 +238,10 @@ def test_policy_audit_replays_frozen_labels_and_denominators(tmp_path):
     from semantic_switch.examples import label_record
     path = definition(tmp_path)
     audit = tmp_path / 'audit.jsonl'
-    with Runtime({'judge': FakeScorer(lambda *args: [.99, .005, .005])}) as rt:
+    with Runtime(FakeScorer(lambda *args: [.99, .005, .005])) as rt:
         tools.lock(rt, path)
         sw = rt.load(path)
-        row = label_record(sw.plan, {'message': 'case'}, {'refund': True}, groups=['family'], sources={'refund': [{'origin': 'human', 'producer': 'fixture'}]})
+        row = label_record(sw.plan, {'message': 'case'}, {'refund': True}, groups=['family'], sources={'refund': [{'derivation': 'authored', 'producer': 'fixture', 'actor': {'kind': 'human'}}]})
         files.publish(audit, json.dumps(row) + '\n')
         candidate = sw.snapshot.candidate_id
         artifact = run(rt, path, audit)
@@ -270,9 +266,9 @@ def test_native_topology_rejected_before_resolution(monkeypatch):
 def test_policy_audit_case_and_fact_denominators_separate():
     from bench.policy_audit import summarize
     rows = [{'case_labelled': True, 'expected_case': 'refund', 'labels': {'refund': True},
-             'result': {'status': 'ok', 'case': 'support', 'facts': {'refund': {'settled': True, 'value': True}}}},
+             'result': {'status': 'ok', 'rule': 'support', 'facts': {'refund': {'settled': True, 'value': True}}}},
             {'case_labelled': True, 'expected_case': 'refund', 'labels': {'refund': True},
-             'result': {'status': 'failed', 'case': None, 'facts': {}}}]
+             'result': {'status': 'failed', 'rule': None, 'facts': {}}}]
     result = summarize(rows)
     assert result['cases']['submitted'] == result['fact:refund']['submitted'] == 2
     assert result['cases']['wrong'] == 1 and result['cases']['failed'] == 1
@@ -284,10 +280,10 @@ def test_policy_audit_raw_argmax_keeps_abstentions_in_denominator(tmp_path):
     from semantic_switch.examples import label_record
     path = definition(tmp_path)
     audit = tmp_path / 'audit.jsonl'
-    with Runtime({'judge': FakeScorer(lambda *args: [.6, .2, .2])}) as rt:
+    with Runtime(FakeScorer(lambda *args: [.6, .2, .2])) as rt:
         tools.lock(rt, path)
         sw = rt.load(path)
-        row = label_record(sw.plan, {'message': 'case'}, {'refund': True}, groups=['family'], sources={'refund': [{'origin': 'human', 'producer': 'fixture'}]})
+        row = label_record(sw.plan, {'message': 'case'}, {'refund': True}, groups=['family'], sources={'refund': [{'derivation': 'authored', 'producer': 'fixture', 'actor': {'kind': 'human'}}]})
         files.publish(audit, json.dumps(row) + '\n')
         artifact = run(rt, path, audit)
     metric = artifact['metrics']['fact:refund']
@@ -302,10 +298,10 @@ def test_policy_audit_invalid_metadata_fails_before_predictor(tmp_path):
     from semantic_switch.examples import label_record
     path = definition(tmp_path)
     audit = tmp_path / 'audit.jsonl'
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         tools.lock(rt, path)
         sw = rt.load(path)
-        row = label_record(sw.plan, {'message': 'case'}, {'refund': True}, groups=['family'], sources={'refund': [{'origin': 'human', 'producer': 'fixture'}]})
+        row = label_record(sw.plan, {'message': 'case'}, {'refund': True}, groups=['family'], sources={'refund': [{'derivation': 'authored', 'producer': 'fixture', 'actor': {'kind': 'human'}}]})
         row['selections'] = [{'selected_by': 'invented'}]
         files.publish(audit, json.dumps(row) + '\n')
         with pytest.raises(ConfigError, match='audit.jsonl:1:.*selection'):
@@ -333,6 +329,6 @@ def test_policy_audit_pairs_identical_cohort_and_rejects_label_changes():
 def test_policy_audit_all_case_labels_match_serialized_tuple_outcomes():
     from bench.policy_audit import summarize
     summary = summarize([{'case_labelled': True, 'expected_case': ['a', 'b'], 'labels': {},
-                          'result': {'status': 'ok', 'case': ('a', 'b'), 'facts': {}}}])
+                          'result': {'status': 'ok', 'rule': ('a', 'b'), 'facts': {}}}])
     assert summary['cases']['correct'] == 1 and summary['cases']['wrong'] == 0
     assert summary['cases']['all_row_agreement'] is None

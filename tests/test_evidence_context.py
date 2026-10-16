@@ -7,12 +7,14 @@ import pytest
 
 from semantic_switch import ConfigError, Runtime, files, tools
 from semantic_switch.artifacts import read_export
+from semantic_switch.compiler import digest
 from semantic_switch.families import FamilyIndex
 from semantic_switch.tools.data import Labels
 from semantic_switch.tools.dataset import EvidenceContext, evaluation_plan
 from bench import evidence, procedures
 
-from .conftest import FakeScorer, envelopes
+from semantic_testkit.labels import envelopes
+from semantic_testkit.scoring import FakeScorer
 
 CHAIN = [{'input': {'message': 'refund one'}, 'facts': {'refund': True}, 'groups': ['a'], 'role': 'check'},
          {'input': {'message': 'refund two'}, 'facts': {'refund': True}, 'groups': ['a'], 'pairs': ['p'], 'role': 'check'},
@@ -25,12 +27,12 @@ def switch(tmp_path, rows):
     path = tmp_path / 'chain.yaml'
     files.publish(path, {'name': 'chain', 'fields': {'message': {'type': 'text', 'required': True}, 'note': {'type': 'text'}}, 'reads': ['message'],
                          'facts': {'refund': {'check': 'The customer asks to receive money back for a charge.'}}})
-    files.append(path.with_suffix('.test.jsonl'), envelopes(rows))
+    files.append(path.with_suffix('.test.jsonl'), files.jsonl(envelopes(rows)))
     return path
 
 
 def materialized(path):
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         return Labels(rt.load(path, draft=True))
 
 
@@ -58,7 +60,7 @@ def test_unread_fields_rendered_duplicates_and_link_chains_share_one_family(tmp_
     (family,) = families
     assert {('group', 'a'), ('group', 'b'), ('pair', 'p')} <= set(labels.seeds(family))
     assert {kind for kind, _ in labels.seeds(family)} == {'group', 'key', 'observation', 'pair', 'rendered', 'situation'}
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         exported = tools.export(rt, path, split='all')
     _, rows = read_export(exported['path'], fitting=False)
     check = [row for row in rows if row['split'] == 'check']
@@ -109,15 +111,20 @@ def test_one_frozen_plan_is_one_consultation_and_changes_are_overlap(tmp_path):
         context.consult({**frozen, 'margin': .1}, families)
 
 
-def test_legacy_records_import_conservatively_and_missing_history_is_disclosed(tmp_path):
+def test_converted_exposure_withholds_independence_and_schema_1_is_refused(tmp_path):
     path = switch(tmp_path, CHAIN)
     labels = materialized(path)
     context = EvidenceContext.from_manifest(path.with_suffix('.dataset.json'))
     family = labels.group(('key', tools.common.input_key(labels.sw.plan, CHAIN[0]['input'])))
-    legacy = {'schema': 1, 'candidate_id': 'old', 'dataset_id': 'd', 'families': [family]}
-    files.append(context.audit, [legacy])
-    imported = context.consult(plan(candidate='new'), {family})
-    assert imported['state'] == 'consulted' and imported['history'] == 'imported' and files.read_jsonl(context.audit)[0] == legacy
+    old = {'arms': {'candidate': 'old'}, 'conversion': 'audit-schema-1'}
+    converted = {'schema': 2, 'plan': {**old, 'id': digest(old)}, 'dataset_id': 'd', 'families': [family], 'aliases': [family], 'seeds': [],
+                 'converted': {'schema': 1, 'candidate_id': 'old'}}
+    files.append(context.audit, files.jsonl([converted]))
+    found = context.consult(plan(candidate='new'), {family})
+    assert found['state'] == 'consulted' and not found['independent'] and found['history'] == 'recorded'
+    files.append(context.audit, files.jsonl([{'schema': 1, 'candidate_id': 'old', 'dataset_id': 'd', 'families': [family]}]))
+    with pytest.raises(ConfigError, match='malformed audit exposure record'):
+        context.consult(plan(candidate='newer'), {family})
     context.audit.unlink()
     for _ in range(2):
         missing = context.consult(plan(candidate='newer'), {family})
@@ -129,7 +136,7 @@ def test_ordinary_test_records_exposure_before_evaluation(tmp_path, monkeypatch)
     from semantic_switch.tools import evaluate
     path = definition(tmp_path)
     dataset(path, 40)
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         tools.lock(rt, path)
         before = len(files.read_jsonl(path.with_suffix('.audit.jsonl')))
         def interrupted(*args, **kwargs):
@@ -137,9 +144,17 @@ def test_ordinary_test_records_exposure_before_evaluation(tmp_path, monkeypatch)
         monkeypatch.setattr(evaluate, 'evaluate_facts', interrupted)
         rows = envelopes([{'input': {'message': f'refund new{i}'}, 'facts': {'refund': True}, 'group': f'new{i}'} for i in range(3)])
         files.publish(tmp_path / 'new.jsonl', ''.join(json.dumps(row) + '\n' for row in rows))
+        manifest = path.with_suffix('.dataset.json').read_bytes()
         with pytest.raises(KeyboardInterrupt):
             tools.run_test(rt, path, tmp_path / 'new.jsonl')
-    assert len(files.read_jsonl(path.with_suffix('.audit.jsonl'))) == before + 1
+    audit = files.read_jsonl(path.with_suffix('.audit.jsonl'))
+    assert len(audit) == before + 1 and path.with_suffix('.dataset.json').read_bytes() == manifest
+    sibling = path.with_suffix(f".dataset.{audit[-1]['dataset_id']}.json")
+    assert audit[-1]['manifest'] == sibling.name and files.read_published(sibling)['id'] == audit[-1]['dataset_id']
+    monkeypatch.undo()
+    with Runtime(FakeScorer()) as rt:
+        again = tools.run_test(rt, path, tmp_path / 'new.jsonl')
+    assert again['dataset'] == str(sibling) and again['dataset_id'] == audit[-1]['dataset_id'] and again['audit_use']['state'] == 'repeat'
 
 
 def test_stage_publishes_the_assignment_and_review_disclosure(tmp_path):
@@ -151,7 +166,7 @@ def test_stage_publishes_the_assignment_and_review_disclosure(tmp_path):
     context.bind(staged['labels'])
     roles = {row['role'] for row in files.read_jsonl(staged['labels'])}
     assert roles == {'fit', 'model_select', 'check'} and set(staged['families']) == roles
-    with Runtime({'judge': FakeScorer()}) as rt:
+    with Runtime(FakeScorer()) as rt:
         assert Labels(rt.load(staged['definition'], draft=True)).manifest['review'] == published['review']
     assert EvidenceContext.from_manifest(staged['evidence']).dataset_id == staged['dataset_id']
     reviews = evidence.read(tmp_path / 'pack')['reviews']

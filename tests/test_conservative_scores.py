@@ -4,9 +4,9 @@ import numpy as np
 import pytest
 import yaml
 
-from semantic_switch import Check, Runtime
+from semantic_switch import Check, Runtime, judge
 from semantic_switch.events import inline_event
-from semantic_switch.hosted import OpenRouterJudge, token_scores
+from semantic_switch.drivers.codecs import token_scores
 from semantic_switch.judge import SCORE_SEMANTICS, Scores
 from semantic_switch.judgment import Judgment, Policy, answer, settle, unpresent
 from semantic_switch.kernel import F, T, U
@@ -143,17 +143,17 @@ def test_threshold_changes_acceptance_without_changing_requests_or_scores(tmp_pa
     observations = []
     for theta in (.85, .95):
         provider = Provider(focused_rows)
-        with Runtime({"judge": OpenRouterJudge("m", transport=provider)}) as rt:
+        with Runtime(judge("openrouter:m", codec="chat", transport=provider)) as rt:
             inline = rt.pick("ax failed", "Which part failed?", OPTIONS, focus="mentions", min_score=theta)
             path.write_text(yaml.safe_dump({"name": "s", "fields": {"r": {"type": "text", "required": True}}, "reads": ["r"],
                                             "facts": {"part": {"pick": "Which part failed?", "options": OPTIONS, "focus": "mentions", "min_score": theta}}}))
             saved = rt.load(path)("ax failed").facts["part"]
             claim = Check("The customer asks for a refund.")
-            event = inline_event(rt, {"c": claim("x", rt)}, {"c": claim}, {})
+            event = inline_event(rt, {"c": claim("x", rt)}, {"c": claim}, {}, "call", 0)
         assert (inline.status, inline.value, inline.score) == (saved.status, saved.value, saved.score)
         assert inline.scores == dict(saved.scores) == {"ax": pytest.approx(.8 / .87)} and inline.prediction == saved.prediction
         observations.append((inline, [body["messages"][1]["content"] for body in provider.bodies]))
     (accepted, asked), (rejected, again) = observations
     assert accepted.status == "ok" and rejected.status == "uncertain" and asked == again and len(asked) == 3
     assert accepted.prediction == rejected.prediction and rejected.prediction.key == "ax" and rejected.focus == "mentions"
-    assert event.schema == 5 and event.score_semantics == SCORE_SEMANTICS
+    assert event.schema == 9 and event.score_semantics == SCORE_SEMANTICS

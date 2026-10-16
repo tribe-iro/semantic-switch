@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 import numpy as np
 
 from ..compiler import FactPlan
@@ -100,23 +102,17 @@ def fit_policy(fact: FactPlan, tune: list, default: Policy) -> Policy:
     return as_policy(fact, fit_report(fact, tune, default))
 
 
-def head_scores(fact: FactPlan, head, examples: list[Example], sw=None, snap=None) -> list:
-    observations = []
-    for example in examples:
-        dist, pending, error = list(head.probs(example.text)), frozenset(), None
-        if sw is not None:
-            call = sw.exec.start(snap or sw.snapshot, sw.bind(example.data, snap or sw.snapshot))
-            f = sw.plan.fact_index[fact.name]
-            if call.error is not None:
-                dist, error = None, str(call.error)
-            elif call.facts[f].missing:
-                dist, error = None, "missing input"
-            else:
-                dist = sw.exec._eligible_dist(call, f, dist)
-                pending = call.facts[f].pending
-        observations.append(Observation(example.id, example.data, example.label, dist, pending=pending,
-                                        error=error, group=example.group))
-    return observations
+def observed(example: Example, row, name: str) -> Observation:
+    target = row.targets[name]
+    return Observation(example.id, example.data, example.label, target.dist, target.mass, target.pending,
+                       error="invalid/missing input" if row.error is not None or target.missing else target.error, group=example.group,
+                       observed_models=target.observed_models)
+
+
+def head_scores(fact: FactPlan, head, examples: list[Example], sw, snap) -> list:
+    installed = snap if snap.heads.get(fact.name) is head else replace(snap, heads={**snap.heads, fact.name: head})
+    rows = sw.score([e.data for e in examples], [fact.name], sources=("classifier",), snap=installed) if examples else []
+    return [observed(e, row, fact.name) for e, row in zip(examples, rows)]
 
 
 def development_curve(fact, observations):

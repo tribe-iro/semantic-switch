@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 import yaml
 
-from semantic_switch import ConfigError, Model, Runtime, cli, files, tools
+from semantic_switch import Actor, ConfigError, Model, Runtime, cli, files, tools
 from semantic_switch.api import _resolve
 from semantic_switch.compiler import compile_spec
 from semantic_switch.examples import derive_fact_labels
@@ -17,7 +17,7 @@ from semantic_switch.judgment import Policy
 from semantic_switch.judgment import ESCAPE
 from semantic_switch.judge import Scored, Scores
 
-from .conftest import FakeScorer, letters_of
+from semantic_testkit.scoring import FakeScorer, letters_of
 from .test_switch import ROOT, edit, t
 
 
@@ -28,7 +28,7 @@ def write(tmp_path, spec, name="s.yaml"):
 
 
 def fake_rt(oracle=None):
-    return Runtime({"judge": FakeScorer(oracle) if oracle else FakeScorer()})
+    return Runtime(FakeScorer(oracle) if oracle else FakeScorer())
 
 
 def peaked(q: str, width: int, wanted) -> list:
@@ -69,17 +69,17 @@ def test_group_atom_does_not_settle_the_category(tmp_path):
     spec = {"name": "g", "fields": {"m": {"type": "text", "required": True}}, "reads": ["m"],
             "facts": {"topic": {"pick": "What is it about?", "options": {"billing": "b", "technical": "t",
                                                                           "account": "a"}}},
-            "cases": [{"id": "spec", "when": 'topic in ["billing", "technical"]', "then": "specialist"}],
+            "rules": [{"id": "spec", "when": 'topic in ["billing", "technical"]', "then": "specialist"}],
             "otherwise": "general"}
     rt = fake_rt(lambda s, q, w: [0.48, 0.48, 0.04] if "about" in q else [0.5, 0.5])
     r = rt.load(write(tmp_path, spec))({"m": "x"})
     assert r.answer == "specialist" and r.facts["topic"].value is None and not r.facts["topic"].settled
 
 
-def test_resolve_all_derives_no_false_labels_for_other_cases():
+def test_resolve_all_derives_no_false_labels_for_other_rules():
     spec = {"name": "u", "fields": {"m": {"type": "text"}}, "reads": ["m"], "resolve": "all",
             "facts": {"a": {"check": "A."}, "b": {"check": "B."}},
-            "cases": [{"id": "a", "when": "a"}, {"id": "b", "when": "b"}], "otherwise": "none_"}
+            "rules": [{"id": "a", "when": "a"}, {"id": "b", "when": "b"}], "otherwise": "none_"}
     assert derive_fact_labels(compile_spec(spec), "b") == {"b": True}
 
 
@@ -153,7 +153,7 @@ def test_exit_codes_and_prompts(monkeypatch, capsys):
 def test_mentions_atom(tmp_path):
     spec = {"name": "m", "fields": {"report": {"type": "text"}}, "reads": ["report"],
             "facts": {"x": {"check": "X."}},
-            "cases": [{"id": "plain", "when": 'mentions(report, "MX-120")', "then": "a"},
+            "rules": [{"id": "plain", "when": 'mentions(report, "MX-120")', "then": "a"},
                       {"id": "alias", "when": 'mentions(report, ["MX-120A", "Mixer 120 Advanced"])', "then": "b"}],
             "otherwise": "c"}
     sw = fake_rt().load(write(tmp_path, spec))
@@ -188,12 +188,12 @@ def test_focus_never_excludes_an_unmentioned_answer():
     assert (r.value, r.focus) == ("MX-210", "fallback")
 
 
-def test_switch_without_cases_returns_its_facts(rt, tmp_path):
+def test_switch_without_rules_returns_its_facts(rt, tmp_path):
     shutil.copy(ROOT / "switches" / "refund.yaml", tmp_path / "refund.yaml")
     sw = rt.load(tmp_path / "refund.yaml")
     r = sw({"message": "Please refund my charge"})
     assert (r.status, r.answer, r.facts["refund"].value) == ("ok", None, True)
-    sw.correct({"message": "Reverse it"}, fact="refund", value=True)
+    sw.correct({"message": "Reverse it"}, fact="refund", value=True, actor=Actor('human'))
     assert sw({"message": "Reverse it"}).facts["refund"].source == "example"
     assert tools.lock(rt, tmp_path / "refund.yaml")["id"]
 
@@ -207,7 +207,7 @@ def test_three_way_check_reports_not_stated(tmp_path):
     assert rt.check("E17 again", "There is a leak.", unstated=True).status == "needs_input"
     spec = {"name": "l", "fields": {"report": {"type": "text", "required": True}}, "reads": ["report"],
             "facts": {"leak": {"check": "There is a visible leak.", "unstated": True}},
-            "cases": {"inspect": "leak"}, "otherwise": "fine"}
+            "rules": {"inspect": "leak"}, "otherwise": "fine"}
     sw = rt.load(write(tmp_path, spec))
     silent = sw({"report": "E17 again"})
     assert silent.status == "needs_input" and silent.missing == ("fact:leak",)
@@ -225,10 +225,10 @@ def test_select_judges_situation_claims_never_titles_and_returns_payloads(proced
     r = rt.load(procedures)({"machine": "MX-120A", "active_alarms": ["E17"], "report": "It won't start. No leak."})
     assert r.answer == "follow_procedure" and r.facts["procedures"].value == ("P02",)
     fact = r.facts["procedures"]
-    assert fact.cards[0]["payload"]["instructions"] == "procedures/P02.md" and fact.complete
+    assert fact.cards[0]["source"]["section"] == "7.3" and fact.complete
     assert fact.states["P01"] == "ineligible" and fact.states["P02"] == "applicable"
     assert not any(title in q for _, q in fake.requests for title in TITLES)
-    assert not any("procedures/P0" in s + q for s, q in fake.requests)
+    assert not any("Maintenance manual" in s + q for s, q in fake.requests)
     assert r.as_dict()["facts"]["procedures"]["cards"][0]["id"] == "P02"
 
 
@@ -243,13 +243,13 @@ def test_select_supersedes_and_exclusive(procedures):
     assert r.status == "uncertain" and not r.facts["procedures"].settled
 
 
-def catalogue(tmp_path, cards, cases=None, **fact):
+def catalogue(tmp_path, cards, rules=None, **fact):
     spec = {"name": "c", "fields": {"report": {"type": "text", "required": True}, "machine": {"type": "text"}},
             "reads": ["report"],
             "facts": {"leak": {"check": "There is a visible leak.", "unstated": True},
                       "procs": {"select": "Which procedures apply?", "cards": cards, **fact}}}
-    if cases is not None:
-        spec |= {"cases": cases, "otherwise": "nothing"}
+    if rules is not None:
+        spec |= {"rules": rules, "otherwise": "nothing"}
     return write(tmp_path, spec)
 
 
@@ -295,13 +295,13 @@ def test_may_be_superseded_by_an_unresolved_card(tmp_path):
 
 def test_is_empty_needs_a_complete_search(tmp_path):
     rt = fake_rt(claim_oracle)
-    cases = [{"id": "empty", "when": "procs is empty", "then": "none_apply"}]
-    sw = rt.load(catalogue(tmp_path, [HOT, RATTLE], cases))
+    rules = [{"id": "empty", "when": "procs is empty", "then": "none_apply"}]
+    sw = rt.load(catalogue(tmp_path, [HOT, RATTLE], rules))
     assert sw({"report": "all quiet, dry"}).answer == "none_apply"
     assert sw({"report": "maybe something, dry"}).status == "uncertain"
-    caseless = rt.load(catalogue(tmp_path, [HOT, RATTLE]))
-    assert caseless({"report": "all quiet, dry"}).status == "none"
-    assert caseless({"report": "maybe something, dry"}).status == "uncertain"
+    ruleless = rt.load(catalogue(tmp_path, [HOT, RATTLE]))
+    assert ruleless({"report": "all quiet, dry"}).status == "none"
+    assert ruleless({"report": "maybe something, dry"}).status == "uncertain"
 
 
 def test_over_budget_cards_stay_unexamined(tmp_path):
@@ -335,13 +335,13 @@ def test_catalogue_validation(tmp_path, cards, needle):
         fake_rt().load(catalogue(tmp_path, cards))
 
 
-def test_catalogue_equals_hand_written_cases(tmp_path):
+def test_catalogue_equals_hand_written_rules(tmp_path):
     rt = fake_rt(claim_oracle)
     cat = rt.load(catalogue(tmp_path, [HOT], [{"id": "hot", "when": 'procs has "hot"', "then": "cool"}]))
     hand = {"name": "h", "fields": {"report": {"type": "text", "required": True}}, "reads": ["report"],
             "facts": {"leak": {"check": "There is a visible leak.", "unstated": True},
                       "hot": {"check": "The unit overheats."}},
-            "cases": [{"id": "hot", "when": "hot and not leak", "then": "cool"}], "otherwise": "nothing"}
+            "rules": [{"id": "hot", "when": "hot and not leak", "then": "cool"}], "otherwise": "nothing"}
     sw = rt.load(write(tmp_path, hand, "h.yaml"))
     for report in ("hot and dry", "hot, oil below", "quiet and dry", "hot"):
         a, b = cat({"report": report}), sw({"report": report})
@@ -378,7 +378,7 @@ def test_engine_runs_on_a_minimal_non_decoder_judge(tmp_path):
                                         np.full(len(q.options), 1 / len(q.options)), None) for q in qs), 0)
                     for _, qs in items]
 
-    rt = Runtime({"judge": TinyJudge()})
+    rt = Runtime(TinyJudge())
     assert rt.check("x", "y").value is True
     shutil.copy(ROOT / "switches" / "refund.yaml", tmp_path / "refund.yaml")
     assert rt.load(tmp_path / "refund.yaml")({"message": "hi"}).facts["refund"].value is True

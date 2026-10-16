@@ -6,12 +6,12 @@ from pathlib import Path
 
 from .. import files
 from ..families import FamilyIndex
-from ..selection import history
+from ..selection import occurrences
 
 from ..compiler import digest
-from ..context import canonical, project, render
+from ..context import canonical, render
 from ..errors import ConfigError
-from ..examples import history_of, merge_sources, origin_summary, partial, sources_at, targets, validate_role, validate_tags
+from ..examples import Frame, derivation_summary, history_of, merge_sources, sources_at, targets, validate_role, validate_tags
 from ..switch import Switch
 from .common import input_key, test_items
 
@@ -38,8 +38,8 @@ class Example:
     situations: tuple = ()
 
     @property
-    def label_origin(self) -> str:
-        return origin_summary(self.sources)
+    def label_derivation(self) -> str:
+        return derivation_summary(self.sources)
 
 
 def merged_sources(entry) -> tuple:
@@ -62,6 +62,7 @@ class Labels:
     def __init__(self, sw: Switch, data: str | None = None):
         from .dataset import source_digests
         data = None if data is not None and Path(data).resolve() == sw.paths.test.resolve() else data
+        self.alternate = data is not None
         with files.locked(sw.paths.dataset):
             previous = files.read_published(sw.paths.dataset)
             for attempt in range(3):
@@ -87,19 +88,20 @@ class Labels:
         restore(self.families, previous)
         from ..examples import collect
         current_examples, _ = collect(plan, files.read_jsonl(sw.paths.examples))
-        records = [(e.input, e.fact, e.value, group, True, e.selections, e.sources, (), None) for exs in current_examples.values() for e in exs
-                   for group in (e.groups or (e.group,))
+        records = [(Frame.projected(plan, e.input), e.fact, e.value, group, True, e.selections, e.sources, (), None) for exs in current_examples.values() for e in exs
+                   for group in (e.groups or (None,))
                    if plan.fact_index[e.fact] in plan.observed]
         self.situations = {}
         pair_memberships = {}
         for examples in current_examples.values():
             for example in examples:
-                key = ("key", input_key(plan, example.input))
+                key = ("key", Frame.projected(plan, example.input).family)
                 pair_memberships.setdefault(key, set()).update(map(str, example.pairs))
                 for pair in example.pairs:
                     self._join(key, ("pair", str(pair)))
         for it in items:
-            key = ("key", input_key(plan, it["input"]))
+            frame = Frame(plan, it["input"])
+            key = ("key", frame.family)
             self.families.add(key)
             pair_memberships.setdefault(key, set()).update(map(str, it.get("pairs", ())))
             for kind, names in (("pair", it.get("pairs", ())), ("group", it.get("groups", ()))):
@@ -107,25 +109,27 @@ class Labels:
                     self._join(key, (kind, str(name)))
             if not it.get("facts"):
                 continue
-            situation = situation_id(plan, project(plan.fields, sw.bind(it["input"], sw.snapshot)))
+            situation = situation_id(plan, frame.values)
             self._join(key, ("situation", situation))
             entry = self.situations.setdefault(situation, {"records": set(), "input": it["input"], "labels": {}})
             entry["records"].add(digest({k: v for k, v in it.items() if k != "created"}))
+            selected = occurrences(it.get("selections", ()))
             for fact, value in targets(plan, it["facts"]):
-                records += [(it["input"], fact.name, value, group, False, history(it.get("selections", ())), history_of(sources_at(it["label_sources"], fact.path)),
+                records += [(frame, fact.name, value, group, False, selected, history_of(sources_at(it["label_sources"], fact.path)),
                              validate_tags(it.get("tags", ())), situation) for group in (it.get("groups") or [None])]
         self._roles = [(("key", input_key(plan, it["input"])), role) for it in items if (role := validate_role(it.get("role"))) is not None]
         merged: dict = {}
-        for data_, name, value, group, taught, selected, provenance, tags, situation in records:
+        for frame, name, value, group, taught, selected, provenance, tags, situation in records:
             fact = plan.fact(name)
             if fact.cards:
                 continue
-            values = project(plan.fields, sw.bind(data_, sw.snapshot))
-            projection = self.projection(fact, data_, values)
+            projection = frame.read(fact)
             label = fact.index(value)
-            entry = merged.setdefault((name, projection), {"data": data_, "label": label, "taught": False, "text": render(plan.fields, values, fact.reads),
-                                                           "nodes": [("observation", observation_id(fact, projection))],
-                                                           "selections": [], "histories": set(), "tags": set(), "situations": set()})
+            entry = merged.get((name, projection))
+            if entry is None:
+                entry = merged[(name, projection)] = {"data": frame.record(), "label": label, "taught": False, "text": render(plan.fields, frame.values, fact.reads),
+                                                      "nodes": [("observation", observation_id(fact, projection))], "selections": set(), "histories": set(),
+                                                      "tags": set(), "situations": set()}
             if entry["label"] != label:
                 raise ConfigError(f"{name}: conflicting labels {' and '.join(sorted(map(repr, (fact.value(entry['label']), fact.value(label)))))} "
                                   f"for the same input {projection}")
@@ -133,13 +137,14 @@ class Labels:
             if situation is not None and plan.fact_index[name] in plan.observed:
                 entry["situations"].add(situation)
                 self.situations[situation]["labels"][fact.path] = observation_id(fact, projection)
-            entry["selections"] = sorted({*entry["selections"], *selected}, key=lambda s: json.dumps(s.record(), sort_keys=True))
+            entry["selections"].update(selected)
             entry["taught"] |= taught
             entry["tags"].update(tags)
-            entry["nodes"].append(("key", input_key(plan, data_)))
+            entry["nodes"].append(("key", frame.family))
             if group is not None:
                 entry["nodes"].append(("group", str(group)))
         for (name, _), entry in merged.items():
+            entry["selections"] = sorted(entry["selections"], key=lambda s: json.dumps(s.record(), sort_keys=True))
             for node in (*entry["nodes"][1:], ("rendered", digest([name, entry["text"]]))):
                 self._join(entry["nodes"][0], node)
         self._merged = merged
@@ -154,14 +159,30 @@ class Labels:
                 tuple(sorted({pair for node in entry["nodes"] for pair in pair_memberships.get(node, ())})), plan.fact(name).path, tuple(sorted(entry["tags"])),
                 tuple(sorted(entry["situations"]))))
 
-    def projection(self, fact, data, values=None) -> str:
-        values = project(self.sw.plan.fields, self.sw.bind(data, self.sw.snapshot)) if values is None else values
-        return canonical(partial(values, fact.context_reads or fact.reads), fact.context_reads or fact.reads)
+    @property
+    def path(self) -> Path:
+        return self.sw.paths.yaml.with_suffix(f".dataset.{self.dataset_id}.json") if self.alternate else self.sw.paths.dataset
+
+    def committed(self) -> Path:
+        if self.alternate:
+            with files.locked(self.path):
+                if files.read_published(self.path) != self.manifest:
+                    files.publish(self.path, self.manifest)
+        return self.path
+
+    def family(self, node) -> str | None:
+        node = tuple(node)
+        return self.families.name(node) if node in self.families else None
+
+    def resolve(self, name) -> str:
+        return name
+
+    def projection(self, fact, data) -> str:
+        return Frame(self.sw.plan, data).read(fact)
 
     def _join(self, a, b):
-        groups = [{name for kind, name in self.families.members[self.families.find(node)] if kind == "group"} if node in self.families
-                  else {node[1]} if node[0] == "group" else set() for node in (a, b)]
-        if all(groups) and self.families.find(a) != self.families.find(b) and not groups[0] & groups[1]:
+        groups = [self.families.groups(node) if node in self.families else {node[1]} if node[0] == "group" else set() for node in (a, b)]
+        if all(groups) and not groups[0] & groups[1] and (a not in self.families or b not in self.families or self.families.find(a) != self.families.find(b)):
             self.warnings += (f"groups {sorted(groups[0])} and {sorted(groups[1])} share an input; they are joined",)
         self.families.join(a, b)
 
@@ -183,23 +204,24 @@ class Labels:
         for fact, stages in snap.family_seeds.items():
             for stage, nodes in stages.items():
                 for node in nodes:
-                    stages_by_root.setdefault(self.families.find(node), set()).add(stage)
+                    if tuple(node) in self.families:
+                        stages_by_root.setdefault(self.families.find(node), set()).add(stage)
         self._historical = stages_by_root
 
     def family_uses(self, data):
         node = ("key", input_key(self.sw.plan, data))
-        return tuple(sorted(getattr(self, "_historical", {}).get(self.families.find(node), ())))
+        return tuple(sorted(getattr(self, "_historical", {}).get(self.families.find(node), ()))) if node in self.families else ()
 
     def split(self, data) -> str:
-        group = self.group(("key", input_key(self.sw.plan, data)))
-        return self.manifest["families"].get(group, {}).get("split", "conflict")
+        node = ("key", input_key(self.sw.plan, data))
+        return self.manifest["families"].get(self.group(node), {}).get("split", "conflict") if node in self.families else "conflict"
 
     def examples(self, fact: str, split: str | None = None, taught: bool | None = None) -> list[Example]:
         return [e for e in self.by_fact.get(fact, []) if (split is None or e.split == split)
                 and (taught is None or e.taught == taught)]
 
-    def cases(self, split: str | None = None) -> list[dict]:
-        return [it for it in self.items if "case" in it and (split is None or self.split(it["input"]) == split)]
+    def rules(self, split: str | None = None) -> list[dict]:
+        return [it for it in self.items if "rule" in it and (split is None or self.split(it["input"]) == split)]
 
 
 def fold_of(example: Example, folds: int = FOLDS) -> int:

@@ -31,6 +31,11 @@ class Presentation:
     stage: str = "full"
     keys: tuple = ()
 
+    def as_dict(self) -> dict:
+        options = self.question.options or (None,) * len(self.slots)
+        return {"stage": self.stage, "answers": [{"answer": a, "key": self.keys[s] if s >= 0 else None, "option": o}
+                                                 for a, s, o in zip(answers(self.question), self.slots, options)]}
+
     def record(self):
         options = self.question.options or (None,) * len(self.slots)
         return MappingProxyType({"stage": self.stage, "answers": tuple(
@@ -38,12 +43,13 @@ class Presentation:
             for a, s, o in zip(answers(self.question), self.slots, options))})
 
 
-def present(judge, j, slots, *, escape=False, stage="full", framing=None) -> Presentation:
+def present(judge, j, slots, *, escape=False, stage="full", framing=None, catalog=None, entry=None) -> Presentation:
     slots = tuple(slots)
     question = j.question() if j.kind == "check" else j.question(tuple(j.descriptions[i] for i in slots))
     if escape:
         question, slots = replace(question, options=question.options + (ESCAPE,)), slots + (-1,)
-    return Presentation(validate_question(judge, replace(question, framing=framing)), slots, stage, j.keys)
+    pointed = {"catalog": catalog, "entry": entry} if entry is not None and question.candidate is None else {}
+    return Presentation(validate_question(judge, replace(question, framing=framing, **pointed)), slots, stage, j.keys)
 
 
 def focused(text, aliases, slots, memo=None) -> tuple[int, ...] | None:
@@ -55,9 +61,8 @@ def focused(text, aliases, slots, memo=None) -> tuple[int, ...] | None:
 def validate_question(judge, question):
     if question.guidance and not getattr(judge, "supports_guidance", False):
         raise ConfigError("this judge does not support guidance")
-    limit = min(len(LETTERS), judge.max_slots)
-    if question.width > limit:
-        raise ConfigError(f"this judge takes at most {limit} answer slots, got {question.width}")
+    if question.width > judge.max_slots:
+        raise ConfigError(f"this judge takes at most {judge.max_slots} answer slots, got {question.width}")
     return question
 
 
@@ -71,6 +76,10 @@ def evidence(rendered: str) -> str:
 
 def guided(guidance) -> str:
     return f"<guidance>\n{guidance.text}\n</guidance>\n\n" if guidance else ""
+
+
+def catalogued(catalog) -> str:
+    return f"<criteria>\n{catalog.text}</criteria>\n\n" if catalog else ""
 
 
 def definition(description: str, excludes=()) -> str:
@@ -87,6 +96,8 @@ def criterion(q: Question) -> str:
 
 def text(q: Question) -> str:
     excepts = [f"Except: {x}." for x in q.excludes]
+    if q.entry is not None:
+        excepts, q = [], replace(q, text=f"criterion [{q.entry}]" + ("?" if q.interrogative else ""))
     if q.candidate is not None and q.kind == "check":
         lines = [f"{criterion(q)} Answer with only yes or no."]
     elif q.candidate is not None:
@@ -104,4 +115,4 @@ def text(q: Question) -> str:
 
 
 def messages(rendered: str, q: Question) -> tuple[str, str]:
-    return GUIDED if q.guidance else SYSTEM, guided(q.guidance) + evidence(rendered) + text(q)
+    return GUIDED if q.guidance else SYSTEM, guided(q.guidance) + catalogued(q.catalog) + evidence(rendered) + text(q)

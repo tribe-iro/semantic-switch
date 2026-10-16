@@ -1,28 +1,32 @@
 from __future__ import annotations
 
+import queue
+import threading
+import time
+import warnings
+from collections import deque
 from dataclasses import dataclass, field, replace
 from types import MappingProxyType
 
 import numpy as np
-import warnings
-import threading
 
 from .context import ContextError, canonical, error_status, project, render, truncated
 from .heads import features
-from .judge import checkpoint, distinct, scored
+from .judge import OPERATION, Cancelled, Scored, Scores, checkpoint, distinct, guided, judge_name, scored, validated
 from .judgment import REASONS as WHY, accept, outcome, predict, reason_text, settle, unpresent
-from .kernel import NEEDS_INPUT, F, T, U, Card, Sem, SelectionState, atoms_of, budgeted, compose, evaluate, exact_state, ranked, relevant, resolve
+from .kernel import NEEDS_INPUT, F, T, U, Card, Sem, atoms_of, budgeted, compose, evaluate, exact_state, ranked, relevant, resolve
 from .presentation import Presentation, focused, present
-from .results import thaw, Fact, SwitchResult, Trace
+from .results import FactResult, Preview, Row, Stage, SwitchResult, Target, Trace, thaw
 from .snapshot import Snapshot
 
 SOURCES = ("example", "classifier", "judge")
 COUNTED = ("rule", "example", "classifier", "judge")
+PRESENTED = 4096
 
 
 @dataclass(slots=True)
 class FactState:
-    dist: list | None = None
+    dist: tuple | None = None
     source: str | None = None
     mass: float | None = None
     error: str | None = None
@@ -34,30 +38,282 @@ class FactState:
     observed_models: tuple = ()
     requests: tuple = ()
     scored: tuple | None = None
-    selection: SelectionState | None = None
+    selection: object = None
     presentations: tuple = ()
+    binding: str | None = None
 
     @property
     def pending(self) -> frozenset:
         return frozenset(k for k, e in enumerate(self.eligible or ()) if e == U)
 
 
-@dataclass(slots=True)
+def stage_of(text: str, aliases, shown, memo, focus: bool, done: bool) -> tuple[tuple, bool, str]:
+    if focus and not done:
+        named = focused(text, aliases, [i for i in shown if i < len(aliases)], memo)
+        if named:
+            return named, True, "mentions"
+    return tuple(shown), False, "fallback" if done else "full"
+
+
+def absorb(state: FactState, p: Presentation, sc, width: int, locked=()) -> bool:
+    state.presentations += (p,)
+    if sc.model is not None:
+        state.observed_models += (sc.model,)
+    state.requests = distinct((*state.requests, sc.request))
+    if locked and sc.model not in locked:
+        state.dist, state.error = None, "predictor_identity_unverified" if sc.model is None else "predictor_identity_changed"
+        return False
+    if sc.error:
+        state.dist, state.error = None, sc.error
+        return False
+    dist = unpresent(p.slots, sc, width)
+    if dist is None:
+        state.focus_done = True
+        return True
+    state.scored = tuple(sorted(s for s in p.slots if s >= 0))
+    state.dist, state.mass, state.error = tuple(map(float, dist)), sc.mass, None
+    return False
+
+
+@dataclass(slots=True, eq=False)
 class Call:
     data: object
+    snap: Snapshot | None = None
+    sources: tuple = SOURCES
+    outputs: frozenset | None = None
+    extra: frozenset = frozenset()
     values: dict | None = None
     error: ContextError | None = None
     st: list = field(default_factory=list)
     reasons: dict = field(default_factory=dict)
     facts: list = field(default_factory=list)
     texts: dict = field(default_factory=dict)
+    cuts: dict = field(default_factory=dict)
+    keys: dict = field(default_factory=dict)
     features: dict = field(default_factory=dict)
     tokens: int = 0
     rounds: int = 0
     mentions: dict = field(default_factory=dict)
     work: dict = field(default_factory=lambda: {"classifier": 0, "judge": 0})
-    batch_native_work: dict = field(default_factory=dict)
-    batch_inputs: int = 1
+    stage: int = 0
+    asked: set = field(default_factory=set)
+    retry: list = field(default_factory=list)
+    judged: bool = False
+
+    def advance(self, ex):
+        return ex.advance(self)
+
+    def absorb(self, ex, binding, f, p, sc):
+        ex.absorb(self, binding, f, p, sc)
+
+
+@dataclass(slots=True, eq=False)
+class Live:
+    index: int
+    work: object
+    started: float
+    waiting: int = 0
+    done: bool = False
+    value: object = None
+
+
+@dataclass(slots=True, eq=False)
+class Ask:
+    live: Live
+    binding: str
+    text: str
+    entries: tuple
+    scores: list
+    left: int
+    key: object = None
+    tokens: int = 0
+    model: str | None = None
+
+    @property
+    def questions(self) -> tuple:
+        return tuple(p.question for _, p in self.entries)
+
+
+class Reuse:
+    def __init__(self):
+        self._done, self.reused, self.scored = {}, 0, 0
+
+    def get(self, key):
+        found = self._done.get(key)
+        self.reused += found is not None
+        return found
+
+    def put(self, key, result):
+        owned = tuple(Scores(value.probs if value.probs is None or type(value.probs) is tuple and all(type(p) is float for p in value.probs) else tuple(map(float, value.probs)), value.mass, value.error,
+                             value.confidence, value.model, value.request) for value in result.scores)
+        self._done[key] = Scored(owned, result.tokens, result.model, result.native_work)
+        self.scored += 1
+        return self._done[key]
+
+    def clear(self):
+        self._done.clear()
+
+
+class Operation:
+    def __init__(self, ex, bound: int, finish, reuse: Reuse | None = None, receipt: bool = True):
+        self.ex, self.bound, self.finish, self.reuse = ex, bound, finish, reuse
+        self.queue, self.inflight, self.futures, self.returned = queue.SimpleQueue(), 0, set(), {}
+        self.pending = {}
+        self.receipt = {"inputs": 0, "window": bound, "native_work": {}, "elapsed_ms": None, "amortized_ms": None} if receipt else None
+        self.native_work = self.receipt["native_work"] if receipt else {}
+
+    def elapsed(self, live: Live) -> float:
+        return round((time.perf_counter() - live.started) * 1000, 2)
+
+    def drive(self, items, start, ordered: bool):
+        began, source, exhausted = time.perf_counter(), iter(items), False
+        order, ready, live, n = deque(), deque(), 0, 0
+        try:
+            while True:
+                checkpoint()
+                while not exhausted and (len(order) if ordered else live) < self.bound:
+                    try:
+                        data = next(source)
+                    except StopIteration:
+                        exhausted = True
+                        break
+                    entry = Live(n, start(data), time.perf_counter())
+                    n, live = n + 1, live + 1
+                    if ordered:
+                        order.append(entry)
+                    ready.append(entry)
+                submissions, finished = {}, []
+                while ready:
+                    entry = ready.popleft()
+                    asks = entry.work.advance(self.ex)
+                    if asks:
+                        entry.waiting += len(asks)
+                        for binding, text, entries in asks:
+                            submissions.setdefault(binding, []).append(Ask(entry, binding, text, tuple(entries), [None] * len(entries), len(entries)))
+                    else:
+                        entry.value, entry.done, live = self.finish(entry), True, live - 1
+                        finished.append(entry)
+                for binding, asks in submissions.items():
+                    self.submit(binding, asks, ready)
+                if ordered:
+                    while order and order[0].done:
+                        entry = order.popleft()
+                        yield entry.index, entry.value
+                else:
+                    for entry in finished:
+                        yield entry.index, entry.value
+                if exhausted and not live and not (ordered and order):
+                    break
+                if ready or not exhausted and (len(order) if ordered else live) < self.bound:
+                    continue
+                if not self.inflight:
+                    raise RuntimeError("execution stalled without pending judge work")
+                handle = OPERATION.get()
+                release = handle.register(lambda: self.queue.put(None)) if handle is not None else None
+                try:
+                    item = self.queue.get()
+                finally:
+                    if release is not None:
+                        release()
+                self.apply(item, ready)
+                while True:
+                    try:
+                        item = self.queue.get_nowait()
+                    except queue.Empty:
+                        break
+                    self.apply(item, ready)
+            for name, models in self.returned.items():
+                if len(models) > 1:
+                    warnings.warn(f"hosted operation returned mixed model versions: {sorted(models)} from {name}", stacklevel=3)
+        finally:
+            self.pending.clear()
+            for future in self.futures:
+                future.cancel()
+            if self.receipt is not None:
+                elapsed = (time.perf_counter() - began) * 1000
+                self.receipt.update(inputs=n, elapsed_ms=round(elapsed, 2), amortized_ms=round(elapsed / n, 2) if n else None)
+
+    def submit(self, binding: str, asks: list, ready) -> None:
+        judge, fresh = self.ex.rt.judge(binding), []
+        for ask in asks:
+            if self.reuse is not None:
+                from .compiler import digest
+                ask.key = (id(judge), digest([ask.text, [(question.kind, question.text, question.options, question.excludes,
+                    question.guidance.digest, None if question.framing is None else question.framing.as_dict(), question.candidate,
+                    None if question.catalog is None else [question.catalog.revision, question.catalog.entries, question.entry])
+                    for question in ask.questions]]))
+                hit = self.reuse.get(ask.key)
+                if hit is not None:
+                    ask.key = None
+                    self.complete(ask, tuple(range(len(ask.entries))), hit, ready, False)
+                    continue
+                if ask.key in self.pending:
+                    self.pending[ask.key].append(ask)
+                    continue
+                self.pending[ask.key] = []
+            fresh.append(ask)
+        if not fresh:
+            return
+        items = [(ask.text, ask.questions) for ask in fresh]
+        start = getattr(judge, "start", None)
+        if start is None:
+            results = scored(judge, items)
+            for name, value in results[0].native_work if results else ():
+                self.native_work[name] = self.native_work.get(name, 0) + value
+            for ask, result in zip(fresh, results):
+                self.complete(ask, tuple(range(len(ask.entries))), result, ready, False)
+            return
+        guided(judge, items)
+        token = (fresh, judge_name(judge))
+        future = start(items, lambda done: self.queue.put((token, done)))
+        self.inflight += len(fresh)
+        self.futures.add(future)
+        future.add_done_callback(lambda done: self.queue.put((None, done)))
+
+    def apply(self, item, ready) -> None:
+        if item is None:
+            checkpoint()
+            return
+        token, done = item
+        if token is None:
+            self.futures.discard(done)
+            if done.cancelled():
+                handle = OPERATION.get()
+                if handle is not None and handle.cancelled:
+                    raise Cancelled("operation cancelled")
+                raise RuntimeError("judge is closed")
+            if done.exception() is not None:
+                raise done.exception()
+            return
+        fresh, name = token
+        ask = fresh[done.owner]
+        self.returned.setdefault(name, set()).update(score.model for score in done.scored.scores if score.model is not None)
+        questions = [ask.entries[k][1].question for k in done.index]
+        self.complete(ask, done.index, validated(name, done.owner, questions, done.scored), ready, True)
+
+    def complete(self, ask: Ask, index, result, ready, hosted: bool) -> None:
+        live = ask.live
+        work = live.work
+        work.tokens += result.tokens
+        for k, sc in zip(index, result.scores):
+            key, p = ask.entries[k]
+            ask.scores[k] = sc
+            work.absorb(self.ex, ask.binding, key, p, sc)
+        ask.left -= len(index)
+        ask.tokens += result.tokens
+        ask.model = ask.model or result.model
+        if ask.left:
+            return
+        self.inflight -= hosted
+        if ask.key is not None:
+            saved = self.reuse.put(ask.key, Scored(tuple(ask.scores), ask.tokens, ask.model))
+            for dependent in self.pending.pop(ask.key, ()):
+                dependent.key = None
+                self.reuse.reused += 1
+                self.complete(dependent, tuple(range(len(dependent.entries))), saved, ready, False)
+        live.waiting -= 1
+        if not live.waiting:
+            ready.append(live)
 
 
 class Executor:
@@ -65,15 +321,41 @@ class Executor:
         self.rt = runtime
         self._drift_lock = threading.Lock()
         self._drift_warned = set()
+        self._presented = {}
+
+    def window(self, bindings) -> int:
+        sizes = [self.rt.batch_inputs(name) for name in sorted(bindings)]
+        return 2 * max(sizes) if sizes else 1
+
+    def bindings(self, snap: Snapshot, sources: tuple, facts=None) -> set:
+        if "judge" not in sources:
+            return set()
+        plan = snap.plan
+        chosen = range(len(plan.facts)) if facts is None else \
+            {x for f in facts for x in ((f,) + tuple(k for card in plan.facts[f].cards for k in card.claims))}
+        return {plan.binding_of(f) for f in chosen if not plan.facts[f].cards}
+
+    def operation(self, bound: int, finish, reuse: Reuse | None = None, receipt: bool = True) -> Operation:
+        return Operation(self, bound, finish, reuse, receipt)
 
     def text(self, snap: Snapshot, call: Call, reads: tuple) -> str:
         if reads not in call.texts:
             call.texts[reads] = render(snap.plan.fields, call.values, reads)
         return call.texts[reads]
 
-    def start(self, snap: Snapshot, data) -> Call:
+    def _cut(self, snap: Snapshot, call: Call, reads: tuple) -> tuple:
+        if reads not in call.cuts:
+            call.cuts[reads] = truncated(snap.plan.fields, call.values, reads)
+        return call.cuts[reads]
+
+    def _key(self, call: Call, reads: tuple) -> str:
+        if reads not in call.keys:
+            call.keys[reads] = canonical(call.values, reads)
+        return call.keys[reads]
+
+    def start(self, snap: Snapshot, data, sources: tuple = SOURCES, outputs: frozenset | None = None, extra: frozenset = frozenset()) -> Call:
         plan = snap.plan
-        call = Call(data)
+        call = Call(data, snap, sources, outputs, extra)
         try:
             call.values = project(plan.fields, data)
         except ContextError as e:
@@ -98,30 +380,56 @@ class Executor:
         self._derive(snap, call)
         return call
 
-    @staticmethod
-    def _batch(calls: list[Call]):
-        work = {}
-        for c in calls:
-            c.batch_native_work, c.batch_inputs = work, len(calls)
+    def advance(self, call: Call) -> list:
+        if call.error is not None:
+            return []
+        snap = call.snap
+        if call.retry:
+            facts, call.retry = call.retry, []
+            return self._asks(snap, call, facts)
+        if call.judged:
+            call.judged = False
+            self._derive(snap, call)
+        stages = (True, False) if snap.plan.first and snap.plan.rules else (False,)
+        while call.stage < len(stages):
+            first_only = stages[call.stage]
+            want = [f for f in self._wanted(snap, call, first_only, call.outputs, call.extra) if f not in call.asked]
+            if first_only or not want:
+                call.stage += 1
+            if not want:
+                continue
+            call.asked.update(want)
+            call.rounds += 1
+            judge = self._prepare(snap, call, want, call.sources, call.outputs, call.extra)
+            if judge:
+                call.judged = True
+                return self._asks(snap, call, judge)
+        return []
 
-    def decide(self, snap: Snapshot, calls: list[Call], sources: tuple = SOURCES, outputs: frozenset | None = None, extra: frozenset = frozenset()):
-        self._batch(calls)
-        stages = (True, False) if snap.plan.first and snap.plan.cases else (False,)
-        live = [c for c in calls if c.error is None]
-        asked = {id(c): set() for c in live}
-        for first_only in stages:
-            todo = live
-            while todo:
-                checkpoint()
-                work = []
-                for c in todo:
-                    want = [f for f in self._wanted(snap, c, first_only, outputs, extra) if f not in asked[id(c)]]
-                    if want:
-                        asked[id(c)] |= set(want)
-                        c.rounds += 1
-                        work.append((c, want))
-                self._rounds(snap, work, sources, outputs, extra)
-                todo = [] if first_only else [c for c, _ in work]
+    def _asks(self, snap: Snapshot, call: Call, facts: list[int]) -> list:
+        plan, groups = snap.plan, {}
+        for f in facts:
+            groups.setdefault((plan.binding_of(f), plan.facts[f].reads), []).append(f)
+        return [(binding, self.text(snap, call, reads), tuple((f, self.presentation(snap, call, f)) for f in gfs))
+                for (binding, reads), gfs in groups.items()]
+
+    def absorb(self, call: Call, binding: str, f: int, p: Presentation, sc) -> None:
+        snap = call.snap
+        fact, state = snap.plan.facts[f], call.facts[f]
+        call.work["judge"] += 1
+        state.binding = binding
+        locked = snap.returned_models.get(binding, ()) if snap.locked else ()
+        if locked and sc.model is not None and sc.model not in locked:
+            with self._drift_lock:
+                if (locked, sc.model) not in self._drift_warned:
+                    self._drift_warned.add((locked, sc.model))
+                    warnings.warn(f"hosted returned-model drift: lock {locked}, response {sc.model!r}", stacklevel=2)
+        if absorb(state, p, sc, len(fact.keys), locked):
+            call.retry.append(f)
+        elif state.error is not None:
+            self._set(snap, call, f, None, "judge", error=state.error)
+        else:
+            self._set(snap, call, f, state.dist, "judge", state.mass)
 
     def _claims(self, snap: Snapshot, call: Call, f: int, cards) -> set[int]:
         plan = snap.plan
@@ -150,16 +458,16 @@ class Executor:
             via = {x for f in targets for x in self._claims(snap, call, f, range(len(plan.facts[f].cards)))}
             return direct, {f for f in via - direct if keep(f)}
 
-        if outputs is not None or not plan.cases:
+        if outputs is not None or not plan.rules:
             return targeted(outputs if outputs is not None else {f for f, fact in enumerate(plan.facts) if not fact.hidden})
         direct, via = targeted(extra) if extra and not first_only else (set(), set())
-        for case in plan.cases:
-            v = evaluate(case.expr, call.st)
+        for rule in plan.rules:
+            v = evaluate(rule.expr, call.st)
             if v == F:
                 continue
             if v == T and plan.first:
                 break
-            d, w = split(relevant(case.expr, call.st))
+            d, w = split(relevant(rule.expr, call.st))
             direct |= d
             via |= w
             if first_only or (plan.first and not d | w):
@@ -195,13 +503,6 @@ class Executor:
         if atoms:
             return any(call.st[i] == U for i, _ in atoms)
         return self.own(snap, call, f)[0] is None
-
-    def _rounds(self, snap: Snapshot, work: list, sources: tuple, outputs: frozenset | None, extra: frozenset):
-        pending = [(c, self._prepare(snap, c, facts, sources, outputs, extra)) for c, facts in work]
-        if "judge" in sources:
-            self._judge(snap, pending)
-            for c, _ in pending:
-                self._derive(snap, c)
 
     def _prepare(self, snap: Snapshot, call: Call, facts: list[int], sources: tuple, outputs: frozenset | None, extra: frozenset) -> list[int]:
         plan = snap.plan
@@ -294,7 +595,7 @@ class Executor:
         for f in facts:
             fact, elig = snap.plan.facts[f], call.facts[f].eligible
             if elig is not None and all(e == F for e in elig[:len(elig) - fact.allow_none]):
-                self._set(snap, call, f, [0.0] * (len(elig) - fact.allow_none) + [1.0] * fact.allow_none, "rule")
+                self._set(snap, call, f, (0.0,) * (len(elig) - fact.allow_none) + (1.0,) * fact.allow_none, "rule")
                 for i, sem in () if fact.allow_none else snap.plan.fact_atoms[f]:
                     call.st[i] = sem.truth[-1]
                     call.reasons.pop(i, None)
@@ -308,25 +609,24 @@ class Executor:
         for f in facts:
             fact = plan.facts[f]
             table = snap.overrides.get(fact.name) if plan.exact_override else None
-            hit = table.get(canonical(call.values, fact.context_reads or fact.reads)) if table else None
+            hit = table.get(self._key(call, fact.context_reads or fact.reads)) if table else None
             idx = None if hit is None else fact.index(hit)
             elig = call.facts[f].eligible
             if idx is None or (elig is not None and elig[idx] == F):
                 rest.append(f)
                 continue
-            dist = [0.0] * len(fact.keys)
-            dist[idx] = 1.0
-            self._set(snap, call, f, dist, "example")
+            self._set(snap, call, f, tuple(1.0 if k == idx else 0.0 for k in range(len(fact.keys))), "example")
         return rest
 
-    def _eligible_dist(self, call: Call, f: int, dist) -> list:
-        elig = call.facts[f].eligible
+    @staticmethod
+    def eligible_dist(state: FactState, dist) -> tuple:
+        elig = state.eligible
         if elig is None:
-            return list(map(float, dist))
+            return tuple(map(float, dist))
         d = np.array([p if e != F else 0.0 for p, e in zip(dist, elig)], dtype=np.float64)
         if d.sum() <= 0:
             d = np.array([1.0 if e != F else 0.0 for e in elig])
-        return list(d / d.sum())
+        return tuple(map(float, d / d.sum()))
 
     def _heads(self, snap: Snapshot, call: Call, facts: list[int]):
         plan = snap.plan
@@ -336,67 +636,24 @@ class Executor:
                 call.features[fact.reads] = features(self.text(snap, call, fact.reads))
             dist = snap.heads[fact.name].probs_features(call.features[fact.reads])
             call.work["classifier"] += 1
-            self._set(snap, call, f, self._eligible_dist(call, f, dist), "classifier")
+            self._set(snap, call, f, self.eligible_dist(call.facts[f], dist), "classifier")
 
     def presentation(self, snap: Snapshot, call: Call, f: int) -> Presentation:
-        fact, state, judge = snap.plan.facts[f], call.facts[f], self.rt.judge()
-        shown = [i for i in range(len(fact.keys)) if state.eligible is None or state.eligible[i] != F]
-        if fact.focus and not state.focus_done:
-            named = focused(self.text(snap, call, fact.reads), fact.aliases,
-                            [i for i in shown if i < len(fact.aliases)], call.mentions)
-            if named:
-                return present(judge, fact.judgment, named, escape=True, stage="mentions", framing=snap.framing)
-        return present(judge, fact.judgment, shown, stage="fallback" if state.focus_done else "full",
-                       framing=snap.framing)
-
-    def _judge(self, snap: Snapshot, pending: list):
         plan = snap.plan
-        asks = []
-        for call, fs in pending:
-            groups: dict = {}
-            for f in fs:
-                groups.setdefault(plan.facts[f].reads, []).append(f)
-            asks += [(call, reads, [(f, self.presentation(snap, call, f)) for f in gfs]) for reads, gfs in groups.items()]
-        if not asks:
-            return
-        results = scored(self.rt.judge(), [(self.text(snap, call, reads), [p.question for _, p in qs])
-                                           for call, reads, qs in asks])
-        with self._drift_lock:
-            models = sorted({model for result in results for model in
-                             (result.model, *(score.model for score in result.scores)) if model is not None})
-            for model in models:
-                if snap.locked and snap.returned_models and model not in snap.returned_models:
-                    pair = (snap.returned_models, model)
-                    if pair not in self._drift_warned:
-                        warnings.warn(f"hosted returned-model drift: lock {snap.returned_models}, response {model!r}", stacklevel=3)
-                        self._drift_warned.add(pair)
-        batch = asks[0][0].batch_native_work
-        for name, value in results[0].native_work:
-            batch[name] = batch.get(name, 0) + value
-        retry: dict = {}
-        for (call, _, qs), result in zip(asks, results):
-            call.tokens += result.tokens
-            for (f, p), sc in zip(qs, result.scores):
-                fact, state = plan.facts[f], call.facts[f]
-                call.work["judge"] += 1
-                state.presentations += (p.record(),)
-                if sc.model is not None:
-                    state.observed_models += (sc.model,)
-                state.requests = distinct((*state.requests, sc.request))
-                if snap.locked and snap.returned_models and sc.model not in snap.returned_models:
-                    self._set(snap, call, f, None, "judge", error="predictor_identity_unverified" if sc.model is None else "predictor_identity_changed")
-                    continue
-                if sc.error:
-                    self._set(snap, call, f, None, "judge", error=sc.error)
-                    continue
-                dist = unpresent(p.slots, sc, len(fact.keys))
-                if dist is None:
-                    state.focus_done = True
-                    retry.setdefault(id(call), (call, []))[1].append(f)
-                else:
-                    state.scored = tuple(sorted(s for s in p.slots if s >= 0))
-                    self._set(snap, call, f, list(dist), "judge", sc.mass)
-        self._judge(snap, list(retry.values()))
+        fact, state, binding = plan.facts[f], call.facts[f], plan.binding_of(f)
+        shown = tuple(i for i in range(len(fact.keys)) if state.eligible is None or state.eligible[i] != F)
+        slots, escape, stage = stage_of(self.text(snap, call, fact.reads) if fact.focus and not state.focus_done else "",
+                                        fact.aliases, shown, call.mentions, bool(fact.focus), state.focus_done)
+        key = (id(plan), id(snap.framing), binding, f, slots, escape, stage)
+        found = self._presented.get(key)
+        if found is None:
+            judge = self.rt.judge(binding)
+            if len(self._presented) >= PRESENTED:
+                self._presented.clear()
+            found = self._presented[key] = (present(judge, fact.judgment, slots, escape=escape, stage=stage,
+                                                    framing=snap.framing if hasattr(judge, "adapter") else None,
+                                                    catalog=plan.catalog, entry=plan.catalog and plan.catalog_ids.get(f)), plan, snap.framing)
+        return found[0]
 
     def _fact_reason(self, snap: Snapshot, call: Call, f: int) -> tuple:
         plan = snap.plan
@@ -422,16 +679,17 @@ class Executor:
             return SwitchResult(error_status(call.error), **{key: (call.error.field,)}, errors={call.error.field: str(call.error)},
                                 facts={plan.facts[f].name: self.public_fact(snap, call, f) for f in sorted(requested)})
         sources = [s.source for f, s in zip(plan.facts, call.facts) if not f.cards]
-        cost = {"rules": len(plan.exact_atoms), **call.work, "settled_by": {s: sources.count(s) for s in COUNTED},
-                "rounds": call.rounds, "logical_tokens": call.tokens, "batch_native_work": call.batch_native_work,
-                "batch_inputs": call.batch_inputs,
-                "requests": [request.as_dict() for request in distinct(r for s in call.facts for r in s.requests)]}
+        from .results import Cost
+        cost = Cost({"rules": len(plan.exact_atoms), **call.work, "settled_by": {s: sources.count(s) for s in COUNTED},
+                "bindings": {f.shown: s.binding for f, s in zip(plan.facts, call.facts) if s.binding is not None},
+                "rounds": call.rounds, "logical_tokens": call.tokens},
+                    distinct(r for s in call.facts for r in s.requests))
         errors = {f.shown: s.error for f, s in zip(plan.facts, call.facts) if s.error}
         trace = Trace(plan, tuple(call.st), MappingProxyType(dict(call.reasons)))
         read = {r for f, s in zip(plan.facts, call.facts) if s.source not in (None, "rule", "example") for r in f.reads}
-        cut = truncated(plan.fields, call.values, [n for n in plan.fields if n in read])
+        cut = self._cut(snap, call, tuple(n for n in plan.fields if n in read))
         common = dict(errors=errors, cost=cost, truncated=cut, _trace=trace)
-        if not plan.cases:
+        if not plan.rules:
             facts = self.public_facts(snap, call, {f for f, x in enumerate(plan.facts) if not x.hidden})
             open_ = {fact.name: self._fact_reason(snap, call, f) for f, fact in enumerate(plan.facts)
                      if not fact.hidden and not facts[fact.name].settled}
@@ -440,13 +698,13 @@ class Executor:
                 empty = bool(selects) and all(x.value == () and x.complete for x in selects)
                 return SwitchResult("none" if empty else "ok", facts=facts, **common)
             return _blocked(open_, None, (), facts, common)
-        res = resolve(plan.cases, plan.otherwise, call.st, plan.first)
+        res = resolve(plan.rules, plan.otherwise, call.st, plan.first)
         facts = self.public_facts(snap, call, {plan.atom_fact[i] for i in res.blocking} | requested)
         if res.status == "accepted":
-            answer, case = res.answer, res.case
-            if not plan.first and case == "otherwise":
-                answer, case = (answer,), ("otherwise",)
-            return SwitchResult("ok", tuple(thaw(value) for value in answer) if not plan.first and isinstance(answer, tuple) else thaw(answer), case, facts=facts, **common)
+            answer, rule = res.answer, res.rule
+            if not plan.first and rule == "otherwise":
+                answer, rule = (answer,), ("otherwise",)
+            return SwitchResult("ok", tuple(thaw(value) for value in answer) if not plan.first and isinstance(answer, tuple) else thaw(answer), rule, facts=facts, **common)
         open_ = {}
         for i in res.blocking:
             f = plan.atom_fact[i]
@@ -468,14 +726,14 @@ class Executor:
                 if not fact.hidden and (f in blocking or state.error or
                                         (state.source is not None if fact.cards else state.dist is not None))}
 
-    def public_fact(self, snap: Snapshot, call: Call, f: int) -> Fact:
+    def public_fact(self, snap: Snapshot, call: Call, f: int) -> FactResult:
         if call.error:
-            return Fact(None, None, False, None, str(call.error), status=error_status(call.error))
+            return FactResult(None, None, False, None, str(call.error), status=error_status(call.error))
         fact, state = snap.plan.facts[f], call.facts[f]
         if state.missing:
-            out = Fact(None, None, False, None, f"missing: {', '.join(state.missing)}")
+            out = FactResult(None, None, False, None, f"missing: {', '.join(state.missing)}")
         elif state.error:
-            out = Fact(None, None, False, state.source, f"error: {state.error}", observed_models=state.observed_models, requests=state.requests)
+            out = FactResult(None, None, False, state.source, f"error: {state.error}", observed_models=state.observed_models, requests=state.requests)
         elif fact.cards:
             out = self._select_fact(snap, call, f)
         elif state.dist is not None:
@@ -490,15 +748,15 @@ class Executor:
             none = len(fact.keys) - 1 if fact.allow_none else None
             shown = state.scored if state.scored is not None else \
                 [k for k in range(len(fact.keys)) if state.eligible is None or state.eligible[k] != F]
-            scores = MappingProxyType({fact.keys[k]: float(state.dist[k]) for k in shown})
+            scores = MappingProxyType({fact.keys[k]: state.dist[k] for k in shown})
             value = None if own is None or own == none else fact.value(own)
-            out = Fact(value, float(state.dist[top]), own is not None or state.source == "rule", state.source,
-                       why, scores, mass=state.mass, observed_models=state.observed_models, requests=state.requests,
-                       prediction=predict(fact.judgment, state.dist, none))
+            out = FactResult(value, state.dist[top], own is not None or state.source == "rule", state.source,
+                             why, scores, mass=state.mass, observed_models=state.observed_models, requests=state.requests,
+                             prediction=predict(fact.judgment, state.dist, none))
         else:
-            out = Fact(None, None, False, None, "uncertain")
+            out = FactResult(None, None, False, None, "uncertain")
         return replace(out, guidance=fact.judgment.guidance.references, status=self.fact_status(snap, call, f),
-                       presentations=state.presentations)
+                       _shown=state.presentations)
 
     def fact_status(self, snap, call, f):
         if call.error:
@@ -521,7 +779,7 @@ class Executor:
     def _unjudged(call: Call, card) -> bool:
         return any(call.facts[x].source is None and not call.facts[x].missing for x in card.claims)
 
-    def _select_fact(self, snap: Snapshot, call: Call, f: int) -> Fact:
+    def _select_fact(self, snap: Snapshot, call: Call, f: int) -> FactResult:
         fact, sel = snap.plan.facts[f], call.facts[f].selection
         ids = [c.id for c in fact.cards]
         chosen = tuple(ids[k] for k in sel.selected)
@@ -534,12 +792,75 @@ class Executor:
                         (["unresolved: " + ", ".join(f"{k} ({v})" for k, v in rest.items())] if rest else [])) or None
         members = {c.id: self.public_fact(snap, call, c.claims[0]) for c in fact.cards
                    if fact.labels and (call.facts[c.claims[0]].source is not None or call.facts[c.claims[0]].error)}
-        return Fact(value, None, sel.settled, call.facts[f].source, why, MappingProxyType({}),
-                    MappingProxyType(unresolved), MappingProxyType(superseded),
-                    () if fact.labels else tuple(MappingProxyType({"id": c.id, "source": c.raw.get("source", {}),
-                                                                   "payload": c.raw.get("payload")})
-                                                 for c in (fact.cards[k] for k in sel.selected)),
-                    sel.complete, MappingProxyType(dict(zip(ids, sel.states))), members=MappingProxyType(members))
+        return FactResult(value, None, sel.settled, call.facts[f].source, why, MappingProxyType({}),
+                          MappingProxyType(unresolved), MappingProxyType(superseded),
+                          () if fact.labels else tuple(MappingProxyType({"id": c.id, "source": c.raw.get("source", {}),
+                                                                         "payload": c.raw.get("payload")})
+                                                       for c in (fact.cards[k] for k in sel.selected)),
+                          sel.complete, MappingProxyType(dict(zip(ids, sel.states))), members=MappingProxyType(members))
+
+    def target(self, snap: Snapshot, call: Call, f: int) -> Target:
+        plan = snap.plan
+        fact, result = plan.facts[f], self.public_fact(snap, call, f)
+        if call.error is not None:
+            return Target(fact.path, fact.meaning_rev, plan.binding_of(f), None, None, None, None, frozenset(), (), str(call.error), result.status,
+                          None, False, None, None, (), (), result)
+        state = call.facts[f]
+        selection = state.selection if fact.cards else None
+        return Target(fact.path, fact.meaning_rev, plan.binding_of(f), state.source, state.dist, state.mass,
+                      None if state.eligible is None else tuple(state.eligible), state.pending, state.missing, state.error, result.status,
+                      None if fact.cards else self.own(snap, call, f)[0], not self._unsettled(snap, call, f),
+                      None if selection is None else tuple(fact.cards[k].id for k in selection.selected),
+                      None if selection is None else selection.complete, state.observed_models, state.requests, result)
+
+    @staticmethod
+    def _scope(plan, call: Call) -> set:
+        if call.outputs is not None or not plan.rules:
+            roots = call.outputs if call.outputs is not None else {f for f, fact in enumerate(plan.facts) if not fact.hidden}
+        else:
+            roots = {plan.atom_fact[i] for rule in plan.rules for i in atoms_of(rule.expr) if plan.atom_fact[i] >= 0} | set(call.extra)
+        return {x for f in roots for x in ((f,) + tuple(k for card in plan.facts[f].cards for k in card.claims))}
+
+    def row(self, call: Call, requested: list[int], decide: bool) -> Row:
+        snap = call.snap
+        plan = snap.plan
+        conditions = {} if call.error is not None else \
+            {plan.atom_keys[i]: call.st[i] for f in requested for i, sem in plan.fact_atoms[f] if isinstance(sem, Sem)}
+        return Row(None if call.error is None else str(call.error), MappingProxyType({plan.facts[f].name: self.target(snap, call, f) for f in requested}),
+                   MappingProxyType(conditions), self.result(snap, call, frozenset(requested)) if decide else None)
+
+    def preview(self, call: Call, requests: bool = True) -> Preview:
+        if call.error is not None:
+            return Preview(str(call.error), (), ())
+        snap = call.snap
+        plan = snap.plan
+        asks = self.advance(call)
+        initial = {f for _, _, entries in asks for f, _ in entries}
+        stages = []
+        for binding, _, entries in asks:
+            for f, p in entries:
+                state = call.facts[f]
+                stages.append(Stage(plan.facts[f].path, binding, p.stage, p, None if state.eligible is None else tuple(state.eligible), False))
+                if p.stage == "mentions":
+                    state.focus_done = True
+                    later = self.presentation(snap, call, f)
+                    state.focus_done = False
+                    stages.append(Stage(plan.facts[f].path, binding, later.stage, later, None if state.eligible is None else tuple(state.eligible), True))
+        if "judge" in call.sources:
+            for f in sorted(self._scope(plan, call) - initial):
+                fact, state = plan.facts[f], call.facts[f]
+                if fact.cards or state.source is not None or state.missing:
+                    continue
+                p = self.presentation(snap, call, f)
+                stages.append(Stage(fact.path, plan.binding_of(f), p.stage, p, None if state.eligible is None else tuple(state.eligible), True))
+        prepared_requests = []
+        for binding, text, entries in asks if requests else ():
+            judge = self.rt.judge(binding)
+            prepared = getattr(judge, "preview", None)
+            for request in prepared([(text, tuple(p.question for _, p in entries))]) if prepared else ():
+                prepared_requests.append(MappingProxyType({**request, "binding": binding, "rendered_input": text,
+                                                           "targets": [list(plan.facts[entries[k][0]].path) for k in request["questions"]]}))
+        return Preview(None, tuple(stages), tuple(prepared_requests))
 
 
 def _merge(reasons: list[tuple]) -> tuple:

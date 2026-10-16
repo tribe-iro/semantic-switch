@@ -2,16 +2,15 @@
 
 New claims, new domains, new sentence families: 8 claims x 10 minimal pairs (EN/PT) plus 20 picks.
 Run from the repository root:
-    python -m bench.fresh SRC [SRC ...]
+    python -m bench.fresh --output REPORT SRC [SRC ...]
 """
 from __future__ import annotations
 
-import sys
+import argparse
 from pathlib import Path
 
-from semantic_switch import Model, files
-from bench import quality
-from bench.outcomes import runtime
+from semantic_switch import Model
+from bench.outcomes import destination, output_argument, report, runtime
 
 FRESH = {
     "meeting": ("The writer accepts the proposed meeting time.", (), [
@@ -202,17 +201,20 @@ FRESH_PICKS = [
 
 
 def main():
-    out = Path("bench/results/fresh.json")
-    report = files.read_json(out) or {}
-    for source in sys.argv[1:]:
+    from bench.model_comparison import suite
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("sources", nargs="+")
+    output_argument(parser)
+    args = parser.parse_args()
+    destination(args.output)
+    out = {}
+    for source in args.sources:
         with runtime(Model(source)) as rt:
-            res = quality.run(rt, checks_spec=FRESH, picks_spec=FRESH_PICKS, topics=FRESH_TOPICS,
-                              question=FRESH_QUESTION)
-        summary = quality.summarize(res)
-        report[Path(source.split(":")[-1]).stem] = summary
-        keys = ("accuracy_given_prediction", "correct_per_submission", "auc", "ece", "coverage_0.9", "precision_0.9", "pick_accuracy", "ms_p50")
-        print(Path(source.split(":")[-1]).stem, {k: summary[k] for k in keys}, flush=True)
-    files.publish(out, report)
+            result = suite(rt, checks_spec=FRESH, picks_spec=FRESH_PICKS, topics=FRESH_TOPICS, question=FRESH_QUESTION)
+        out[Path(source.split(":")[-1]).stem] = result
+        keys = ("accuracy_given_prediction", "correct_per_submission", "auc", "coverage_0.9", "precision_0.9", "pick_accuracy")
+        print(Path(source.split(":")[-1]).stem, {k: result["summary"][k] for k in keys}, flush=True)
+    report(args.output, out)
 
 
 if __name__ == "__main__":

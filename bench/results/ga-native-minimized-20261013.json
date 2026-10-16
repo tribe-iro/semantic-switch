@@ -1,0 +1,2892 @@
+{
+ "utc": "2026-10-13T20:17:13.060500+00:00",
+ "command": [
+  ".artifacts/ga-completion/native-minimize.py"
+ ],
+ "base": "/home/tribeiro/.cache/semantic-switch/trainer/models/google--gemma-4-E2B-it/3e22461f65e89153144f8adb70e3b8c2cc9845a7/llama.cpp-a4cb4c61fd9d9c2066c7c1747821d3d65b8943bd/Q8_0.gguf",
+ "provenance": {
+  "schema": 2,
+  "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+  "sources": "d7c768d5ad718fe47869b4f861faa57100f46903df748982dd3769f2d76c3802",
+  "dataset": "b8c29ca0e4755e0384ea5b6442f19141dac5e4282397bc74e524f4ff016ff7df",
+  "execution": {
+   "identity": {
+    "source": "/home/tribeiro/.cache/semantic-switch/trainer/models/google--gemma-4-E2B-it/3e22461f65e89153144f8adb70e3b8c2cc9845a7/llama.cpp-a4cb4c61fd9d9c2066c7c1747821d3d65b8943bd/Q8_0.gguf",
+    "template": "chat"
+   },
+   "requested_device": "gpu",
+   "threads": null,
+   "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+   "loaded": false,
+   "observed_models": [],
+   "accelerated": true,
+   "batch_inputs": 1,
+   "max_slots": null,
+   "capabilities": {
+    "shared": null,
+    "conformance": false,
+    "counters": {
+     "submissions": 0,
+     "submitted_tokens": 0
+    }
+   },
+   "requested_capacity": {},
+   "configuration": {
+    "max_input_tokens": null,
+    "prefix_slots": null
+   },
+   "capacity": {},
+   "binding": {
+    "representation": "base"
+   }
+  },
+  "boundary": "public SDK"
+ },
+ "execution": {
+  "device": "gpu",
+  "tensor_types": [
+   "f16",
+   "f32",
+   "q8_0"
+  ],
+  "flash_attn": "enabled",
+  "type_k": "f16",
+  "type_v": "f16",
+  "use_extra_bufts": true,
+  "repacked": [],
+  "n_ctx": 8192,
+  "n_batch": 512,
+  "n_ubatch": 512,
+  "n_seq_max": 6,
+  "n_outputs_max": 6,
+  "swa_full": true,
+  "kv_unified": true,
+  "prefix_slots": 4,
+  "scheduling": "resident-prefix-cache@2",
+  "shared": true,
+  "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}"
+ },
+ "tolerance": 0.001,
+ "rows": [
+  {
+   "binding": "base",
+   "question": 0,
+   "prefix_tokens": 40,
+   "input_tokens": 29,
+   "suffix_tokens": 37,
+   "fresh": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -4.344968829173013e-12,
+       -26.161819458007812
+      ],
+      "log_mass": -1.2254375292286568e-10,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       0.9999999999956541,
+       4.345764349260926e-12
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "true",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "true",
+      "accepted": true
+     }
+    }
+   ],
+   "reference": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -4.344968829173013e-12,
+       -26.161819458007812
+      ],
+      "log_mass": -1.2254375292286568e-10,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       0.9999999999956541,
+       4.345764349260926e-12
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "true",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "true",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_first": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -5.332623231879552e-12,
+       -25.956926345825195
+      ],
+      "log_mass": -1.1572254265956872e-10,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       0.999999999994666,
+       5.333964498846526e-12
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "true",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "true",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_shifted": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -4.0252245980809676e-12,
+       -26.238643646240234
+      ],
+      "log_mass": -1.0540901485001086e-10,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       0.9999999999959756,
+       4.024406592988987e-12
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "true",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "true",
+      "accepted": true
+     }
+    }
+   ],
+   "reference_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "repeat_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "layout_difference": {
+    "rows": 1,
+    "max_abs_prob": 1.3095579058575389e-12,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.28171730041503906,
+    "max_abs_log_mass": 1.0313527809557854e-11,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   }
+  },
+  {
+   "binding": "base",
+   "question": 1,
+   "prefix_tokens": 40,
+   "input_tokens": 29,
+   "suffix_tokens": 64,
+   "fresh": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -8.171241461241152e-14,
+       -31.00246810913086,
+       -30.668643951416016
+      ],
+      "log_mass": -2.035704937952687e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "pick",
+      "options": [
+       "charges, invoices or payments",
+       "the product is broken, erroring or unavailable",
+       "login, profile or account access"
+      ],
+      "probabilities": [
+       0.9999999999999178,
+       3.4339911756975815e-14,
+       4.7948736158478534e-14
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "charges, invoices or payments",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "charges, invoices or payments",
+      "accepted": true
+     }
+    }
+   ],
+   "reference": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -8.171241461241152e-14,
+       -31.00246810913086,
+       -30.668643951416016
+      ],
+      "log_mass": -2.035704937952687e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "pick",
+      "options": [
+       "charges, invoices or payments",
+       "the product is broken, erroring or unavailable",
+       "login, profile or account access"
+      ],
+      "probabilities": [
+       0.9999999999999178,
+       3.4339911756975815e-14,
+       4.7948736158478534e-14
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "charges, invoices or payments",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "charges, invoices or payments",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_first": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -8.171241461241152e-14,
+       -31.049026489257812,
+       -30.669954299926758
+      ],
+      "log_mass": -1.8900436771218665e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "pick",
+      "options": [
+       "charges, invoices or payments",
+       "the product is broken, erroring or unavailable",
+       "login, profile or account access"
+      ],
+      "probabilities": [
+       0.9999999999999194,
+       3.277774915129424e-14,
+       4.788594774979432e-14
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "charges, invoices or payments",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "charges, invoices or payments",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_shifted": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -6.394884621840902e-14,
+       -31.18675994873047,
+       -30.92421531677246
+      ],
+      "log_mass": -1.6626700016786344e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "pick",
+      "options": [
+       "charges, invoices or payments",
+       "the product is broken, erroring or unavailable",
+       "login, profile or account access"
+      ],
+      "probabilities": [
+       0.9999999999999343,
+       2.8560265857961615e-14,
+       3.713504296584977e-14
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "charges, invoices or payments",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "charges, invoices or payments",
+      "accepted": true
+     }
+    }
+   ],
+   "reference_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "repeat_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "layout_difference": {
+    "rows": 1,
+    "max_abs_prob": 1.4876988529977098e-14,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.2542610168457031,
+    "max_abs_log_mass": 2.2737367544323206e-13,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   }
+  },
+  {
+   "binding": "base",
+   "question": 2,
+   "prefix_tokens": 40,
+   "input_tokens": 29,
+   "suffix_tokens": 55,
+   "fresh": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -6.300768852233887,
+       -0.002080857753753662,
+       -8.319159507751465
+      ],
+      "log_mass": -3.150258578443754e-07,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "rate",
+      "options": [
+       "can wait",
+       "today",
+       "immediately"
+      ],
+      "probabilities": [
+       0.0018348934728067844,
+       0.9979213058364405,
+       0.0002438006907528025
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 0.9999996423721313,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "today",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "today",
+      "accepted": true
+     }
+    }
+   ],
+   "reference": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -6.300768852233887,
+       -0.002080857753753662,
+       -8.319159507751465
+      ],
+      "log_mass": -3.150258578443754e-07,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "rate",
+      "options": [
+       "can wait",
+       "today",
+       "immediately"
+      ],
+      "probabilities": [
+       0.0018348934728067844,
+       0.9979213058364405,
+       0.0002438006907528025
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 0.9999996423721313,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "today",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "today",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_first": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -6.304997444152832,
+       -0.002050219802185893,
+       -8.41749095916748
+      ],
+      "log_mass": -2.8581661126736435e-07,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "rate",
+      "options": [
+       "can wait",
+       "today",
+       "immediately"
+      ],
+      "probabilities": [
+       0.0018271508392454392,
+       0.997951880784122,
+       0.0002209683766325581
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 0.9999997019767761,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "today",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "today",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_shifted": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -6.381839275360107,
+       -0.001935645705088973,
+       -8.32754135131836
+      ],
+      "log_mass": -3.06843503494747e-07,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "rate",
+      "options": [
+       "can wait",
+       "today",
+       "immediately"
+      ],
+      "probabilities": [
+       0.0016920080238774456,
+       0.9980662262444288,
+       0.00024176573169385927
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 0.9999996423721313,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "today",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "today",
+      "accepted": true
+     }
+    }
+   ],
+   "reference_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "repeat_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "layout_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0001351428153679936,
+    "max_abs_mass": 5.960464477539063e-08,
+    "max_abs_logp": 0.0899496078491211,
+    "max_abs_log_mass": 2.1026892227382632e-08,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   }
+  },
+  {
+   "binding": "base",
+   "question": 3,
+   "prefix_tokens": 40,
+   "input_tokens": 29,
+   "suffix_tokens": 34,
+   "fresh": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -35.04377365112305,
+       0.0
+      ],
+      "log_mass": -1.5631940186722204e-13,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       6.035072313204494e-16,
+       0.9999999999999993
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "false",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "false",
+      "accepted": true
+     }
+    }
+   ],
+   "reference": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -35.04377365112305,
+       0.0
+      ],
+      "log_mass": -1.5631940186722204e-13,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       6.035072313204494e-16,
+       0.9999999999999993
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "false",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "false",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_first": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -35.070064544677734,
+       0.0
+      ],
+      "log_mass": -1.5276668818842154e-13,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       5.8784724645905e-16,
+       0.9999999999999993
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "false",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "false",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_shifted": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -34.80817794799805,
+       0.0
+      ],
+      "log_mass": -1.8118839761882555e-13,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       7.638364731635555e-16,
+       0.9999999999999993
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "false",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "false",
+      "accepted": true
+     }
+    }
+   ],
+   "reference_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "repeat_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "layout_difference": {
+    "rows": 1,
+    "max_abs_prob": 1.7598922670450553e-16,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.2618865966796875,
+    "max_abs_log_mass": 2.842170943040401e-14,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   }
+  },
+  {
+   "binding": "A",
+   "question": 0,
+   "prefix_tokens": 40,
+   "input_tokens": 29,
+   "suffix_tokens": 37,
+   "fresh": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -2.9807267765136203e-12,
+       -26.538259506225586
+      ],
+      "log_mass": -3.282707439211663e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       0.9999999999970175,
+       2.9824992087817062e-12
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "true",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "true",
+      "accepted": true
+     }
+    }
+   ],
+   "reference": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -4.135358722123783e-12,
+       -26.21153450012207
+      ],
+      "log_mass": -4.057199021190172e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       0.999999999995865,
+       4.134997053114006e-12
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "true",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "true",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_first": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -3.232969447708456e-12,
+       -26.458003997802734
+      ],
+      "log_mass": -3.82982534574694e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       0.9999999999967683,
+       3.2317284505815293e-12
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "true",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "true",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_shifted": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -3.5136338283336954e-12,
+       -26.374584197998047
+      ],
+      "log_mass": -3.4710012641880894e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       0.9999999999964871,
+       3.5128824733102107e-12
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "true",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "true",
+      "accepted": true
+     }
+    }
+   ],
+   "reference_difference": {
+    "rows": 1,
+    "max_abs_prob": 1.152522521863375e-12,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.3267250061035156,
+    "max_abs_log_mass": 7.744915819785092e-13,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "repeat_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "layout_difference": {
+    "rows": 1,
+    "max_abs_prob": 2.8115402272868136e-13,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0834197998046875,
+    "max_abs_log_mass": 3.588240815588506e-13,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   }
+  },
+  {
+   "binding": "A",
+   "question": 1,
+   "prefix_tokens": 40,
+   "input_tokens": 29,
+   "suffix_tokens": 64,
+   "fresh": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -1.9895196601282805e-13,
+       -29.577430725097656,
+       -30.51864242553711
+      ],
+      "log_mass": -6.860290113763767e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "pick",
+      "options": [
+       "charges, invoices or payments",
+       "the product is broken, erroring or unavailable",
+       "login, profile or account access"
+      ],
+      "probabilities": [
+       0.9999999999998015,
+       1.427858092279493e-13,
+       5.5708568568929024e-14
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "charges, invoices or payments",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "charges, invoices or payments",
+      "accepted": true
+     }
+    }
+   ],
+   "reference": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -1.8474111129762605e-13,
+       -29.65634536743164,
+       -30.5480899810791
+      ],
+      "log_mass": -7.73070496506989e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "pick",
+      "options": [
+       "charges, invoices or payments",
+       "the product is broken, erroring or unavailable",
+       "login, profile or account access"
+      ],
+      "probabilities": [
+       0.9999999999998139,
+       1.3195105092388033e-13,
+       5.409200612432196e-14
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "charges, invoices or payments",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "charges, invoices or payments",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_first": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -1.6342482922482304e-13,
+       -29.78386688232422,
+       -30.70117950439453
+      ],
+      "log_mass": -7.439382443408249e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "pick",
+      "options": [
+       "charges, invoices or payments",
+       "the product is broken, erroring or unavailable",
+       "login, profile or account access"
+      ],
+      "probabilities": [
+       0.9999999999998375,
+       1.161531422914358e-13,
+       4.6413802864175114e-14
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "charges, invoices or payments",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "charges, invoices or payments",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_shifted": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -1.8829382497642655e-13,
+       -29.625146865844727,
+       -30.576147079467773
+      ],
+      "log_mass": -7.329248319365433e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "pick",
+      "options": [
+       "charges, invoices or payments",
+       "the product is broken, erroring or unavailable",
+       "login, profile or account access"
+      ],
+      "probabilities": [
+       0.9999999999998113,
+       1.3613261610907233e-13,
+       5.259543429194482e-14
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "charges, invoices or payments",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "charges, invoices or payments",
+      "accepted": true
+     }
+    }
+   ],
+   "reference_difference": {
+    "rows": 1,
+    "max_abs_prob": 1.2434497875801753e-14,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.07891464233398438,
+    "max_abs_log_mass": 8.704148513061227e-13,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "repeat_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "layout_difference": {
+    "rows": 1,
+    "max_abs_prob": 2.6201263381153694e-14,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.1587200164794922,
+    "max_abs_log_mass": 1.1013412404281553e-13,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   }
+  },
+  {
+   "binding": "A",
+   "question": 2,
+   "prefix_tokens": 40,
+   "input_tokens": 29,
+   "suffix_tokens": 55,
+   "fresh": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -6.597228050231934,
+       -0.003615222405642271,
+       -6.099249839782715
+      ],
+      "log_mass": -8.354109581887315e-07,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "rate",
+      "options": [
+       "can wait",
+       "today",
+       "immediately"
+      ],
+      "probabilities": [
+       0.001364144141065283,
+       0.9963913049972809,
+       0.0022445508616537446
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 0.9999991655349731,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "today",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "today",
+      "accepted": true
+     }
+    }
+   ],
+   "reference": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -6.7549238204956055,
+       -0.0035388211254030466,
+       -6.045947074890137
+      ],
+      "log_mass": -8.317755941789073e-07,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "rate",
+      "options": [
+       "can wait",
+       "today",
+       "immediately"
+      ],
+      "probabilities": [
+       0.0011651285906166557,
+       0.9964674337716714,
+       0.002367437637712002
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 0.9999991655349731,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "today",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "today",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_first": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -6.585958957672119,
+       -0.0033190236426889896,
+       -6.2482075691223145
+      ],
+      "log_mass": -7.270567152772855e-07,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "rate",
+      "options": [
+       "can wait",
+       "today",
+       "immediately"
+      ],
+      "probabilities": [
+       0.0013796037522488945,
+       0.9966864788018641,
+       0.0019339174458869518
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 0.9999992251396179,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "today",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "today",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_shifted": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -6.564998149871826,
+       -0.003718775697052479,
+       -6.073523998260498
+      ],
+      "log_mass": -8.553723773729871e-07,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "rate",
+      "options": [
+       "can wait",
+       "today",
+       "immediately"
+      ],
+      "probabilities": [
+       0.0014088265575292749,
+       0.996288130468169,
+       0.0023030429743018475
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 0.9999991655349731,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "today",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "today",
+      "accepted": true
+     }
+    }
+   ],
+   "reference_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0001990155504486273,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.15769577026367188,
+    "max_abs_log_mass": 3.6353640098241158e-09,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "repeat_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "layout_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0003983483336951199,
+    "max_abs_mass": 5.960464477539063e-08,
+    "max_abs_logp": 0.1746835708618164,
+    "max_abs_log_mass": 1.2831566209570155e-07,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   }
+  },
+  {
+   "binding": "A",
+   "question": 3,
+   "prefix_tokens": 40,
+   "input_tokens": 29,
+   "suffix_tokens": 34,
+   "fresh": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -35.94316482543945,
+       0.0
+      ],
+      "log_mass": -6.927791673660977e-14,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       2.455171613490065e-16,
+       0.9999999999999998
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "false",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "false",
+      "accepted": true
+     }
+    }
+   ],
+   "reference": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -36.25821304321289,
+       0.0
+      ],
+      "log_mass": -5.5067062021407764e-14,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       1.7916705354994936e-16,
+       0.9999999999999998
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "false",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "false",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_first": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -36.020530700683594,
+       0.0
+      ],
+      "log_mass": -6.572520305780927e-14,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       2.272386923557959e-16,
+       0.9999999999999998
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "false",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "false",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_shifted": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -36.20532989501953,
+       0.0
+      ],
+      "log_mass": -5.684341886080802e-14,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       1.888969784488706e-16,
+       0.9999999999999998
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "false",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "false",
+      "accepted": true
+     }
+    }
+   ],
+   "reference_difference": {
+    "rows": 1,
+    "max_abs_prob": 6.635010779905713e-17,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.3150482177734375,
+    "max_abs_log_mass": 1.4210854715202004e-14,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "repeat_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "layout_difference": {
+    "rows": 1,
+    "max_abs_prob": 3.83417139069253e-17,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.1847991943359375,
+    "max_abs_log_mass": 8.881784197001252e-15,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   }
+  },
+  {
+   "binding": "B",
+   "question": 0,
+   "prefix_tokens": 40,
+   "input_tokens": 29,
+   "suffix_tokens": 37,
+   "fresh": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -1.2683187833317788e-12,
+       -27.394227981567383
+      ],
+      "log_mass": -1.2090950463061745e-10,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       0.9999999999987328,
+       1.267178954875954e-12
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "true",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "true",
+      "accepted": true
+     }
+    }
+   ],
+   "reference": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -1.2256862191861728e-12,
+       -27.427724838256836
+      ],
+      "log_mass": -1.3242029694993107e-10,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       0.9999999999987745,
+       1.2254354836400928e-12
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "true",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "true",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_first": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -1.2683187833317788e-12,
+       -27.39286994934082
+      ],
+      "log_mass": -1.206288402499922e-10,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       0.999999999998731,
+       1.2689009937609896e-12
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "true",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "true",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_shifted": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -1.2967404927621828e-12,
+       -27.369731903076172
+      ],
+      "log_mass": -1.1371881214472523e-10,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       0.9999999999987015,
+       1.2986031838596017e-12
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "true",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "true",
+      "accepted": true
+     }
+    }
+   ],
+   "reference_difference": {
+    "rows": 1,
+    "max_abs_prob": 4.1744385725905886e-14,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.033496856689453125,
+    "max_abs_log_mass": 1.1510792319313623e-11,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "repeat_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "layout_difference": {
+    "rows": 1,
+    "max_abs_prob": 2.9702190098612144e-14,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.023138046264648438,
+    "max_abs_log_mass": 6.910028105266974e-12,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   }
+  },
+  {
+   "binding": "B",
+   "question": 1,
+   "prefix_tokens": 40,
+   "input_tokens": 29,
+   "suffix_tokens": 64,
+   "fresh": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -1.9895196601282805e-13,
+       -30.283084869384766,
+       -29.676097869873047
+      ],
+      "log_mass": -5.009326287108706e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "pick",
+      "options": [
+       "charges, invoices or payments",
+       "the product is broken, erroring or unavailable",
+       "login, profile or account access"
+      ],
+      "probabilities": [
+       0.9999999999998002,
+       7.050555672636834e-14,
+       1.2937025991854067e-13
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "charges, invoices or payments",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "charges, invoices or payments",
+      "accepted": true
+     }
+    }
+   ],
+   "reference": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -2.0605739337042905e-13,
+       -30.252779006958008,
+       -29.640090942382812
+      ],
+      "log_mass": -4.387601393318619e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "pick",
+      "options": [
+       "charges, invoices or payments",
+       "the product is broken, erroring or unavailable",
+       "login, profile or account access"
+      ],
+      "probabilities": [
+       0.9999999999997933,
+       7.267499574907492e-14,
+       1.3411336537241648e-13
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "charges, invoices or payments",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "charges, invoices or payments",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_first": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -2.1671553440683056e-13,
+       -30.192045211791992,
+       -29.608400344848633
+      ],
+      "log_mass": -4.970246436641901e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "pick",
+      "options": [
+       "charges, invoices or payments",
+       "the product is broken, erroring or unavailable",
+       "login, profile or account access"
+      ],
+      "probabilities": [
+       0.9999999999997843,
+       7.722561350208933e-14,
+       1.384315597497655e-13
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "charges, invoices or payments",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "charges, invoices or payments",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_shifted": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -1.8829382497642655e-13,
+       -30.33171272277832,
+       -29.754497528076172
+      ],
+      "log_mass": -4.849454171562684e-12,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "pick",
+      "options": [
+       "charges, invoices or payments",
+       "the product is broken, erroring or unavailable",
+       "login, profile or account access"
+      ],
+      "probabilities": [
+       0.9999999999998133,
+       6.715904901596347e-14,
+       1.196150735778371e-13
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "charges, invoices or payments",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "charges, invoices or payments",
+      "accepted": true
+     }
+    }
+   ],
+   "reference_difference": {
+    "rows": 1,
+    "max_abs_prob": 6.8833827526759706e-15,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.036006927490234375,
+    "max_abs_log_mass": 6.217248937900877e-13,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "repeat_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "layout_difference": {
+    "rows": 1,
+    "max_abs_prob": 2.8976820942716586e-14,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.14609718322753906,
+    "max_abs_log_mass": 1.2079226507921703e-13,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   }
+  },
+  {
+   "binding": "B",
+   "question": 2,
+   "prefix_tokens": 40,
+   "input_tokens": 29,
+   "suffix_tokens": 55,
+   "fresh": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -5.92612361907959,
+       -0.0029400116764009,
+       -8.228687286376953
+      ],
+      "log_mass": -4.490162552883703e-07,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "rate",
+      "options": [
+       "can wait",
+       "today",
+       "immediately"
+      ],
+      "probabilities": [
+       0.002668807278018813,
+       0.9970643062760125,
+       0.00026688644596866324
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 0.9999995827674866,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "today",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "today",
+      "accepted": true
+     }
+    }
+   ],
+   "reference": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -5.826045036315918,
+       -0.003219790756702423,
+       -8.236183166503906
+      ],
+      "log_mass": -4.510962980930344e-07,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "rate",
+      "options": [
+       "can wait",
+       "today",
+       "immediately"
+      ],
+      "probabilities": [
+       0.0029497199749562836,
+       0.9967853866488865,
+       0.00026489337615730375
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 0.9999995827674866,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "today",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "today",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_first": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -5.743154525756836,
+       -0.0034816660918295383,
+       -8.213508605957031
+      ],
+      "log_mass": -4.3871133925676986e-07,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "rate",
+      "options": [
+       "can wait",
+       "today",
+       "immediately"
+      ],
+      "probabilities": [
+       0.0032046431862478224,
+       0.9965243884832018,
+       0.0002709683305503367
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 0.9999995827674866,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "today",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "today",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_shifted": [
+    {
+     "native": {
+      "columns": 3,
+      "finite": [
+       true,
+       true,
+       true
+      ],
+      "logp": [
+       -5.866667747497559,
+       -0.0030925660394132137,
+       -8.272315979003906
+      ],
+      "log_mass": -4.1852072740766744e-07,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "rate",
+      "options": [
+       "can wait",
+       "today",
+       "immediately"
+      ],
+      "probabilities": [
+       0.0028322955521678642,
+       0.9969122115583342,
+       0.0002554928894980206
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 0.9999995827674866,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "today",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "today",
+      "accepted": true
+     }
+    }
+   ],
+   "reference_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.00028091269693747076,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.10007858276367188,
+    "max_abs_log_mass": 2.0800428046641173e-09,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "repeat_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "layout_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.00038782307513240966,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.12351322174072266,
+    "max_abs_log_mass": 2.0190611849102424e-08,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   }
+  },
+  {
+   "binding": "B",
+   "question": 3,
+   "prefix_tokens": 40,
+   "input_tokens": 29,
+   "suffix_tokens": 34,
+   "fresh": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -34.39486312866211,
+       -1.7763568394002505e-15
+      ],
+      "log_mass": -4.085620730620576e-13,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       1.154783945437545e-15,
+       0.9999999999999989
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "false",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "false",
+      "accepted": true
+     }
+    }
+   ],
+   "reference": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -33.97005081176758,
+       -1.7763568394002505e-15
+      ],
+      "log_mass": -6.465938895416912e-13,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       1.766014977441236e-15,
+       0.9999999999999982
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "false",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "false",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_first": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -34.1677360534668,
+       -1.7763568394002505e-15
+      ],
+      "log_mass": -4.654054919228656e-13,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       1.4492415367035234e-15,
+       0.9999999999999986
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "false",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "false",
+      "accepted": true
+     }
+    }
+   ],
+   "namespace_shifted": [
+    {
+     "native": {
+      "columns": 2,
+      "finite": [
+       true,
+       true
+      ],
+      "logp": [
+       -34.400718688964844,
+       -1.7763568394002505e-15
+      ],
+      "log_mass": -4.405364961712621e-13,
+      "error": null
+     },
+     "observation": {
+      "revision": 1,
+      "kind": "check",
+      "options": [
+       "true",
+       "false"
+      ],
+      "probabilities": [
+       1.1480417972005134e-15,
+       0.9999999999999989
+      ],
+      "stage": "final",
+      "normalization": "option-softmax@1",
+      "mass": 1.0,
+      "status": "ok",
+      "source": "judge",
+      "accepted": "false",
+      "score": null,
+      "stages": [],
+      "presentations": [],
+      "models": [],
+      "execution": null
+     },
+     "public": {
+      "status": "ok",
+      "reason": null,
+      "answer": "false",
+      "accepted": true
+     }
+    }
+   ],
+   "reference_difference": {
+    "rows": 1,
+    "max_abs_prob": 6.661338147750939e-16,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.42481231689453125,
+    "max_abs_log_mass": 2.3803181647963356e-13,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "repeat_difference": {
+    "rows": 1,
+    "max_abs_prob": 0.0,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.0,
+    "max_abs_log_mass": 0.0,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   },
+   "layout_difference": {
+    "rows": 1,
+    "max_abs_prob": 3.3306690738754696e-16,
+    "max_abs_mass": 0.0,
+    "max_abs_logp": 0.23298263549804688,
+    "max_abs_log_mass": 2.4868995751603507e-14,
+    "shape_changes": 0,
+    "answer_changes": 0,
+    "status_changes": 0,
+    "acceptance_changes": 0,
+    "errors": []
+   }
+  }
+ ]
+}

@@ -8,12 +8,14 @@ import sys
 import tempfile
 from pathlib import Path
 
-from semantic_switch import files
-from semantic_switch.errors import ConfigError
+from semantic_switch import ConfigError
+from semantic_switch.training import files
 
 from . import assets
-from .adapter import identify
+from .adapter import identify, zero_delta
 from .jobs import MODULES
+
+REPRESENTATIONS = ('merged', 'runtime-adapter')
 
 INSPECT = ("import json,sys,numpy as np; from gguf import GGUFReader; r=GGUFReader(sys.argv[1]); "
            "print(json.dumps({t.name: {'shape': [int(n) for n in t.data.shape], 'finite': bool(np.isfinite(t.data).all())} for t in r.tensors}))")
@@ -39,6 +41,12 @@ def adapter(fitted, located, peft, destination):
     expected = expected_tensors(fitted)
     if set(expected) != set(tensors) or any(tensors[name]['shape'] != shape or not tensors[name]['finite'] for name, shape in expected.items()):
         raise ConfigError(f'{peft}: converted adapter targets/shapes or finite tensors do not match the fitted architecture; refit with this toolchain')
+
+
+def representation_of(value):
+    if value not in REPRESENTATIONS:
+        raise ConfigError(f'deployment representation must be one of {", ".join(REPRESENTATIONS)}, not {value!r}')
+    return value
 
 
 def conversion_bytes(located):
@@ -74,3 +82,14 @@ def verify_zero(fitted, located, peft, quant, work, job):
         raise ConfigError(f'zero adapter merged into the F16 base and quantized to {quant} gives {produced}, not the pipeline-built base {expected}; '
                           f'the base or toolchain differs from manifest {located["manifest"]}: rebuild with semantic-trainer assets and refit')
     return produced
+
+
+def verify_runtime_zero(fitted, located, peft, quant, base_sha256):
+    identify(fitted, peft)
+    if not zero_delta(peft):
+        raise ConfigError(f'{peft}: the zero adapter has nonzero lora_B factors, so its runtime delta over the base is not zero; refit from a fresh initialization')
+    expected = located['gguf'][quant]['sha256']
+    if base_sha256 != expected:
+        raise ConfigError(f'runtime-adapter base {base_sha256} is not the pipeline-built {quant} base {expected} of manifest {located["manifest"]}; '
+                          'rebuild with semantic-trainer assets and refit')
+    return expected

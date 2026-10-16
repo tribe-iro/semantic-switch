@@ -8,10 +8,19 @@ import math
 from .compiler import FactPlan, Plan, compile_spec, digest
 from .results import freeze, thaw
 from .errors import ConfigError
-from .examples import DATASET_SCHEMA, Example, collect, make_example, overrides_of
+from .examples import DATASET_SCHEMA, Example, collect, make_example, overrides_of, reduced
 from .families import valid_seeds
 from .heads import LexicalHead
 from .judgment import CERTAIN, OFF, Policy
+from .resident import REPRESENTATIONS
+
+
+@dataclass(frozen=True, slots=True)
+class Pending:
+    models: Mapping
+    execution: Mapping
+    pinned: Mapping
+    scopes: Mapping
 
 
 @dataclass(frozen=True, slots=True)
@@ -30,15 +39,20 @@ class Snapshot:
     membership: Mapping = MappingProxyType({})
 
     family_seeds: Mapping = MappingProxyType({})
-    returned_models: tuple = ()
+    returned_models: Mapping = MappingProxyType({})
     candidate_id: str | None = None
     dataset_id: str | None = None
     lineage: Mapping = MappingProxyType({})
     framing: object = None
+    pending: Pending | None = None
 
     def __post_init__(self):
-        for name in ("examples", "overrides", "heads", "policies", "sides", "models", "membership", "family_seeds", "lineage"):
+        for name in ("examples", "overrides", "heads", "policies", "sides", "models", "membership", "family_seeds", "lineage", "returned_models"):
             object.__setattr__(self, name, freeze(getattr(self, name)))
+
+    @property
+    def reconciled(self) -> bool:
+        return self.pending is None
 
     def policy(self, source: str, fact: FactPlan) -> Policy:
         if source in ("example", "rule"):
@@ -47,24 +61,20 @@ class Snapshot:
         return table.get(fact.name, fact.policy if source == "judge" else OFF)
 
     def with_example(self, e: Example) -> Snapshot:
-        previous = next((example for example in self.examples[e.fact] if example.key == e.key), None)
-        groups = tuple(dict.fromkeys((*getattr(previous, "groups", ()),
-                                      *((previous.group,) if previous and previous.group is not None else ()),
-                                      *e.groups, *((e.group,) if e.group is not None else ()))))
-        e = replace(e, groups=groups, pairs=tuple(dict.fromkeys((*getattr(previous, "pairs", ()), *e.pairs))), selections=tuple(dict.fromkeys((*getattr(previous, "selections", ()), *e.selections))))
-        kept = tuple(x for x in self.examples[e.fact] if x.key != e.key) + (e,)
-        return replace(self, examples={**self.examples, e.fact: kept},
-                       overrides={**self.overrides, e.fact: {**self.overrides[e.fact], e.key: e.value}})
-
-    def with_examples(self, fact: str, kept: tuple, overrides: bool = True) -> Snapshot:
-        table = {e.key: e.value for e in kept} if overrides else {}
-        return replace(self, examples={**self.examples, fact: kept}, overrides={**self.overrides, fact: table})
+        fact = self.plan.fact_index[e.fact]
+        previous = [example for example in self.examples[e.fact] if example.key == e.key]
+        merged, _ = reduced(self.plan.facts[fact], (*previous, e))
+        kept = tuple(x for x in self.examples[e.fact] if x.key != e.key) + ((merged,) if merged is not None else ())
+        overrides = {key: value for key, value in self.overrides[e.fact].items() if key != e.key}
+        if merged is not None:
+            overrides[e.key] = merged.value
+        warnings = self.warnings if merged is not None else self.warnings + (f"{'/'.join(e.path)}: competing corrections for one input have no recorded lineage; "
+                                                                            "the override is withheld until ss correct records a resolution",)
+        return replace(self, examples={**self.examples, e.fact: kept}, overrides={**self.overrides, e.fact: overrides}, warnings=warnings)
 
 
 def draft(plan: Plan, records: list[dict]) -> Snapshot:
     examples, warnings = collect(plan, records)
-    if any(f.specialize for f in plan.facts):
-        raise ConfigError("specialize: lexical no longer fits predictors; remove it, run ss export, semantic-trainer lexical EXPORT --to BUNDLE, then ss lock --head FACT=BUNDLE")
     return Snapshot(plan, examples, overrides_of(examples), warnings=warnings)
 
 
@@ -77,16 +87,20 @@ def _execution(execution) -> str:
     return "unknown" if execution is None else ", ".join(f"{key}={execution[key]}" for key in sorted(execution) if key != "build")
 
 
-def from_lock(data: dict, identity, allow_model_change: bool, source: str) -> Snapshot:
+def from_lock(data: dict, source: str) -> Snapshot:
     try:
-        return _from_lock(data, identity, allow_model_change, source)
+        return _from_lock(data, source)
     except ConfigError:
         raise
     except (KeyError, TypeError, ValueError, AttributeError, IndexError) as error:
         raise ConfigError(f'{source}: malformed lock artifact: {error}') from None
 
 
-LOCK_SCHEMA = 17
+LOCK_SCHEMA = 20
+
+
+def lock_id(data: dict) -> str:
+    return digest({key: value for key, value in data.items() if key not in ("id", "created")})[:12]
 
 
 def _fact(source: str, plan: Plan, f: FactPlan, fd, tables: tuple):
@@ -98,8 +112,8 @@ def _fact(source: str, plan: Plan, f: FactPlan, fd, tables: tuple):
     if not isinstance(fd.get("examples"), list) or any(not isinstance(record, dict) or
         not {"input", "value"} <= record.keys() for record in fd["examples"]):
         raise ConfigError(f"{source}: {f.shown}: invalid examples")
-    examples[f.name] = tuple(make_example(plan, f, r["input"], r["value"], r.get("created", ""), r.get("group"), r.get("pair"), r.get("groups", ()), selections=r.get("selections", ()), sources=r["label_sources"], pairs=r.get("pairs", ()))
-                             for r in fd["examples"])
+    examples[f.name] = tuple(make_example(plan, f, r["input"], r["value"], r.get("created", ""), groups=r.get("groups", ()), pairs=r.get("pairs", ()),
+                                          selections=r.get("selections", ()), sources=r["label_sources"]) for r in fd["examples"])
     if fd.get('head') is not None and (not isinstance(fd['head'], dict) or not fd['head']):
         raise ConfigError(f'{source}: {f.shown}: invalid head payload')
     if not isinstance(fd.get('policies'), dict):
@@ -153,21 +167,29 @@ def _fact(source: str, plan: Plan, f: FactPlan, fd, tables: tuple):
     membership[f.name] = {use: frozenset(keys) for use, keys in member.items()}
 
 
-def _from_lock(data: dict, identity, allow_model_change: bool, source: str) -> Snapshot:
+def _envelope(data: dict, source: str):
     if not isinstance(data, dict) or data.get("schema") != LOCK_SCHEMA:
         raise ConfigError(f"{source}: unsupported lock schema {data.get('schema') if isinstance(data, dict) else None} "
                           f"(current {LOCK_SCHEMA}); regenerate this lock with ss lock")
     if not isinstance(data.get("spec"), dict) or not isinstance(data.get("id"), str):
         raise ConfigError(f"{source}: lock needs a spec object and artifact ID")
-    if data.get("id") != digest({key: value for key, value in data.items() if key not in ("id", "created")})[:12]:
+    if data.get("id") != lock_id(data):
         raise ConfigError(f"{source}: lock payload does not match its artifact ID")
     plan = compile_spec(thaw(data["spec"]), source)
     if not isinstance(data.get("facts"), dict) or set(data["facts"]) != {fact.name for fact in plan.visible}:
         raise ConfigError(f"{source}: lock fact set differs from its compiled definition")
-    if not isinstance(data.get("models"), dict) or not isinstance(data["models"].get("judge"), dict):
-        raise ConfigError(f"{source}: lock is missing judge identity")
-    if not isinstance(data.get("execution"), dict) or "judge" not in data["execution"]:
-        raise ConfigError(f"{source}: lock is missing judge execution identity; regenerate this lock with ss lock")
+    names = set(plan.bindings)
+    if not isinstance(data.get("models"), dict) or set(data["models"]) != names or not all(isinstance(value, dict) for value in data["models"].values()):
+        raise ConfigError(f"{source}: lock must pin one model identity per binding {sorted(names)}; regenerate this lock with ss lock")
+    if not isinstance(data.get("execution"), dict) or set(data["execution"]) != names:
+        raise ConfigError(f"{source}: lock is missing judge execution identity for its bindings {sorted(names)}; regenerate this lock with ss lock")
+    scopes = {}
+    for target, name in plan.targets.items():
+        scopes.setdefault(name, []).append(target)
+    pinned = data.get("bindings")
+    if not isinstance(pinned, dict) or set(pinned) != names or any(not isinstance(record, dict) or record.get("scope") != sorted(scopes[name]) or
+                                                                   record.get("representation") not in REPRESENTATIONS for name, record in pinned.items()):
+        raise ConfigError(f"{source}: lock target-binding map differs from its compiled definition; regenerate this lock with ss lock")
     seeds = data.get("family_seeds")
     if not isinstance(seeds, dict) or any(not isinstance(stages, dict) or any(
         stage not in ("trained", "tuned", "validated", "judge") or not valid_seeds(nodes)
@@ -177,9 +199,13 @@ def _from_lock(data: dict, identity, allow_model_change: bool, source: str) -> S
     if not isinstance(data.get('tuned_keys'), list) or not all(isinstance(key, str) for key in data['tuned_keys']):
         raise ConfigError(f'{source}: invalid tuned input membership')
     returned = data.get('returned_models')
-    if not isinstance(returned, dict) or not isinstance(returned.get('judge'), list) or len(returned['judge']) > 1 or \
-            not all(isinstance(model, str) for model in returned['judge']):
-        raise ConfigError(f'{source}: a lock must freeze at most one returned judge identity')
+    if not isinstance(returned, dict) or set(returned) != names or any(not isinstance(models, list) or len(models) > 1 or
+                                                                       not all(isinstance(model, str) for model in models) for models in returned.values()):
+        raise ConfigError(f'{source}: a lock must freeze at most one returned predictor identity per binding')
+    return plan, names, scopes, pinned, seeds, returned
+
+
+def _populated(data: dict, plan: Plan, source: str):
     tables = examples, heads, policies, sides, membership = {}, {}, {}, {}, {}
     for f in plan.visible:
         fd = data["facts"][f.name]
@@ -200,57 +226,81 @@ def _from_lock(data: dict, identity, allow_model_change: bool, source: str) -> S
         raise ConfigError(f'{source}: embedded dataset is not a current schema-{DATASET_SCHEMA} materialization; regenerate this lock with ss lock')
     if not isinstance(data.get('lineage'), dict) or any(not isinstance(v, dict) or v.get('state') not in ('unknown', 'known_overlap', 'declared_disjoint') for v in data['lineage'].values()):
         raise ConfigError(f'{source}: missing lineage assessment')
+    return tables, dataset
+
+
+def reconcile(snap: Snapshot, context, allow_model_change: bool, source: str) -> Snapshot:
+    pending = snap.pending
+    if pending is None:
+        return snap
+    names, scopes, pinned = sorted(pending.models), pending.scopes, pending.pinned
+    policies = {src: dict(table) for src, table in snap.policies.items()}
+    sides = {src: dict(table) for src, table in snap.sides.items()}
     warnings = []
+    if snap.framing is not None:
+        native = [judge for judge in (context.judge(name) for name in names) if hasattr(judge, "adapter")]
+        if not native:
+            raise ConfigError("pinned native framing requires a native judge; re-run `ss lock` with this judge")
+        for judge in native:
+            judge.adapter.validate_framing(snap.framing)
+    models, returned, changed = dict(pending.models), dict(snap.returned_models), set()
+
+    def reset(name, what):
+        if not allow_model_change:
+            raise ConfigError(f"{source}: {what}. Re-run `ss lock`, or load with allow_model_change=True.")
+        for table in (policies, sides):
+            for fact in scopes[name]:
+                table.get("judge", {}).pop(fact, None)
+            if not table.get("judge", True):
+                del table["judge"]
+        changed.add(name)
+        warnings.append(f"{what}; its tuned judge policies were reset; predictor receipts are unverified until re-lock")
+
+    for name in names:
+        label = "judge" if name == "judge" else f"binding {name}"
+        locked, current = pending.models[name], context.identity(name)
+        if locked.get("presentation") != current.get("presentation"):
+            raise ConfigError(f"{source}: evidence/choice presentation changed; re-run ss lock")
+        representation = context.representation(name)
+        if representation != pinned[name]["representation"]:
+            reset(name, f"{label} representation changed: lock: {pinned[name]['representation']}, runtime has {representation}")
+        elif not _same({k: v for k, v in locked.items() if k != "prompt" or snap.framing is None},
+                       {k: v for k, v in current.items() if k != "prompt" or snap.framing is None}):
+            differences = sorted(key for key in set(locked) | set(current)
+                                 if key != "file" and locked.get(key) != current.get(key))
+            reset(name, f"{label} identity changed ({', '.join(differences)}): lock: lock was made with {locked.get('file') or locked.get('source')} "
+                        f"({locked.get('template', '-')}), runtime has {current.get('file') or current.get('source')} ({current.get('template', '-')})")
+        models[name] = current if name in changed else locked
+        tuned = any(fact in policies.get("judge", {}) for fact in scopes[name])
+        execution = context.execution(name) if tuned else None
+        if execution is not None:
+            before = pending.execution[name]
+            material = sorted(key for key in set(before or {}) | set(execution) if key != "build" and (before or {}).get(key) != execution.get(key))
+            if material:
+                reset(name, f"{label} execution changed ({', '.join(material)}): lock: {_execution(before)}, runtime has {_execution(execution)}")
+            elif before != execution:
+                warnings.append(f"{label} native build changed since lock; tuned judge policies kept, but their calibration has not been reverified on this build; re-run ss lock")
+    if any(not returned[name] and context.identity(name).get('model') for name in names):
+        warnings.append('hosted returned-model baseline is unverified')
+    result = replace(snap, policies=policies, sides=sides, warnings=snap.warnings + tuple(warnings), models=MappingProxyType(models),
+                     returned_models={name: () if name in changed else models_ for name, models_ in returned.items()}, pending=None)
+    if changed:
+        from .artifacts import snapshot_digest
+        stale = {f"judge:{snap.plan.fact(fact).shown}" for name in changed for fact in scopes[name]}
+        result = replace(result, lineage={key: value for key, value in result.lineage.items() if key not in stale})
+        result = replace(result, candidate_id=snapshot_digest(result, context))
+    return result
+
+
+def _from_lock(data: dict, source: str) -> Snapshot:
+    plan, names, scopes, pinned, seeds, returned = _envelope(data, source)
+    tables, dataset = _populated(data, plan, source)
+    examples, heads, policies, sides, membership = tables
     framing = None
     if data.get("framing") is not None:
         from .protocols import Framing
         framing = Framing.parse(data["framing"])
-        runtime = getattr(identity, "__self__", None)
-        judge = runtime.judge() if runtime is not None else None
-        if judge is None or not hasattr(judge, "adapter"):
-            raise ConfigError("pinned native framing requires a native judge; re-run `ss lock` with this judge")
-        judge.adapter.validate_framing(framing)
-    locked, current = data["models"]["judge"], identity("judge")
-    runtime_identity = current
-    if locked.get("presentation") != current.get("presentation"):
-        raise ConfigError(f"{source}: evidence/choice presentation changed; re-run ss lock")
-    changed = not _same({k: v for k, v in locked.items() if k != "prompt" or framing is None},
-                        {k: v for k, v in current.items() if k != "prompt" or framing is None})
-    if changed:
-        differences = sorted(key for key in set(locked) | set(current)
-                             if key != "file" and locked.get(key) != current.get(key))
-        what = f"judge identity changed ({', '.join(differences)}): lock: lock was made with {locked.get('file') or locked.get('source')} " \
-               f"({locked.get('template', '-')}), runtime has {current.get('file') or current.get('source')} " \
-               f"({current.get('template', '-')})"
-        if not allow_model_change:
-            raise ConfigError(f"{source}: {what}. Re-run `ss lock`, or load with allow_model_change=True.")
-        policies.pop("judge", None)
-        sides.pop("judge", None)
-        warnings.append(f"{what}; its tuned judge policies were reset; predictor receipts are unverified until re-lock")
-    runtime = getattr(identity, "__self__", None)
-    execution = runtime.execution("judge") if runtime is not None and policies.get("judge") else None
-    if execution is not None:
-        before = data["execution"]["judge"]
-        material = sorted(key for key in set(before or {}) | set(execution) if key != "build" and (before or {}).get(key) != execution.get(key))
-        if material:
-            what = f"judge execution changed ({', '.join(material)}): lock: {_execution(before)}, runtime has {_execution(execution)}"
-            if not allow_model_change:
-                raise ConfigError(f"{source}: {what}. Re-run `ss lock`, or load with allow_model_change=True.")
-            changed = True
-            policies.pop("judge", None)
-            sides.pop("judge", None)
-            warnings.append(f"{what}; its tuned judge policies were reset; predictor receipts are unverified until re-lock")
-        elif before != execution:
-            warnings.append("judge native build changed since lock; tuned judge policies kept, but their calibration has not been reverified on this build; re-run ss lock")
-    result = Snapshot(plan, examples, overrides_of(examples), heads, policies, sides, True, data["id"],
-                      tuple(warnings), MappingProxyType(dict(data["models"])), frozenset(data["tuned_keys"]),
-                      MappingProxyType(membership), freeze(seeds), tuple(returned["judge"]), data.get("candidate_id"),
-                      dataset["id"], data["lineage"], framing)
-    if not result.returned_models and runtime_identity.get('model'):
-        result = replace(result, warnings=result.warnings + ('hosted returned-model baseline is unverified',))
-    if changed:
-        from .artifacts import snapshot_digest
-        result = replace(result, returned_models=(), models={**result.models, 'judge': runtime_identity},
-                         lineage={key: value for key, value in result.lineage.items() if not key.startswith('judge:')})
-        result = replace(result, candidate_id=snapshot_digest(result, runtime))
-    return result
+    return Snapshot(plan, examples, overrides_of(examples), heads, policies, sides, True, data["id"], (), MappingProxyType(dict(data["models"])),
+                    frozenset(data["tuned_keys"]), MappingProxyType(membership), freeze(seeds), {name: tuple(models) for name, models in returned.items()},
+                    data.get("candidate_id"), dataset["id"], data["lineage"], framing,
+                    Pending(data["models"], data["execution"], pinned, {name: tuple(targets) for name, targets in scopes.items()}))

@@ -1,0 +1,169 @@
+{
+ "command": [
+  ".artifacts/ga-implementation/native-controls.py",
+  "cpu"
+ ],
+ "source": {
+  "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+  "sources": "49459cb55239ae1a3ff9030469be73641c52dce3d058b70b8ad94d580c544916"
+ },
+ "roles": {
+  "judge": {
+   "controls": {
+    "repeat": {
+     "equal_logp": true,
+     "equal_mass": true,
+     "max_logp_delta": 0.0,
+     "max_probability_delta": 0.0,
+     "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    "residency": {
+     "equal_logp": true,
+     "equal_mass": true,
+     "max_logp_delta": 0.0,
+     "max_probability_delta": 0.0,
+     "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    },
+    "reference": {
+     "equal_logp": true,
+     "equal_mass": true,
+     "max_logp_delta": 0.0,
+     "max_probability_delta": 0.0,
+     "errors": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   },
+   "execution": {
+    "identity": {
+     "presentation": {
+      "evidence": "named-fields@2",
+      "choices": "full-criteria@3"
+     },
+     "file": "Q8_0.gguf",
+     "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+     "template": "chat@3:0a2c8073",
+     "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb"
+    },
+    "requested_device": "cpu",
+    "threads": 8,
+    "build": "{\"native\": \"49107cc32c91fccb13ce020e955ae63f4d01bbe95d4742efd1f3f8b9da8773c1\", \"system\": \"CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \", \"version\": \"0.3.36\"}",
+    "loaded": true,
+    "observed_models": [],
+    "accelerated": false,
+    "batch_inputs": 1,
+    "max_slots": 20,
+    "capabilities": {
+     "shared": true,
+     "conformance": true,
+     "counters": {
+      "prefix_hits": 7,
+      "prefix_misses": 10,
+      "state_hits": 0,
+      "state_misses": 17,
+      "state_tokens": 520,
+      "suffix_tokens": 2006,
+      "failures": 0,
+      "prefix_tokens": 632,
+      "prefix_evictions": 6,
+      "adapter_switches": 0,
+      "submissions": 107,
+      "submitted_tokens": 4576
+     }
+    },
+    "requested_capacity": {
+     "n_ctx": 21504,
+     "n_ctx_seq": 3584,
+     "n_batch": 512,
+     "n_seq_max": 6
+    },
+    "configuration": {
+     "max_input_tokens": 1024,
+     "max_prefix_tokens": 1024,
+     "prefix_slots": 4
+    },
+    "capacity": {
+     "n_ctx": 21504,
+     "n_ctx_seq": 3584,
+     "sequence_limit": 3584,
+     "n_batch": 512,
+     "n_seq_max": 6,
+     "prefix_slots": 4,
+     "scheduling": "resident-prefix-streams@3",
+     "n_outputs_max": 6,
+     "swa_full": true,
+     "kv_unified": false,
+     "n_ubatch": 512,
+     "flash_attn": "enabled",
+     "type_k": "f16",
+     "type_v": "f16",
+     "device": "cpu",
+     "tensor_types": [
+      "f16",
+      "f32",
+      "q8_0"
+     ],
+     "use_extra_bufts": true,
+     "repacked": [],
+     "buffers": {
+      "CPU model": 5379498967,
+      "CPU output": 6291456,
+      "CPU KV": 396361728,
+      "Vulkan_Host compute": 123165737
+     },
+     "shared": true
+    },
+    "binding": {
+     "representation": "base",
+     "adapter": "3ea8914e113c91b02e85f1a0828a3141c6662a0b411c106b82caeb4fef089dbd",
+     "pool": {
+      "loads": 0,
+      "hits": 0,
+      "evictions": 0,
+      "underestimates": 0,
+      "unestimated": 0,
+      "max_adapters": 4,
+      "resident": {}
+     }
+    }
+   }
+  }
+ }
+}

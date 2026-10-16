@@ -10,17 +10,13 @@ from copy import deepcopy
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-import numpy as np
-
-from semantic_switch import Check, ConfigError, Pick, Rate, DEFAULT_JUDGE, PRECISE_JUDGE, Model, files, tools
+from semantic_switch import Check, ConfigError, Guidance, Pick, Rate, DEFAULT_JUDGE, PRECISE_JUDGE, Model, files, tools
 from semantic_switch.compiler import digest
-from semantic_switch.metrics import Progress, comparison_identity, identity, paired, ratio
-from bench.diagnostics import fingerprint
-from bench.outcomes import classification_metrics, failure, finish, judged, measure, resumable, resumed, runtime as model_runtime, task, prediction_value, work_key
-from semantic_switch.context import render
-from semantic_switch.inline import rendered
-from semantic_switch.presentation import identity as presentation_identity
-from bench.workflows import cli
+from semantic_switch.metrics import comparison_identity, paired, ratio
+from bench.outcomes import Progress
+from semantic_switch.results import thaw
+from bench.outcomes import (Receipts, classification_metrics, cli, destination, failure, fingerprint, finish, judged, latency, measure, output_argument, report, resumable, resumed,
+                            runtime as model_runtime, task, prediction_value, work_key)
 from bench.policy_adaptation import materialize_cohort
 
 
@@ -49,7 +45,7 @@ def definition(policy):
             'reads': ['message'],
             'facts': {'refund': {'check': REQUEST, 'unstated': True, 'min_score': .9},
                       'defect': {'check': DEFECT, 'unstated': True, 'min_score': .9}},
-            'cases': [{'id': 'held', 'when': 'account_hold == true', 'then': {'action': 'deny_refund'}},
+            'rules': [{'id': 'held', 'when': 'account_hold == true', 'then': {'action': 'deny_refund'}},
                       {'id': 'details', 'when': 'not exists(purchase_days) or not exists(account_hold)',
                        'then': {'action': 'request_details'}},
                       {'id': 'not_cash', 'when': 'not refund', 'then': {'action': 'deny_refund'}},
@@ -142,10 +138,10 @@ def summarize_actions(rows):
     def correct(row):
         return row['result']['answer'] == row['expected']['answer'] and row['result']['status'] == row['expected']['status']
     return {'submitted': len(rows), 'correct': sum(correct(row) for row in rows),
-            'case_agreement': sum(row['result']['case'] == row['expected']['case'] for row in rows),
+            'case_agreement': sum(row['result']['rule'] == row['expected']['rule'] for row in rows),
             'operational_agreement': sum(row['correct'] for row in rows),
             'accepted': len(accepted), 'wrong_accepted': sum(not correct(row) for row in accepted),
-            'wrong_accepted_cases': sum(row['result']['case'] != row['expected']['case'] for row in accepted),
+            'wrong_accepted_cases': sum(row['result']['rule'] != row['expected']['rule'] for row in accepted),
             'coverage': len(accepted) / len(rows) if rows else 0,
             'accepted_precision': sum(correct(row) for row in accepted) / len(accepted) if accepted else None,
             'statuses': {status: sum(row['result']['status'] == status for row in rows)
@@ -183,19 +179,30 @@ def contrast_result(left, right, kind, *, direct=False):
 
 
 FAILED = {'status': 'failed', 'value': None, 'prediction': None, 'requests': []}
-FAILED_SWITCH = {'case': None, 'answer': None, 'status': 'failed', 'facts': {}, 'cost': {}}
+FAILED_SWITCH = {'rule': None, 'answer': None, 'status': 'failed', 'facts': {}, 'cost': {}}
 
 
-def measured(runtime, operation, recording, identifier, failed=FAILED):
-    requests = len(recording.records) if recording else 0
-    with recording.recording(identifier) if recording else nullcontext():
+def described_guidance(switch, name):
+    described = thaw(switch.describe())
+    documents = {(document['reference'], document['digest']): document['text'] for document in described['documents']}
+    references = described['facts'][name]['guidance']
+    return Guidance(sections=[(reference, documents[reference, digest], None) for reference, digest in references]) if references else None
+
+
+def projected(switch, name, data):
+    return {key: data[key] for key in thaw(switch.describe())['facts'][name]['reads'] if key in data}
+
+
+def measured(runtime, operation, receipts, identifier, failed=FAILED):
+    requests = len(receipts) if receipts is not None else 0
+    with receipts.operation(identifier) if receipts is not None else nullcontext():
         window = measure(operation, runtime=runtime)
     receipt = {'native_work': window.work, 'peak_rss_bytes': window.peak_rss_bytes, 'error': window.error,
-               'transport_requests': len(recording.records) - requests if recording else None}
+               'transport_requests': len(receipts) - requests if receipts is not None else None}
     return failed if window.error else window.output, window.ms, receipt
 
 
-def run(runtime, directory, *, recording=None):
+def run(runtime, directory, *, receipts=None):
     started = time.perf_counter()
     observations, direct_rows, fact_rows = [], [], {'refund': [], 'defect': []}
     seen_bindings = set()
@@ -211,59 +218,59 @@ def run(runtime, directory, *, recording=None):
         sw = switches[fixture['policy']]
         policy = POLICIES[fixture['policy']]
         items = {'refund': Check(REQUEST, unstated=True, min_score=.9), 'defect': Check(DEFECT, unstated=True, min_score=.9)}
-        binding = sw.plan.fact('refund').judgment.guidance
+        binding = described_guidance(sw, 'refund')
         action = Pick(ACTION_QUESTION, ACTION_OPTIONS, guidance=binding)
-        rendered_case = render(sw.plan.fields, fixture['input'], tuple(sw.plan.fields))
-        rendered_atoms = render(sw.plan.fields, fixture['input'], ('message',))
+        case = deepcopy(fixture['input'])
+        atoms = projected(sw, 'refund', fixture['input'])
         phase = 'warm_binding' if binding.digest in seen_bindings else 'first_binding'
         seen_bindings.add(binding.digest)
-        before_requests = len(recording.records) if recording else None
-        direct, direct_ms, direct_work = measured(runtime, lambda: action(rendered_case, runtime), recording, 'policy:' + fixture['id'] + ':direct')
-        inline, inline_ms, inline_work = measured(runtime, lambda: runtime.ask(rendered_atoms, items, guidance=binding), recording, 'policy:' + fixture['id'] + ':atoms',
+        before_requests = len(receipts) if receipts is not None else None
+        direct, direct_ms, direct_work = measured(runtime, lambda: action(case, runtime), receipts, 'policy:' + fixture['id'] + ':direct')
+        inline, inline_ms, inline_work = measured(runtime, lambda: runtime.ask(atoms, items, guidance=binding), receipts, 'policy:' + fixture['id'] + ':atoms',
                                                   dict.fromkeys(items, FAILED))
-        composed, elapsed, composed_work = measured(runtime, lambda: sw(deepcopy(fixture['input'])), recording, 'policy:' + fixture['id'] + ':composed', FAILED_SWITCH)
+        composed, elapsed, composed_work = measured(runtime, lambda: sw(deepcopy(fixture['input'])), receipts, 'policy:' + fixture['id'] + ':composed', FAILED_SWITCH)
         direct_rows.append({'case_id': fixture['id'], 'family': fixture['family'],
                             'expected_action': DOMAIN_ACTIONS[fixture['id']], 'result': direct,
                             'normalized_action': final_action(direct, direct=True), 'elapsed_ms': direct_ms, 'phase': phase, **direct_work,
-                            'task': task(runtime, action, rendered_case, result=direct)})
+                            'task': task(runtime, action, case)})
         for name, label in fixture['facts'].items():
             value = None if label == 'unstated' else label
             fact_rows[name].append({'case_id': fixture['id'], 'family': fixture['family'],
                                    'expected': {'value': value, 'status': 'needs_input' if value is None else 'ok'},
                                    'result': inline[name]})
-        expected = {'case': fixture['case'], 'answer': None if fixture['action'] is None else {'action': fixture['action']}, 'status': fixture['status']}
+        expected = {'rule': fixture['case'], 'answer': None if fixture['action'] is None else {'action': fixture['action']}, 'status': fixture['status']}
         matched = all(composed[key] == value for key, value in expected.items())
         observations.append({'id': fixture['id'], 'family': fixture['family'], 'policy': str(paths[fixture['policy']]), 'input': fixture['input'],
                              'expected': expected, 'expected_facts': fixture['facts'], 'reason': fixture['reason'], 'correct': matched,
                              'expected_action': DOMAIN_ACTIONS[fixture['id']],
                              'normalized_action': final_action(composed), 'phase': phase,
-                             'rendered_evidence': rendered_case, 'composed_projection': {'refund': rendered_atoms, 'defect': rendered_atoms},
-                             'guidance': sw.plan.fact('refund').judgment.guidance.as_dict(), 'candidate_id': sw.snapshot.candidate_id,
-                             'tasks': {name: task(runtime, item, rendered_atoms, binding, inline[name]) for name, item in items.items()},
+                             'composed_projection': {name: projected(sw, name, fixture['input']) for name in items},
+                             'guidance': thaw(sw.describe())['facts']['refund']['guidance'], 'candidate_id': sw.snapshot.candidate_id,
+                             'tasks': {name: task(runtime, item, atoms, binding) for name, item in items.items()},
                              'inline': inline, 'inline_ms': inline_ms, 'inline_work': inline_work, 'composed_work': composed_work, 'result': composed, 'elapsed_ms': elapsed,
                              'logical_inline_questions': len(items),
-                             'transport_requests': len(recording.records) - before_requests if recording else None,
+                             'transport_requests': len(receipts) - before_requests if receipts is not None else None,
                              'native_work': {key: sum(work['native_work'].get(key, 0) for work in (direct_work, inline_work, composed_work)) for key in composed_work['native_work']},
-                             'composed_native_work': composed['cost'].get('batch_native_work', {})})
+                             'composed_native_work': (composed['cost'].get('operation') or {}).get('native_work', {})})
     if frozen != {key: files.sha256_file(path.with_suffix('.lock.json')) for key, path in paths.items()}:
         raise RuntimeError('policy benchmark mutated frozen locks')
-    policies = {key: {'candidate_id': sw.snapshot.candidate_id, 'guidance': sw.plan.fact('refund').judgment.guidance.as_dict(),
-                      'meaning': sw.plan.switch_rev, 'framing': sw.snapshot.framing.as_dict() if sw.snapshot.framing else None}
+    policies = {key: {'candidate_id': sw.snapshot.candidate_id, 'guidance': thaw(sw.describe())['documents'],
+                      'meaning': thaw(sw.describe())['revision'], 'framing': sw.snapshot.framing.as_dict() if sw.snapshot.framing else None}
                 for key, sw in switches.items()}
     indexed = {row['id']: row for row in observations}
     contrasts = []
     for left, right, kind in CONTRASTS:
         a, b = indexed[left], indexed[right]
-        same = (a['result']['case'], a['result']['answer'], a['result']['status']) == (b['result']['case'], b['result']['answer'], b['result']['status'])
+        same = (a['result']['rule'], a['result']['answer'], a['result']['status']) == (b['result']['rule'], b['result']['answer'], b['result']['status'])
         contrasts.append({'left': left, 'right': right, 'expected': kind, 'observed': 'preserve' if same else 'change',
                           'correct': a['correct'] and b['correct'] and same == (kind == 'preserve')})
     direct_index = {row['case_id']: row for row in direct_rows}
     paired_contrasts = [{'left': left, 'right': right,
                         'direct': contrast_result(direct_index[left], direct_index[right], kind, direct=True),
                         'composed': contrast_result(indexed[left], indexed[right], kind)} for left, right, kind in CONTRASTS]
-    agent = run_agent(runtime, recording=recording)
-    late = run_late_criteria(runtime, recording=recording)
-    return {'schema': 2, 'fixture_revision': 4, 'presentation': presentation_identity(),
+    agent = run_agent(runtime, receipts=receipts)
+    late = run_late_criteria(runtime, receipts=receipts)
+    return {'schema': 3, 'fixture_revision': 4,
             'preparation_ms': preparation_ms, 'acceptance': 'frozen default 0.9; uncalibrated, no fitting on outcomes',
             'status_handling': STATUS_HANDLING, 'execution_order': ['direct', 'inline_atoms', 'composed'],
             'direct': {'rows': direct_rows, 'metrics': decision_metrics(direct_rows, direct=True)},
@@ -274,7 +281,7 @@ def run(runtime, directory, *, recording=None):
                                      'direct_question': ACTION_QUESTION, 'direct_options': ACTION_OPTIONS, 'status_handling': STATUS_HANDLING}), 'policies': policies, 'runtime': runtime.info(), 'observations': observations,
             'fact_metrics': {name: classification_metrics(rows) for name, rows in fact_rows.items()},
             'actions': summarize_actions(observations),
-            'contrasts': contrasts, 'requests': recording.summary() if recording else None}
+            'contrasts': contrasts, 'requests': receipts.summary() if receipts is not None else None}
 
 
 AGENT_POLICY = (
@@ -301,12 +308,12 @@ AGENT_CONTRASTS = [('public', 'public_quoted', 'preserve'), ('internal_external'
                    ('internal_authorized', 'internal_unauthorized', 'change'), ('public', 'recipient_missing', 'change')]
 
 
-def run_agent(runtime, recording=None):
+def run_agent(runtime, receipts=None):
     spec = {'name': 'disclosure', 'guidance': {'policy': {'text': AGENT_POLICY}},
             'fields': {'message': {'type': 'text', 'required': True}, 'recipient': {'type': 'enum', 'values': ['internal', 'external']},
                        'authorized': {'type': 'bool', 'required': True}}, 'reads': ['message'],
             'facts': {'internal': {'check': 'The report proposed for disclosure is internal.', 'unstated': True}},
-            'cases': [{'id': 'details', 'when': 'not exists(recipient)', 'then': {'action': 'request_details'}},
+            'rules': [{'id': 'details', 'when': 'not exists(recipient)', 'then': {'action': 'request_details'}},
                       {'id': 'forbidden', 'when': 'internal and recipient == "external"', 'then': {'action': 'stop'}},
                       {'id': 'permission', 'when': 'internal and authorized == false', 'then': {'action': 'request_authorization'}},
                       {'id': 'send', 'when': 'not internal or authorized == true', 'then': {'action': 'send_report'}}],
@@ -318,24 +325,24 @@ def run_agent(runtime, recording=None):
         tools.lock(runtime, path)
         sw = runtime.load(path)
         frozen = files.sha256_file(path.with_suffix('.lock.json'))
-        binding = sw.plan.fact('internal').judgment.guidance
+        binding = described_guidance(sw, 'internal')
         pick = Pick('Which response does the disclosure policy require?', AGENT_OPTIONS, guidance=binding)
         for fixture in AGENT_CASES:
-            evidence = render(sw.plan.fields, fixture['input'], tuple(sw.plan.fields))
-            direct, direct_ms, direct_work = measured(runtime, lambda: pick(evidence, runtime), recording, 'agent:' + fixture['id'] + ':direct')
-            composed, composed_ms, composed_work = measured(runtime, lambda: sw(deepcopy(fixture['input'])), recording, 'agent:' + fixture['id'] + ':composed', FAILED_SWITCH)
+            evidence = deepcopy(fixture['input'])
+            direct, direct_ms, direct_work = measured(runtime, lambda: pick(evidence, runtime), receipts, 'agent:' + fixture['id'] + ':direct')
+            composed, composed_ms, composed_work = measured(runtime, lambda: sw(deepcopy(fixture['input'])), receipts, 'agent:' + fixture['id'] + ':composed', FAILED_SWITCH)
             common = {'case_id': fixture['id'], 'family': fixture['family'], 'input': fixture['input'], 'expected_action': fixture['action']}
             direct_rows.append({**common, 'result': direct, 'normalized_action': final_action(direct, direct=True), 'elapsed_ms': direct_ms, **direct_work,
-                                'task': task(runtime, pick, evidence, result=direct)})
+                                'task': task(runtime, pick, evidence)})
             composed_rows.append({**common, 'result': composed, 'normalized_action': final_action(composed), 'elapsed_ms': composed_ms, **composed_work,
-                                  'rendered_evidence': evidence, 'projected_evidence': render(sw.plan.fields, fixture['input'], ('message',))})
+                                  'projected_evidence': projected(sw, 'internal', fixture['input'])})
         if frozen != files.sha256_file(path.with_suffix('.lock.json')):
             raise RuntimeError('agent benchmark mutated frozen lock')
         candidate = sw.snapshot.candidate_id
     a, b = {row['case_id']: row for row in direct_rows}, {row['case_id']: row for row in composed_rows}
     return {'population': 'authored agent-choice regression; not an authorization or injection guarantee',
             'cohort_sha256': digest({'cases': AGENT_CASES, 'policy': AGENT_POLICY, 'options': AGENT_OPTIONS, 'definition': spec}),
-            'guidance': binding.as_dict(), 'candidate_id': candidate, 'definition': spec,
+            'guidance': binding.digest, 'candidate_id': candidate, 'definition': spec,
             'direct': {'rows': direct_rows, 'metrics': decision_metrics(direct_rows, direct=True)},
             'composed': {'rows': composed_rows, 'metrics': decision_metrics(composed_rows)},
             'contrasts': [{'left': left, 'right': right, 'direct': contrast_result(a[left], a[right], kind, direct=True),
@@ -359,23 +366,20 @@ LATE_CASES = [
 ]
 
 
-def run_late_criteria(runtime, recording=None):
+def run_late_criteria(runtime, receipts=None):
     pick = Pick('Which maintenance response is required?', LATE_OPTIONS)
-    judge = runtime.judge()
-    adapter = getattr(judge, 'adapter', None)
-    position = len(adapter.content(LATE_PREAMBLE)) if adapter else None
     rows = []
     for case in LATE_CASES:
-        result, elapsed, work = measured(runtime, lambda: pick(case['input'], runtime), recording, 'late-criteria:' + case['id'])
+        result, elapsed, work = measured(runtime, lambda: pick(case['input'], runtime), receipts, 'late-criteria:' + case['id'])
         rows.append({'case_id': case['id'], 'family': case['family'], 'expected_action': case['action'], 'result': result,
-                     'elapsed_ms': elapsed, **work, 'task': task(runtime, pick, case['input'], result=result)})
-    return {'exception_token_offset': position, 'former_limit': 64, 'rows': rows, 'metrics': decision_metrics(rows, direct=True)}
+                     'elapsed_ms': elapsed, **work, 'task': task(runtime, pick, case['input'])})
+    return {'rows': rows, 'metrics': decision_metrics(rows, direct=True)}
 
 
 def cli_parity(model, artifact):
     for row in artifact['observations']:
         parity = cli(['--judge', model, '--json', 'run', row['policy']], row['input'])
-        parity['same_public_outcome'] = all(parity['result'].get(key) == row['result'].get(key) for key in ('case', 'answer', 'status', 'missing', 'invalid')) and {name: {key: fact.get(key) for key in ('value', 'status', 'source', 'why', 'guidance')} for name, fact in parity['result'].get('facts', {}).items()} == {name: {key: fact.get(key) for key in ('value', 'status', 'source', 'why', 'guidance')} for name, fact in row['result'].get('facts', {}).items()}
+        parity['same_public_outcome'] = all(parity['result'].get(key) == row['result'].get(key) for key in ('rule', 'answer', 'status', 'missing', 'invalid')) and {name: {key: fact.get(key) for key in ('value', 'status', 'source', 'why', 'guidance')} for name, fact in parity['result'].get('facts', {}).items()} == {name: {key: fact.get(key) for key in ('value', 'status', 'source', 'why', 'guidance')} for name, fact in row['result'].get('facts', {}).items()}
         row['cli'] = parity
 
 
@@ -403,9 +407,10 @@ def cohort_cases(runtime, directory):
         value = None if label in fact.judgment.silence else fact.value(label)
         judgment = data['policies'][row['policy']]['judgment']
         cases.append({**row, 'role': assignment['families'][assignment['situations'][row['situation']]],
-                      'evidence': render(switch.plan.fields, row['input'], fact.reads),
+                      'evidence': projected(switch, row['fact'], row['input']),
+                      'rendered_input': switch.preview([row['input']], facts=[row['fact']], sources=('judge',))[0].requests[0]['rendered_input'],
                       'expected': {'value': value, 'raw_value': value, 'status': 'needs_input' if value is None else 'ok'},
-                      'judgment': judgment, 'authored': data['judgments'][judgment], 'guidance': fact.judgment.guidance})
+                      'judgment': judgment, 'authored': data['judgments'][judgment], 'guidance': described_guidance(switch, row['fact'])})
     return assignment, cases
 
 
@@ -420,24 +425,23 @@ def chunks(cases, condition, size):
             yield {'judgment': judgment, 'guidance': binding}, item, members[start:start + size]
 
 
-def judge_cases(runtime, item, cases, recording=None):
+def judge_cases(runtime, item, cases, receipts=None):
     chunk = uuid.uuid4().hex
-    before = len(recording.records) if recording else 0
-    with recording.recording(chunk) if recording else nullcontext():
-        window = measure(lambda: item.run([case['evidence'] for case in cases], runtime), runtime=runtime)
+    receipts = Receipts() if receipts is None else receipts
+    before = len(receipts)
+    with receipts.operation(chunk):
+        window = measure(lambda: item.run([case['rendered_input'] for case in cases], runtime), runtime=runtime)
     if window.error is None and len(window.output) != len(cases):
         raise RuntimeError(f'chunk {chunk} returned {len(window.output)} results for {len(cases)} cases')
     rows = []
     for case, result in zip(cases, window.output or [FAILED] * len(cases)):
         value, usable = prediction_value(result)
         known = {**{name: case[name] for name in ROW_FIELDS}, 'family': case['situation'], 'task_family': case['fact'], 'chunk': chunk,
-                 'result': result, 'raw_value': value, 'raw_usable': usable, 'task': task(runtime, item, case['evidence'], result=result)}
+                 'evidence': case['evidence'], 'result': result, 'raw_value': value, 'raw_usable': usable, 'task': task(runtime, item, case['rendered_input'])}
         rows.append(known if window.error is None else failure(window, **known))
     return rows, {'chunk': chunk, 'members': [case['case_id'] for case in cases], 'wall_ms': window.ms, 'native_work': window.work,
                   'peak_rss_bytes': window.peak_rss_bytes, 'error': window.error, 'identity': runtime.identity(),
-                  'returned_models': sorted(getattr(runtime.judge(), 'observed_models', ())),
-                  'requests': [request for result in window.output or () for request in result['requests']],
-                  'transport': deepcopy(recording.records[before:]) if recording else None}
+                  'receipts': receipts.since(before)}
 
 
 def raw_correct(row):
@@ -472,43 +476,32 @@ def cohort_summary(rows):
                              for kind in ('change', 'preserve')}, 'pairs': contrasts}}
 
 
-def latency(requests):
-    seconds = [request['seconds'] * 1000 for request in requests]
-    return {'requests': len(requests), 'attempts': sum(request['attempts'] for request in requests),
-            'failed': sum(request['status'] != 200 for request in requests),
-            'p50_ms': float(np.percentile(seconds, 50)) if seconds else None,
-            'p95_ms': float(np.percentile(seconds, 95)) if seconds else None} if requests else None
-
-
 def timing(chunks):
     executed, wall = sum(len(chunk['members']) for chunk in chunks), sum(chunk['wall_ms'] for chunk in chunks)
-    hosted = [chunk['transport'] for chunk in chunks if chunk['transport'] is not None]
-    attempts = [receipt['elapsed_ms'] for receipts in hosted for receipt in receipts]
+    receipts = [receipt for chunk in chunks for receipt in chunk['receipts']]
     return {'chunks': len(chunks), 'executed_cases': executed, 'wall_ms': wall, 'cases_per_second': ratio(executed, wall / 1000),
             'amortized_ms_per_case': ratio(wall, executed),
-            'per_request': latency([request for chunk in chunks for request in chunk['requests']]),
-            'http_attempts': {'scope': 'one HTTP attempt each; a request retried after failure contributes several', 'attempts': len(attempts),
-                              'failed': sum(receipt['completion'] != 'response' for receipts in hosted for receipt in receipts),
-                              'p50_ms': float(np.percentile(attempts, 50)) if attempts else None,
-                              'p95_ms': float(np.percentile(attempts, 95)) if attempts else None} if hosted else None}
+            'requests': {'requests': len(receipts), 'attempts': sum(receipt['attempts'] for receipt in receipts),
+                         'failed': sum(receipt['status'] is None or not 200 <= receipt['status'] < 300 for receipt in receipts),
+                         'latency': latency(receipt['seconds'] * 1000 for receipt in receipts)} if receipts else None}
 
 
 BOOTSTRAP = {'seed': 0, 'count': 2000}
 
 
 def comparison(fact, evidence, expected, policy, condition):
-    return comparison_identity(task=fact, projection=identity(evidence), gold=expected, answers=policy, scope='fact', condition=condition)
+    return comparison_identity(task=fact, projection=digest(evidence), gold=expected, answers=policy, scope='fact', condition=condition)
 
 
 def evaluated(row):
-    return {'key': row['case_id'], 'comparison': comparison(row['fact'], row['task']['rendered_evidence'], row['expected'], row['policy'], row['condition']),
+    return {'key': row['case_id'], 'comparison': comparison(row['fact'], row['evidence'], row['expected'], row['policy'], row['condition']),
             'gold': row['expected'], 'outcome': 'failed' if failed(row) else 'predicted', 'correct': raw_correct(row) if row['raw_usable'] else None,
             'accepted': row['result']['status'] == 'ok'}
 
 
 def compared(arms, cases):
     expected = [{'key': case['case_id'], 'family': case['situation'], 'gold': case['expected'],
-                 'comparison': comparison(case['fact'], rendered(case['evidence']), case['expected'], case['policy'], 'guided')} for case in cases]
+                 'comparison': comparison(case['fact'], case['evidence'], case['expected'], case['policy'], 'guided')} for case in cases]
     return [{'baseline': arms[0]['name'], 'candidate': arm['name'], 'scope': 'frozen guided cohort; missing work counts as unavailable',
              **paired(expected, [evaluated(row) for row in arms[0]['rows']], [evaluated(row) for row in arm['rows']], **BOOTSTRAP,
                       names=(arms[0]['name'], arm['name']))} for arm in arms[1:]]
@@ -526,15 +519,15 @@ def cohort_artifact(entries, judges, conditions, chunk, assignment, cases):
     for name, spec in judges.items():
         own = [row for row in records if row['arm'] == name]
         arms.append({'name': name, 'judge': spec, 'identities': [json.loads(text) for text in sorted({json.dumps(row['identity'], sort_keys=True) for row in own})],
-                     'returned_models': sorted({model for row in own for model in row['returned_models']}), **part(name, 'guided'),
+                     'returned_models': sorted({model for row in own for receipt in row['receipts'] for model in receipt['models']}), **part(name, 'guided'),
                      **({'control': {'diagnostic': 'guidance-omission control: the same primitives and evidence without the procedure; not a deployable arm',
                                      **part(name, 'omitted')}} if 'omitted' in conditions else {})})
-    return {'schema': 2, 'population': assignment['population'], 'conditions': list(conditions), 'chunk': chunk,
+    return {'schema': 3, 'population': assignment['population'], 'conditions': list(conditions), 'chunk': chunk,
             'target_precision': assignment['target_precision'], 'accepted_error_target': round(1 - assignment['target_precision'], 4),
             'minimum_coverage': assignment['minimum_coverage'], 'target_declared': 'in the authored cohort before any model result, fitting or selection',
             'assignment': {key: assignment[key] for key in ('cohort', 'source_sha256', 'assignment_sha256', 'dataset_id', 'objective', 'objective_scope', 'counts', 'families', 'situations')},
             'boundary': 'public Check/Pick/Rate run() on rendered named evidence in chunks grouped by judgment and guidance; no eligibility callbacks, shortlist or exact rules; default acceptance 0.9',
-            'independent_families': len(assignment['situations']), 'presentation': presentation_identity(), 'paired': compared(arms, cases), 'arms': arms}
+            'independent_families': len(assignment['situations']), 'paired': compared(arms, cases), 'arms': arms}
 
 
 def entry(arm, condition, name):
@@ -552,10 +545,10 @@ def run_cohort(judges, directory, output, *, provider=None, key_file=None, batch
 def cohort_run(stack, judges, directory, output, conditions, provider, key_file, batch_inputs, chunk, retry_failed, fresh):
     journal = None
     for name, spec in judges.items():
-        with judged(spec, provider=provider, key_file=key_file, batch_inputs=batch_inputs) as (runtime, recording):
+        with judged(spec, provider=provider, key_file=key_file, batch_inputs=batch_inputs) as (runtime, receipts):
             assignment, cases = cohort_cases(runtime, directory)
             if journal is None:
-                journal = stack.enter_context(resumable(output, {'script': 'bench.policy_workflow', 'code': fingerprint(), 'presentation': presentation_identity(),
+                journal = stack.enter_context(resumable(output, {'script': 'bench.policy_workflow', 'code': fingerprint(),
                                                  'judges': judges, 'provider': provider, 'conditions': conditions, 'chunk': chunk,
                                                  'cohort': {key: assignment[key] for key in ('cohort', 'source_sha256', 'assignment_sha256', 'dataset_id')}}, fresh=fresh))
                 keys = [entry(arm, condition, case['case_id']) for arm in judges for condition in conditions for case in cases]
@@ -566,7 +559,7 @@ def cohort_run(stack, judges, directory, output, conditions, provider, key_file,
                 runtime.judge()
             for condition, selected in work.items():
                 for group, item, members in chunks(selected, condition, chunk):
-                    rows, record = judge_cases(runtime, item, members, recording)
+                    rows, record = judge_cases(runtime, item, members, receipts)
                     journal.commit([(entry(name, condition, 'chunk:' + record['chunk']), {**record, 'arm': name, 'condition': condition, 'group': group}),
                                        *((entry(name, condition, row['case_id']), {**row, 'arm': name, 'condition': condition}) for row in rows)])
                     todo -= {entry(name, condition, case['case_id']) for case in members}
@@ -588,7 +581,7 @@ if __name__ == '__main__':
     parser.add_argument('--chunk', type=int, default=CHUNK, help='cases per public run() call')
     parser.add_argument('--retry-failed', action='store_true', help='rerun recorded failures; earlier attempts stay in the log')
     parser.add_argument('--fresh', action='store_true', help='move an existing checkpoint log aside')
-    parser.add_argument('--output', required=True, type=Path)
+    output_argument(parser)
     args = parser.parse_args()
     if args.cohort:
         judges = {spec.removeprefix('openrouter:'): spec for spec in args.judge} if args.judge else {'e2b': DEFAULT_JUDGE, 'e4b': PRECISE_JUDGE}
@@ -596,6 +589,7 @@ if __name__ == '__main__':
                               chunk=args.chunk, retry_failed=args.retry_failed, fresh=args.fresh)
         print({arm['name']: {key: arm['metrics'][key] for key in ('submitted', 'raw_correct', 'protocol_failures', 'accepted', 'wrong_accepted')} for arm in artifact['arms']})
     else:
+        destination(args.output)
         started = time.perf_counter()
         with TemporaryDirectory(prefix='bounded-policy-') as directory:
             with model_runtime(Model(args.model)) as runtime:
@@ -606,4 +600,4 @@ if __name__ == '__main__':
                 cli_parity(args.model, artifact)
         artifact['model_load_ms'] = model_load_ms
         print(artifact['actions'])
-        files.publish(args.output, artifact)
+        report(args.output, artifact)

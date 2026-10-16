@@ -6,7 +6,7 @@ from pathlib import Path
 
 from semantic_switch import ConfigError, files
 from semantic_switch.metrics import METRICS
-from bench.snapshots import DOMAINS, set_metrics, set_rows, step_rows
+from bench.snapshots import DOMAINS, probability_report, set_metrics, set_rows, step_rows
 
 ROWS = "stored rows lack the outcome or per-member reference and prediction states needed to establish completeness"
 BASELINE = "stored baseline lacks canonical per-frame set rows"
@@ -41,6 +41,8 @@ def snapshot(artifact) -> dict:
             rows = entry.get("rows")
             metrics, states[f"baselines|{name}|{arm}"] = rebuild(lambda: rows, rows is not None and all(set(CANONICAL) <= set(row) for row in rows), BASELINE)
             arms[arm] = {**metrics, **({"rows": rows} if rows is not None else {})}
+    artifact["probabilities"] = probability_report(domain, artifact["results"], artifact["roles"], artifact["review"]["status"], artifact["plan"]["id"], artifact["exposure"]["state"])
+    states["probabilities"] = "recomputed" if artifact["probabilities"]["state"] == "reported" else "unrecoverable"
     return states
 
 
@@ -64,7 +66,7 @@ def recompute(report, to) -> dict:
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="bench.recompute", description="recompute set aggregates of a published bench.snapshots or episode report from its stored rows")
+    parser = argparse.ArgumentParser(prog="bench.recompute", description="recompute set and probability aggregates of a published bench.snapshots or episode report from its stored rows")
     parser.add_argument("report", type=Path)
     parser.add_argument("--to", type=Path, required=True)
     args = parser.parse_args()

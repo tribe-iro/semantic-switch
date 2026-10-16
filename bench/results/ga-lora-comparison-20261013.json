@@ -1,0 +1,384 @@
+{
+ "utc": "2026-10-13T20:29:11.934005+00:00",
+ "device": "xpu:0",
+ "numerical_sources": {
+  "packages/semantic-trainer/src/semantic_trainer/adapter.py": "cfe801fd6f0d2dedcca38e3b5013559af1a271585e3570445b158c33cca8a90a",
+  "packages/semantic-trainer/src/semantic_trainer/jobs.py": "31122e59ccb1fe67719e02d9ca925f6d9b7896ce385db27a2728097bdf608951",
+  "packages/semantic-trainer/src/semantic_trainer/lora.py": "936c3114c7f6e643d17405374e4518d9b4797d69d8a83753f90b14f020598963",
+  "packages/semantic-trainer/src/semantic_trainer/monitor.py": "4c75e09db01e2f96829ba634a97dce3400578010fbe2475a8c62fa0df3d8d770",
+  "packages/semantic-trainer/src/semantic_trainer/objective.py": "bd6bd4aaa99fe7ba2e209a4ab63c011d77333e1c5c660a6e722194b15a01c58c",
+  "semantic_switch/compiler.py": "cd28b31313483a6ef174fc37295c12eee5a33de6be533c185df722f6244fa8ca",
+  "semantic_switch/files.py": "6b8c17d4cdc3f86da57add42dd3f70f00da04f3ad822c9e3edd572dc474f70ef",
+  "semantic_switch/metrics.py": "fc0c14962e2c7d9d557495a6d09038b58d37ce833e826aef615a11f877a032d7",
+  "semantic_switch/protocols.py": "34a173a32368b3ad3c2cf50d0e597118c2dcab84712d9c0a60b01ed715cdc5b9"
+ },
+ "profiles": {
+  "eager": {
+   "id": "518ffc8634b414fc8a2b69831147b4214bd48f5d56c90e8c0817f8d68ff3dcdc",
+   "configuration": {
+    "assets": {
+     "manifest": "f6bdeb193f522a844500e42b1a4963f15a8e19e3722fa63f36e0db2d9a568f9e",
+     "quant": "Q8_0"
+    },
+    "fitting": {
+     "device": "xpu:0",
+     "precision": "bfloat16",
+     "threads": 16,
+     "attention": "eager",
+     "gradient_checkpointing": false,
+     "fused_optimizer": false
+    },
+    "loss": {
+     "name": "full_vocabulary_group_nll",
+     "version": 2,
+     "reduction": "float32"
+    },
+    "implementation": 2,
+    "adapter": {
+     "rank": 2,
+     "alpha": 4,
+     "dropout": 0.0,
+     "target_modules": [
+      "q_proj",
+      "v_proj"
+     ]
+    },
+    "batching": {
+     "batch_size": 2,
+     "microbatch": 1,
+     "max_padded_tokens": 1024
+    },
+    "max_sequence_tokens": 1024
+   },
+   "updates": [
+    {
+     "seconds": 13.462151529995026,
+     "phases": {
+      "slot_packing": 0.0001972919999388978,
+      "transfer": 0.031644394002796616,
+      "collate": 0.01763664100144524,
+      "host_embedding": 0.5198346319957636,
+      "forward": 8.496341830003075,
+      "reduction": 0.8218015200036461,
+      "backward": 2.8663641969978926,
+      "clip_optimizer": 0.6938651949967607
+     },
+     "peak_host_bytes": 6079397888,
+     "peak_device_bytes": 6741645312,
+     "peak_reserved_device_bytes": 6828326912,
+     "loss": 5.042765769758262e-05,
+     "gradient_norm": 0.002798752160742879,
+     "padded_tokens": 515,
+     "tokens": 515,
+     "presentations": 2,
+     "observations": 2
+    },
+    {
+     "seconds": 0.9435170870056027,
+     "phases": {
+      "slot_packing": 0.00013627199950860813,
+      "transfer": 0.000606060988502577,
+      "collate": 0.00023434299509972334,
+      "host_embedding": 0.0829314959992189,
+      "forward": 0.3405931960005546,
+      "reduction": 0.016294602013658732,
+      "backward": 0.4970459129981464,
+      "clip_optimizer": 0.0022746180038666353
+     },
+     "peak_host_bytes": 6079397888,
+     "peak_device_bytes": 6732925952,
+     "peak_reserved_device_bytes": 6840909824,
+     "loss": 1.0331254429729597e-07,
+     "gradient_norm": 3.3048913792299572e-06,
+     "padded_tokens": 493,
+     "tokens": 493,
+     "presentations": 2,
+     "observations": 2
+    }
+   ],
+   "peak_device_bytes": 6741645312,
+   "costs": {
+    "loading_seconds": 14.026419406996865,
+    "update_seconds_per_token": 0.0142913379136911,
+    "point_seconds_per_token": 0.0014533916192127254,
+    "checkpoint_seconds": 0.04249613400315866
+   }
+  },
+  "sdpa": {
+   "id": "0a9264a380364f91c8e0635682562682560e151a332680db6049e8b123836a1d",
+   "configuration": {
+    "assets": {
+     "manifest": "f6bdeb193f522a844500e42b1a4963f15a8e19e3722fa63f36e0db2d9a568f9e",
+     "quant": "Q8_0"
+    },
+    "fitting": {
+     "device": "xpu:0",
+     "precision": "bfloat16",
+     "threads": 16,
+     "attention": "sdpa",
+     "gradient_checkpointing": false,
+     "fused_optimizer": false
+    },
+    "loss": {
+     "name": "full_vocabulary_group_nll",
+     "version": 2,
+     "reduction": "float32"
+    },
+    "implementation": 2,
+    "adapter": {
+     "rank": 2,
+     "alpha": 4,
+     "dropout": 0.0,
+     "target_modules": [
+      "q_proj",
+      "v_proj"
+     ]
+    },
+    "batching": {
+     "batch_size": 2,
+     "microbatch": 1,
+     "max_padded_tokens": 1024
+    },
+    "max_sequence_tokens": 1024
+   },
+   "updates": [
+    {
+     "seconds": 4.5976924630012945,
+     "phases": {
+      "slot_packing": 0.00016620499809505418,
+      "transfer": 0.001409352000337094,
+      "collate": 0.0026917510040220805,
+      "host_embedding": 0.32348932599416,
+      "forward": 2.1207058430081815,
+      "reduction": 0.608334417003789,
+      "backward": 0.9711578799979179,
+      "clip_optimizer": 0.5647913619977771
+     },
+     "peak_host_bytes": 6336720896,
+     "peak_device_bytes": 6956269568,
+     "peak_reserved_device_bytes": 6998196224,
+     "loss": 6.892993405926973e-05,
+     "gradient_norm": 0.003851263551041484,
+     "padded_tokens": 515,
+     "tokens": 515,
+     "presentations": 2,
+     "observations": 2
+    },
+    {
+     "seconds": 0.7399855039984686,
+     "phases": {
+      "slot_packing": 0.00015466100740013644,
+      "transfer": 0.0005367480043787509,
+      "collate": 0.00025211599859176204,
+      "host_embedding": 0.05458692100364715,
+      "forward": 0.3176982669974677,
+      "reduction": 0.004541731002973393,
+      "backward": 0.3569273420071113,
+      "clip_optimizer": 0.0028042779958923347
+     },
+     "peak_host_bytes": 6336720896,
+     "peak_device_bytes": 6957059072,
+     "peak_reserved_device_bytes": 6998196224,
+     "loss": 5.946598236050704e-08,
+     "gradient_norm": 1.977998635993572e-06,
+     "padded_tokens": 493,
+     "tokens": 493,
+     "presentations": 2,
+     "observations": 2
+    }
+   ],
+   "peak_device_bytes": 6957059072,
+   "costs": {
+    "loading_seconds": 6.228079726002761,
+    "update_seconds_per_token": 0.005295315443452146,
+    "point_seconds_per_token": 0.00041157407227687296,
+    "checkpoint_seconds": 0.02299758599838242
+   }
+  },
+  "fused": {
+   "id": "1eebd7279904040ffeb3bdca6a153678f1ea26abb2d2485b7fde9d056c2bf21d",
+   "configuration": {
+    "assets": {
+     "manifest": "f6bdeb193f522a844500e42b1a4963f15a8e19e3722fa63f36e0db2d9a568f9e",
+     "quant": "Q8_0"
+    },
+    "fitting": {
+     "device": "xpu:0",
+     "precision": "bfloat16",
+     "threads": 16,
+     "attention": "eager",
+     "gradient_checkpointing": false,
+     "fused_optimizer": true
+    },
+    "loss": {
+     "name": "full_vocabulary_group_nll",
+     "version": 2,
+     "reduction": "float32"
+    },
+    "implementation": 2,
+    "adapter": {
+     "rank": 2,
+     "alpha": 4,
+     "dropout": 0.0,
+     "target_modules": [
+      "q_proj",
+      "v_proj"
+     ]
+    },
+    "batching": {
+     "batch_size": 2,
+     "microbatch": 1,
+     "max_padded_tokens": 1024
+    },
+    "max_sequence_tokens": 1024
+   },
+   "updates": [
+    {
+     "seconds": 5.079785943999013,
+     "phases": {
+      "slot_packing": 0.00013761800073552877,
+      "transfer": 0.001382001988531556,
+      "collate": 0.0003340399998705834,
+      "host_embedding": 0.14481175300170435,
+      "forward": 2.6951288929994917,
+      "reduction": 0.6945157829977688,
+      "backward": 0.7953691750008147,
+      "clip_optimizer": 0.7347061589971418
+     },
+     "peak_host_bytes": 6420709376,
+     "peak_device_bytes": 6741645312,
+     "peak_reserved_device_bytes": 6828326912,
+     "loss": 5.042765769758262e-05,
+     "gradient_norm": 0.002798752160742879,
+     "padded_tokens": 515,
+     "tokens": 515,
+     "presentations": 2,
+     "observations": 2
+    },
+    {
+     "seconds": 0.8384674379994976,
+     "phases": {
+      "slot_packing": 0.00015333800547523424,
+      "transfer": 0.03788694199465681,
+      "collate": 0.000307403999613598,
+      "host_embedding": 0.07616584700735984,
+      "forward": 0.3391761090097134,
+      "reduction": 0.015192668011877686,
+      "backward": 0.3652141539932927,
+      "clip_optimizer": 0.0016279549963655882
+     },
+     "peak_host_bytes": 6420709376,
+     "peak_device_bytes": 6732977152,
+     "peak_reserved_device_bytes": 6838812672,
+     "loss": 1.0331254429729597e-07,
+     "gradient_norm": 3.3048913792299572e-06,
+     "padded_tokens": 493,
+     "tokens": 493,
+     "presentations": 2,
+     "observations": 2
+    }
+   ],
+   "peak_device_bytes": 6741645312,
+   "costs": {
+    "loading_seconds": 2.6307615410041763,
+    "update_seconds_per_token": 0.005871283117062015,
+    "point_seconds_per_token": 0.0004835645821904786,
+    "checkpoint_seconds": 0.022779538005124778
+   }
+  }
+ },
+ "fit": {
+  "reason": "epoch_cap",
+  "convergence": "not_demonstrated",
+  "steps_trained": 2,
+  "examples_trained": 4,
+  "max_optimizer_steps": 2,
+  "evaluation_points": 2,
+  "last_evaluation": {
+   "step": 2,
+   "examples_seen": 4
+  },
+  "unevaluated": {
+   "steps": 0,
+   "examples": 0
+  },
+  "best_monitored": {
+   "name": "step-2",
+   "step": 2,
+   "examples_seen": 4
+  },
+  "best_at_boundary": true,
+  "deadline": null,
+  "work": {
+   "updates": 2,
+   "points": 2,
+   "checkpoints": 2,
+   "training_tokens": 1008,
+   "monitor_tokens": 4538,
+   "tasks": {
+    "1338dad1956376e09dba824fbf8437e0ffe7ee4bedf27ba9c2a82f9e1649f5a6": {
+     "observations": 4,
+     "tokens": 1008
+    }
+   },
+   "seconds": {
+    "update": [
+     1.9796853649968398,
+     0.7426730869992753
+    ],
+    "point": [
+     3.324135759001365,
+     1.3029382230015472
+    ],
+    "checkpoint": [
+     0.02283191699825693,
+     0.025207275997672696
+    ]
+   }
+  },
+  "inputs": {
+   "rows": 9,
+   "presentations": 9,
+   "bytes": 18152,
+   "seconds": 8.646999776829034e-05,
+   "device": "cpu"
+  }
+ },
+ "raw": {
+  "updates.jsonl": {
+   "path": "bench/results/ga-lora-fit-20261013.updates.jsonl",
+   "sha256": "af7adc2658c5ab81f21486e066f07b40dd9de06208e4057d555d848aa073b6a8",
+   "bytes": 371
+  },
+  "progress.jsonl": {
+   "path": "bench/results/ga-lora-fit-20261013.progress.jsonl",
+   "sha256": "76a5f45ec57e1ff5571dbb7940a0dae595237f2ab1b4b2b4a21cee3460755cd6",
+   "bytes": 23180
+  },
+  "resolved-job.json": {
+   "path": "bench/results/ga-lora-fit-20261013.resolved-job.json",
+   "sha256": "12674fbcb2bd3557254bb4907143d9b9717954e498a7a1d8bc32b1ad84a929e1",
+   "bytes": 207502
+  },
+  "candidates.json": {
+   "path": "bench/results/ga-lora-fit-20261013.candidates.json",
+   "sha256": "8bbb094964297a0e62a6d3e380b5025a060a0537d9dfe0d4b635e9478e608062",
+   "bytes": 5044
+  },
+  "run.json": {
+   "path": "bench/results/ga-lora-fit-20261013.run.json",
+   "sha256": "0522245c1c28121ce5df9f8dd209f9fec84edd18406d4565fb2cde7c3d9a10f8",
+   "bytes": 2550
+  }
+ },
+ "default_changes": {},
+ "scope": {
+  "fit_observations": 4,
+  "model_select_observations": 5,
+  "optimizer_updates": 2,
+  "quality_claim": false,
+  "transfer_counter": null,
+  "transfer_timing": "profile transfer and host_embedding phases",
+  "sampling": "bounded computed printer labels, detection_symptom only"
+ }
+}

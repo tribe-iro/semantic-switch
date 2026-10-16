@@ -6,7 +6,7 @@ import sys
 import numpy as np
 import pytest
 
-from semantic_switch import Check, Model, Rate, Runtime, files, tools
+from semantic_switch import Actor, Check, Model, Rate, Runtime, files, tools
 from semantic_switch.judgment import Judgment
 from bench.latency import latency
 
@@ -18,7 +18,7 @@ QWEN3 = "unsloth/Qwen3-0.6B-GGUF:Qwen3-0.6B-Q4_K_M.gguf"
 
 @pytest.fixture(scope="module")
 def real():
-    rt = Runtime({"judge": Model(QWEN3, device="cpu")})
+    rt = Runtime(Model(QWEN3, device="cpu"))
     yield rt
     rt.close()
 
@@ -83,7 +83,7 @@ def test_cli_check_exit_codes(tmp_path):
 
 def test_hybrid_model_records_d1_and_shares_the_prefix(tmp_path, monkeypatch):
     monkeypatch.setenv("SEMANTIC_SWITCH_CACHE", str(tmp_path))
-    with Runtime({"judge": Model("unsloth/Qwen3.5-0.8B-GGUF:Qwen3.5-0.8B-Q4_K_M.gguf")}) as rt:
+    with Runtime(Model("unsloth/Qwen3.5-0.8B-GGUF:Qwen3.5-0.8B-Q4_K_M.gguf")) as rt:
         judge = rt.judge()
         assert judge.scorer.weights.hybrid and judge.scorer.shared
         assert files.read_cached("doctor", rt.cache_key())["checks"]["D1 shared = reference"]["ok"]
@@ -97,7 +97,7 @@ def test_a_closed_runtime_raises_instead_of_touching_freed_memory():
     with pytest.raises(RuntimeError, match="runtime is closed"):
         judge.score("x", [Judgment.check("A.").question()])
     scorer = judge.scorer
-    for call in (scorer.chat, scorer.weights.chat, lambda: scorer.tokenize("x"), lambda: scorer.detokenize([1]),
+    for call in (lambda: scorer.tokenize("x"), lambda: scorer.detokenize([1]),
                  lambda: scorer.ctx.cp(0, 1), lambda: scorer.ctx.logits(0)):
         with pytest.raises(RuntimeError, match="runtime is closed"):
             call()
@@ -106,7 +106,7 @@ def test_a_closed_runtime_raises_instead_of_touching_freed_memory():
 def test_mixed_suffix_capacity_regression():
     from semantic_switch.backend import LlamaScorer
     from semantic_switch.protocols import ScoreRequest
-    with Runtime({"judge": Model(QWEN3, adapter="qwen3", device="cpu")}) as rt:
+    with Runtime(Model(QWEN3, adapter="qwen3", device="cpu")) as rt:
         path = rt.models["judge"].path()
     scorer = LlamaScorer(path, n_ctx=512, inputs=2, n_gpu_layers=0)
     try:
@@ -133,7 +133,8 @@ def test_doctor_conformance(real):
     report = tools.doctor(real)
     failed = {k: v for k, v in report["checks"].items() if not v["ok"]}
     assert not failed, failed
-    assert report["shared_prefix"] is True and len(report["checks"]) == 6
+    assert report["shared_prefix"] is True and len(report["checks"]) == 7
+    assert report['checks']['D6 chunking']['repeat_diff'] == report['checks']['D6 chunking']['restored_diff'] == 0
 
 
 def test_check_separates_clear_cases(real):
@@ -187,7 +188,7 @@ def test_input_cache_reuses_and_trims_without_changing_scores(gemma):
     long_text = "[customer] body: " + "The pump was serviced last week and runs fine. " * 12
     qs = [Judgment.check("The pump is broken.").question(), Judgment.check("The text mentions a pump.").question()]
     first = [s.probs for s in judge.score(long_text, qs)]
-    assert scorer._states
+    assert scorer._state is not None
     again = [s.probs for s in judge.score(long_text, qs[::-1])][::-1]
     judge.score(long_text + " Also the fan is noisy.", qs)
     after_other = [s.probs for s in judge.score(long_text, qs)]
@@ -218,7 +219,7 @@ def test_switch_batch_and_stream_agree(gemma, path):
     stream = [(r.status, r.answer) for r in sw.many(inputs)]
     batch = sw.run(inputs)
     assert stream == [(r.status, r.answer) for r in batch]
-    assert batch[0].cost["amortized_ms"] <= batch[0].cost["elapsed_ms"]
+    assert batch[0].cost["operation"]["amortized_ms"] <= batch[0].cost["operation"]["elapsed_ms"]
 
 
 def test_switch_end_to_end_and_lock(gemma, path):
@@ -239,9 +240,9 @@ def test_lexical_head_with_the_real_judge(gemma, path, head_bundle):
     others = ["how do I change my password", "the app crashes on startup", "what are your opening hours",
               "my router does not turn on", "can I upgrade my plan", "thanks for the help yesterday"]
     for text in refunds:
-        sw.correct(t(text), fact="refund_requested", value=True)
+        sw.correct(t(text), fact="refund_requested", value=True, actor=Actor('human'))
     for text in others:
-        sw.correct(t(text), fact="refund_requested", value=False)
+        sw.correct(t(text), fact="refund_requested", value=False, actor=Actor('human'))
     tools.lock(real, path, head_bundles={"refund_requested": head_bundle(real, path)})
     locked = real.load(path)
     assert "refund_requested" in locked.snapshot.heads
@@ -277,4 +278,4 @@ def test_procedure_catalog_selects_the_exact_machine(gemma, tmp_path):
     sw = gemma.load(tmp_path / "procedures.yaml", draft=True)
     r = sw({"machine": "MX-120A", "active_alarms": ["E17"], "report": "It won't start after a restart. No leak."})
     assert r.answer == "follow_procedure" and r.facts["procedures"].value == ("P02",)
-    assert r.facts["procedures"].cards[0]["payload"]["instructions"] == "procedures/P02.md"
+    assert r.facts["procedures"].cards[0]["source"]["section"] == "7.3"

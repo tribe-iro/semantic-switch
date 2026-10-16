@@ -1,0 +1,230 @@
+{
+ "scope": "100 warm calls per operation across two runs; same model/input/threshold/window; busy host, not an isolated KV-flag timing comparison",
+ "runs": {
+  "2": {
+   "path": "bench/results/ga-public-slots2-20261014.json",
+   "sha256": "0bc9008d8b3a4a91c0597e571682edb796444b6eed2232712a2f6ceb77683689",
+   "source": {
+    "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+    "sources": "7ff17cc3635fa62b27d474dcab6108150302d197a3cf6bbea00f6df0ceef607c"
+   },
+   "source_unchanged": true,
+   "latency": {
+    "check": {
+     "unit": "ms",
+     "samples": 100,
+     "interpolation": "linear between closest ranks",
+     "p50": 132.13802200334612,
+     "p95": 155.10549385580816
+    },
+    "pick": {
+     "unit": "ms",
+     "samples": 100,
+     "interpolation": "linear between closest ranks",
+     "p50": 155.837774000247,
+     "p95": 217.0620361510372
+    },
+    "rate": {
+     "unit": "ms",
+     "samples": 100,
+     "interpolation": "linear between closest ranks",
+     "p50": 149.9113629979547,
+     "p95": 286.82484869568725
+    },
+    "select": {
+     "unit": "ms",
+     "samples": 100,
+     "interpolation": "linear between closest ranks",
+     "p50": 231.376015508431,
+     "p95": 250.2265000002808
+    },
+    "switch": {
+     "unit": "ms",
+     "samples": 100,
+     "interpolation": "linear between closest ranks",
+     "p50": 156.89119949820451,
+     "p95": 198.7935327015293
+    }
+   },
+   "guided_churn_mean_ms": 319.3807927073067,
+   "capacity": {
+    "n_ctx": 14336,
+    "n_ctx_seq": 3584,
+    "sequence_limit": 3584,
+    "n_batch": 512,
+    "n_seq_max": 4,
+    "prefix_slots": 2,
+    "scheduling": "resident-prefix-streams@3",
+    "n_outputs_max": 4,
+    "swa_full": true,
+    "kv_unified": false,
+    "n_ubatch": 512,
+    "flash_attn": "enabled",
+    "type_k": "f16",
+    "type_v": "f16",
+    "device": "gpu",
+    "tensor_types": [
+     "f16",
+     "f32",
+     "q8_0"
+    ],
+    "use_extra_bufts": true,
+    "repacked": [],
+    "buffers": {
+     "Vulkan0 model": 2456069079,
+     "Vulkan_Host model": 2923429888,
+     "Vulkan_Host output": 4194304,
+     "Vulkan0 KV": 264241152,
+     "Vulkan0 compute": 115888620,
+     "Vulkan_Host compute": 32013025
+    },
+    "shared": true
+   },
+   "counters": {
+    "prefix_hits": 511,
+    "prefix_misses": 26,
+    "state_hits": 2,
+    "state_misses": 535,
+    "state_tokens": 17580,
+    "suffix_tokens": 32904,
+    "failures": 0,
+    "prefix_tokens": 2662,
+    "prefix_evictions": 24,
+    "adapter_switches": 0,
+    "submissions": 1208,
+    "submitted_tokens": 53146
+   },
+   "near_capacity": {
+    "lengths": [
+     {
+      "prefix": 990,
+      "input": 1000,
+      "questions": [
+       1424
+      ],
+      "total": 3414
+     }
+    ],
+    "statuses": [
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   "failures": 0
+  },
+  "4": {
+   "path": "bench/results/ga-public-slots4-20261014.json",
+   "sha256": "9a4e88c5e76ae1ff7af89f8c61caa60a31b141f42f2d11bb3891f3c62f71356a",
+   "source": {
+    "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+    "sources": "9498eba336475cb10dacd8c1a6110b02f49329fb81e27b6d3f086e2ed300db89"
+   },
+   "source_unchanged": true,
+   "latency": {
+    "check": {
+     "unit": "ms",
+     "samples": 100,
+     "interpolation": "linear between closest ranks",
+     "p50": 130.7219769951189,
+     "p95": 135.3212007401453
+    },
+    "pick": {
+     "unit": "ms",
+     "samples": 100,
+     "interpolation": "linear between closest ranks",
+     "p50": 164.84721699816873,
+     "p95": 296.0001793493575
+    },
+    "rate": {
+     "unit": "ms",
+     "samples": 100,
+     "interpolation": "linear between closest ranks",
+     "p50": 223.04243300459348,
+     "p95": 292.7501631565974
+    },
+    "select": {
+     "unit": "ms",
+     "samples": 100,
+     "interpolation": "linear between closest ranks",
+     "p50": 234.9982959931367,
+     "p95": 243.54100514829042
+    },
+    "switch": {
+     "unit": "ms",
+     "samples": 100,
+     "interpolation": "linear between closest ranks",
+     "p50": 147.43319999979576,
+     "p95": 192.5343074457487
+    }
+   },
+   "guided_churn_mean_ms": 182.54653637571514,
+   "capacity": {
+    "n_ctx": 21504,
+    "n_ctx_seq": 3584,
+    "sequence_limit": 3584,
+    "n_batch": 512,
+    "n_seq_max": 6,
+    "prefix_slots": 4,
+    "scheduling": "resident-prefix-streams@3",
+    "n_outputs_max": 6,
+    "swa_full": true,
+    "kv_unified": false,
+    "n_ubatch": 512,
+    "flash_attn": "enabled",
+    "type_k": "f16",
+    "type_v": "f16",
+    "device": "gpu",
+    "tensor_types": [
+     "f16",
+     "f32",
+     "q8_0"
+    ],
+    "use_extra_bufts": true,
+    "repacked": [],
+    "buffers": {
+     "Vulkan0 model": 2456069079,
+     "Vulkan_Host model": 2923429888,
+     "Vulkan_Host output": 6291456,
+     "Vulkan0 KV": 396361728,
+     "Vulkan0 compute": 116790395,
+     "Vulkan_Host compute": 32285655
+    },
+    "shared": true
+   },
+   "counters": {
+    "prefix_hits": 531,
+    "prefix_misses": 6,
+    "state_hits": 2,
+    "state_misses": 535,
+    "state_tokens": 17580,
+    "suffix_tokens": 32904,
+    "failures": 0,
+    "prefix_tokens": 1302,
+    "prefix_evictions": 2,
+    "adapter_switches": 0,
+    "submissions": 1188,
+    "submitted_tokens": 51786
+   },
+   "near_capacity": {
+    "lengths": [
+     {
+      "prefix": 990,
+      "input": 1000,
+      "questions": [
+       1424
+      ],
+      "total": 3414
+     }
+    ],
+    "statuses": [
+     "ok",
+     "ok",
+     "ok"
+    ]
+   },
+   "failures": 0
+  }
+ },
+ "public_result_differences": []
+}

@@ -1,7 +1,7 @@
 {
  "schema": 2,
  "name": "zt411-snapshot",
- "version": "1.0",
+ "version": "1.2",
  "subject": {
   "equipment": "Zebra ZT411/ZT421 industrial printer",
   "models": [
@@ -16,7 +16,6 @@
    "return to printing"
   ]
  },
- "author": "unassigned",
  "extraction": "pdftotext-layout excerpts of pinned user-guide pages",
  "created": "2026-10-11T00:00:00Z",
  "sources": [
@@ -135,17 +134,17 @@
  "rules": [
   {
    "id": "ZT-ASSET",
-   "text": "Evidence about another printer asset establishes nothing about the current printer.",
+   "text": "Evidence about another printer establishes nothing about this one.",
    "source": "benchmark convention"
   },
   {
    "id": "ZT-CURRENT",
-   "text": "A stale note (older than a later state change) does not establish current state.",
+   "text": "A note older than a later state change does not establish current state.",
    "source": "benchmark convention"
   },
   {
    "id": "ZT-CONFLICT",
-   "text": "Contradictory current indications of one property leave it unresolved; no indication is preferred by recency or source alone.",
+   "text": "Contradictory current indications leave a property unresolved, none preferred by recency or source; a decision is unresolved only if its possible values give different answers.",
    "source": "benchmark convention"
   },
   {
@@ -155,47 +154,52 @@
   },
   {
    "id": "ZT-METHOD-TT",
-   "text": "With thermal-transfer media established and print method direct thermal, setting the print method to thermal transfer is justified.",
+   "text": "With thermal-transfer media established and method direct thermal, setting thermal transfer is justified.",
    "source": "zt-user-guide"
   },
   {
    "id": "ZT-METHOD-DT",
-   "text": "With direct-thermal media established and print method thermal transfer, setting the print method to direct thermal is justified.",
+   "text": "With direct-thermal media established and method thermal transfer, setting direct thermal is justified.",
    "source": "zt-user-guide"
   },
   {
    "id": "ZT-RIBBON",
-   "text": "Thermal-transfer printing needs a loaded ribbon: with no ribbon established, loading one is justified and returning to printing is prohibited.",
+   "text": "Thermal-transfer printing needs a loaded ribbon: with ribbon absence established, loading one is justified and returning to printing is prohibited.",
    "source": "zt-user-guide"
   },
   {
    "id": "ZT-CAL-START",
-   "text": "A current media/ribbon detection symptom with consistent configuration justifies starting manual sensor calibration or verifying the loading.",
+   "text": "A current media/ribbon detection symptom (an operator reporting an out indication despite loaded media, or a controller out alert while loaded) with consistent configuration justifies starting manual sensor calibration or verifying the loading.",
    "source": "zt-calibration"
   },
   {
    "id": "ZT-CAL-NEXT",
    "text": "Continuing a calibration prompt requires verified completion of that prompt's step; continuing without it is prohibited.",
-   "source": "zt-calibration"
+   "source": "benchmark convention"
   },
   {
    "id": "ZT-CAL-CANCEL",
    "text": "Cancelling calibration leaves calibration incomplete; it is justified when calibration runs under a configuration inconsistent with the media.",
-   "source": "zt-calibration"
+   "source": "benchmark convention"
+  },
+  {
+   "id": "ZT-CAL-HOLD",
+   "text": "Print-method changes wait until calibration is cancelled.",
+   "source": "benchmark convention"
   },
   {
    "id": "ZT-RESUME",
-   "text": "Returning to printing is prohibited during calibration, after an unverified or cancelled calibration with a current symptom, or with configuration inconsistent with the media; it is justified when paused with consistent configuration and no unaddressed symptom.",
+   "text": "Returning to printing is prohibited during calibration, with a current unaddressed detection symptom or with configuration inconsistent with the media; it is justified when paused with consistent configuration and no such symptom.",
    "source": "zt-calibration"
   },
   {
    "id": "ZT-VERIFY",
-   "text": "An attempted but unverified loading or calibration step justifies verifying it.",
+   "text": "An unverified ribbon-load command or reported calibration step or completion justifies verifying it.",
    "source": "benchmark convention"
   },
   {
    "id": "ZT-DIAGNOSE",
-   "text": "When a decision depends on an unresolved property, requesting that observation is justified.",
+   "text": "Requesting the observation an unresolved decision needs is justified.",
    "source": "benchmark convention"
   },
   {
@@ -211,7 +215,7 @@
   "claim": "decisions are claims about the documented procedure of this edition, not about any particular installed printer"
  },
  "authored": {
-  "rules": "5d6b9baa2a476d788437b2e861f3ff2c54b01631581d16fec2ca7bf514446111",
-  "catalogue": "11233826861133858422c6158d9e08f60d50135d7aab4a7c9ef6601c7c19a5c0"
+  "rules": "013fd06f04a2d30cbb2a15d308534247afbeb54c0331f4b568e1de28979aaa6b",
+  "catalogue": "dfaae1a8b1a75e2b2fe8e591700b206794344e17f8c1c47a0f55036085936605"
  }
 }

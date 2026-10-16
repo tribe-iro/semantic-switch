@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import semantic_switch as ss
 from semantic_switch import tools
+from examples.environment import judge
 
 POLICY = ss.Guidance(
     "Escalate current overheating that remains unresolved. A repaired historical incident does not count. "
@@ -27,10 +27,6 @@ REPORTS = [
     "The temperature sensor is faulty. We have no verified temperature measurement.",
 ]
 
-
-def judge(environ=os.environ):
-    model = environ.get("OPENROUTER_MODEL")
-    return ss.judge_from(f"openrouter:{model}", provider=environ.get("OPENROUTER_PROVIDER")) if model else ss.judge_from(ss.DEFAULT_JUDGE)
 
 
 def show(result):
@@ -55,14 +51,14 @@ def run(runtime):
         saved = switch(REPORTS[0]).as_dict(True)
         print(json.dumps({"saved_fact": "maintenance", "value": saved["facts"]["maintenance"]["value"],
                           "status": saved["facts"]["maintenance"]["status"]}))
-        receipt = switch.correct(REPORTS[0], fact="maintenance", value="escalate")
+        correction = switch.correct(REPORTS[0], fact="maintenance", value="escalate", actor=ss.Actor("human"))
         tools.lock(runtime, path)
-        restored = runtime.load(path)(REPORTS[0]).as_dict(True)
+        restored = runtime.load(path.with_suffix(".lock.json"))(REPORTS[0]).as_dict(True)
     return {"first": first.as_dict(True), "answers": [result.as_dict(True) for result in answers],
             "shared": {name: result.as_dict(True) for name, result in shared.items()},
-            "saved": saved, "correction": receipt, "restored": restored}
+            "saved": saved, "correction": correction, "restored": restored}
 
 
 if __name__ == "__main__":
-    with ss.Runtime({"judge": judge()}, own_judges=True) as runtime:
-        run(runtime)
+    with ss.Runtime(judge(), own_judges=True) as bound:
+        run(bound)

@@ -9,7 +9,7 @@ facts:
   refund:
     check: The customer asks to receive money back for a charge.
 
-cases:
+rules:
   billing: refund
 
 otherwise: support

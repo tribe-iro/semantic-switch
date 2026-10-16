@@ -4,12 +4,12 @@ import argparse
 from pathlib import Path
 
 from semantic_switch import Runtime, tools
-from semantic_trainer.lexical import train
+from semantic_trainer import train_lexical
 
 
 def run(runtime, switch, fact, bundle):
     exported = tools.export(runtime, switch)
-    trained = train(exported['path'], bundle, fact=fact)
+    trained = train_lexical(exported['path'], bundle, fact=fact)
     report = tools.lock(runtime, switch, head_bundles={fact: trained['path']})
     return report, tools.run_test(runtime, switch)
 

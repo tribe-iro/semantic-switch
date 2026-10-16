@@ -1,0 +1,67 @@
+{
+ "scope": "Gemma4 E2B XPU; four fit observations and five monitoring observations, not a quality evaluation",
+ "comparisons": {
+  "sdpa": {
+   "loss": {
+    "exact": false,
+    "max_absolute_delta": 4.376030119601637e-05
+   },
+   "gradient_norm": {
+    "exact": false,
+    "max_absolute_delta": 0.0027394223725423217
+   }
+  },
+  "fused": {
+   "loss": {
+    "exact": false,
+    "max_absolute_delta": 1.2860653441748582e-05
+   },
+   "gradient_norm": {
+    "exact": false,
+    "max_absolute_delta": 0.0008000239031389356
+   }
+  }
+ },
+ "profiles": {
+  "eager": {
+   "path": "bench/results/ga-training-eager-20261014.json",
+   "sha256": "3dd04b10050219033ee22ba9e29f602ff5e7d2572fbefa0d3b5431afa352d3f3",
+   "source": {
+    "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+    "sources": "49459cb55239ae1a3ff9030469be73641c52dce3d058b70b8ad94d580c544916"
+   },
+   "source_unchanged": true,
+   "warmup": 2,
+   "complete_updates": 20,
+   "update_mean_seconds": 0.5811623899011465,
+   "peak_device_bytes": 6744324096
+  },
+  "sdpa": {
+   "path": "bench/results/ga-training-sdpa-20261014.json",
+   "sha256": "f0128c0be94444b1341762e78133aadaab7b828c9e3f4adb308d02e4e25487b1",
+   "source": {
+    "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+    "sources": "49459cb55239ae1a3ff9030469be73641c52dce3d058b70b8ad94d580c544916"
+   },
+   "source_unchanged": true,
+   "warmup": 2,
+   "complete_updates": 20,
+   "update_mean_seconds": 0.6817260317504406,
+   "peak_device_bytes": 6958948352
+  },
+  "fused": {
+   "path": "bench/results/ga-training-fused-20261014.json",
+   "sha256": "ad34d9bbe88853bfd49ace54c0448592a27672f758271d4f068cf4236436910e",
+   "source": {
+    "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+    "sources": "49459cb55239ae1a3ff9030469be73641c52dce3d058b70b8ad94d580c544916"
+   },
+   "source_unchanged": true,
+   "warmup": 2,
+   "complete_updates": 20,
+   "update_mean_seconds": 0.8000706675513356,
+   "peak_device_bytes": 6744375296
+  }
+ },
+ "defaults_changed": false
+}

@@ -15,11 +15,11 @@ def test_check_value_and_p_true(rt):
 def test_check_gate_and_tie(fake):
     from semantic_switch import Runtime
 
-    rt = Runtime({"judge": type(fake)(lambda s, q, w: [0.5, 0.5])})
+    rt = Runtime(type(fake)(lambda s, q, w: [0.5, 0.5]))
     r = rt.check("x", "anything")
     assert r.status == "uncertain" and r.value is None
     assert rt.check("x", "anything", min_score=0.51).status == "uncertain"
-    rt = Runtime({"judge": type(fake)(lambda s, q, w: [0.8, 0.2])})
+    rt = Runtime(type(fake)(lambda s, q, w: [0.8, 0.2]))
     assert rt.check("x", "anything").status == "uncertain"
     assert rt.check("x", "anything", min_score=0.8 - 1e-3).value is True
 
@@ -105,7 +105,7 @@ def test_callable_judgments_run_on_a_runtime(rt):
 def test_pick_uncertain_below_policy(fake):
     from semantic_switch import Runtime
 
-    rt = Runtime({"judge": type(fake)(lambda s, q, w: [0.6, 0.4])})
+    rt = Runtime(type(fake)(lambda s, q, w: [0.6, 0.4]))
     r = rt.pick(TICKET, "q", ["a", "b"])
     assert r.status == "uncertain" and r.value is None and r.score == pytest.approx(0.6)
     assert rt.pick(TICKET, "q", ["a", "b"], min_score=0.6).value == "a"

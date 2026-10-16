@@ -3,7 +3,7 @@ from __future__ import annotations
 import time
 import json
 
-from bench.outcomes import materialize
+from bench.outcomes import ece, latency, materialize
 from collections import Counter
 
 import numpy as np
@@ -331,7 +331,7 @@ def render(text: str, actor: str | None = None) -> str:
 
 def _role_runtime(rt, role):
     from semantic_switch import Runtime
-    selected = rt if role == "judge" else Runtime({"judge": rt.judge(role)})
+    selected = rt if role == "judge" else Runtime(rt.judge(role))
     class Bound:
         def capacity(self):
             return selected.batch_inputs()
@@ -395,14 +395,6 @@ def _auc(p, y):
     return auc(p, y)
 
 
-def _ece(p: np.ndarray, y: np.ndarray, bins: int = 10) -> float:
-    conf = np.maximum(p, 1 - p)
-    right = (p >= 0.5) == y
-    idx = np.minimum(((conf - 0.5) * 2 * bins).astype(int), bins - 1)
-    return float(sum(abs(conf[idx == b].mean() - right[idx == b].mean()) * (idx == b).mean()
-                     for b in range(bins) if (idx == b).any()))
-
-
 def decision(row: dict, policy: Policy = DEFAULT) -> tuple[str, bool | None]:
     if policy == DEFAULT and "value" in row:
         return row["status"], row["value"]
@@ -442,13 +434,13 @@ def summarize(res: dict, t: float = 0.9) -> dict:
             "valid_pairs": len(complete_pairs),
             "auc": round(_auc(p, y), 3) if y.any() and (~y).any() else None,
             "brier": round(float(((p - y) ** 2).mean()), 3) if rows else None,
-            "ece": round(_ece(p, y), 3) if rows else None,
+            "ece": ece(np.maximum(p, 1 - p), (p >= .5) == y, low=.5),
             f"coverage_{t}": round(settled["coverage"], 3) if submitted else None,
             f"precision_{t}": None if settled["precision"] is None else round(settled["precision"], 3),
             "pick_submitted": len(res['picks']), "pick_valid_scores": len(pk),
             "pick_valid_score_accuracy": round(float(np.mean(pick_ok)), 3) if pk else None,
             "pick_accuracy": round(sum(pick_ok) / len(res['picks']), 3) if res['picks'] else None,
-            "ms_p50": round(float(np.median([r["ms"] for r in res["checks"]])), 1) if submitted else None,
+            "latency": latency(r["ms"] for r in res["checks"]),
             "check_statuses": dict(Counter(row.get('status', 'unexamined') for row in res['checks'])),
             "pick_statuses": dict(Counter(row.get('status', 'unexamined') for row in res['picks'])),
             "errors": sum(r["p"] is None and r["error"] is not None for r in res["checks"]),
@@ -498,38 +490,44 @@ SCENARIOS = [
 ]
 
 
-def positions(rt) -> dict:
-    by = {s + 1: 0 for s in POSITION_SLOTS}
-    flips = 0
+def positions(rt, slots=POSITION_SLOTS) -> dict:
+    rows = []
     for text, answer in PICKS:
         others = [d for k, d in TOPICS.items() if k != answer] + DISTRACTORS
-        tops = []
-        for slot in POSITION_SLOTS:
+        for slot in slots:
             options = others[:slot] + [TOPICS[answer]] + others[slot:]
             r = rt.pick(render(text), TOPIC_QUESTION, options, min_score=0.9)
-            tops.append(max(range(len(options)), key=lambda i: r.scores[i]) == slot)
-            by[slot + 1] += tops[-1]
-        flips += len(set(tops)) > 1
-    return {"top1_by_slot": {s: round(n / len(PICKS), 3) for s, n in by.items()}, "order_flips": flips,
-            "items": len(PICKS)}
+            top = max(range(len(options)), key=lambda i: r.scores[i])
+            rows.append({"text": text, "slot": slot + 1, "top": top == slot, "p": r.scores[slot], "settled": r.status == "ok",
+                         "wrong_settled": r.status == "ok" and r.index != slot})
+    by = {slot + 1: [row for row in rows if row["slot"] == slot + 1] for slot in slots}
+    tops = {}
+    for row in rows:
+        tops.setdefault(row["text"], set()).add(row["top"])
+    return {"top1_by_slot": {s: round(sum(r["top"] for r in group) / len(PICKS), 3) for s, group in by.items()},
+            "slots": {s: {"top1": sum(r["top"] for r in group), "settled": sum(r["settled"] for r in group), "wrong_settled": sum(r["wrong_settled"] for r in group),
+                          "mean_p": round(sum(r["p"] for r in group) / len(group), 3), "n": len(group)} for s, group in by.items()},
+            "order_flips": sum(len(found) > 1 for found in tops.values()), "all_slots_correct": sum(found == {True} for found in tops.values()),
+            "items": len(PICKS), "rows": rows}
 
 
 def comparative(rt) -> dict:
-    follows, stable, n = 0, 0, 0
+    rows = []
     for state, options, *goals in SCENARIOS:
-        tops = []
         for question, want in goals:
-            pair = [max(r.scores, key=r.scores.get) for r in
-                    (rt.pick(state, question, {k: options[k] for k in order})
-                     for order in (list(options), list(reversed(options))))]
-            stable += pair[0] == pair[1]
-            follows += sum(t == want for t in pair)
-            n += 2
-            tops.append(pair[0])
-    return {"goal_followed": round(follows / n, 3), "order_stable": round(stable / (n // 2), 3), "items": n}
+            for order in (list(options), list(reversed(options))):
+                r = rt.pick(state, question, {k: options[k] for k in order})
+                top = max(r.scores, key=r.scores.get)
+                rows.append({"q": question, "want": want, "top": top, "p": round(r.scores[top], 3), "status": r.status, "value": r.value})
+    settled = [r for r in rows if r["status"] == "ok"]
+    pairs = [(rows[i], rows[i + 1]) for i in range(0, len(rows), 2)]
+    return {"goal_followed": round(sum(r["top"] == r["want"] for r in rows) / len(rows), 3), "order_stable": round(sum(a["top"] == b["top"] for a, b in pairs) / len(pairs), 3),
+            "items": len(rows), "settled": len(settled), "settled_wrong": sum(r["value"] != r["want"] for r in settled),
+            "goal_sensitive_scenarios": sum(rows[i]["top"] != rows[i + 2]["top"] for i in range(0, len(rows), 4)), "scenarios": len(SCENARIOS), "rows": rows}
 
 
 def probe(rt, role: str = "judge") -> dict:
-    summary = summarize(run(rt, role)) | {"positions": positions(_role_runtime(rt, role)), "comparative": comparative(_role_runtime(rt, role))}
+    summary = summarize(run(rt, role)) | {name: {k: v for k, v in measure(_role_runtime(rt, role)).items() if k != "rows"}
+                                          for name, measure in (("positions", positions), ("comparative", comparative))}
     files.write_cached("quality", rt.cache_key(role), summary | {"at": files.now()})
     return summary

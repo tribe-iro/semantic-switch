@@ -4,20 +4,19 @@ import argparse
 from collections import Counter
 import json
 from pathlib import Path
-import statistics
 import time
 
 from semantic_switch import Check, DEFAULT_JUDGE, Label, Model, Select, files
 from semantic_switch.artifacts import artifact_digest
-from semantic_switch.metrics import Progress, correctness, membership, ratio
+from semantic_switch.metrics import correctness, membership, ratio
+from bench.outcomes import Progress
 from semantic_switch.presentation import identity as presentation_identity
-from bench.external_primitives import CACHE, CATEGORY, evaluator, install, state
-from bench.outcomes import configuration, finish, judge_spec, materialize, resumable, resumed, runtime, work_key
+from bench.external_primitives import CATEGORY, cases, state
+from bench.outcomes import Receipts, configuration, finish, judge_spec, latency, materialize, output_argument, resumable, resumed, runtime, work_argument, work_directory, work_key
 
 LIMIT = 100
 TASKS = {"go-emotions-noul-test-v1": "Which emotions does the text express?",
          "civil-comments-noul-test-v1": "Which of these attributes does the comment have?"}
-RECEIPT = ("elapsed_ms", "usage", "returned_model", "returned_provider", "completion", "error")
 BOUNDARY = (f"first {LIMIT} cases (every case of the pinned data) of the {CATEGORY} S1MB benchmarks whose questions are independent yes/no criteria over one input "
             f"({', '.join(TASKS)}); each case is asked once as public Select over Label definitions taken from the benchmark's true-option "
             "descriptions and once as the equivalent named Checks of the same descriptions, select first. Gold is a membership only where the "
@@ -39,18 +38,17 @@ def definitions(question, members):
     return Select(question, members), {key: Check(label.description) for key, label in members.items()}
 
 
-def timed(recording, operation):
-    first = len(recording.records) if recording else 0
+def timed(receipts, operation):
+    first = len(receipts)
     started = time.perf_counter()
     result = materialize(operation())
-    return {"ms": (time.perf_counter() - started) * 1000, "result": result,
-            "transport": [{name: receipt[name] for name in RECEIPT} for receipt in recording.records[first:]] if recording else None}
+    return {"ms": (time.perf_counter() - started) * 1000, "result": result, "requests": receipts.since(first)}
 
 
-def predict(rt, recording, case, question, members):
+def predict(rt, receipts, case, question, members):
     select, checks = definitions(question, members)
-    return {"select": timed(recording, lambda: rt.ask(state(case), {"select": select})["select"]),
-            "checks": timed(recording, lambda: rt.ask(state(case), checks))}
+    return {"select": timed(receipts, lambda: rt.ask(state(case), {"select": select})["select"]),
+            "checks": timed(receipts, lambda: rt.ask(state(case), checks))}
 
 
 def tasks(rows):
@@ -111,16 +109,14 @@ def parity(rows):
     return {"scope": "same case and label; checks -> select", "memberships": len(pairs), "both_predicted": len(both),
             "raw_agreement": sum(raw(s) == raw(c) for _, s, c in both), "raw_agreement_rate": ratio(sum(raw(s) == raw(c) for _, s, c in both), len(both)),
             "status_value_agreement": sum((s or {}).get("status") == c["status"] and (s or {}).get("value") == c["value"] for _, s, c in pairs),
-            "p_true_abs_difference": {"mean": statistics.fmean(gaps) if gaps else None, "max": max(gaps, default=None)},
+            "p_true_abs_difference": {"mean": sum(gaps) / len(gaps) if gaps else None, "max": max(gaps, default=None)},
             "hard_label_transitions": dict(sorted(moved.items())), "fixes": moved["wrong->correct"], "regressions": moved["correct->wrong"]}
 
 
 def timing(rows, arm):
-    ms = sorted(row["arms"][arm]["ms"] for row in rows)
-    receipts = [receipt for row in rows for receipt in row["arms"][arm]["transport"] or ()]
-    return {"case_ms_p50": statistics.median(ms) if ms else None, "case_ms_p95": ms[min(len(ms) - 1, int(.95 * len(ms)))] if ms else None,
-            "http_attempts": len(receipts) if receipts else None, "failed_attempts": sum(r["completion"] != "response" for r in receipts) if receipts else None,
-            "returned_models": sorted({r["returned_model"] for r in receipts if r["returned_model"]})}
+    receipts = [receipt for row in rows for receipt in row["arms"][arm]["requests"]]
+    return {"case": latency(row["arms"][arm]["ms"] for row in rows), "requests": len(receipts), "attempts": sum(r["attempts"] for r in receipts),
+            "failed_requests": sum(map(Receipts.failed, receipts)), "returned_models": sorted({m for r in receipts for m in r["models"]})}
 
 
 def report(rows):
@@ -142,23 +138,21 @@ def summarize(rows, provenance, judge, identity, found):
 
 
 def run(args):
-    provenance = install()
-    cases_path = CACHE / f"cases-{LIMIT}.jsonl"
-    evaluator("cases", LIMIT, cases_path)
+    provenance, cases_path = cases(work_directory(args.output, args.work), LIMIT)
     found = tasks(files.read_jsonl(cases_path))
     keyed = {work_key(benchmark, row['case']['case_id']): (benchmark, position, row) for benchmark, (_, rows) in found.items() for position, row in enumerate(rows)}
     judge = args.judge or DEFAULT_JUDGE
-    model, recording = judge_spec(judge, provider=args.provider, key_file=args.key_file, device=args.device, max_input_tokens=args.max_input_tokens)
+    model, receipts = judge_spec(judge, provider=args.provider, key_file=args.key_file, device=args.device, max_input_tokens=args.max_input_tokens), Receipts()
     config = configuration("bench.select_quality", args, *[model] if isinstance(model, Model) else [], provenance=provenance,
                            cases=files.sha256_file(cases_path), keys=artifact_digest(sorted(keyed)), presentation=presentation_identity())
-    with resumable(args.output, config, fresh=args.fresh) as journal, runtime(model) as rt:
+    with resumable(args.output, config, fresh=args.fresh) as journal, runtime(model, receipts=receipts) as rt:
         identity = rt.identity()
         todo = journal.pending(keyed)
         progress = Progress(f"bench.select_quality {judge}", len(keyed), unit="cases", resumed=resumed(journal, keyed, todo))
         for key in todo:
             benchmark, position, row = keyed[key]
             committed = {"benchmark": benchmark, "case_id": row["case"]["case_id"], "position": position, "targets": row["targets"],
-                         "arms": predict(rt, recording, row["case"], TASKS[benchmark], found[benchmark][0])}
+                         "arms": predict(rt, receipts, row["case"], TASKS[benchmark], found[benchmark][0])}
             journal.commit([(key, committed)])
             progress.record([committed])
         progress.finish()
@@ -167,12 +161,13 @@ def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description="Public Select on S1MB multi-label tasks, with parity against the equivalent named Checks.")
-    parser.add_argument("--judge", help="judge source for semantic_switch.judge_from (default: DEFAULT_JUDGE)")
+    parser.add_argument("--judge", help="judge source for semantic_switch.judge (default: DEFAULT_JUDGE)")
     parser.add_argument("--provider", help="OpenRouter provider route for openrouter:MODEL")
     parser.add_argument("--key-file", type=Path, help="OpenRouter API key file (default: OPENROUTER_API_KEY)")
     parser.add_argument("--device", default="gpu")
     parser.add_argument("--max-input-tokens", type=int, default=4096)
-    parser.add_argument("--output", required=True)
+    output_argument(parser, help="published summary; resumable journal beside it")
+    work_argument(parser)
     parser.add_argument("--fresh", action="store_true")
     artifact = run(parser.parse_args())
     for name in ("select", "checks"):

@@ -8,10 +8,12 @@ import threading
 import pytest
 from typer.testing import CliRunner
 
-from semantic_switch import DEFAULT_JUDGE, ConfigError, Model, Runtime, api, cli, files, hosted, judge_from, tools
-from semantic_switch.hosted import OpenRouterJudge
+from semantic_switch import DEFAULT_JUDGE, ConfigError, Model, Runtime, api, cli, files, judge, tools
+from semantic_switch.drivers import openrouter
+from semantic_switch.hosted import HostedJudge
+from semantic_switch.training import Engine
 
-from .conftest import FakeScorer
+from semantic_testkit.scoring import FakeScorer
 from .test_artifact_pipeline import dataset
 from .test_native_resources import QWEN3
 from .test_openrouter_judge import Provider
@@ -43,7 +45,7 @@ def test_close_releases_unused_owned_bindings_once(monkeypatch):
     monkeypatch.setattr(api, "_resolve", lambda source: pytest.fail("loaded an unused model to close it"))
     closed = []
     first, shared = Closing(closed, "first"), Closing(closed, "shared")
-    rt = Runtime({"judge": first, "alias": first, "wrapped": Wrapper(shared), "raw": shared, "local": Model("unused.gguf")}, own_judges=True)
+    rt = Runtime(bindings={"judge": first, "alias": first, "wrapped": Wrapper(shared), "raw": shared, "local": Model("unused.gguf")}, own_judges=True)
     rt.close()
     rt.close()
     assert closed == ["first", "shared"]
@@ -51,18 +53,18 @@ def test_close_releases_unused_owned_bindings_once(monkeypatch):
 
 def test_close_keeps_borrowed_bindings_and_transports(monkeypatch):
     closed, supplied, created = [], Provider(), Provider()
-    Runtime({"judge": Closing(closed, "borrowed")}).close()
-    with Runtime({"judge": judge_from("openrouter:m", transport=supplied)}, own_judges=True):
+    Runtime(Closing(closed, "borrowed")).close()
+    with Runtime(judge("openrouter:m", codec="chat", transport=supplied), own_judges=True):
         pass
-    monkeypatch.setattr(hosted, "http", lambda *args: created)
-    with Runtime({"judge": judge_from("openrouter:m")}, own_judges=True):
+    monkeypatch.setattr(openrouter.OpenRouter, "wire", lambda *args: created)
+    with Runtime(judge("openrouter:m", codec="chat"), own_judges=True):
         pass
     assert closed == [] and not supplied.closed and created.closed
 
 
 def test_close_attempts_every_resource_and_reports_all_failures():
     closed = []
-    rt = Runtime({"judge": Closing(closed, "a", RuntimeError("a failed")), "b": Closing(closed, "b"),
+    rt = Runtime(bindings={"judge": Closing(closed, "a", RuntimeError("a failed")), "b": Closing(closed, "b"),
                   "c": Closing(closed, "c", ValueError("c failed"))}, own_judges=True)
     with pytest.raises(ExceptionGroup) as raised:
         rt.close()
@@ -79,7 +81,7 @@ def test_close_waits_for_active_operation_then_refuses_calls():
         release.wait(5)
         return [.99, .01]
 
-    rt = Runtime({"judge": Closing(closed, "judge", oracle=oracle)}, own_judges=True)
+    rt = Engine(Closing(closed, "judge", oracle=oracle), own_judges=True)
     results = []
     worker = threading.Thread(target=lambda: results.append(rt.check("case", "Claim.")))
     worker.start()
@@ -100,20 +102,20 @@ def test_close_waits_for_active_operation_then_refuses_calls():
 
 def test_closed_hosted_runtime_never_sends():
     provider = Provider()
-    rt = Runtime({"judge": judge_from("openrouter:m", transport=provider)}, own_judges=True)
+    rt = Runtime(judge("openrouter:m", codec="chat", transport=provider), own_judges=True)
     rt.close()
     with pytest.raises(RuntimeError, match="runtime is closed"):
         rt.check("case", "Claim.")
     assert provider.bodies == []
 
 
-def test_judge_from_returns_existing_judges(monkeypatch):
-    monkeypatch.setattr(hosted, "http", lambda *args: pytest.fail("supplied transport ignored"))
-    local = judge_from("models/x.gguf", device="cpu", threads=2, repack=False)
+def test_judge_returns_existing_judges(monkeypatch):
+    monkeypatch.setattr(openrouter.OpenRouter, "wire", lambda *args: pytest.fail("supplied transport ignored"))
+    local = judge("models/x.gguf", device="cpu", threads=2, repack=False)
     assert local == Model("models/x.gguf", device="cpu", threads=2, repack=False)
-    routed = judge_from("openrouter:m", provider="p", transport=Provider(), timeout=5, batch_inputs=2)
-    structured = judge_from("openrouter:typesafe/jev-1.13", transport=Provider(), batch_inputs=3)
-    assert isinstance(routed, OpenRouterJudge) and (routed.model, routed.provider, routed.batch_inputs, routed.timeout) == ("m", "p", 2, 5)
+    routed = judge("openrouter:m", codec="chat", provider="p", transport=Provider(), timeout=5, batch_inputs=2)
+    structured = judge("openrouter:typesafe/jev-1.13", transport=Provider(), batch_inputs=3)
+    assert isinstance(routed, HostedJudge) and (routed.model, routed.provider.route, routed.batch_inputs, routed.timeout) == ("m", "p", 2, 5)
     assert structured.identity["protocol"] == "systemone" and structured.batch_inputs == 3 and not routed.own_transport
     assert SECRET not in json.dumps(routed.identity)
 
@@ -122,57 +124,57 @@ def test_judge_from_returns_existing_judges(monkeypatch):
     ("", {}, "judge source must be nonempty"),
     ("openrouter:", {}, "pass the provider separately"),
     ("openrouter:m@p", {}, "pass the provider separately"),
-    ("openrouter:m", {"provider": ""}, "provider must be nonempty"),
-    ("openrouter:m", {"key": " "}, "key must be nonempty"),
-    ("openrouter:m", {"device": "cpu", "repack": False}, "device, repack apply only to local GGUF judges"),
-    ("openrouter:m", {"timeout": 0}, "timeout must be a positive"),
-    ("openrouter:m", {"batch_inputs": 0}, "batch_inputs must be a positive integer"),
-    ("openrouter:m", {"key": SECRET, "transport": Provider()}, "key applies only to the built-in transport"),
-    ("x.gguf", {"provider": "p", "key": SECRET}, "provider, key apply only to hosted judges"),
-    ("x.gguf", {"timeout": 5}, "timeout apply only to hosted judges"),
-    ("x.gguf", {"devise": "cpu"}, "unknown native setting 'devise' \\(did you mean 'device'\\?\\)"),
+    ("openrouter:m", {"codec": "chat", "provider": ""}, "provider must be nonempty"),
+    ("openrouter:m", {"codec": "chat", "key": " "}, "key must be nonempty"),
+    ("openrouter:m", {"codec": "chat", "device": "cpu", "repack": False}, "device, repack do not apply to openrouter judges"),
+    ("openrouter:m", {"codec": "chat", "timeout": 0}, "timeout must be a positive"),
+    ("openrouter:m", {"codec": "chat", "batch_inputs": 0}, "batch_inputs must be a positive integer"),
+    ("openrouter:m", {"codec": "chat", "key": SECRET, "transport": Provider()}, "key applies only to the built-in transport"),
+    ("x.gguf", {"provider": "p", "key": SECRET}, "key, provider do not apply to gguf judges"),
+    ("x.gguf", {"timeout": 5}, "timeout does not apply to gguf judges"),
+    ("x.gguf", {"devise": "cpu"}, "devise does not apply to gguf judges \\(did you mean 'device'\\?\\)"),
     ("x.gguf", {"device": "tpu"}, "unknown device"),
 ])
-def test_judge_from_refuses_invalid_combinations_before_transport(monkeypatch, source, settings, message):
-    monkeypatch.setattr(hosted, "http", lambda *args: pytest.fail("transport created for an invalid configuration"))
+def test_judge_refuses_invalid_combinations_before_transport(monkeypatch, source, settings, message):
+    monkeypatch.setattr(openrouter.OpenRouter, "wire", lambda *args: pytest.fail("transport created for an invalid configuration"))
     monkeypatch.setattr(api, "_resolve", lambda source: pytest.fail("assets resolved for an invalid configuration"))
     with pytest.raises(ConfigError, match=message) as raised:
-        judge_from(source, **settings)
+        judge(source, **settings)
     assert SECRET not in str(raised.value)
 
 
 def test_cli_options_distinguish_unspecified_native_defaults(monkeypatch):
     seen = []
-    monkeypatch.setattr(cli, "judge_from", lambda source, **settings: seen.append((source, settings)) or FakeScorer(lambda *a: [.99, .01]))
+    monkeypatch.setattr(cli, "judge", lambda source, **settings: seen.append((source, settings)) or FakeScorer(lambda *a: [.99, .01]))
     runner = CliRunner()
     assert runner.invoke(cli.app, ["--json", "--judge", "openrouter:m", "--provider", "p", "check", "Claim."], input="case").exit_code == 0
     assert runner.invoke(cli.app, ["--json", "--judge", "x.gguf", "--no-repack", "--device", "cpu", "check", "Claim."], input="case").exit_code == 0
-    assert seen == [("openrouter:m", {"provider": "p"}), ("x.gguf", {"provider": None, "device": "cpu", "repack": False})]
+    assert seen == [("openrouter:m", {"provider": "p"}), ("x.gguf", {"device": "cpu", "repack": False})]
 
 
 def test_cli_rejects_native_flags_for_hosted_judges(monkeypatch):
-    monkeypatch.setattr(hosted, "http", lambda *args: pytest.fail("transport created"))
+    monkeypatch.setattr(openrouter.OpenRouter, "wire", lambda *args: pytest.fail("transport created"))
     result = CliRunner().invoke(cli.app, ["--judge", "openrouter:m", "--threads", "4", "check", "Claim."], input="case")
-    assert isinstance(result.exception, ConfigError) and "threads apply only to local GGUF judges" in str(result.exception)
+    assert isinstance(result.exception, ConfigError) and "threads does not apply to openrouter judges" in str(result.exception)
 
 
 def test_hosted_cli_matches_python_without_native_packages(tmp_path, monkeypatch):
     for name in ("llama_cpp", "huggingface_hub"):
         monkeypatch.setitem(sys.modules, name, None)
     monkeypatch.setenv("OPENROUTER_API_KEY", SECRET)
-    monkeypatch.setattr(hosted, "http", lambda *args: Provider())
+    monkeypatch.setattr(openrouter.OpenRouter, "wire", lambda *args: Provider())
     paths = {}
     for name in ("python", "cli"):
         (tmp_path / name).mkdir()
         paths[name] = definition(tmp_path / name)
         dataset(paths[name], 40)
     case = json.dumps({"message": "refund item"})
-    with Runtime({"judge": judge_from("openrouter:m", provider="p")}, own_judges=True) as rt:
+    with Runtime(judge("openrouter:m", codec="chat", provider="p"), own_judges=True) as rt:
         python = {"check": rt.check("refund please", "Refund requested.").as_dict(False)}
         tools.lock(rt, paths["python"])
         python["run"] = rt.load(paths["python"])(json.loads(case)).as_dict(False)
-        python["test"] = tools.run_test(rt, paths["python"], None, False)
-    runner, options = CliRunner(), ["--json", "--judge", "openrouter:m", "--provider", "p"]
+        python["test"] = tools.run_test(rt, paths["python"])
+    runner, options = CliRunner(), ["--json", "--judge", "openrouter:m", "--provider", "p", "--setting", "codec=chat"]
     outputs = [runner.invoke(cli.app, options + command, input=stdin) for command, stdin in (
         (["check", "Refund requested."], "refund please"), (["lock", str(paths["cli"])], ""),
         (["run", str(paths["cli"])], case), (["test", str(paths["cli"])], ""))]
@@ -188,17 +190,17 @@ def test_hosted_cli_matches_python_without_native_packages(tmp_path, monkeypatch
 def test_native_export_on_hosted_judge_is_unsupported(tmp_path):
     path = definition(tmp_path)
     dataset(path, 40)
-    with Runtime({"judge": judge_from("openrouter:m", provider="p", transport=Provider())}, own_judges=True) as rt:
+    with Runtime(judge("openrouter:m", codec="chat", provider="p", transport=Provider()), own_judges=True) as rt:
         with pytest.raises(ConfigError, match="native export requires a local tokenizer"):
             tools.export(rt, path, native=True)
 
 
-def test_quickstart_and_readme_select_judges_through_judge_from(monkeypatch):
+def test_quickstart_and_readme_select_judges_through_judge(monkeypatch):
     monkeypatch.setenv("OPENROUTER_API_KEY", SECRET)
     from examples.quickstart import judge
     assert judge({}) == Model(api.DEFAULT_JUDGE)
-    routed = judge({"OPENROUTER_MODEL": "m", "OPENROUTER_PROVIDER": "p"})
-    assert (routed.model, routed.provider) == ("m", "p")
+    routed = judge({"OPENROUTER_MODEL": "m", "OPENROUTER_PROVIDER": "p", "OPENROUTER_CODEC": "chat"})
+    assert (routed.model, routed.provider.route) == ("m", "p")
     routed.close()
 
 
@@ -209,7 +211,7 @@ import semantic_switch as ss
 import semantic_switch.cli
 import semantic_switch.hosted
 try:
-    ss.Runtime({"judge": ss.Model(ss.DEFAULT_JUDGE, device="cpu")}).check("case", "Claim.")
+    ss.Runtime(ss.Model(ss.DEFAULT_JUDGE, device="cpu")).check("case", "Claim.")
 except ss.ConfigError as error:
     print(error)
 """
@@ -257,6 +259,6 @@ def test_serial_native_accepted_outcomes_do_not_depend_on_cache_composition_or_c
 
     results = []
     for settings in ({}, {"n_batch": 1024}):
-        with Runtime({"judge": Model(QWEN3, adapter="qwen3", device="cpu", **settings)}) as rt:
+        with Engine(Model(QWEN3, adapter="qwen3", device="cpu", **settings)) as rt:
             results += [outcomes(rt, "composed"), outcomes(rt, "composed"), outcomes(rt, "cold")]
     assert all(result == results[0] for result in results) and any(status == "ok" for row in results[0] for _, status in row.values())

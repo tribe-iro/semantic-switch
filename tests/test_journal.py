@@ -37,7 +37,7 @@ def test_retry_appends_a_new_attempt_and_streams_superseded_ones(tmp_path):
         first = journal.current[key('one')]['attempt']
         journal.commit([(key('one'), {'outcome': 'answered'})])
         summary = journal.summary()
-    assert journal.payloads() == [{'outcome': 'uncertain'}, {'outcome': 'answered'}]
+        assert list(journal.payloads()) == [{'outcome': 'uncertain'}, {'outcome': 'answered'}]
     assert summary['superseded'] == [{'key': key('one'), 'attempt': first, 'sequence': 1}] and summary['attempts'] == 3 and summary['completed'] == 2
     assert [record['sequence'] for record in files.read_jsonl(path)[1:]] == [1, 2, 3]
 

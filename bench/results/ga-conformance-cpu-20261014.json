@@ -1,0 +1,65 @@
+{
+ "source": {
+  "revision": "099a7887e8b0c6a339869f9588db7ed9537e4ed6",
+  "sources": "7ff17cc3635fa62b27d474dcab6108150302d197a3cf6bbea00f6df0ceef607c"
+ },
+ "source_unchanged": true,
+ "command": [
+  ".artifacts/ga-implementation/conformance.py",
+  "cpu"
+ ],
+ "roles": {
+  "judge": {
+   "role": "judge",
+   "model": {
+    "presentation": {
+     "evidence": "named-fields@2",
+     "choices": "full-criteria@3"
+    },
+    "file": "Q8_0.gguf",
+    "sha256": "0c3c341c4d55de75bc192404a19779e7ad68f5050a238e9b0ba279b62782d489",
+    "template": "chat@3:0a2c8073",
+    "prompt": "01b77c5ec35ee1481551a6116b5108d561f2ab4607f8b525a28bca9503ca93fb"
+   },
+   "requested_device": "cpu",
+   "boundary": "renderer/readout/execution conformance; not domain accuracy",
+   "status": "failed",
+   "ok": false,
+   "checks": {
+    "D1 shared = reference": {
+     "ok": true,
+     "max_diff": 0.0,
+     "includes_mass": true
+    },
+    "D2 batching": {
+     "ok": true,
+     "after_diff": 0.0,
+     "batched_diff": 0.0,
+     "includes_mass": true
+    },
+    "D3 no leakage": {
+     "ok": true,
+     "max_diff": 0.0
+    },
+    "D4 answer tokens": {
+     "ok": true
+    },
+    "D5 template": {
+     "ok": true,
+     "median_mass": 1.0
+    },
+    "D6 chunking": {
+     "ok": false,
+     "max_diff": 1.6516491950155365e-14
+    },
+    "D7 residency": {
+     "ok": true,
+     "max_diff": 0.0,
+     "includes_mass": true
+    }
+   },
+   "cached": false,
+   "shared_prefix": true
+  }
+ }
+}

@@ -1,20 +1,20 @@
 from __future__ import annotations
 
-import argparse
 from dataclasses import asdict, dataclass, replace
+from itertools import product
 import json
 from pathlib import Path
 import random
 import sys
 
 from semantic_switch import ConfigError, files
-from semantic_switch.metrics import identity
+from semantic_switch.compiler import digest
 from bench import evidence
 from bench.evidence import Assertion, Decision, Frame, Gold, Prose
 
 DATA = Path(__file__).parent / "data" / "zt411"
-PACK, DEFINITION = DATA / "pack.json", DATA / "printer.yaml"
-REVISION = "zt411-reference-1"
+PACK, DEFINITION = DATA / "pack.json", Path(__file__).parents[1] / "examples" / "data" / "printer.yaml"
+REVISION = "zt411-reference-3"
 ACTIONS = {"set_method_tt": "Set print method to thermal transfer", "set_method_dt": "Set print method to direct thermal",
            "load_ribbon": "Load a ribbon", "start_calibration": "Start manual sensor calibration",
            "verify_loading": "Inspect and verify media and ribbon loading", "calibration_next": "Confirm the calibration prompt and continue",
@@ -22,12 +22,15 @@ ACTIONS = {"set_method_tt": "Set print method to thermal transfer", "set_method_
            "request_observation": "Ask the operator for the missing or conflicting observation"}
 MENU = tuple(ACTIONS)
 SCOPE = tuple(f"actions/{action}" for action in MENU)
-PRIMITIVES = ("tt_media", "dt_media", "ribbon_loaded", "ribbon_absent", "detection_symptom", "step_verified", "unverified_step",
+PRIMITIVES = ("tt_media", "dt_media", "ribbon_loaded", "ribbon_absent", "detection_symptom", "verification_due", "step_verified", "unverified_step",
               "calibration_verified", "method_inconsistent", "ready_to_print", "needs_observation")
 FIELDS = ("asset", "model", "print_method", "prompt", "enabled", "alerts", "verified", "attempted", "notes")
 IDLE, CALIBRATION = ("ready", "paused"), ("calibration_1", "calibration_2")
 TT, DT = "thermal_transfer", "direct_thermal"
-ABSENT, CONFLICT = "absent", "conflict"
+ABSENT, CONFLICT, UNREAD = "absent", "conflict", "unknown"
+PROPERTIES = ("prompt", "print_method", "media_type", "ribbon_loaded", "detection_symptom")
+DOMAIN = {"prompt": (*IDLE, *CALIBRATION), "print_method": (TT, DT), "media_type": (TT, DT), "ribbon_loaded": (True, False), "detection_symptom": (True, False)}
+UNSTATED = ("tt_media", "dt_media", "ribbon_loaded", "ribbon_absent", "calibration_verified", "method_inconsistent", "ready_to_print")
 STRUCTURED = {"configuration": "print_method", "display": "prompt", "reading": "alerts", "verification": "verified", "command": "attempted"}
 TRAINED = "structured"
 CONDITIONS = ("structured", "prose", "structured_permuted")
@@ -35,6 +38,7 @@ LANGUAGES = ("en", "pt")
 PHRASES = {
     "en": {("media_type", TT): ["loaded thermal-transfer labels", "put in a roll of thermal-transfer media"],
            ("media_type", DT): ["loaded direct-thermal labels", "put in a roll of direct-thermal media"],
+           ("media_changed", True): ["swapped the media roll at handover", "changed the label roll at shift change"],
            ("ribbon_loaded", True): ["a ribbon is loaded", "the ribbon is in"],
            ("ribbon_loaded", False): ["there is no ribbon loaded", "the ribbon spindle is empty"],
            ("detection_symptom", True): ["labels are skipping and it stops mid-roll", "it reports media out although labels are loaded"],
@@ -43,6 +47,7 @@ PHRASES = {
            ("calibration_complete", True): ["finished the manual sensor calibration", "completed the sensor calibration"]},
     "pt": {("media_type", TT): ["coloquei etiquetas de transferência térmica", "pus um rolo de mídia de transferência térmica"],
            ("media_type", DT): ["coloquei etiquetas térmicas diretas", "pus um rolo de mídia térmica direta"],
+           ("media_changed", True): ["troquei o rolo de mídia na passagem de turno", "mudei o rolo de etiquetas na troca de turno"],
            ("ribbon_loaded", True): ["há um ribbon instalado", "o ribbon está colocado"],
            ("ribbon_loaded", False): ["não há ribbon instalado", "o eixo do ribbon está vazio"],
            ("detection_symptom", True): ["as etiquetas estão pulando e ela para no meio do rolo", "ela indica falta de mídia embora haja etiquetas"],
@@ -98,17 +103,21 @@ def alert(value):
 def render(scenario: str, state: State, events, *, condition: str, frame_id: str, family: str, tags=(), seeds=(), pairs=(), language="en") -> Frame:
     if condition not in CONDITIONS or language not in LANGUAGES:
         raise ConfigError(f"condition must be one of {CONDITIONS} and language one of {LANGUAGES}")
+    events = tuple(events)
     structured = condition.removesuffix("_permuted") == "structured"
     data = {"asset": state.asset, "model": state.model}
     notes, assertions, lists = Prose("notes"), [], {"alerts": [], "verified": [], "attempted": []}
+    scalar = {prop: {json.dumps(event.value) for event in events if event.asset == state.asset and event.status == 'current' and event.property == prop}
+              for prop in ('prompt', 'print_method')}
+    ambiguous = {prop for prop, values in scalar.items() if len(values) > 1}
     for n, e in enumerate(sorted(events, key=lambda e: (e.time, e.indication, e.property))):
         key = f"a{n}"
         clock = f"{8 + e.time // 60:02d}:{e.time % 60:02d}"
-        if structured and e.indication in STRUCTURED and e.asset == state.asset and e.status == "current":
+        if structured and e.indication in STRUCTURED and e.asset == state.asset and e.status == "current" and e.property not in ambiguous:
             target = STRUCTURED[e.indication]
             if target in lists:
-                lists[target].append(alert((e.property, e.value)) if e.indication == "reading" else e.value if e.indication == "command" else
-                                     f"{e.property}:{json.dumps(e.value)}")
+                lists[target].append(f"{clock} " + (alert((e.property, e.value)) if e.indication == "reading" else e.value if e.indication == "command" else
+                                                    f"{e.property}:{json.dumps(e.value)}"))
             else:
                 data[target] = e.value
             assertions.append(Assertion(key, e.asset, e.property, e.value, f"e{n}", e.time, e.indication, e.status, paths=(target,)))
@@ -119,7 +128,7 @@ def render(scenario: str, state: State, events, *, condition: str, frame_id: str
         spans = tuple(notes.spans[key])
         assertions.append(Assertion(key, e.asset, e.property, e.value, f"e{n}", e.time, e.indication, e.status, spans=spans))
     if structured:
-        data |= {"enabled": list(enabled(data.get("prompt"))), **lists}
+        data |= {"enabled": list(enabled(data.get("prompt"))), **lists, "alerts": lists["alerts"] or UNREAD}
     data["notes"] = notes.text.rstrip() or WORDS[language]["none"]
     return Frame(frame_id, family, scenario, condition, data, tuple(assertions), tuple(sorted(tags)), tuple(seeds), tuple(pairs))
 
@@ -148,14 +157,14 @@ def sentence(e: Event, language="en") -> str:
             return w["complete"]
         return w["checked"].format(phrases[(e.property, e.value)][0])
     text = phrases[(e.property, e.value)][e.phrase % 2]
-    return stale + (w["I"].format(text) if e.property in ("media_type", "step", "calibration_complete") else f"{text[0].upper()}{text[1:]}.")
+    return stale + (w["I"].format(text) if e.property in ("media_type", "media_changed", "step", "calibration_complete") else f"{text[0].upper()}{text[1:]}.")
 
 
 class View:
     def __init__(self, frame: Frame):
         self.asset = frame.input["asset"]
         self.values, self.evidence, self.attempted, self.reported, self.steps, self.verified = {}, {}, set(), set(), set(), set()
-        self.ignored, self.stale = [], []
+        self.ignored, self.stale, self.readings = [], [], set()
         for a in frame.assertions:
             if a.subject != self.asset:
                 self.ignored.append(a.id)
@@ -168,101 +177,28 @@ class View:
             elif a.property == "calibration_complete" and a.indication != "verification":
                 self.reported.add("calibration_complete")
             else:
+                if a.indication == "reading":
+                    self.readings.add((a.property, json.dumps(a.value)))
                 self.values.setdefault(a.property, set()).add(json.dumps(a.value))
                 self.evidence.setdefault(a.property, []).append(a.id)
                 if a.indication == "verification":
                     self.verified.add(a.property)
 
+    @property
+    def context(self) -> tuple[str, ...]:
+        return (*(("ZT-ASSET",) if self.ignored else ()), *(("ZT-CURRENT",) if self.stale else ()))
+
     def get(self, prop):
         found = self.values.get(prop, set())
         return json.loads(next(iter(found))) if len(found) == 1 else CONFLICT if found else ABSENT
 
-
-def consistency(method, media, ribbon):
-    if media in (ABSENT, CONFLICT):
-        return None, ("media_type",)
-    if method != media:
-        return False, ()
-    if media == DT:
-        return True, ()
-    if ribbon in (ABSENT, CONFLICT):
-        return None, ("ribbon_loaded",)
-    return ribbon is True, ()
+    def options(self, prop) -> tuple:
+        found = self.values.get(prop)
+        return tuple(json.loads(x) for x in sorted(found)) if found else (False,) if prop == "detection_symptom" else DOMAIN[prop]
 
 
-def reference(frame: Frame) -> Gold:
-    v = View(frame)
-    method, prompt, media, ribbon, symptom = (v.get(p) for p in ("print_method", "prompt", "media_type", "ribbon_loaded", "detection_symptom"))
-    context = (*(("ZT-ASSET",) if v.ignored else ()), *(("ZT-CURRENT",) if v.stale else ()))
-    out, prohibited = {}, []
-
-    def decide(action, value, *rules, unresolved=()):
-        conflict = ("ZT-CONFLICT",) if any(v.get(p) == CONFLICT for p in unresolved) else ()
-        out[f"actions/{action}"] = Decision(value, (*context, *rules, *conflict), tuple(i for p in unresolved for i in v.evidence.get(p, ())), tuple(unresolved))
-    def forbid(action, *rules):
-        out[f"actions/{action}"] = Decision(False, (*context, *rules))
-        prohibited.append(action)
-    if prompt in (ABSENT, CONFLICT) or method in (ABSENT, CONFLICT):
-        for action in MENU[:-1]:
-            decide(action, None, "ZT-DEFAULT", unresolved=tuple(p for p, x in (("prompt", prompt), ("print_method", method)) if x in (ABSENT, CONFLICT)))
-    else:
-        idle, calibrating = prompt in IDLE, prompt in CALIBRATION
-        for action, want, other, rule in (("set_method_tt", TT, DT, "ZT-METHOD-TT"), ("set_method_dt", DT, TT, "ZT-METHOD-DT")):
-            if not idle or method == want:
-                decide(action, False, "ZT-DEFAULT")
-            elif media in (ABSENT, CONFLICT):
-                decide(action, None, rule, "ZT-DIAGNOSE", unresolved=("media_type",))
-            else:
-                decide(action, media == want, rule)
-        if not idle or method != TT or media == DT:
-            decide("load_ribbon", False, "ZT-DEFAULT" if media != DT else "ZT-METHOD-DT")
-        elif ribbon in (ABSENT, CONFLICT):
-            decide("load_ribbon", None, "ZT-RIBBON", "ZT-DIAGNOSE", unresolved=("ribbon_loaded",))
-        else:
-            decide("load_ribbon", ribbon is False, "ZT-RIBBON")
-        consistent, needs = consistency(method, media, ribbon)
-        if not idle or symptom == ABSENT:
-            decide("start_calibration", False, "ZT-DEFAULT")
-        elif symptom == CONFLICT or consistent is None:
-            decide("start_calibration", None, "ZT-CAL-START", unresolved=("detection_symptom",) if symptom == CONFLICT else needs)
-        else:
-            decide("start_calibration", bool(symptom) and consistent, "ZT-CAL-START")
-        if unverified(v):
-            decide("verify_loading", True, "ZT-VERIFY", "ZT-COMMAND")
-        elif idle and symptom is True and consistent:
-            decide("verify_loading", True, "ZT-CAL-START")
-        else:
-            decide("verify_loading", False, "ZT-DEFAULT")
-        if not calibrating:
-            decide("calibration_next", False, "ZT-DEFAULT")
-        elif prompt in v.steps:
-            decide("calibration_next", True, "ZT-CAL-NEXT")
-        else:
-            forbid("calibration_next", "ZT-CAL-NEXT", *(("ZT-COMMAND",) if prompt in v.reported else ()))
-        if not calibrating:
-            decide("cancel_calibration", False, "ZT-DEFAULT")
-        elif consistent is None:
-            decide("cancel_calibration", None, "ZT-CAL-CANCEL", unresolved=needs)
-        else:
-            decide("cancel_calibration", consistent is False, "ZT-CAL-CANCEL")
-        calibrated = v.get("calibration_complete") is True
-        if calibrating:
-            forbid("resume_printing", "ZT-RESUME")
-        elif prompt != "paused":
-            decide("resume_printing", False, "ZT-DEFAULT")
-        elif consistent is False:
-            forbid("resume_printing", "ZT-RESUME", *(("ZT-RIBBON",) if ribbon is False else ()))
-        elif consistent is None:
-            decide("resume_printing", None, "ZT-RESUME", unresolved=needs)
-        elif symptom == CONFLICT and not calibrated:
-            decide("resume_printing", None, "ZT-RESUME", unresolved=("detection_symptom",))
-        elif symptom is True and not calibrated:
-            forbid("resume_printing", "ZT-RESUME", *(("ZT-CAL-CANCEL",) if "cancel_calibration" in v.attempted else ()))
-        else:
-            decide("resume_printing", True, "ZT-RESUME")
-    pending = any(d.value is None for d in out.values())
-    decide("request_observation", pending, "ZT-DIAGNOSE" if pending else "ZT-DEFAULT")
-    return Gold(REVISION, SCOPE, {target: out[target] for target in SCOPE}, tuple(a for a in MENU if a in prohibited), primitives(v, pending))
+def consistent(method, media, ribbon) -> bool:
+    return method == media and (media == DT or ribbon is True)
 
 
 def unverified(v: View, accepted=()) -> bool:
@@ -272,34 +208,136 @@ def unverified(v: View, accepted=()) -> bool:
     return loading or bool(steps) or completion
 
 
-def stated(value, rule, ids=()):
-    return Decision(None if value == CONFLICT else "unstated" if value == ABSENT else value, (rule, *(("ZT-CONFLICT",) if value == CONFLICT else ())), tuple(ids))
+def judge(v: View, world: dict) -> dict:
+    prompt, method, media, ribbon = (world[p] for p in PROPERTIES[:4])
+    symptom = world["detection_symptom"] or (ribbon is True and ("ribbon_loaded", "false") in v.readings)
+    calibrated, idle, calibrating, fits = v.get("calibration_complete") is True, prompt in IDLE, prompt in CALIBRATION, consistent(method, media, ribbon)
+    out = {}
 
-
-def primitives(v: View, pending: bool) -> dict:
-    method, prompt, media, ribbon, symptom, calibrated = (v.get(p) for p in ("print_method", "prompt", "media_type", "ribbon_loaded", "detection_symptom",
-                                                                               "calibration_complete"))
-    flip = {True: False, False: True}
-    consistent, needs = consistency(method, media, ribbon) if method not in (ABSENT, CONFLICT) else (None, ("print_method",))
-    unknown = CONFLICT if any(v.get(p) == CONFLICT for p in needs) else ABSENT
-    inconsistent = method != media if media in (TT, DT) and method in (TT, DT) else CONFLICT if CONFLICT in (media, method) else ABSENT
-    if consistent is None:
-        ready = unknown
+    def decide(action, value, *rules, forbidden=False):
+        out[f"actions/{action}"] = (value, rules, forbidden)
+    for action, want, rule in (("set_method_tt", TT, "ZT-METHOD-TT"), ("set_method_dt", DT, "ZT-METHOD-DT")):
+        if method == want:
+            decide(action, False, "ZT-DEFAULT")
+        elif calibrating:
+            decide(action, False, "ZT-CAL-HOLD")
+        else:
+            decide(action, media == want, rule)
+    if not idle or method != TT or media == DT:
+        decide("load_ribbon", False, "ZT-METHOD-DT" if media == DT else "ZT-DEFAULT")
     else:
-        ready = consistent and (calibrated is True or symptom is not True) if symptom != CONFLICT or calibrated is True else CONFLICT
-    return {"tt_media": stated(media == TT if media in (TT, DT) else media, "ZT-METHOD-TT", v.evidence.get("media_type", ())),
-            "dt_media": stated(media == DT if media in (TT, DT) else media, "ZT-METHOD-DT", v.evidence.get("media_type", ())),
-            "ribbon_loaded": stated(ribbon, "ZT-RIBBON", v.evidence.get("ribbon_loaded", ())),
-            "ribbon_absent": stated(flip.get(ribbon, ribbon), "ZT-RIBBON", v.evidence.get("ribbon_loaded", ())),
-            "detection_symptom": Decision(None if symptom == CONFLICT else symptom is True, ("ZT-CAL-START", *(("ZT-CONFLICT",) if symptom == CONFLICT else ())),
-                                          tuple(v.evidence.get("detection_symptom", ()))),
-            "step_verified": Decision(prompt in CALIBRATION and prompt in v.steps, ("ZT-CAL-NEXT", "ZT-COMMAND")),
-            "unverified_step": Decision(unverified(v), ("ZT-VERIFY", "ZT-COMMAND")),
-            "calibration_verified": Decision(True if calibrated is True else False if "calibration_complete" in v.reported or "cancel_calibration" in v.attempted
-                                             else "unstated", ("ZT-RESUME", "ZT-COMMAND")),
-            "method_inconsistent": stated(inconsistent, "ZT-CAL-CANCEL"),
-            "ready_to_print": stated(ready, "ZT-RESUME"),
-            "needs_observation": Decision(pending, ("ZT-DIAGNOSE",))}
+        decide("load_ribbon", ribbon is False, "ZT-RIBBON")
+    for action in ("start_calibration", "verify_loading"):
+        if action == "verify_loading" and unverified(v):
+            decide(action, True, "ZT-VERIFY", "ZT-COMMAND")
+        elif not idle or not symptom:
+            decide(action, False, "ZT-DEFAULT")
+        else:
+            decide(action, fits, "ZT-CAL-START")
+    if not calibrating:
+        decide("calibration_next", False, "ZT-DEFAULT")
+        decide("cancel_calibration", False, "ZT-DEFAULT")
+    else:
+        if prompt in v.steps:
+            decide("calibration_next", True, "ZT-CAL-NEXT")
+        else:
+            decide("calibration_next", False, "ZT-CAL-NEXT", *(("ZT-COMMAND",) if prompt in v.reported else ()), forbidden=True)
+        decide("cancel_calibration", not fits, "ZT-CAL-CANCEL")
+    if calibrating:
+        decide("resume_printing", False, "ZT-RESUME", forbidden=True)
+    elif prompt != "paused":
+        decide("resume_printing", False, "ZT-DEFAULT")
+    elif not fits:
+        decide("resume_printing", False, "ZT-RESUME", *(("ZT-RIBBON",) if ribbon is False else ()), forbidden=True)
+    elif symptom and not calibrated:
+        decide("resume_printing", False, "ZT-RESUME", *(("ZT-CAL-CANCEL",) if "cancel_calibration" in v.attempted else ()), forbidden=True)
+    else:
+        decide("resume_printing", True, "ZT-RESUME")
+    calibration = calibrating or bool(v.attempted & {"start_calibration", "cancel_calibration"}) or "calibration_complete" in v.reported
+    return {**out, "tt_media": (media == TT, ("ZT-METHOD-TT",), ("media_type",)), "dt_media": (media == DT, ("ZT-METHOD-DT",), ("media_type",)),
+            "ribbon_loaded": (ribbon, ("ZT-RIBBON",), ("ribbon_loaded",)), "ribbon_absent": (not ribbon, ("ZT-RIBBON",), ("ribbon_loaded",)),
+            "detection_symptom": (symptom, ("ZT-CAL-START",), ("detection_symptom",)),
+            "step_verified": (calibrating and prompt in v.steps, ("ZT-CAL-NEXT", "ZT-COMMAND"), ()),
+            "unverified_step": (unverified(v), ("ZT-VERIFY", "ZT-COMMAND"), ()),
+            "calibration_verified": (True if calibrated else False if calibration else "unstated", ("ZT-RESUME", "ZT-COMMAND"), ()),
+            "method_inconsistent": (method != media, ("ZT-CAL-CANCEL",), ()),
+            "ready_to_print": (not calibrating and fits and (calibrated or not symptom), ("ZT-RESUME",), ())}
+
+
+def sensitive(table: dict, varying, key) -> tuple[str, ...]:
+    found = []
+    for prop in varying:
+        i, groups = PROPERTIES.index(prop), {}
+        for world, outcome in table.items():
+            groups.setdefault(world[:i] + world[i + 1:], set()).add(key(outcome))
+        if any(len(group) > 1 for group in groups.values()):
+            found.append(prop)
+    return tuple(found)
+
+
+def settle(v: View, table: dict, target: str, undecided=None) -> Decision:
+    varying = tuple(p for p in PROPERTIES if len(v.options(p)) > 1)
+    outcomes = [outcome[target] for outcome in table.values()]
+    values = {o[0] for o in outcomes}
+    value = next(iter(values)) if len(values) == 1 else None
+    relevant = sensitive(table, varying, lambda outcome: outcome[target][0])
+    cited = relevant if relevant else sensitive(table, varying, lambda outcome: outcome[target][:2])
+    conflict = ("ZT-CONFLICT",) if any(p in v.values for p in cited) else ()
+    rules = (*dict.fromkeys(rule for o in outcomes for rule in o[1]), *conflict)
+    if target.startswith("actions/"):
+        ids = tuple(i for p in cited for i in v.evidence.get(p, ()))
+        return Decision(value, (*v.context, *rules), ids, relevant)
+    ids = tuple(i for p in dict.fromkeys((*outcomes[0][2], *cited)) for i in v.evidence.get(p, ()))
+    return Decision("unstated" if relevant and target in UNSTATED and not conflict else value, rules, ids)
+
+
+def worlds(v: View) -> dict:
+    return {world: judge(v, dict(zip(PROPERTIES, world))) for world in product(*(v.options(p) for p in PROPERTIES))}
+
+
+def constructed(values: dict, readings=()) -> View:
+    v = View.__new__(View)
+    v.asset, v.ignored, v.stale = "P", [], []
+    v.values = {key: {json.dumps(value) for value in entries} for key, entries in values.items()}
+    v.evidence = {key: [] for key in values}
+    v.attempted, v.reported, v.steps, v.verified = set(), set(), set(), set()
+    v.readings = set(readings)
+    return v
+
+
+EXTRACTED = ("tt_media", "ribbon_loaded", "detection_symptom", "step_verified", "unverified_step", "calibration_verified", "method_inconsistent")
+EXACT = ("prompt", "print_method")
+
+
+def sufficiency(views, target: str, extracted=EXTRACTED, exact=EXACT) -> list[dict]:
+    groups = {}
+    for v in views:
+        table = worlds(v)
+        key = (tuple((p, tuple(sorted(v.values.get(p, ())))) for p in exact), tuple(settle(v, table, f).value for f in extracted))
+        groups.setdefault(key, {}).setdefault(settle(v, table, target).value, v)
+    return [{"target": target, "exact": {p: list(values) for p, values in key[0]}, "extracted": dict(zip(extracted, key[1])),
+             "outcomes": {json.dumps(outcome): {p: sorted(values) for p, values in v.values.items()} | {"readings": sorted(v.readings)}
+                          for outcome, v in found.items()}}
+            for key, found in groups.items() if len(found) > 1]
+
+
+def readiness_witness() -> list[dict]:
+    values = {"prompt": ["paused"], "print_method": [TT], "media_type": [TT], "ribbon_loaded": [False, True]}
+    return sufficiency([constructed(values, {("ribbon_loaded", "false")}), constructed({**values, "detection_symptom": [False, True]})], "ready_to_print")
+
+
+def reference(frame: Frame) -> Gold:
+    v = View(frame)
+    table = worlds(v)
+    out = {f"actions/{action}": settle(v, table, f"actions/{action}") for action in MENU[:-1]}
+    prohibited = tuple(action for action in MENU[:-1] if out[f"actions/{action}"].value is False and all(o[f"actions/{action}"][2] for o in table.values()))
+    pending = any(d.value is None for d in out.values())
+    out["actions/request_observation"] = Decision(pending, (*v.context, "ZT-DIAGNOSE" if pending else "ZT-DEFAULT"))
+    verify = out["actions/verify_loading"]
+    primitives = {fact: settle(v, table, fact) for fact in PRIMITIVES if fact not in ("verification_due", "needs_observation")}
+    primitives |= {"verification_due": Decision(verify.value, verify.rules, verify.evidence), "needs_observation": Decision(pending, ("ZT-DIAGNOSE",))}
+    gold = Gold(REVISION, SCOPE, {target: out[target] for target in SCOPE}, prohibited, {fact: primitives[fact] for fact in PRIMITIVES})
+    return view_gold(frame, gold) if frame.condition == 'prose' else gold
 
 
 def definition(condition: str) -> dict:
@@ -309,10 +347,132 @@ def definition(condition: str) -> dict:
         return spec
     if condition == "structured_permuted":
         return {**spec, "facts": {**spec["facts"], "actions": {**actions, "cards": evidence.permuted(actions["cards"])}}}
-    cards = [{key: value for key, value in card.items() if key != "requires"} for card in actions["cards"]]
+    guards = {'set_method_tt': (['idle_prompt'], ['tt_method']), 'set_method_dt': (['idle_prompt', 'tt_method'], []),
+              'load_ribbon': (['idle_prompt', 'tt_method'], []), 'start_calibration': (['idle_prompt'], []),
+              'calibration_next': ([], ['idle_prompt']), 'cancel_calibration': ([], ['idle_prompt']), 'resume_printing': (['paused_prompt'], [])}
+    cards = []
+    for card in actions['cards']:
+        if card.get('requires') and card['id'] not in guards:
+            raise ConfigError(f"prose view needs authored guard mapping for {card['id']}")
+        positive, negative = guards[card['id']] if card.get('requires') else ([], [])
+        source = {**card.get('source', {}), **({'method_universe': list(DOMAIN['print_method'])} if 'tt_method' in negative else {}),
+                  **({'prompt_universe': list(DOMAIN['prompt'])} if 'idle_prompt' in negative else {})}
+        cards.append({**{key: value for key, value in card.items() if key != 'requires'},
+                      'applies_when': [*card['applies_when'], *({'fact': name} for name in positive)],
+                      'excludes': [*card.get('excludes', []), *({'fact': name} for name in negative)],
+                      'source': source})
+    checks = {'idle_prompt': 'Current evidence establishes that this printer is ready or paused. False when calibration 1 or 2 is established; unstated when the display state is missing, unsupported or not determined.',
+              'paused_prompt': 'Current evidence establishes that this printer is paused. False when ready or calibration 1 or 2 is established; unstated when the display state is missing, unsupported or not determined.',
+              'tt_method': 'Current evidence establishes thermal-transfer configuration for this printer. False when direct thermal is established; unstated when the method is missing, unsupported or not determined.'}
     return {**spec, "fields": {name: spec["fields"][name] for name in ("asset", "model", "notes")}, "reads": ["asset", "model", "notes"],
-            "facts": {**spec["facts"], "actions": {**actions, "cards": cards}}}
+            "facts": {**spec["facts"], **{name: {'check': text, 'unstated': True}
+                                          for name, text in checks.items()}, "actions": {**actions, "cards": cards}}}
 
+
+def view_gold(frame, gold):
+    if frame.condition != 'prose':
+        return gold
+    view, extra = View(frame), {}
+    for name, prop, values in (('idle_prompt', 'prompt', IDLE), ('paused_prompt', 'prompt', ('paused',)), ('tt_method', 'print_method', (TT,))):
+        options = view.options(prop)
+        outcomes = {value in values for value in options}
+        value = 'unstated' if any(value not in DOMAIN[prop] for value in options) else next(iter(outcomes)) if len(outcomes) == 1 else 'unstated' if view.get(prop) == ABSENT else None
+        extra[name] = Decision(value, ('ZT-CURRENT',), tuple(view.evidence.get(prop, ())))
+    return replace(gold, primitives={**gold.primitives, **extra})
+
+
+def behavior_tags(frame):
+    view = View(frame)
+    return tuple(f'{prop}:{view.get(prop)}' for prop in ('prompt', 'print_method', 'media_type'))
+
+
+def materialize_command(args):
+    return evidence.materialize(args.parent, args.output, condition=args.condition, definition=definition(args.condition),
+                                derive=view_gold, tags=lambda frame: (*behavior_tags(frame), 'existing_corpus'), producer='bench.procedures.view_gold',
+                                producer_digest=evidence.code_digest(sys.modules[__name__], evidence))
+
+
+def view_arguments(parser):
+    parser.add_argument('parent', type=Path)
+    parser.add_argument('--condition', choices=CONDITIONS, default='prose')
+    parser.add_argument('--output', type=Path, required=True)
+
+
+def coverage_arguments(parser):
+    parser.add_argument('parent', type=Path)
+    parser.add_argument('request', type=Path)
+    parser.add_argument('--condition', choices=('structured', 'prose'), default='prose')
+    parser.add_argument('--per-template', type=int, default=40)
+    parser.add_argument('--variants', type=int, default=3)
+    parser.add_argument('--role', choices=('fit', 'model_select'), default='fit')
+    parser.add_argument('--exclude', type=Path, action='append', default=[])
+    parser.add_argument('--output', type=Path, required=True)
+
+
+def coverage_command(args):
+    with files.committing(args.output):
+        if (Path(args.output) / 'benchmark.json').exists():
+            raise ConfigError('coverage publication already exists; reuse it or choose a new destination')
+        parent = evidence.read(args.parent)
+        request = files.read_json(args.request)
+        if not isinstance(request, dict) or set(request) != {'seed', 'requests'} or type(request['seed']) is not int or not isinstance(request['requests'], list):
+            raise ConfigError('coverage request is {seed, requests: [{target, class, tags, families}]}')
+        for item in request['requests']:
+            if not isinstance(item, dict) or set(item) != {'target', 'class', 'tags', 'families'} or not isinstance(item['target'], str) or not isinstance(item['class'], str) or not isinstance(item['tags'], list) or not all(isinstance(tag, str) for tag in item['tags']) or type(item['families']) is not int or item['families'] < 1:
+                raise ConfigError('coverage entries declare target, semantic class, metadata tags and positive family count')
+        if not request['requests'] or args.per_template < 1:
+            raise ConfigError('coverage production requires requests and a positive per-template bound')
+        definition_ = definition(args.condition)
+        parent_families = {row['family'] for row in parent['reference']}
+        parent_groups = {group for row in parent['situations'] for group in row['groups']}
+        parent_inputs = {digest(row['input']) for row in parent['situations']}
+        excluded = []
+        for path in args.exclude:
+            known = evidence.read(path)
+            parent_families.update(row['family'] for row in known['reference'])
+            parent_groups.update(group for row in known['situations'] for group in row['groups'])
+            parent_inputs.update(digest(row['input']) for row in known['situations'])
+            excluded.append({'path': str(path.resolve()), 'sha256': known['manifest_sha256']})
+        planned = scenarios(request['seed'], args.per_template, args.variants)
+        for row in planned:
+            if row['scenario'] in parent_groups or row['scenario'] in parent_families:
+                raise ConfigError('coverage seed reuses parent scenario ancestry; choose a new production seed')
+        built = frames(planned, conditions=(args.condition,))
+        built = [replace(frame, tags=tuple(sorted({*frame.tags, *behavior_tags(frame), 'coverage', f'coverage:{args.role}'}))) for frame in built]
+        ref = evidence.Reference(lambda frame: view_gold(frame, reference(frame)), REVISION, SCOPE, tuple(definition_['fields']),
+                                 {args.condition: evidence.criterion(definition_)})
+        golds = evidence.references(ref, built)
+        groups = {}
+        for frame in built:
+            groups.setdefault(frame.family, []).append(frame)
+        selected, achieved = set(), [set() for _ in request['requests']]
+        def matches(frame, item):
+            value = golds[frame.id].supervision.get(item['target'])
+            label = str(value.value).lower() if value is not None else None
+            return label == item['class'] and set(item['tags']) <= set(frame.tags)
+        duplicate_families = {family for family, members in groups.items() if any(frame.public in parent_inputs for frame in members)}
+        for family, members in sorted(groups.items()):
+            if family in duplicate_families:
+                continue
+            hits = [n for n, item in enumerate(request['requests']) if any(matches(frame, item) for frame in members)]
+            if not any(len(achieved[n]) < request['requests'][n]['families'] for n in hits):
+                continue
+            selected.add(family)
+            for n in hits:
+                achieved[n].add(family)
+        built = [frame for frame in built if frame.family in selected]
+        assignment = {'seed': request['seed'], 'quotas': {}, 'families': {family: args.role for family in selected},
+                      'components': {frame.id: frame.family for frame in built}, 'counted': [frame.id for frame in built],
+                      'counts': {role: {} for role in ('fit', 'model_select', 'check')}}
+        pack = replace(evidence.load_pack(PACK), created=files.now())
+        reviewed = evidence.review(pack, built, (), ref, authored=authored())
+        coverage = [{**item, 'achieved_families': len(found), 'state': 'met' if len(found) >= item['families'] else 'unmet'}
+                    for item, found in zip(request['requests'], achieved)]
+        return evidence.publish(args.output, pack, reviewed, ref, scenarios=[row for row in planned if row['scenario'] in selected],
+                                definition=definition_, name='definition.yaml', condition=args.condition, assignment=assignment,
+                                producer='bench.procedures.coverage_command', producer_digest=evidence.code_digest(sys.modules[__name__], evidence), seed=request['seed'],
+                                extra={'parent': {'path': str(args.parent.resolve()), 'sha256': parent['manifest_sha256']},
+                                       'excluded': excluded, 'coverage': coverage, 'duplicate_input_families_skipped': len(duplicate_families)})
 
 def justified(gold: Gold) -> tuple[str, ...]:
     return tuple(t.split("/")[1] for t, d in gold.decisions.items() if d.value is True)
@@ -348,7 +508,8 @@ def method_mismatch(asset, other, name, model, phrase, loaded=TT):
     media = ev(2, "operator_report", asset, "media_type", loaded, name, phrase=phrase)
     return [("base", state, [*base, media], {"configured_mode"}),
             ("missing_media", state, base, {"configured_mode", "missing_observation"}),
-            ("stale_media", state, [*base, replace(media, indication="handover_note", status="stale", time=-30)], {"configured_mode", "stale_handover"}),
+            ("stale_media", state, [*base, replace(media, indication="handover_note", status="stale", time=-30),
+                                    ev(-15, "operator_report", asset, "media_changed", True, name, phrase=phrase)], {"configured_mode", "stale_handover"}),
             ("other_asset", state, [*base, replace(media, asset=other)], {"configured_mode", "wrong_machine"})]
 
 
@@ -419,12 +580,12 @@ def frames(planned, conditions=CONDITIONS, languages=LANGUAGES) -> list[Frame]:
     return out
 
 
+def standard() -> evidence.Reference:
+    return evidence.Reference(reference, REVISION, SCOPE, FIELDS, {condition: evidence.criterion(definition(condition)) for condition in CONDITIONS})
+
+
 def evaluate(built) -> dict:
-    for frame in built:
-        evidence.validate_frame(frame, FIELDS)
-    golds = {frame.id: evidence.validate_gold(frame, reference(frame), SCOPE, REVISION) for frame in built}
-    evidence.invariant(reference, built)
-    return golds
+    return evidence.references(standard(), built)
 
 
 def build(planned, *, conditions=CONDITIONS, languages=LANGUAGES):
@@ -433,7 +594,7 @@ def build(planned, *, conditions=CONDITIONS, languages=LANGUAGES):
 
 
 def authored() -> dict:
-    return {"catalogue": identity({"actions": ACTIONS, "action_text": ACTION_TEXT, "words": WORDS, "names": NAMES,
+    return {"catalogue": digest({"actions": ACTIONS, "action_text": ACTION_TEXT, "words": WORDS, "names": NAMES,
                                    "phrases": {language: [[list(key), value] for key, value in table.items()] for language, table in PHRASES.items()}})}
 
 
@@ -451,8 +612,7 @@ CONVENTIONS = {
           "prompt's step and the completion of a manual sensor calibration; a pressed ribbon-load command is not completion and still needs a verification.",
           ("reported_step", "reported_completion"))}
 TRANSFER_ROLES = {"fit": ("a", "b"), "model_select": ("c",), "check": ("d",)}
-TRANSFER_FACT = ("Under the supplied procedure document, a loading or calibration step on this printer was attempted or reported "
-                 "but is not established as completed.")
+TRANSFER_FACT = "Under the supplied procedure document, a ribbon-load command or calibration step or completion report on this printer is not established as completed."
 
 
 def transfer_definition(pack) -> dict:
@@ -463,9 +623,12 @@ def transfer_definition(pack) -> dict:
             "facts": {f"unverified_step_{key}": {"check": TRANSFER_FACT, "guidance": [f"zt411_{key}"]} for key in CONVENTIONS}}
 
 
+TRANSFER_SCOPE = tuple(f"unverified_step_{key}" for key in CONVENTIONS)
+
+
 def transfer_gold(frame: Frame, role: str) -> Gold:
     v = View(frame)
-    return Gold(REVISION, tuple(f"unverified_step_{key}" for key in CONVENTIONS),
+    return Gold(REVISION, TRANSFER_SCOPE,
                 primitives={f"unverified_step_{key}": Decision(unverified(v, CONVENTIONS[key][1]), ("ZT-COMMAND", "ZT-VERIFY")) for key in TRANSFER_ROLES[role]})
 
 
@@ -473,36 +636,28 @@ def transfer_command(args):
     pack = evidence.load_pack(PACK)
     planned = scenarios(args.seed, args.per_template, args.variants)
     built, _ = build(planned)
-    assignment = evidence.assign(built, {"fit": args.fit, "model_select": args.model_select, "check": args.check}, seed=args.seed,
-                                 counted={f.id for f in built if f.condition == TRAINED},
-                                 families_minimum={"fit": 30, "model_select": 40, "check": 60} if args.fit == 100 else None)
+    assignment = evidence.quota_assignment(built, args, counted={f.id for f in built if f.condition == TRAINED})
     role = {f.id: assignment["families"][assignment["components"][f.id]] for f in built}
-    transfer = {f.id: transfer_gold(f, role[f.id]) for f in built}
-    return evidence.publish(args.output, pack, scenarios=planned, frames=built, golds=transfer, definition=transfer_definition(pack), name="printer-transfer.yaml",
-                            condition=TRAINED, assignment=assignment, producer="bench.procedures.transfer",
-                            producer_digest=evidence.code_digest(sys.modules[__name__], evidence), reference=lambda frame: transfer_gold(frame, role[frame.id]),
-                            fields=FIELDS, stratum=stratum, rules=[rule.id for rule in pack.rules], authored=authored(), seed=args.seed,
-                            extra={"objective": "bounded guidance transfer across four printer procedure documents; not unseen-manual ingestion or cross-equipment competence",
-                                   "documents": {f"zt411_{key}": {"source": "pinned manual rules" if text is None else "authored benchmark convention variant",
-                                                                  "roles": [role_ for role_, keys in TRANSFER_ROLES.items() if key in keys]}
-                                                 for key, (text, _) in CONVENTIONS.items()},
-                                   "revision": REVISION})
+    spec = transfer_definition(pack)
+    ref = evidence.Reference(lambda frame: transfer_gold(frame, role[frame.id]), REVISION, TRANSFER_SCOPE, FIELDS, dict.fromkeys(CONDITIONS, evidence.criterion(spec)))
+    reviewed = evidence.review(pack, built, (), ref, rules=[rule.id for rule in pack.rules], authored=authored())
+    return evidence.publish_domain(args, sys.modules[__name__], pack, reviewed, ref, scenarios=planned, assignment=assignment, producer="bench.procedures.transfer",
+                                   definition=spec, name="printer-transfer.yaml",
+                                   extra={"objective": "bounded guidance transfer across four printer procedure documents; not unseen-manual ingestion or cross-equipment competence",
+                                          "documents": {f"zt411_{key}": {"source": "pinned manual rules" if text is None else "authored benchmark convention variant",
+                                                                         "roles": [role_ for role_, keys in TRANSFER_ROLES.items() if key in keys]}
+                                                        for key, (text, _) in CONVENTIONS.items()},
+                                          "revision": REVISION})
 
 
 def pack_command(args):
     pack = evidence.load_pack(PACK)
     planned = scenarios(args.seed, args.per_template, args.variants)
-    reviews = evidence.load_reviews(args.reviews) if args.reviews else ()
-    built, applied = evidence.apply_reviews(frames(planned), reviews)
-    golds = evaluate(built)
-    assignment = evidence.assign(built, {"fit": args.fit, "model_select": args.model_select, "check": args.check}, seed=args.seed,
-                                 counted=evidence.situation_frames(built, golds, TRAINED), families_minimum={"fit": 30, "model_select": 40, "check": 60} if args.fit == 100 else None)
-    return evidence.publish(args.output, pack, scenarios=planned, frames=built, golds=golds, definition=files.read_yaml(DEFINITION), name=DEFINITION.name, condition=TRAINED, assignment=assignment,
-                            reviews=reviews, applied=applied, producer="bench.procedures.reference", producer_digest=evidence.code_digest(sys.modules[__name__], evidence),
-                            reference=reference, fields=FIELDS, stratum=stratum, authored=authored(), seed=args.seed,
-                            extra={"menu": ACTIONS, "revision": REVISION})
-
-
+    ref = standard()
+    reviewed = evidence.reviewed_pack(args, sys.modules[__name__], pack, frames(planned), ref)
+    assignment = evidence.quota_assignment(reviewed.frames, args, counted=evidence.situation_frames(reviewed.frames, reviewed.golds, TRAINED))
+    return evidence.publish_domain(args, sys.modules[__name__], pack, reviewed, ref, scenarios=planned, assignment=assignment, producer="bench.procedures.reference",
+                                   extra={"menu": ACTIONS, "revision": REVISION})
 
 
 def transition(state: State, action: str, events, time: int, actor="operator"):
@@ -533,7 +688,7 @@ def transition(state: State, action: str, events, time: int, actor="operator"):
         if state.prompt == "calibration_1":
             return replace(state, prompt="calibration_2"), [*stale({"prompt"}), ev(time, "display", asset, "prompt", "calibration_2"),
                                                             ev(time, "operator_report", asset, "step", "calibration_2", actor)]
-        done = consistency(state.method, state.media, state.ribbon)[0] is True
+        done = consistent(state.method, state.media, state.ribbon)
         return replace(state, prompt="paused", calibrated=done, symptom=state.symptom and not done, step_done=False), \
             [*stale({"prompt", "step", *(("detection_symptom",) if done else ())}), ev(time, "display", asset, "prompt", "paused"),
              *([ev(time, "verification", asset, "calibration_complete", True)] if done else [])]
@@ -548,16 +703,16 @@ def transition(state: State, action: str, events, time: int, actor="operator"):
 def terminal(state: State) -> str | None:
     if state.prompt != "ready":
         return None
-    working = consistency(state.method, state.media, state.ribbon)[0] is True and not state.symptom
+    working = consistent(state.method, state.media, state.ribbon) and not state.symptom
     return "printing" if working else "printing_failed"
 
 
 def digest_state(state: State) -> str:
-    return identity(asdict(state))
+    return digest(asdict(state))
 
 
 def progress_key(state: State, gold: Gold):
-    return digest_state(state), identity({t: d.value for t, d in gold.decisions.items()})
+    return digest_state(state), digest({t: d.value for t, d in gold.decisions.items()})
 
 
 def episode(row, decide, *, seed: int, condition="structured", cap: int = 5, priority=()) -> dict:
@@ -619,30 +774,22 @@ def controls(row, *, seed, condition="structured"):
             "always_cancel": episode(row, lambda frame: {"selected": {"cancel_calibration"}, "unresolved": set()}, seed=seed, condition=condition)}
 
 
+def templates(parser):
+    evidence.pack_arguments(parser)
+    parser.add_argument("--per-template", type=int, default=40)
+
+
+def reviewed_templates(parser):
+    templates(parser)
+    parser.add_argument("--reviews", type=Path, help="reviewer decisions JSONL; every decision names its worksheet binding")
+
+
 def main():
-    parser = argparse.ArgumentParser(prog="bench.procedures", description="Zebra ZT411/ZT421 snapshot pack: explicit offline construction; no model or network use")
-    commands = parser.add_subparsers(dest="command", required=True)
-    for name, text in (("pack", "plan scenarios, build frames/reference and publish the benchmark artifacts"),
-                       ("transfer", "publish the bounded four-document guidance-transfer pack: fit A/B, model_select C, check D")):
-        p = commands.add_parser(name, help=text)
-        p.add_argument("--seed", type=int, default=0)
-        p.add_argument("--per-template", type=int, default=40)
-        p.add_argument("--variants", type=int, default=3, help="per scenario: base plus a seeded sample of up to N-1 contrast variants, keeping families small")
-        p.add_argument("--fit", type=int, default=100)
-        p.add_argument("--model-select", type=int, default=150)
-        p.add_argument("--check", type=int, default=200)
-        p.add_argument("--output", type=Path, required=True)
-    commands.choices["pack"].add_argument("--reviews", type=Path, help="reviewer decisions JSONL (confirm with a worksheet binding; replace/skip with content digests)")
-    commands.add_parser("pin-authored", help="record the reviewed authored rule and catalogue digests in the pack manifest")
-    args = parser.parse_args()
-    try:
-        if args.command == "pin-authored":
-            print(json.dumps(evidence.pin_authored(PACK, authored()), indent=1))
-            return
-        manifest = (pack_command if args.command == "pack" else transfer_command)(args)
-    except ConfigError as error:
-        parser.exit(2, f"{error}\n")
-    print(json.dumps({"assignment": manifest["assignment"], "review_plan": manifest["review_plan"], "review": manifest["review"]["status"]}, indent=1))
+    evidence.pack_main(sys.modules[__name__], "Zebra ZT411/ZT421 snapshot pack: explicit offline construction; no model or network use",
+                       {"pack": ("plan scenarios, build frames/reference and publish the benchmark artifacts", pack_command, reviewed_templates),
+                        "view": ("materialize existing evidence under an input view without generating scenarios", materialize_command, view_arguments),
+                        "coverage": ("publish bounded additive coverage from an explicit request", coverage_command, coverage_arguments),
+                        "transfer": ("publish the bounded four-document guidance-transfer pack: fit A/B, model_select C, check D", transfer_command, templates)})
 
 
 if __name__ == "__main__":

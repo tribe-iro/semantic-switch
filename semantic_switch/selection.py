@@ -30,7 +30,7 @@ class Selection:
         return cls(**data)
 
     def __post_init__(self):
-        if self.selected_by not in ('random', 'uncertain', 'manual', 'unknown') or self.unit not in ('observation', 'family'):
+        if self.selected_by not in ('random', 'targeted', 'uncertain', 'manual', 'unknown') or self.unit not in ('observation', 'family'):
             raise ConfigError('selection: invalid method or unit')
         for name in ('selection_id', 'frame_id', 'window'):
             v = getattr(self, name)
@@ -50,10 +50,3 @@ def occurrences(values):
     if not isinstance(values, (list, tuple)):
         raise ConfigError('selections: expected a sequence')
     return tuple(dict.fromkeys(Selection.parse(v) for v in values))
-
-
-def history(values=(), value=None, default="unknown"):
-    rows = occurrences(values)
-    if value is not None:
-        rows = tuple(dict.fromkeys((*rows, Selection.parse(value))))
-    return rows or (Selection(default),)

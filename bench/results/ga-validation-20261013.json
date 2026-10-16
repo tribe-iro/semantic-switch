@@ -1,0 +1,49 @@
+{
+ "utc": "2026-10-13T20:49:44.576652+00:00",
+ "suites": [
+  {
+   "suite": "core",
+   "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-m",
+    "not slow",
+    "-q",
+    "--disable-warnings",
+    "--maxfail=2"
+   ],
+   "environment": {
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+   },
+   "passed": 1250,
+   "deselected": 32,
+   "log": "bench/results/ga-validation-core-20261013.txt",
+   "sha256": "a2e9f113bb3b66fbea8a8888b24c13d7db91288b7c56aa571672cb2444ec7484"
+  },
+  {
+   "suite": "packages",
+   "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "packages/semantic-trainer/tests",
+    "packages/semantic-learn/tests",
+    "-q",
+    "--disable-warnings",
+    "--maxfail=2"
+   ],
+   "environment": {
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+   },
+   "passed": 310,
+   "deselected": 0,
+   "log": "bench/results/ga-validation-packages-20261013.txt",
+   "sha256": "c9091fb71e764436ea7e1dac9053890e814d7a1cd5d7d7f178086f8269329c3d"
+  }
+ ],
+ "native_controls": "bench/results/ga-native-scope-20261013.json",
+ "hardware_fit": "bench/results/ga-lora-comparison-20261013.json"
+}

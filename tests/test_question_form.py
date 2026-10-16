@@ -5,7 +5,7 @@ from semantic_switch.adapters.qwen3 import Qwen3Adapter
 from semantic_switch.judgment import Judgment
 from semantic_switch.protocols import Framing, Question
 
-from tests.conftest import FakeScorer
+from semantic_testkit.scoring import FakeScorer
 
 
 @pytest.fixture
@@ -45,7 +45,7 @@ def test_three_way_wording_follows_form(text, guidance, options):
 def test_question_and_claim_settle_the_same_way():
     for text in ("Is the customer asking for a refund?", "The customer asks for a refund."):
         scorer = FakeScorer(lambda state, question, width: [0.97, 0.03])
-        with Runtime({"judge": scorer}) as rt:
+        with Runtime(scorer) as rt:
             result = rt.check("I want my money back.", text)
         assert (result.status, result.value) == ("ok", True)
 

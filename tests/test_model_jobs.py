@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from semantic_switch import model_jobs
+
 import ast
 import inspect
 import os
@@ -25,9 +27,9 @@ def lock(tmp_path, monkeypatch):
 
 
 def test_model_job_lock_exclusive_across_processes(lock, monkeypatch):
-    monkeypatch.setattr(api, "available_host_bytes", lambda: 1 << 50)
-    code = ("import sys, time; from semantic_switch import api; api.available_host_bytes = lambda: 1 << 50\n"
-            "with api.model_job():\n    print('held', flush=True)\n    time.sleep(60)")
+    monkeypatch.setattr(model_jobs, "available_host_bytes", lambda: 1 << 50)
+    code = ("import sys, time; from semantic_switch import model_jobs; model_jobs.available_host_bytes = lambda: 1 << 50\n"
+            "with model_jobs.model_job():\n    print('held', flush=True)\n    time.sleep(60)")
     child = subprocess.Popen([sys.executable, "-c", code], stdout=subprocess.PIPE, text=True)
     try:
         assert child.stdout.readline().strip() == "held"
@@ -38,7 +40,7 @@ def test_model_job_lock_exclusive_across_processes(lock, monkeypatch):
         child.kill()
         child.wait()
     with model_job() as job:
-        assert job.diagnostics()["admitted_bytes"] == api.HOST_RESERVE
+        assert job.diagnostics()["admitted_bytes"] == model_jobs.HOST_RESERVE
 
 
 def test_explicit_job_admission_refuses_but_default_runtime_never_admits(lock, tmp_path, monkeypatch):
@@ -49,7 +51,7 @@ def test_explicit_job_admission_refuses_but_default_runtime_never_admits(lock, t
     monkeypatch.setenv("SEMANTIC_SWITCH_CACHE", str(tmp_path / "cache"))
     monkeypatch.setattr(backend, "LlamaScorer", LoadedScorer)
     monkeypatch.setattr(Model, "resources", lambda self: {"weights": api.Resources(1 << 50)})
-    monkeypatch.setattr(api, "available_host_bytes", lambda: admitted.append(1) or 8 * GiB)
+    monkeypatch.setattr(model_jobs, "available_host_bytes", lambda: admitted.append(1) or 8 * GiB)
     model = Model(str(weights), adapter="qwen3", device="cpu")
     with pytest.raises(ConfigError, match=r"requires \d+ bytes.*8589934592 bytes are available.*systemd-run --user --scope -q -p MemoryMax=\d+G -p MemorySwapMax=0"):
         with model_job(model):
@@ -94,25 +96,25 @@ def test_admission_uses_lower_cgroup_limit(lock, tmp_path, monkeypatch):
     (leaf / "memory.stat").write_text(f"anon {GiB}\ninactive_file {GiB}\n")
     cgroup = tmp_path / "self-cgroup"
     cgroup.write_text("0::/user.slice/job.scope\n")
-    monkeypatch.setattr(api, "MEMINFO", meminfo)
-    monkeypatch.setattr(api, "CGROUP_ROOT", root)
-    monkeypatch.setattr(api, "SELF_CGROUP", cgroup)
-    assert api.available_host_bytes() == 3 * GiB
+    monkeypatch.setattr(model_jobs, "MEMINFO", meminfo)
+    monkeypatch.setattr(model_jobs, "CGROUP_ROOT", root)
+    monkeypatch.setattr(model_jobs, "SELF_CGROUP", cgroup)
+    assert model_jobs.available_host_bytes() == 3 * GiB
     with model_job(extra={"working_set": GiB // 2}) as job:
         assert (job.diagnostics()["admitted_bytes"], job.available_bytes) == (2 * GiB + GiB // 2, 3 * GiB)
     with pytest.raises(ConfigError, match=f"requires {4 * GiB} bytes.*{3 * GiB} bytes are available"):
         with model_job(extra={"working_set": 2 * GiB}):
             pass
     (leaf / "memory.max").write_text("max\n")
-    assert api.available_host_bytes() == 8 * GiB
+    assert model_jobs.available_host_bytes() == 8 * GiB
 
 
 def test_admission_counts_reclaimable_gpu_pool(lock, tmp_path, monkeypatch):
     meminfo = tmp_path / "meminfo"
     meminfo.write_text("MemTotal:       33554432 kB\nMemAvailable:    7340032 kB\nGPUActive:        655360 kB\nGPUReclaim:      9437184 kB\n")
-    monkeypatch.setattr(api, "MEMINFO", meminfo)
-    monkeypatch.setattr(api, "SELF_CGROUP", tmp_path / "absent")
-    assert api.available_host_bytes() == 16 * GiB
+    monkeypatch.setattr(model_jobs, "MEMINFO", meminfo)
+    monkeypatch.setattr(model_jobs, "SELF_CGROUP", tmp_path / "absent")
+    assert model_jobs.available_host_bytes() == 16 * GiB
     with model_job(extra={"working_set": 12 * GiB}) as job:
         assert job.available_bytes == 16 * GiB
 
@@ -141,7 +143,7 @@ def test_slow_fixtures_single_resident_model(monkeypatch):
 
 @pytest.fixture
 def roomy(lock, monkeypatch):
-    monkeypatch.setattr(api, "available_host_bytes", lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, "available_host_bytes", lambda: 1 << 50)
     monkeypatch.setattr(Model, "resources", lambda self: {"weights": api.Resources(GiB)})
 
 
@@ -252,7 +254,7 @@ def test_load_failure_releases_owned_job_and_hosted_takes_no_lease(roomy, tmp_pa
 def test_cli_sessions_admit_lazily(lock, monkeypatch):
     from semantic_switch import cli
     admitted = []
-    monkeypatch.setattr(api, "available_host_bytes", lambda: admitted.append(1) or 1 << 50)
+    monkeypatch.setattr(model_jobs, "available_host_bytes", lambda: admitted.append(1) or 1 << 50)
     monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
     with cli.session({"judge": "openrouter:m", "provider": "p", "settings": {"codec": "chat"}}) as rt:
         assert rt.job is None and not admitted

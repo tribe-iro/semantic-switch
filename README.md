@@ -6,11 +6,27 @@ Ask a language question about a case inside ordinary Python code and get a typed
 input evidence + question (+ your rules) → model scores the allowed answers → accepted answer, or uncertain / needs_input / failed
 ```
 
-The model never chooses outside the answers you allow, exact rules in code are authoritative, and a judgment that is not confident enough says so instead of guessing.
+Your application receives a typed member of the allowed answer set or an explicit non-answer. Exact rules execute in code. Confidence-based acceptance can withhold an answer, but a model can still be confidently wrong.
 
-**What it is for:** classification, routing, extraction and policy reading over bounded evidence: a message, a report, a few reference excerpts. **What it is not for:** arithmetic, logic puzzles or multi-step reasoning. The judge reads one answer token without reasoning and stays confident while wrong there; on a public benchmark subset (S1MB, first 25 cases per task) the default judge's answers settled at 0.9 were right about 81% of the time overall and far less on math and logic tasks.
+**What it is for:** classification, routing, bounded choice extraction and policy reading over bounded evidence: a message, a report, a few reference excerpts. **What it is not for:** arithmetic, logic puzzles or multi-step reasoning. The native judge reads answer-token scores without generating a reasoning trace. On the matched S1MB subset, the default judge was correct on 81.0% of accepted hard-label judgments at the 0.9 cutoff, with weaker results on reasoning tasks. See [benchmark scope and results](#benchmarks-and-how-to-read-them).
 
 The 0.9 cutoff is an acceptance setting, not a promised precision. `ss lock` fits thresholds on your labelled development data and reports the precision and coverage it observed there; a different judge, task mix or procedure needs its own evaluation. The precise judge (E4B) settles more answers at similar precision; it is an option to measure, not a cure for confident errors.
+
+## Features at a glance
+
+| Need | Public path |
+|---|---|
+| Boolean judgment, one choice, ordered level, any matching labels | `check`, `pick`, `rate`, `select` |
+| Several questions over the same evidence | `ask` with named `Check`, `Pick`, `Rate`, `Select` specifications |
+| Business rules and procedure applicability | YAML switches, exact predicates, shared facts and card exclusions |
+| Finite batches, bounded streams, async | `spec.run`, `spec.many`, `Runtime.ask_many`, `Runtime.aask` |
+| Inspect requests and record decisions | `Runtime.preview`, `Runtime(on_decision=...)`, `result.as_dict()` |
+| Label, evaluate and fit acceptance thresholds | `ss label`, `ss test`, `ss lock`; Python `semantic_switch.tools` |
+| Optional task specialization | CPU lexical heads or LoRA through `semantic-trainer` |
+| Optional data collection and repeated fitting | Explicit capture, teacher collection, review and rounds through `semantic-learn` |
+| Deploy and recover a chosen version | Frozen locks, `ss compare`, `ss promote`, `ss rollback` |
+
+The core package does not train models, collect traffic or run background learning automatically. Those operations are explicit and optional.
 
 ## Install
 
@@ -19,7 +35,9 @@ pip install -e '.[local]'   # Python ≥ 3.12; local judges: llama-cpp-python an
 pip install -e '.[hosted]'  # hosted judges only (httpx); no native packages
 ```
 
-The base package authors and runs judgments without native packages; a local judge without the `local` extra fails before any download and names the extra. The default local judge (Gemma 4 E2B, Q4_0 GGUF) downloads from Hugging Face on first use.
+These editable-install commands run from this repository root. Use `pip install -e .` for the base package alone. For LoRA, install the optional [trainer and device-specific PyTorch environment](packages/semantic-trainer/README.md#install); for collection and review, install `pip install -e packages/semantic-learn` plus the local or hosted extra needed by its teacher.
+
+The base package supports authoring and custom judges without native packages; a local judge without the `local` extra fails before any download and names the extra. The default local judge (Gemma 4 E2B, Q4_0 GGUF) downloads from Hugging Face on first use.
 
 ## One question
 
@@ -51,6 +69,7 @@ match r.status:
 ## Predictions beside accepted answers
 
 ```python
+actions = {"refund": "Refund the duplicate charge", "review": "Request manual review"}
 r = ss.pick(message, "What should support do next?", actions, allow_none=True)
 r.status, r.value      # ("uncertain", None): not accepted at the cutoff
 r.prediction           # Prediction(kind="value", key="refund", value="refund", score=0.62)
@@ -85,7 +104,7 @@ r = ss.ask(message, {"topic": ss.Pick("What is the message mainly about?", topic
                      "urgency": ss.Rate("How urgent is this?", ["can wait", "today", "immediately"])})
 ```
 
-- **Pick** asks one question listing the labels; the answer alphabet allows 19 labels plus `none`. Above that, narrow the candidates first.
+- **Pick** asks one question listing up to 20 labels, or 19 plus `none`. For larger catalogues, filter with `eligible=` or explicitly use `shortlist="lexical"` (up to 1,000 candidates). Shortlisting leaves candidates unexamined: inspect `complete` and `removed["not_examined"]`; a shortlist is not an exhaustive search.
 - **Select** asks one yes/no membership question per label, each carrying the full instruction and that label's definition, over one read of the evidence. `r["issues"].value` is the tuple of accepted labels; `r["issues"].members` holds each label's own result. `complete` means every eligible label was examined; `settled` means every examined label resolved. Status is `ok` when everything resolved with members, `none` when everything resolved empty, and otherwise the outstanding reason (`failed`, then `needs_input`, then `uncertain`) while the accepted partial value stays readable.
 - **Rate** returns one level; **ask** keeps one result per dimension, so a failed dimension never erases a settled one. There is no joint confidence across labels or dimensions.
 
@@ -116,7 +135,7 @@ ss.pick(ticket, "Which of the customer's orders is this about?", orders,
         ids=lambda o: o.number, focus="mentions")                     # a quoted order number narrows the question
 ```
 
-Guidance is placed in the prompt in full; split long manuals into a `select` catalogue of cards. A mapping input renders only `fields`; a missing or blank field is `needs_input`, never a "no".
+Guidance is placed in the prompt in full; split long manuals into a `select` catalogue of cards. For inline judgments, `fields=[...]` selects mapping fields to render; without it, all mapping fields are rendered as named evidence, with non-text values encoded as JSON. Saved switches declare typed `fields` and `reads`. A missing required field produces `needs_input`; a field with the wrong type produces `failed`. Neither becomes a negative answer.
 
 ## Reference text, procedures and dispatch
 
@@ -141,14 +160,16 @@ Only `ok` dispatches. "ask_details" is an accepted answer: the procedure says to
 
 ```python
 legal = ss.Check("Is the customer threatening legal action against us?")
-legal(message)
-legal.run(messages, rt)          # finite batch, results in order
-for r in legal.many(stream, rt, window=4): ...
-await rt.acheck(message, "Is the customer asking to get money back?")
+messages = ["I will sue over this charge.", "Please explain the charge."]
+with ss.Runtime() as rt:
+    results = legal.run(messages, rt)
+    for result in legal.many(iter(messages), rt, window=4):
+        print(result.status, result.value)
 ```
 
-`many(..., window=1)` is strictly lazy. A larger positive window admits bounded lookahead through the same executor, enabling hosted concurrency while preserving output order. A slow earlier result can delay later results; closing the iterator stops admission and cancels pending work.
+`await rt.aask(input, items)` and `await rt.acheck(...)` / `apick` / `arate` / `aselect` provide async calls on an open runtime. Saved switches offer `run(inputs)` and `many(inputs, window=...)`.
 
+`many(..., window=1)` is strictly lazy. A larger positive window admits bounded lookahead through the same executor, enabling hosted concurrency while preserving output order. A slow earlier result can delay later results; closing the iterator stops admission and cancels pending work.
 
 ```bash
 echo '"Refund me now"' | ss check "Is the customer asking to get money back?"
@@ -169,11 +190,21 @@ with hosted as rt:
     rt.check(message, "Is the customer asking to get money back?")
 ```
 
-`ss.judge` is the one judge factory; it resolves its source once through the judge driver registry: a GGUF path or `repo:file` (or `gguf:PATH`; native settings such as `device`, `threads`, `repack`), `openrouter:MODEL` (`provider`, `key`, `codec`, `profile`, `timeout`, `batch_inputs`; reads `OPENROUTER_API_KEY`) or a scheme registered by a plugin through the `semantic_switch.judges` entry-point group or `semantic_switch.drivers.register`; an unknown scheme and settings that do not apply to the driver are refused before any request. A hosted driver combines one shared engine with a provider (endpoint, authentication, routing and response envelope), a codec (question encoding and score decoding) and a model profile (question kinds and widths, questions per request, request size, truncation, probability precision and normalization). Built-in profiles map known models to their codec: `google/gemma-4-31b-it` and other listed chat models answer one question per request through chat log probabilities (top 20, `require_parameters`, no fallbacks); `typesafe/jev-1.13` and `openai/gpt-6-luna-decisions` answer every question of an input in one System One request under empirical two-decimal profiles pinned to recorded response fixtures. Any other model needs `codec="chat"` or an explicit `profile`; System One needs a profile declaring its serialization precision, and a returned distribution whose mass differs from one by more than `width × 0.5 × 10^-decimals` fails instead of being renormalized. `semantic_switch.testing.drivers` is the conformance kit for new providers, codecs and profiles. A provider that rejects the request shape fails with an error naming it; pin another with `provider`. `timeout` is each request unit's end-to-end budget, not a fresh per-attempt timeout: it starts before admission and covers admission and active-slot queueing, request encoding, every transport attempt and response-body read, retry waits (408/429/5xx and connection errors, at most 5 attempts) and decoding. Admission bounds how many units hold work, not how long one may queue; each attempt receives only the remaining budget, and a response completing after the deadline is rejected, not retried. A unit's request body is encoded once after admission and reused byte-for-byte by every retry, so at most `2 × batch_inputs` bodies exist; at most `batch_inputs` attempts are on the wire, and a unit releases its active slot during backoff and decoding. A `Retry-After` from the provider holds every unit of that judge until it passes; other retries back off privately. Request receipts split elapsed time into queue, service and retry seconds that sum to the total. An encoding, transport or decoding failure fails only its unit; the other units and their receipts are kept. Each hosted judge runs one HTTPX `AsyncClient` on its own AnyIO portal; `close()` (or `await judge.aclose()`) cancels queued and active units, then releases an owned transport once, and repeating it is harmless. A supplied `transport` is an async `send(url, body_bytes, remaining_seconds) -> Reply`, borrowed unless `own_transport=True`; an owned transport's `close` hook, synchronous or async, is optional. A runtime owns and closes a judge it constructs from a source (`ss.Runtime("openrouter:MODEL")`); a judge you supply is borrowed unless `own_judges=True`. `Runtime(bindings={"judge": ..., "hosted": ...})` binds several model roles; a runtime given only roles other than `judge` binds no default judge. Leaving a `with Runtime(...)` block by an exception cancels its in-flight work before closing; `close()` waits for it. Cancelling `await rt.aask(...)` cancels its hosted requests and starts no further rounds; a native decode finishes its current batch first. Locking a hosted judge requires a pinned provider; the lock records the protocol, the requested provider and the returned model and provider. The CLI uses the same registry and validator: `ss --judge openrouter:MODEL --provider PROVIDER --setting codec=chat check ...`; `--setting KEY=VALUE` reaches any driver setting, and local flags (`--device`, `--repack/--no-repack`, ...) apply only when given. Local judges use serial decoding with a separate KV stream per sequence. Three caps bound one request: `max_input_tokens` (evidence, default 1024), `max_prefix_tokens` (chat template plus guidance, default 1024) and the fixed 1536-token question suffix (framing included). Their sum is the request window (3584 by default) and the only useful native window. `n_ctx` is an advanced smaller aggregate limit for memory-constrained workloads; a larger value is refused before any model load, naming the useful window and the caps that form it. To score longer requests, raise the caps themselves. Overlong requests fail without truncation or cache mutation. Physical context allocation rounds each stream to native padding and multiplies by `prefix_slots + 2`; `prefix_slots=4` therefore allocates six streams, including full SWA storage. Reducing slots saves memory while preserving the request window. Runtime info reports requested and realized capacities. Locks and native exports bind the realized execution, including per-sequence capacity, KV layout and scheduler revision; old unified-KV locks require explicit `ss lock` regeneration. On the measured Gemma4/Q8_0 CPU and Vulkan base scope, cold, warm, resident-prefix and whole-sequence reference scores match exactly. Runtime adapters are resident-history stable on that Vulkan build but still differ from whole-sequence reference scoring; see [measurements](docs/ga-measurements.md). Grouped decoding remains a backend experiment because the measured grouping changed probabilities and did not improve throughput. The application code is the same for every judge. Answer quality, confidence and latency are not: measure them on your inputs and re-run `ss lock` after changing judges. Hosted spending is limited on the provider's API key. The demos run from the repository root as packages (`python -m examples.quickstart`, `python -m examples.printer_snapshot`, `python -m examples.support_snapshot`); they share one judge/runtime helper, `examples/environment.py`, which selects OpenRouter when `OPENROUTER_MODEL` is set and the local judge otherwise, and the packaged example definitions in `examples/data/`.
+`ss.judge` resolves a GGUF path, Hugging Face `repo:file`, fitted deployment, or registered driver source. `ss.DEFAULT_JUDGE` is Gemma 4 E2B Q4_0; `ss.PRECISE_JUDGE` is E4B Q4_0. Native `device="gpu"` requires GPU offload; `device="auto"` may use CPU. A GPU-capable llama.cpp build is required for acceleration; installing the local extra alone does not guarantee GPU support.
+
+OpenRouter sources use `openrouter:MODEL`. Known chat profiles include `google/gemma-4-26b-a4b-it` and `google/gemma-4-31b-it`; another chat model needs `codec="chat"` or a declared profile and must support the requested log probabilities. The built-in System One profiles for `typesafe/jev-1.13` and `openai/gpt-6-luna-decisions` return distributions for multiple questions per request. Profiles describe supported question kinds, widths and response precision; they do not certify model quality or continued provider availability. Pin `provider=...` when fitting a hosted lock. Enforce a hard spending ceiling on the provider API key; the SDK does not enforce a dollar budget.
+
+Use a context-managed `Runtime` for application lifetime. It owns a judge it constructs from a source; a supplied judge is borrowed unless `own_judges=True`. `Runtime(bindings={"judge": local_judge, "reviewer": hosted_judge})` supplies named model roles used by saved definitions. Hosting, retries and concurrency use the same executor as local calls. Set `batch_inputs` to bound active hosted attempts and `timeout` for the end-to-end request-unit budget, including queueing and retries. Driver settings are also available through `ss --judge SOURCE --setting KEY=VALUE ...`.
+
+Native evidence defaults to a 1024-token cap, guidance/template to 1024, and question suffix to 1536: a 3584-token logical window per sequence. Increase `max_input_tokens` or `max_prefix_tokens` for longer requests. `n_ctx` is an advanced **smaller per-stream window**, not a total allocation; four prefix slots allocate six streams. Overlong native requests fail without implicit truncation. Determinism applies to a fixed model, build and execution shape; changing quantization or batching can change probabilities and acceptance.
+
+See [judge contracts and execution limits](docs/judges.md) for ownership, transports, retries, profiles and native memory details. See [benchmarks](#benchmarks-and-how-to-read-them) for quality and latency evidence.
+
+Repository demos run as packages: `python -m examples.quickstart`, `python -m examples.printer_snapshot`, and `python -m examples.support_snapshot`. Their shared helper uses `OPENROUTER_MODEL` when set, with optional `OPENROUTER_PROVIDER` and `OPENROUTER_CODEC`; otherwise it uses the local judge. Demo inputs are authored examples, not quality guarantees.
 
 ## Saved switches: judgments + exact rules + decisions
 
-When a decision combines several judgments with business data, write it down:
+When a decision combines several judgments with business data, save a definition such as `switches/support_route.yaml` and supply the referenced `policies/refunds.md`:
 
 ```yaml
 name: support_route
@@ -196,15 +227,20 @@ otherwise: normal_queue
 ```
 
 ```python
-route = rt.load("switches/support_route.yaml")
-r = route(ticket)
-r.answer, r.rule, r.facts["refund"].value
-print(r.explain())
+ticket = {"subject": "Duplicate charge", "body": "Please refund the second payment.",
+          "payment": {"status": "settled"}}
+with ss.Runtime() as rt:
+    route = rt.load("switches/support_route.yaml")
+    result = route(ticket)
+    print(result.answer, result.rule)
+    print(result.explain())
 ```
 
-Exact predicates settle first and only the facts a remaining rule depends on are judged. Exact rules prevent the specific invalid actions they encode, not every confidently wrong semantic answer. Any inline judgment saves to this form with `.save(path)` and behaves identically. For "which of these procedures apply?", a `select` fact over a reviewed card catalogue judges each shared situation claim once and applies exact eligibility and precedence in code; see `switches/procedures.yaml`. A card negates a fact with `excludes` (three-valued: an unknown fact leaves the card unresolved), so a logical complement never needs its own judged question. When a revision drops a fact, list it under `retired: [name]`: historical label files keep loading, their retired values are ignored, and an unknown or misspelled fact still fails.
+Rules run in declared order. Exact predicates settle first and only the facts a remaining rule depends on are judged; an unresolved earlier rule can withhold the decision rather than silently falling through. Exact rules prevent the specific invalid actions they encode, not every confidently wrong semantic answer. Any inline judgment saves to this form with `.save(path)` and behaves identically. For "which of these procedures apply?", a `select` fact over a reviewed card catalogue judges each shared situation claim once and applies exact eligibility and precedence in code; see `switches/procedures.yaml`. A card negates a fact with `excludes` (three-valued: an unknown fact leaves the card unresolved), so a logical complement never needs its own judged question. When a revision drops a fact, list it under `retired: [name]`: historical label files keep loading, their retired values are ignored, and an unknown or misspelled fact still fails.
 
 ## Optional: measure, correct, specialize
+
+Start with labeled inputs and measured failures. Exact corrections, lexical heads, acceptance fitting and LoRA are separate options; none is required for ordinary judgments. The `route` below is the loaded switch from the previous example, used while its runtime is open.
 
 ```python
 route.correct(ticket, fact="refund", value=True, actor=ss.Actor("human"))   # exact override for this input
@@ -215,22 +251,29 @@ route.correct(ticket, rule="refund", actor=ss.Actor("human"))              # or 
 ss label support_route new_tickets.jsonl --to test --actor human   # label real inputs; supplied values are reviewed: Enter confirms, s skips, an answer replaces
 ss lock support_route                                # fit per-judgment thresholds on development labels, check them on held-out labels, pin the judge and execution
 ss test support_route                                # raw correctness of predictions, then accepted precision and coverage on unseen labels (intervals where sampling supports them)
-ss --verbose run support_route [--raw] < ticket.json # the decision with its explanation (an explain field with --json)
-ss export support_route --native --labels reviewed.jsonl   # exact-token rows from a label file; never copied into corrections or tests
+ss --verbose run support_route < ticket.json # the decision with its explanation (an explain field with --json)
+ss export support_route --native                     # export tune rows from the switch dataset
 ss prune switches/                                   # remove generation files that no current manifest in the directory names
 ```
 
-The same operations are Python functions in `semantic_switch.tools`; each CLI command above calls them:
+Situation JSONL for `ss label` and teacher collection uses schema-3 envelopes, one per line, for example:
+
+```json
+{"schema":3,"input":{"subject":"Duplicate charge","body":"Please refund the second payment.","payment":{"status":"settled"}},"groups":["ticket:123"],"pairs":[],"tags":[]}
+```
+
+`groups` keep related inputs together during assignment. Use distinct groups for unrelated situations; explicit `role` values can preserve an existing assignment. Label outputs add fact values, meaning revisions and source histories; let `ss label` write those records. `--to test` stores the switch's labeled dataset, which tools partition into development/check families; it does not declare every row an untouched check sample. `--to reviewed.jsonl` instead writes a separate label file for explicit export or specialization. `--to examples` installs exact corrections and is not independent evaluation evidence.
+
+The same lock, export and test operations are Python functions in `semantic_switch.tools`, using the labeled switch from the CLI example:
 
 ```python
 from semantic_switch import tools
 
 with ss.Runtime() as rt:
-    route = ss.Check("Is the customer asking to get money back?").save("switches/refund.yaml", rt=rt)
-    tools.export(rt, "switches/refund.yaml", native=True)   # {"path", "export_id", "rows", "situations", "complete_situations", "dataset_id", "split", "skipped_rule"}
-    report = tools.lock(rt, "switches/refund.yaml")          # {"lock", "id", "tests", "written", "heads", "policies", "targets", "evidence", "warnings", ...}
-    tested = tools.run_test(rt, "switches/refund.yaml")      # {"fresh", "taught", "used", "facts", "fact_populations", "dataset_id", "candidate_id", "warnings", ...}
-    print(tools.explain_test(tested))                        # the text `ss test` prints
+    exported = tools.export(rt, "switches/support_route.yaml", native=True)
+    report = tools.lock(rt, "switches/support_route.yaml")
+    tested = tools.run_test(rt, "switches/support_route.yaml")
+    print(tools.explain_test(tested))
 ```
 
 - `tools.lock(rt, path, dry_run=False, *, head_bundles=None) -> dict` fits and checks thresholds and publishes `NAME.lock.json` unless `dry_run`.
@@ -242,7 +285,7 @@ The optional packages expose their entry points the same way: `from semantic_tra
 
 An unlocked judgment still works; a lock pins configuration and fitted thresholds, not domain truth. Label records name a rule with `"rule"`. Held-out authored labels are development evidence, not an independent domain evaluation. `ss analyze-head SWITCH FACT --head BUNDLE` analyzes a supplied lexical head; `ss specialize` runs the trainer pipeline (`ss specialize --help`).
 
-Task specialization (optional `packages/semantic-trainer`) fits LoRA on the default student and deploys one merged, quantized GGUF: `semantic-learn collect` (optional `packages/semantic-learn`) labels situations with a teacher whose terms permit training use, `ss label … --to reviewed.jsonl` reviews them, `semantic-trainer prepare` assigns family roles and creates the job, `semantic-trainer lora` fits under model_select monitoring and retains the zero adapter and the two best evaluated points, and `semantic-trainer select` merges each into the F16 base, quantizes it, selects on model_select families and publishes one self-contained fitted lock (GGUF, bundled task definition and guidance, frozen policies and execution); `semantic-trainer check` evaluates it independently. The specialist is adopted only by your explicit choice:
+Task specialization (optional [`packages/semantic-trainer`](packages/semantic-trainer/README.md)) fits LoRA on the default student and deploys one merged, quantized GGUF: `semantic-learn collect` (optional `packages/semantic-learn`) labels situations with a teacher whose terms permit training use, `ss label … --to reviewed.jsonl` reviews them, `semantic-trainer prepare` assigns family roles and creates the job, `semantic-trainer lora` fits under model_select monitoring and retains the zero adapter and the two best evaluated points, and `semantic-trainer select` merges each into the F16 base, quantizes it, selects on model_select families and publishes one self-contained fitted lock (GGUF, bundled task definition and guidance, frozen policies and execution); `semantic-trainer check` evaluates the deployed model on the declared check population; independence depends on that population's exposure and lineage. The specialist is adopted only by your explicit choice:
 
 ```python
 decide = ss.Runtime().load("run/deployment")   # fitted lock: weights, task, guidance, corrections, policies, execution
@@ -259,19 +302,77 @@ ss rollback current.json --reason "regression reported" --expected CANDIDATE_ENT
 
 `ss compare` scores each frozen lock over the check-role inputs in one bounded operation per arm and requested-target set, journaled per input and resumable, and reports the paired difference with a decision; the same comparison publishes `decision.json`, the promotion decision. `--claim non_inferiority --benefit latency|cost`, `--required-precision`, `--tolerate failed|unresolved|forbidden=N`, `--forbidden ADDRESS=KEY` and `--recall ADDRESS=CLASS:raw|operational=MIN` complete the predeclared claim. A recall floor protects one semantic class: operational recall counts withheld answers as misses, a class without references is unassessed rather than passed, and an unmet or unassessed floor blocks automatic adoption without changing fitting. `ss promote` moves the pointer only to the candidate of a supported decision and only while the pointer still serves the incumbent that decision compared against; a stale incumbent changes nothing. The decision is an adoption claim only on fresh independent evidence with disjoint lineage and every scored target inside the declared reference scope (`--reference`, default verified and computed labels; authored labels count only when declared); otherwise it is descriptive and says why. None and unstated are scored as answers: a confident none is accepted, a correct unstated stays needs_input. `--robustness MANIFEST` adds a descriptive per-arm diagnostic over authored option permutations/renames, meaning-preserving formatting and contrast siblings, and `recompute_comparison` rebuilds a published comparison from its stored rows without inference.
 
-A fitted lock declares one representation. `merged` (the default) is one quantized GGUF with the adapter merged in; it serves a whole-task specialization and is not many-adapter serving. `runtime-adapter` (`semantic-trainer select --representation runtime-adapter`) publishes the pipeline-built quantized base and a converted LoRA GGUF, hashed independently, and applies the adapter at scale 1 on one resident base: `Model(base, lora="adapter.gguf")`. Roles naming the same base and native settings share one loaded model and context; their adapters share a bounded pool (`max_adapters`), and only unreferenced adapters are evicted. Representations are never interchanged: a merged binding loads no adapter and a runtime-adapter binding never falls back to merged weights. `bench/adapter_profile.py` (an explicitly invoked GPU job) measures the pinned llama.cpp build and Vulkan device: switching is exact against a matched no-switch control and adapters fit 128 MiB, but complete scoring calls over its probe workload exceed the declared 1,000 ms requirement with or without a switch, so runtime adapters remain unsupported for that workload. Cached scores also differ from freshly cleared references by up to 0.061 probability, above the 0.001 tolerance and of undetermined cause; the current profile assesses that cache equivalence separately from switching through one-variable controls (`bench/README.md`, *Adapter profile*); fake lifecycle tests do not establish capability.
+A fitted lock declares one representation. `merged` is the default: one GGUF with the adapter merged into its weights, loaded without the trainer or PyTorch. `runtime-adapter` keeps a base GGUF and a converted LoRA GGUF separate and binds them at scale 1. Named roles with the same base and native settings share its resident model/context and a bounded adapter pool. These representations are explicit, never automatic fallbacks. Runtime-adapter repeat/residency controls passed on the measured Vulkan build, while whole-sequence reference scores differed by up to 0.017315. That evidence does not establish equivalence across execution paths or a universal switching-latency guarantee; see [native execution measurements](docs/ga-measurements.md) and [trainer deployment](packages/semantic-trainer/README.md).
 
-Model admission charges one estimate per resident: physical host bytes plus resident bytes per offload device, derived from each GGUF tensor's type and the layer it is placed on (on unified memory, device bytes are part of physical memory and are not counted twice). An adapter is charged before native allocation and its reported buffers are verified afterwards; an allocation exceeding its charge is freed and reported, never absorbed by enlarging the job. A job you pass with `Runtime(..., job=...)` must already cover the same estimate (`semantic_switch.training.estimate`).
+Ordinary runtimes do not require model-job admission. An explicitly supplied `model_job` owns a host allocation envelope; model and adapter allocations are checked against it. This is an opt-in resource control for model workloads, not a prerequisite for using the SDK.
 
 Facts answer under the definition's `binding:` (default `judge`; a fact or Select may name another model role, and staged questions and Select members inherit it). A job prepared with `semantic-trainer prepare --scope FACT[/MEMBER]` fits and selects only those targets: other bindings are neither loaded nor scored, and the result is scoped support, not a runnable application. Install it by role, `Runtime(bindings={"refund_model": ss.judge("run/deployment"), "judge": ...}).load("app.yaml")`, or publish a complete application with `semantic-trainer select ... --binding ROLE=JUDGE` for every remaining role; its lock pins those identities and policies, and loading it requires them: `Runtime(bindings={"hosted": ...}).load("run/deployment")`. Selection on the scoped targets says nothing about the whole application, which needs its own check.
 
 A model's adaptation provenance comes only from its fitted lock (or a verified pipeline-built base); a plain `Model(path)` has unknown provenance, and a lock of a specialist excludes every family that adapted, selected or calibrated it.
 
+## Specialization, reuse and interruption
+
+```bash
+ss specialize switches/support_route.yaml --examples reviewed.jsonl --to work/support --trainer /absolute/path/to/semantic-trainer --device xpu:0 --native-device gpu
+ss specialize --to work/support --trainer /absolute/path/to/semantic-trainer
+```
+
+Choose `cpu`, `xpu:N` or `cuda:N` for fitting; the native scorer separately uses `auto`, `cpu` or `gpu`. The first command freezes inputs, resolves assets, exports model-specific token rows, prepares the population, fits, selects and publishes a deployment. The second resumes the same request. Corpus generation is separate: these commands consume existing labels and never regenerate situations. Token exports depend on the task, tokenizer and presentation; reuse requires the same content and settings. Completed pipeline stages are reused within the work root, not through a global cross-run stage cache.
+
+Profiling is optional. The default monitoring cadence is one fit epoch; `--cadence` overrides it. Monitoring uses the full model-selection population, with separate `evaluation_batch_size` and no fit probe by default. Fits preserve evaluated candidates and rolling recovery checkpoints; repeating `semantic-trainer lora JOB --to RUN` resumes that identified attempt. A new `--attempt` starts a fresh fit. Selection compares retained candidates on development data, so training longer does not imply deploying the last weights. See [training and recovery](packages/semantic-trainer/README.md#monitoring-and-interruption). For CPU lexical fitting without LoRA, see [the lexical-head example](examples/lexical_head.py): export labeled rows, call `train_lexical`, then pass the resulting bundle to `tools.lock(..., head_bundles=...)`.
+
+## Collection and observability
+
+`Runtime(on_decision=callback)` sends typed `DecisionEvent` records to your callback; `event.as_dict()` serializes them. Raw input is excluded unless `decision_input=True`. `Runtime.preview(input, items).as_dict()` shows rendered questions and available driver request previews without scoring; constructing a local preview can still initialize the native model. These hooks do not automatically save data or create training labels. See [decision events](examples/events.py).
+
+The optional `semantic-learn` package provides `Capture` in `semantic_learn.capture` with explicit redaction, consent, sampling and bounds, then explicit `situations`, `collect`, `review`, `diagnose` and `round` commands. Teacher labels require a declared permitted training route; confident `unstated` and allowed `none` are valid semantic labels. Collection journals resume unfinished work. Reviewed additions can feed another round while preserving prior fit evidence and family lineage. There is no background scheduler, automatic specialist discovery or automatic promotion. The [teacher–student cycle](docs/teacher-student-cycle.md) and [specialist portfolio](docs/specialist-portfolio.md) are extension designs, not shipped automatic modes.
+
+## Benchmarks and how to read them
+
+| Evidence | What it measures | Limits |
+|---|---|---|
+| [S1MB matched subset](bench/README.md#s1mb-external-subset-first-25-cases-per-benchmark-benchexternal_primitivespy) | Fixed-answer Check, Pick and Rate on public tasks; E2B accepted hard-label precision 81.0%, E4B 82.1% at 0.9 | First-N subset; 2,233 matched cases, 3,257 hard-label judgments; not a leaderboard score or a precision guarantee |
+| [Select quality](bench/README.md#select-quality-benchselect_qualitypy) | Public multi-label Select versus named Checks, local and hosted | Mostly negative hard labels: only 29 unanimous positives; aggregate correctness hides low positive precision |
+| [Procedure and equipment studies](bench/README.md) | Exact-rule composition, procedure applicability and SDK/CLI behavior | Authored fixtures and historical runs; source, prompt and execution versions differ |
+| [Native and training measurements](docs/ga-measurements.md) | Cache/residency controls, latency, allocation and completed training operations | Hardware/build/workload-specific; historical timings are not current performance promises |
+| [Printer enrichment experiment](#measured-readiness-2b-printer-specialist-2026-10-16) | Completed LoRA deployment comparison with random and targeted fit additions | Synthetic structured text, repeatedly consulted check population, unreviewed reference |
+
+Raw accuracy, accepted-answer precision, coverage, per-class recall and exact action-set agreement answer different questions. A 0.9 score cutoff is not 90% correctness. Latency must name its unit: one question and one whole situation with ten questions are different workloads. Provider and quantization changes also change the comparison.
+
+The [benchmark catalog](bench/README.md) lists commands, artifacts, versions and historical limitations. Start quality comparisons with `python -m bench.model_comparison --model MODEL --output result.json`; maintained report writers require an explicit output path. Snapshot experiments consume an existing published corpus; [printer commands](bench/README.md#printer-fit-and-comparison) describe fitting, recovery and optional paid reference arms. Running examples demonstrates API behavior, not task accuracy.
+
+## Measured readiness: 2B printer specialist (2026-10-16)
+
+The completed printer experiment supports a scoped pilot with reviewed actions and a fallback. It demonstrates strong task specialization on synthetic structured inputs; it does not establish general availability for autonomous operation on real operator notes.
+
+Both arms used Gemma E2B with LoRA, deployed as merged Q8_0 GGUFs through the existing llama.cpp scorer. Each added 96 fit situations from 16 families to the original 100 fit situations. One addition was randomly selected; the other targeted four under-covered behaviors. The model-selection population stayed fixed at 150 situations. The original corpus and role assignment were preserved; additions were published separately. Both runs completed 980 updates, and deployment selected checkpoints on model-selection data rather than taking the last update.
+
+| Completed deployed-model check | Random enrichment | Targeted enrichment |
+|---|---:|---:|
+| Exact action sets on fully labeled situations | 560/560 | 560/560 |
+| Action precision across known reference memberships | 99.5% | 99.1% |
+| Action recall across known reference memberships | 92.5% | 97.4% |
+| Situations with a reference-forbidden recommendation | 4 | 8 |
+| Median latency per whole situation (10 scored questions) | 1.26 s | 1.10 s |
+
+The comparison evaluated 736 structured situations. Only 560 have complete action references and enter exact-set accuracy. The remaining 176 still contribute their known action labels to precision, recall and forbidden-recommendation counts; their unresolved labels are unassessed. This is why 100% exact-set accuracy coexists with forbidden recommendations. These are action-set results, not a claim that every fact in every situation was correct.
+
+Training also showed why checkpoint selection matters: the random-enrichment arm reached 1,500/1,500 correct development answers across all 150 situations at update 600, then fell to 1,487/1,500 at update 750. The targeted arm reached 1,500/1,500 at update 600 and maintained it at every later evaluation. More updates did not consistently improve the model.
+
+The evidence supports improving training coverage before increasing model size. It does not show that targeted sampling always beats random sampling: this was one cohort pair and one training seed, and historical runs used fewer fit examples and updates. Both additions came from the same narrow authored language templates. The check population has been consulted repeatedly, so these results are regression evidence rather than independent confirmation. The comparison reference remains unreviewed: all 305 required evidence confirmations are outstanding. No adoption was performed by this experiment.
+
+The next quality evaluation is fresh, freely written operator notes with reviewed labels, including missing and contradictory evidence. Measure incorrect accepted actions, withholding and per-behavior recall there before claiming autonomous production readiness. A pilot should retain review or fallback for consequential actions.
+
+Published evidence: [summary](bench/results/printer-coverage-20261016/summary.json), [cohort declaration](bench/results/printer-coverage-20261016/cohorts.json), [run declaration](bench/results/printer-coverage-20261016/declaration.json), and [complete comparison and preservation inventory](bench/results/printer-coverage-20261016/README.md). Reports and small evidence are preserved in the repository; trained weights and recovery state are archived separately.
+
 ## Repository
 
-`semantic_switch/` is the library (`semantic_switch.training` is the trainer integration surface: `Engine` adds native scoring, cache invalidation and detokenization to the `Runtime` constructor; `model_job` admits explicit model jobs), `packages/semantic-trainer/` the optional trainer, `bench/` the measured evidence (`bench/README.md`), `experiments/` archived explorations, `docs/invariants.md` the invariants and stage boundaries with their owning modules, `TODO.md` the open work. Tests: `pytest -m "not slow"` (controlled judges) and `pytest -m slow` (real models; one model job per host).
+See [repository layout, preservation and developer setup](docs/repository.md) for directory ownership, ignored outputs, corpus preservation, archives and complete multi-package test installation. Public usage stays in this README; current contracts are in [invariants](docs/invariants.md), unfinished work in [TODO](TODO.md), and the superseded specification is explicitly [historical](docs/history/semantic-switch-v0.26-20261006.md).
 
-### Scores and acceptance
+Tests cover numerical correctness, decision logic, ownership, concurrency, recovery and SDK behavior. Scripted SDK examples and controller integrations do not measure model quality. A separate real deployment test checks nonzero LoRA → merge → Q8_0 GGUF → native probabilities against PyTorch, using a tiny locally generated model. See [test scope and commands](docs/repository.md#what-the-tests-establish). Passing tests do not establish accuracy on unfamiliar language; the benchmark results above retain their stated limitations.
+
+
+## Scores and acceptance
 
 Allowed-answer probabilities describe the model distribution, not the probability that its answer is correct. Answer mass is the probability assigned to the allowed answer tokens before conditioning; it remains separate from class probabilities. Reports distinguish argmax accuracy, precision among accepted answers, coverage and wrong acceptances per submission, with denominators and family counts. NLL, Brier and reliability bins describe stored complete distributions; missing and staged distributions are explicitly unassessed.
 

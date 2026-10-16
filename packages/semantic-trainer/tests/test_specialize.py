@@ -1,3 +1,5 @@
+
+from semantic_switch import model_jobs
 from contextlib import ExitStack
 import json
 from pathlib import Path
@@ -9,7 +11,7 @@ import pytest
 from semantic_switch import ConfigError, Runtime, api, files, tools
 from semantic_switch.api import execution_identity
 from semantic_switch.artifacts import artifact_digest, load_receipt, read_export
-from semantic_switch.examples import role_of
+from semantic_switch.evidence import role_of
 from semantic_switch.results import thaw
 from semantic_switch.tools.dataset import EvidenceContext
 from semantic_testkit.assets import fake_assets, pipeline_base
@@ -224,7 +226,7 @@ def test_deployment_merges_into_the_f16_base_then_quantizes_and_checks_the_zero_
     from semantic_trainer import assets
     from semantic_trainer.deploy import conversion_bytes, verify_zero
     monkeypatch.setenv('SEMANTIC_TRAINER_ASSETS', str(tmp_path / 'assets'))
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     manifest, base = fake_assets(tmp_path / 'assets')
     located = assets.load(manifest)
     calls = fake_toolchain(monkeypatch, lambda command: b'Q4_0')
@@ -375,7 +377,7 @@ def selection(tmp_path, monkeypatch, *, acceptance_fit=False, author=None, amend
     monkeypatch.setattr(module, 'verify_zero', lambda fitted, located, peft, quant, work, handle: deployed.append(('zero', quant, handle.state)))
     monkeypatch.setattr(backend, 'LlamaScorer', Native)
     monkeypatch.setattr(api.Model, 'resources', lambda self: {'weights': api.Resources(1)})
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     monkeypatch.setattr(module, 'conversion_bytes', lambda located: {'conversion': 1})
     Native.built, Native.realized = [], REALIZED
     return module, job, run, {**resolved, 'roles': {role: [row['id'] for row in observations if row['role'] == role] for role in ('fit', 'model_select', 'acceptance_fit')}}, records, deployed, definition
@@ -383,7 +385,7 @@ def selection(tmp_path, monkeypatch, *, acceptance_fit=False, author=None, amend
 
 def check_labels(tmp_path, n=12):
     from semantic_switch.compiler import compile_spec
-    from semantic_switch.examples import label_record
+    from semantic_switch.evidence import label_record
     definition = tmp_path / 'task' / 'action.yaml'
     plan = compile_spec(files.read_yaml(definition), definition.name, definition.parent)
     path = tmp_path / 'check.jsonl'
@@ -669,7 +671,7 @@ def test_cli_recipe_and_budget_are_the_sole_typed_setters(monkeypatch, capsys):
 
 def test_complete_situation_selection_rejects_incomplete_selection_gold_before_fitting(tmp_path, monkeypatch):
     from semantic_switch.compiler import compile_spec
-    from semantic_switch.examples import each_target, label_record
+    from semantic_switch.evidence import each_target, label_record
     from semantic_trainer.jobs import prepare
     manifest = pipeline_base(tmp_path, monkeypatch)
     path = tmp_path / 'pair.yaml'
@@ -692,7 +694,7 @@ def test_complete_situation_selection_rejects_incomplete_selection_gold_before_f
 
 def test_transfer_preparation_keeps_per_source_task_families_and_objective_aware_support(tmp_path, monkeypatch):
     from semantic_switch.compiler import compile_spec
-    from semantic_switch.examples import each_target, label_record
+    from semantic_switch.evidence import each_target, label_record
     from semantic_trainer.jobs import prepare, resolve
     manifest = pipeline_base(tmp_path, monkeypatch)
     path = tmp_path / 'printer.yaml'
@@ -786,7 +788,7 @@ def test_runtime_adapter_selection_publishes_independently_hashed_base_and_adapt
 
 def test_prepare_resolves_an_explicit_target_scope_through_the_integration_surface(tmp_path, monkeypatch):
     from semantic_switch.compiler import compile_spec
-    from semantic_switch.examples import each_target, label_record
+    from semantic_switch.evidence import each_target, label_record
     from semantic_trainer.jobs import prepare, resolve
     manifest = pipeline_base(tmp_path, monkeypatch)
     path = tmp_path / 'printer.yaml'

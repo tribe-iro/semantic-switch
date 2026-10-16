@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from semantic_switch import models
+
 import json
 import subprocess
 import sys
@@ -42,7 +44,7 @@ class Wrapper:
 
 
 def test_close_releases_unused_owned_bindings_once(monkeypatch):
-    monkeypatch.setattr(api, "_resolve", lambda source: pytest.fail("loaded an unused model to close it"))
+    monkeypatch.setattr(models, "_resolve", lambda source: pytest.fail("loaded an unused model to close it"))
     closed = []
     first, shared = Closing(closed, "first"), Closing(closed, "shared")
     rt = Runtime(bindings={"judge": first, "alias": first, "wrapped": Wrapper(shared), "raw": shared, "local": Model("unused.gguf")}, own_judges=True)
@@ -137,7 +139,7 @@ def test_judge_returns_existing_judges(monkeypatch):
 ])
 def test_judge_refuses_invalid_combinations_before_transport(monkeypatch, source, settings, message):
     monkeypatch.setattr(openrouter.OpenRouter, "wire", lambda *args: pytest.fail("transport created for an invalid configuration"))
-    monkeypatch.setattr(api, "_resolve", lambda source: pytest.fail("assets resolved for an invalid configuration"))
+    monkeypatch.setattr(models, "_resolve", lambda source: pytest.fail("assets resolved for an invalid configuration"))
     with pytest.raises(ConfigError, match=message) as raised:
         judge(source, **settings)
     assert SECRET not in str(raised.value)

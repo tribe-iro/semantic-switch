@@ -1,0 +1,506 @@
+{
+ "scope": "Fixed T7 model_select, fit-only lexical controls, unchanged features/C=10/seed=0; no action or independent-check claim",
+ "arms": {
+  "original": {
+   "correct": 1344,
+   "references": 1500,
+   "accuracy": 0.896,
+   "targets": [
+    {
+     "target": "calibration_verified",
+     "fit_observations": 100,
+     "per_class": {
+      "unstated": {
+       "correct": 104,
+       "references": 104
+      },
+      "false": {
+       "correct": 39,
+       "references": 42
+      },
+      "true": {
+       "correct": 0,
+       "references": 4
+      }
+     }
+    },
+    {
+     "target": "detection_symptom",
+     "fit_observations": 100,
+     "per_class": {
+      "false": {
+       "correct": 120,
+       "references": 122
+      },
+      "true": {
+       "correct": 13,
+       "references": 28
+      }
+     }
+    },
+    {
+     "target": "method_inconsistent",
+     "fit_observations": 100,
+     "per_class": {
+      "true": {
+       "correct": 22,
+       "references": 30
+      },
+      "unstated": {
+       "correct": 12,
+       "references": 16
+      },
+      "false": {
+       "correct": 104,
+       "references": 104
+      }
+     }
+    },
+    {
+     "target": "needs_observation",
+     "fit_observations": 100,
+     "per_class": {
+      "false": {
+       "correct": 124,
+       "references": 124
+      },
+      "true": {
+       "correct": 10,
+       "references": 26
+      }
+     }
+    },
+    {
+     "target": "ready_to_print",
+     "fit_observations": 100,
+     "per_class": {
+      "false": {
+       "correct": 100,
+       "references": 100
+      },
+      "unstated": {
+       "correct": 12,
+       "references": 26
+      },
+      "true": {
+       "correct": 3,
+       "references": 24
+      }
+     }
+    },
+    {
+     "target": "ribbon_loaded",
+     "fit_observations": 100,
+     "per_class": {
+      "true": {
+       "correct": 92,
+       "references": 92
+      },
+      "false": {
+       "correct": 22,
+       "references": 22
+      },
+      "unstated": {
+       "correct": 26,
+       "references": 36
+      }
+     }
+    },
+    {
+     "target": "step_verified",
+     "fit_observations": 100,
+     "per_class": {
+      "false": {
+       "correct": 142,
+       "references": 142
+      },
+      "true": {
+       "correct": 0,
+       "references": 8
+      }
+     }
+    },
+    {
+     "target": "tt_media",
+     "fit_observations": 100,
+     "per_class": {
+      "true": {
+       "correct": 120,
+       "references": 120
+      },
+      "unstated": {
+       "correct": 12,
+       "references": 16
+      },
+      "false": {
+       "correct": 14,
+       "references": 14
+      }
+     }
+    },
+    {
+     "target": "unverified_step",
+     "fit_observations": 100,
+     "per_class": {
+      "false": {
+       "correct": 113,
+       "references": 116
+      },
+      "true": {
+       "correct": 20,
+       "references": 34
+      }
+     }
+    },
+    {
+     "target": "verification_due",
+     "fit_observations": 100,
+     "per_class": {
+      "false": {
+       "correct": 84,
+       "references": 92
+      },
+      "true": {
+       "correct": 36,
+       "references": 58
+      }
+     }
+    }
+   ]
+  },
+  "random": {
+   "correct": 1412,
+   "references": 1500,
+   "accuracy": 0.9413333333333334,
+   "targets": [
+    {
+     "target": "calibration_verified",
+     "fit_observations": 196,
+     "per_class": {
+      "unstated": {
+       "correct": 104,
+       "references": 104
+      },
+      "false": {
+       "correct": 42,
+       "references": 42
+      },
+      "true": {
+       "correct": 4,
+       "references": 4
+      }
+     }
+    },
+    {
+     "target": "detection_symptom",
+     "fit_observations": 196,
+     "per_class": {
+      "false": {
+       "correct": 122,
+       "references": 122
+      },
+      "true": {
+       "correct": 16,
+       "references": 28
+      }
+     }
+    },
+    {
+     "target": "method_inconsistent",
+     "fit_observations": 196,
+     "per_class": {
+      "true": {
+       "correct": 30,
+       "references": 30
+      },
+      "unstated": {
+       "correct": 12,
+       "references": 16
+      },
+      "false": {
+       "correct": 104,
+       "references": 104
+      }
+     }
+    },
+    {
+     "target": "needs_observation",
+     "fit_observations": 196,
+     "per_class": {
+      "false": {
+       "correct": 124,
+       "references": 124
+      },
+      "true": {
+       "correct": 10,
+       "references": 26
+      }
+     }
+    },
+    {
+     "target": "ready_to_print",
+     "fit_observations": 196,
+     "per_class": {
+      "false": {
+       "correct": 98,
+       "references": 100
+      },
+      "unstated": {
+       "correct": 19,
+       "references": 26
+      },
+      "true": {
+       "correct": 18,
+       "references": 24
+      }
+     }
+    },
+    {
+     "target": "ribbon_loaded",
+     "fit_observations": 196,
+     "per_class": {
+      "true": {
+       "correct": 92,
+       "references": 92
+      },
+      "false": {
+       "correct": 22,
+       "references": 22
+      },
+      "unstated": {
+       "correct": 33,
+       "references": 36
+      }
+     }
+    },
+    {
+     "target": "step_verified",
+     "fit_observations": 196,
+     "per_class": {
+      "false": {
+       "correct": 142,
+       "references": 142
+      },
+      "true": {
+       "correct": 8,
+       "references": 8
+      }
+     }
+    },
+    {
+     "target": "tt_media",
+     "fit_observations": 196,
+     "per_class": {
+      "true": {
+       "correct": 120,
+       "references": 120
+      },
+      "unstated": {
+       "correct": 11,
+       "references": 16
+      },
+      "false": {
+       "correct": 14,
+       "references": 14
+      }
+     }
+    },
+    {
+     "target": "unverified_step",
+     "fit_observations": 196,
+     "per_class": {
+      "false": {
+       "correct": 116,
+       "references": 116
+      },
+      "true": {
+       "correct": 23,
+       "references": 34
+      }
+     }
+    },
+    {
+     "target": "verification_due",
+     "fit_observations": 196,
+     "per_class": {
+      "false": {
+       "correct": 92,
+       "references": 92
+      },
+      "true": {
+       "correct": 36,
+       "references": 58
+      }
+     }
+    }
+   ]
+  },
+  "targeted": {
+   "correct": 1418,
+   "references": 1500,
+   "accuracy": 0.9453333333333334,
+   "targets": [
+    {
+     "target": "calibration_verified",
+     "fit_observations": 196,
+     "per_class": {
+      "unstated": {
+       "correct": 104,
+       "references": 104
+      },
+      "false": {
+       "correct": 42,
+       "references": 42
+      },
+      "true": {
+       "correct": 4,
+       "references": 4
+      }
+     }
+    },
+    {
+     "target": "detection_symptom",
+     "fit_observations": 196,
+     "per_class": {
+      "false": {
+       "correct": 122,
+       "references": 122
+      },
+      "true": {
+       "correct": 16,
+       "references": 28
+      }
+     }
+    },
+    {
+     "target": "method_inconsistent",
+     "fit_observations": 196,
+     "per_class": {
+      "true": {
+       "correct": 30,
+       "references": 30
+      },
+      "unstated": {
+       "correct": 12,
+       "references": 16
+      },
+      "false": {
+       "correct": 104,
+       "references": 104
+      }
+     }
+    },
+    {
+     "target": "needs_observation",
+     "fit_observations": 196,
+     "per_class": {
+      "false": {
+       "correct": 124,
+       "references": 124
+      },
+      "true": {
+       "correct": 10,
+       "references": 26
+      }
+     }
+    },
+    {
+     "target": "ready_to_print",
+     "fit_observations": 196,
+     "per_class": {
+      "false": {
+       "correct": 100,
+       "references": 100
+      },
+      "unstated": {
+       "correct": 19,
+       "references": 26
+      },
+      "true": {
+       "correct": 17,
+       "references": 24
+      }
+     }
+    },
+    {
+     "target": "ribbon_loaded",
+     "fit_observations": 196,
+     "per_class": {
+      "true": {
+       "correct": 92,
+       "references": 92
+      },
+      "false": {
+       "correct": 22,
+       "references": 22
+      },
+      "unstated": {
+       "correct": 36,
+       "references": 36
+      }
+     }
+    },
+    {
+     "target": "step_verified",
+     "fit_observations": 196,
+     "per_class": {
+      "false": {
+       "correct": 142,
+       "references": 142
+      },
+      "true": {
+       "correct": 8,
+       "references": 8
+      }
+     }
+    },
+    {
+     "target": "tt_media",
+     "fit_observations": 196,
+     "per_class": {
+      "true": {
+       "correct": 120,
+       "references": 120
+      },
+      "unstated": {
+       "correct": 12,
+       "references": 16
+      },
+      "false": {
+       "correct": 14,
+       "references": 14
+      }
+     }
+    },
+    {
+     "target": "unverified_step",
+     "fit_observations": 196,
+     "per_class": {
+      "false": {
+       "correct": 116,
+       "references": 116
+      },
+      "true": {
+       "correct": 24,
+       "references": 34
+      }
+     }
+    },
+    {
+     "target": "verification_due",
+     "fit_observations": 196,
+     "per_class": {
+      "false": {
+       "correct": 92,
+       "references": 92
+      },
+      "true": {
+       "correct": 36,
+       "references": 58
+      }
+     }
+    }
+   ]
+  }
+ }
+}

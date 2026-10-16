@@ -3,7 +3,7 @@ import json
 import pytest
 
 from semantic_switch import ConfigError, files
-from semantic_switch.examples import reviewed_content
+from semantic_switch.evidence import reviewed_content
 from semantic_switch.training import LabelSource, TrainingUse, current, load_receipt
 from semantic_learn.common import task_of
 from semantic_switch.training import promote

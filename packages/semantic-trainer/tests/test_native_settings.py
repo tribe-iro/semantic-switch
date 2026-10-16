@@ -1,4 +1,3 @@
-import inspect
 from types import SimpleNamespace
 
 import pytest
@@ -17,11 +16,19 @@ def row(*presentations):
 
 
 def test_trainer_native_defaults_come_from_model_defaults():
-    source = inspect.getsource(jobs.populate)
-    assert "max_sequence_tokens'] * 2" not in source and 'n_ctx=max(' not in source
     assert native_settings(Model('unused.gguf', device='auto', threads=4))['n_ctx'] == 3584
     explicit = native_settings(Model('unused.gguf', **{'device': 'auto', 'threads': 4, 'max_input_tokens': 2048}))
     assert explicit['n_ctx'] == 2048 + 1536 + 1024 and explicit['max_input_tokens'] == 2048
+
+
+@pytest.mark.parametrize('max_padded_tokens', [512, 4096])
+def test_prepared_population_uses_native_limits_independently_of_training_batch_budget(tmp_path, monkeypatch, max_padded_tokens):
+    from test_specialize import task
+    manifest, definition, export, _ = task(tmp_path, monkeypatch)
+    prepared = jobs.prepare(definition, [export], tmp_path / 'job', assets_manifest=manifest,
+                            recipe={'max_padded_tokens': max_padded_tokens, 'eval_every_examples': 8}, native={'max_input_tokens': 2048})
+    resolved, _ = jobs.resolve(prepared['job'])
+    assert resolved['native'] == native_settings(Model(resolved['model']['gguf'], threads=4, max_input_tokens=2048))
 
 
 @pytest.mark.parametrize('segment, sizes', [('prefix', (1025, 1, 1)), ('input', (1, 1025, 1)), ('question', (1, 1, 1537))])

@@ -125,7 +125,7 @@ def test_recipe_target_modules_default_to_all_projections_and_reject_unknown(tmp
 def test_lexical_and_lora_reject_the_same_restricted_history_before_publication(tmp_path, monkeypatch):
     lexical = pytest.importorskip('semantic_trainer.lexical')
     from semantic_switch import Runtime
-    from semantic_switch.examples import LabelSource
+    from semantic_switch.evidence import LabelSource
     from semantic_switch.permissions import TrainingUse
     from semantic_testkit.assets import pipeline_base
     from semantic_testkit.labels import TEACHER, action_definition, action_export, declared, label_file

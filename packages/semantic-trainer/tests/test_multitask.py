@@ -1,3 +1,5 @@
+
+from semantic_switch import model_jobs
 import hashlib
 import json
 from pathlib import Path
@@ -8,7 +10,7 @@ from semantic_switch import ConfigError, Runtime, files, tools
 from semantic_switch.artifacts import artifact_digest, read_export
 from semantic_switch.training import Resources
 from semantic_switch.compiler import compile_spec
-from semantic_switch.examples import each_target, label_record
+from semantic_switch.evidence import each_target, label_record
 from semantic_testkit.scoring import FakeScorer
 from semantic_testkit.assets import pipeline_base
 
@@ -545,7 +547,7 @@ def broad(tmp_path, monkeypatch):
     monkeypatch.setattr(module, 'verify_zero', lambda fitted, located, peft, quant, work, handle: deployed.append('zero'))
     monkeypatch.setattr(backend, 'LlamaScorer', Ranked)
     monkeypatch.setattr(api.Model, 'resources', lambda self: {'weights': Resources(1)})
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     monkeypatch.setattr(module, 'conversion_bytes', lambda located: {'conversion': 1})
     Ranked.built, Ranked.realized = [], None
     Ranked.table = {'step-8': {'S1': lambda n: True, 'S2': lambda n: False}, 'step-16': {'S1': lambda n: n % 9 < 5, 'S2': lambda n: True}}

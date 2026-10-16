@@ -1,3 +1,5 @@
+
+from semantic_switch import model_jobs
 from argparse import Namespace
 import json
 from pathlib import Path
@@ -26,7 +28,7 @@ def staged(tmp_path, monkeypatch):
     manifest, gguf = fake_assets(tmp_path / 'assets', 'Q8_0')
     identity = api.Runtime.identity
     monkeypatch.setattr(api.Runtime, 'identity', lambda self, role='judge': {**identity(self, role), 'sha256': files.sha256_file(str(gguf))})
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     monkeypatch.setattr(pipeline, 'native_judge', lambda path, device: FakeScorer())
     monkeypatch.setattr(task_experiment, 'DEVICES', {'fit': 'cpu', 'native': 'cpu'})
     monkeypatch.setattr(task_experiment, 'FIT_SITUATIONS', FIT)

@@ -1,0 +1,78 @@
+{
+ "corpus_sha256": "66d3ae00a9ac53d9feda9afdc7f6bf5f8ebc17db9faec51b5f23a2d970e704e1",
+ "definition_sha256": "f334f5c1e08bf337d7e37e8f99b7f2809901ec9092e4f72947ba7b30ce2bba1c",
+ "seed": 20261015,
+ "candidate_families": 449,
+ "excluded_overlap_families": 31,
+ "cells": [
+  {
+   "name": "readiness_detection",
+   "target": "ready_to_print",
+   "class": true,
+   "tags": [
+    "detection"
+   ]
+  },
+  {
+   "name": "readiness_after_calibration",
+   "target": "ready_to_print",
+   "class": true,
+   "tags": [
+    "cancelled"
+   ]
+  },
+  {
+   "name": "mismatch_during_calibration",
+   "target": "method_inconsistent",
+   "class": true,
+   "tags": [
+    "calibration_step"
+   ]
+  },
+  {
+   "name": "missing_ribbon",
+   "target": "ribbon_loaded",
+   "class": "unstated",
+   "tags": [
+    "ribbon_out"
+   ]
+  }
+ ],
+ "scope": "Synthetic structured-input development experiment. No new wording or independent confirmation claim.",
+ "arms": {
+  "random": {
+   "pack": "/home/tribeiro/Projects/semantic-select/work/coverage-experiment-20261015/random",
+   "sha256": "ad5cdd2470748d867707a736c8f12444e5bf419371ee7323548f24babc05cb20",
+   "families": 16,
+   "family_size_histogram": {
+    "6": 16
+   },
+   "fit_situations": 96,
+   "labels": 96,
+   "coverage": {
+    "readiness_detection": 4,
+    "readiness_after_calibration": 6,
+    "mismatch_during_calibration": 4,
+    "missing_ribbon": 2
+   },
+   "overlap_between_arms": 0
+  },
+  "targeted": {
+   "pack": "/home/tribeiro/Projects/semantic-select/work/coverage-experiment-20261015/targeted",
+   "sha256": "27f852000976749fce52f3d70bb2caddfb47762fb14e00f4516bc0937d79d7cf",
+   "families": 16,
+   "family_size_histogram": {
+    "6": 16
+   },
+   "fit_situations": 96,
+   "labels": 96,
+   "coverage": {
+    "readiness_detection": 4,
+    "readiness_after_calibration": 4,
+    "mismatch_during_calibration": 4,
+    "missing_ribbon": 4
+   },
+   "overlap_between_arms": 0
+  }
+ }
+}

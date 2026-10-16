@@ -178,13 +178,15 @@ def test_baseline_plugin_classifies_failures(tmp_path):
     report = SimpleNamespace(when="call", longrepr=SimpleNamespace(reprcrash=SimpleNamespace(message="AssertionError: x")), failed=True, skipped=False, nodeid="t::a")
     assert classify(report) == "assertion"
     plugin = Baseline(tmp_path / "baseline.json")
-    plugin.pytest_collection_finish(SimpleNamespace(items=[SimpleNamespace(nodeid="t::a", get_closest_marker=lambda name: None)]))
+    plugin.pytest_collection_finish(SimpleNamespace(items=[SimpleNamespace(nodeid="t::a", get_closest_marker=lambda name: None),
+                                                          SimpleNamespace(nodeid="t::native", get_closest_marker=lambda name: object())]))
     plugin.pytest_runtest_logreport(report)
     plugin.pytest_runtest_logreport(SimpleNamespace(when="setup", failed=False, skipped=True, nodeid="t::b"))
     plugin.pytest_sessionfinish(SimpleNamespace(), 1)
     written = files.read_json(tmp_path / "baseline.json")
     assert (written["failed"], written["skipped"], written["passed"]) == (1, 1, 0) and written["failures"] == {"t::a": "assertion"}
-    assert written["selected"] == [{"id": "t::a", "kind": "fake_behavior"}] and written["code"]["sources"]
+    assert written['schema'] == 2 and written["selected"] == [{"id": "t::a", "slow": False}, {"id": "t::native", "slow": True}]
+    assert written["code"]["sources"]
 
 
 def exact(**row):

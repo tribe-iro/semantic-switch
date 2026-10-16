@@ -8,7 +8,7 @@ from .. import files
 from ..snapshot import Snapshot
 from ..results import thaw
 from ..switch import Switch
-from ..examples import flatten, label_provenance, path_record, record_path
+from ..evidence import flatten, label_provenance, path_record, record_path
 from ..errors import ConfigError
 from ..judgment import truth
 from ..metrics import COUNTS, auc, confusion, correctness, ordered, rates, scored_answer
@@ -169,7 +169,7 @@ def fact_rows(facts: dict):
 
 
 def contrasts(own: list, items: list[dict]) -> dict:
-    from ..examples import metadata_values
+    from ..evidence import metadata_values
     pairs: dict = {}
     groups: dict = {}
     for (got, want), it in zip(own, items):

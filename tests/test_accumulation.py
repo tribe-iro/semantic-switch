@@ -5,7 +5,7 @@ from itertools import permutations
 import pytest
 
 from semantic_switch import ConfigError, Runtime, files
-from semantic_switch.examples import Claim, Criteria, current, resolve_claims, reviewed_content
+from semantic_switch.evidence import Claim, Criteria, current, resolve_claims, reviewed_content
 from semantic_switch.permissions import admit
 from semantic_switch.training import Actor, LabelSource, Task, Verification
 
@@ -161,7 +161,7 @@ def test_assessment_needs_the_effective_criterion_and_separates_label_from_sourc
         assert found.record()['binding'] == {'revision': 2, 'label': sorted({meaning, *bound}), 'evidence': bound}
     both = action(task, 'escalate', LabelSource('authored', 'ana', actor=HUMAN, verifications=(frame('binding-2'), frame('binding-2', 'skip'))))
     assert (task.assess(both, declared)['action'].state, task.assess(both, declared)['action'].fidelity) == ('conflicting', 'conflicting')
-    from semantic_switch.examples import assess
+    from semantic_switch.evidence import assess
     assert assess((A,), data=DATA, path=('action',), value='escalate', criteria=None).state == 'unassessed'
     assert assess((A.verified(label(meaning)),), data=DATA, path=('action',), value='escalate', criteria=Criteria(frozenset({meaning}))).state == 'verified'
 

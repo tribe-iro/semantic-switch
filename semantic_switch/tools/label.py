@@ -7,7 +7,7 @@ from pathlib import Path
 from .. import files
 from ..compiler import FactPlan
 from ..errors import ConfigError
-from ..examples import Actor, Claim, LabelSource, Verification, decode, label_record, labelled, record_path, reviewed_content, sources_at, successor
+from ..evidence import Actor, Claim, LabelSource, Verification, decode, label_record, labelled, record_path, reviewed_content, sources_at, successor
 
 REVIEW_SCHEMA = 2
 

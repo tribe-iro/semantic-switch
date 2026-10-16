@@ -1,3 +1,5 @@
+
+from semantic_switch import model_jobs
 import json
 
 from semantic_switch import api, files
@@ -17,7 +19,7 @@ def collected(tmp_path, monkeypatch, count):
     situations = tmp_path / 'situations.jsonl'
     files.publish(situations, ''.join(json.dumps({'schema': 3, 'input': {'message': f'case {i} refund'}, 'groups': [f'g{i}']}) + '\n' for i in range(count)))
     monkeypatch.setattr(module, 'judge', lambda source, provider=None: FakeScorer(oracle))
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     report = module.collect(definition, situations, tmp_path / 'labels.collection.json', teacher=TEACHER, training_use=declared('Example'), provider='Example')
     return definition, report['manifest'] if 'manifest' in report else tmp_path / 'labels.collection.json'
 

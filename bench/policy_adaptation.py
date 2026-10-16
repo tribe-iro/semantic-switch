@@ -9,7 +9,7 @@ import time
 
 from semantic_switch import Check, ConfigError, Model, Pick, files, tools
 from semantic_switch.compiler import compile_spec
-from semantic_switch.examples import Actor, LabelSource, Verification, each_target, label_record, reviewed_content, situation_record
+from semantic_switch.evidence import Actor, LabelSource, Verification, each_target, label_record, reviewed_content, situation_record
 from semantic_switch.tools.data import Labels, fold_of
 from semantic_switch.artifacts import artifact_digest
 from bench.outcomes import Progress

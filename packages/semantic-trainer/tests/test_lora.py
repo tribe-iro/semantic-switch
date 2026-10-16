@@ -1,3 +1,5 @@
+
+from semantic_switch import model_jobs
 import math
 from pathlib import Path
 from types import SimpleNamespace
@@ -435,17 +437,16 @@ def records(path):
 def test_trainer_dry_run_loads_no_weights(tmp_path, monkeypatch):
     from semantic_switch import api
     from semantic_trainer import lora
-    from semantic_trainer.jobs import physical_cores
     job, loaded, calls = monitored_job(tmp_path, monkeypatch)
     result = lora.train(job, tmp_path / 'out', dry_run=True)
     assert loaded == [] and calls == [] and not (tmp_path / 'out').exists()
     assert result['dry_run'] and result['job']['schema'] == 11 and result['job']['loss']['version'] == 2 and result['job']['recipe']['epochs'] == 8
-    assert result['job']['fitting'] == {'device': 'cpu', 'precision': 'float32', 'threads': physical_cores(), 'attention': 'eager', 'gradient_checkpointing': False,
+    assert result['job']['fitting'] == {'device': 'cpu', 'precision': 'float32', 'threads': 1, 'attention': 'eager', 'gradient_checkpointing': False,
                                         'fused_optimizer': False}
     admission = result['admission']
     estimated = {use: value['host'] for use, value in admission['estimated_bytes'].items()}
     assert estimated == {**lora.fit_bytes(result['job']), 'fit:prepared_inputs': estimated['fit:prepared_inputs']} and estimated['fit:adapter_parameters_gradients_adamw'] > 0
-    assert admission['admitted_bytes'] == api.HOST_RESERVE + sum(estimated.values()) and admission['state'] == 'open'
+    assert admission['admitted_bytes'] == model_jobs.HOST_RESERVE + sum(estimated.values()) and admission['state'] == 'open'
 
 
 def test_fit_monitors_from_point_zero_and_retains_the_two_best_plus_zero(tmp_path, monkeypatch, capsys):

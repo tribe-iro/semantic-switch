@@ -25,8 +25,9 @@ from semantic_learn.review import collection, review_export
 from semantic_learn.rounds import coverage
 from semantic_learn import collect
 
-HERE = Path(__file__).resolve().parent
-DATA, CHECK = HERE / 'data', HERE / 'check'
+ROOT = Path(__file__).resolve().parents[2]
+HERE = ROOT / 'specialists' / 'routing'
+DATA, CHECK = ROOT / 'work' / 'routing' / 'data', ROOT / 'work' / 'routing' / 'check'
 DEFINITION = HERE / 'routing.yaml'
 OPENROUTER = 'https://openrouter.ai/api/v1'
 COHORT = HERE.parents[1] / 'tests' / 'fixtures' / 'small-context-cohort.json'
@@ -255,7 +256,7 @@ def cohort_texts():
 
 
 def authored():
-    return yaml.safe_load((CHECK / 'authored.yaml').read_text())['families']
+    return yaml.safe_load((HERE / 'check.yaml').read_text())['families']
 
 
 @functools.cache

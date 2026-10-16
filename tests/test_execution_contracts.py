@@ -8,7 +8,7 @@ import pytest
 from semantic_switch import Actor, Check, ConfigError, Rate, Runtime, files, tools
 from semantic_switch.cli import question_specs
 from semantic_switch.compiler import compile_spec
-from semantic_switch.examples import label_record
+from semantic_switch.evidence import label_record
 from semantic_testkit.scoring import FakeScorer
 from tests.test_remaining_contracts import ReceiptJudge, definition
 from semantic_testkit.labels import envelopes

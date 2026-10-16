@@ -53,7 +53,7 @@ def test_policy_audit_rejects_repeated_inputs_before_scoring(tmp_path):
     import json
     import pytest
     from semantic_switch import ConfigError
-    from semantic_switch.examples import label_record
+    from semantic_switch.evidence import label_record
     from bench.policy_audit import run
     scorer = FakeScorer()
     with Runtime(scorer) as rt:

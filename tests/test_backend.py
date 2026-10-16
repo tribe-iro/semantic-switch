@@ -118,13 +118,14 @@ def test_mixed_suffix_capacity_regression():
         slots = ((scorer.tokenize("true")[0],), (scorer.tokenize("false")[0],))
         requests = [ScoreRequest(prefix, state_a, (suffix_a,), (slots,)),
                     ScoreRequest(prefix, state_b, (suffix_b,), (slots,))]
-        for ordered in (requests, requests[::-1]):
-            scorer.shared = True
-            shared = scorer.score(ordered)
-            scorer.shared = False
-            reference = scorer.score(ordered)
-            assert not any(shared.error) and not any(reference.error)
-            assert np.allclose(np.exp(shared.logp), np.exp(reference.logp), atol=.15)
+        first = scorer.score(requests)
+        assert not any(first.error) and np.isfinite(first.logp).all() and np.isfinite(first.log_mass).all()
+        np.testing.assert_allclose(np.exp(first.logp).sum(axis=1), 1, rtol=1e-6)
+        for ordered, reverse in ((requests[::-1], True), (requests, False)):
+            current = scorer.score(ordered)
+            assert not any(current.error)
+            np.testing.assert_array_equal(first.logp, current.logp[::-1] if reverse else current.logp)
+            np.testing.assert_array_equal(first.log_mass, current.log_mass[::-1] if reverse else current.log_mass)
     finally:
         scorer.close()
 

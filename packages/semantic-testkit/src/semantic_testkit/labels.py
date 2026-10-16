@@ -47,7 +47,7 @@ def action_export(runtime, directory, labels, task_family):
 
 def label_file(tmp_path, values=('escalate', 'continue', 'clarify'), n=30, history=None, **extra):
     from semantic_switch.compiler import compile_spec
-    from semantic_switch.examples import LabelSource, label_record
+    from semantic_switch.evidence import LabelSource, label_record
     from semantic_switch.permissions import TrainingUse
     with Runtime(FakeScorer()) as runtime:
         path = ACTION.save(tmp_path / 'scratch' / 'action.yaml', rt=runtime).paths.yaml

@@ -1,0 +1,246 @@
+{
+ "scope": "Raw lexical argmax projected through normal Executor/cards under an explicit always-answer policy. No calibrated confidence, LM vocabulary mass, latency or accepted-quality comparison with LoRA.",
+ "corpus_sha256": "66d3ae00a9ac53d9feda9afdc7f6bf5f8ebc17db9faec51b5f23a2d970e704e1",
+ "arms": {
+  "original": {
+   "model_select": {
+    "actions": {
+     "metric": "action_sets",
+     "version": 5,
+     "frames": 160,
+     "known_reference_support": 1346,
+     "precision": 0.9137931034482759,
+     "recall": 0.5145631067961165,
+     "known_reference": {
+      "true_positive": 106,
+      "false_positive": 10,
+      "false_negative": 100,
+      "true_negative": 1130,
+      "positive_precision": 0.9137931034482759,
+      "positive_recall": 0.5145631067961165,
+      "negative_precision": 0.9186991869918699
+     },
+     "reference_unresolved": 94,
+     "unassessed_selected": 12,
+     "prohibited_selected": 0,
+     "frames_with_prohibited": 0,
+     "required_omissions": 100,
+     "prediction_unresolved": 34,
+     "failed": 0,
+     "denominator": "known-reference memberships; selections of unresolved reference memberships are unassessed, not false positives"
+    },
+    "exact": {
+     "metric": "exact_sets",
+     "version": 5,
+     "situations": 160,
+     "gold_complete": 124,
+     "incomplete_reference": 36,
+     "prediction_complete": 124,
+     "failed": 0,
+     "exact": 72,
+     "exact_rate": 0.5806451612903226,
+     "denominator": "gold-complete situations; failed, partial, unresolved or absent predictions count as not exact; incomplete-reference situations are reported, never scored"
+    }
+   },
+   "check": {
+    "actions": {
+     "metric": "action_sets",
+     "version": 5,
+     "frames": 736,
+     "known_reference_support": 6184,
+     "precision": 0.9179487179487179,
+     "recall": 0.5749464668094219,
+     "known_reference": {
+      "true_positive": 537,
+      "false_positive": 48,
+      "false_negative": 397,
+      "true_negative": 5202,
+      "positive_precision": 0.9179487179487179,
+      "positive_recall": 0.5749464668094219,
+      "negative_precision": 0.9290944811573495
+     },
+     "reference_unresolved": 440,
+     "unassessed_selected": 48,
+     "prohibited_selected": 0,
+     "frames_with_prohibited": 0,
+     "required_omissions": 397,
+     "prediction_unresolved": 250,
+     "failed": 0,
+     "denominator": "known-reference memberships; selections of unresolved reference memberships are unassessed, not false positives"
+    },
+    "exact": {
+     "metric": "exact_sets",
+     "version": 5,
+     "situations": 736,
+     "gold_complete": 560,
+     "incomplete_reference": 176,
+     "prediction_complete": 558,
+     "failed": 0,
+     "exact": 295,
+     "exact_rate": 0.5267857142857143,
+     "denominator": "gold-complete situations; failed, partial, unresolved or absent predictions count as not exact; incomplete-reference situations are reported, never scored"
+    }
+   }
+  },
+  "random": {
+   "model_select": {
+    "actions": {
+     "metric": "action_sets",
+     "version": 5,
+     "frames": 160,
+     "known_reference_support": 1346,
+     "precision": 0.9859154929577465,
+     "recall": 0.6796116504854369,
+     "known_reference": {
+      "true_positive": 140,
+      "false_positive": 2,
+      "false_negative": 66,
+      "true_negative": 1138,
+      "positive_precision": 0.9859154929577465,
+      "positive_recall": 0.6796116504854369,
+      "negative_precision": 0.9451827242524917
+     },
+     "reference_unresolved": 94,
+     "unassessed_selected": 13,
+     "prohibited_selected": 2,
+     "frames_with_prohibited": 2,
+     "required_omissions": 66,
+     "prediction_unresolved": 47,
+     "failed": 0,
+     "denominator": "known-reference memberships; selections of unresolved reference memberships are unassessed, not false positives"
+    },
+    "exact": {
+     "metric": "exact_sets",
+     "version": 5,
+     "situations": 160,
+     "gold_complete": 124,
+     "incomplete_reference": 36,
+     "prediction_complete": 124,
+     "failed": 0,
+     "exact": 106,
+     "exact_rate": 0.8548387096774194,
+     "denominator": "gold-complete situations; failed, partial, unresolved or absent predictions count as not exact; incomplete-reference situations are reported, never scored"
+    }
+   },
+   "check": {
+    "actions": {
+     "metric": "action_sets",
+     "version": 5,
+     "frames": 736,
+     "known_reference_support": 6184,
+     "precision": 0.9541284403669725,
+     "recall": 0.7794432548179872,
+     "known_reference": {
+      "true_positive": 728,
+      "false_positive": 35,
+      "false_negative": 206,
+      "true_negative": 5215,
+      "positive_precision": 0.9541284403669725,
+      "positive_recall": 0.7794432548179872,
+      "negative_precision": 0.9619996310643792
+     },
+     "reference_unresolved": 440,
+     "unassessed_selected": 49,
+     "prohibited_selected": 2,
+     "frames_with_prohibited": 2,
+     "required_omissions": 206,
+     "prediction_unresolved": 267,
+     "failed": 0,
+     "denominator": "known-reference memberships; selections of unresolved reference memberships are unassessed, not false positives"
+    },
+    "exact": {
+     "metric": "exact_sets",
+     "version": 5,
+     "situations": 736,
+     "gold_complete": 560,
+     "incomplete_reference": 176,
+     "prediction_complete": 558,
+     "failed": 0,
+     "exact": 481,
+     "exact_rate": 0.8589285714285714,
+     "denominator": "gold-complete situations; failed, partial, unresolved or absent predictions count as not exact; incomplete-reference situations are reported, never scored"
+    }
+   }
+  },
+  "targeted": {
+   "model_select": {
+    "actions": {
+     "metric": "action_sets",
+     "version": 5,
+     "frames": 160,
+     "known_reference_support": 1346,
+     "precision": 1.0,
+     "recall": 0.6747572815533981,
+     "known_reference": {
+      "true_positive": 139,
+      "false_positive": 0,
+      "false_negative": 67,
+      "true_negative": 1140,
+      "positive_precision": 1.0,
+      "positive_recall": 0.6747572815533981,
+      "negative_precision": 0.9444904722452361
+     },
+     "reference_unresolved": 94,
+     "unassessed_selected": 12,
+     "prohibited_selected": 0,
+     "frames_with_prohibited": 0,
+     "required_omissions": 67,
+     "prediction_unresolved": 53,
+     "failed": 0,
+     "denominator": "known-reference memberships; selections of unresolved reference memberships are unassessed, not false positives"
+    },
+    "exact": {
+     "metric": "exact_sets",
+     "version": 5,
+     "situations": 160,
+     "gold_complete": 124,
+     "incomplete_reference": 36,
+     "prediction_complete": 124,
+     "failed": 0,
+     "exact": 105,
+     "exact_rate": 0.8467741935483871,
+     "denominator": "gold-complete situations; failed, partial, unresolved or absent predictions count as not exact; incomplete-reference situations are reported, never scored"
+    }
+   },
+   "check": {
+    "actions": {
+     "metric": "action_sets",
+     "version": 5,
+     "frames": 736,
+     "known_reference_support": 6184,
+     "precision": 0.9669421487603306,
+     "recall": 0.7516059957173448,
+     "known_reference": {
+      "true_positive": 702,
+      "false_positive": 24,
+      "false_negative": 232,
+      "true_negative": 5226,
+      "positive_precision": 0.9669421487603306,
+      "positive_recall": 0.7516059957173448,
+      "negative_precision": 0.9574935873946501
+     },
+     "reference_unresolved": 440,
+     "unassessed_selected": 52,
+     "prohibited_selected": 1,
+     "frames_with_prohibited": 1,
+     "required_omissions": 232,
+     "prediction_unresolved": 275,
+     "failed": 0,
+     "denominator": "known-reference memberships; selections of unresolved reference memberships are unassessed, not false positives"
+    },
+    "exact": {
+     "metric": "exact_sets",
+     "version": 5,
+     "situations": 736,
+     "gold_complete": 560,
+     "incomplete_reference": 176,
+     "prediction_complete": 560,
+     "failed": 0,
+     "exact": 463,
+     "exact_rate": 0.8267857142857142,
+     "denominator": "gold-complete situations; failed, partial, unresolved or absent predictions count as not exact; incomplete-reference situations are reported, never scored"
+    }
+   }
+  }
+ }
+}

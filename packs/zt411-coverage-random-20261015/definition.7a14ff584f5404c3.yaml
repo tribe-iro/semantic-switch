@@ -1,0 +1,164 @@
+name: zt411_snapshot
+fields:
+  asset:
+    type: text
+    required: true
+  model:
+    type: enum
+    values:
+    - ZT411
+    - ZT421
+    required: true
+  print_method:
+    type: enum
+    values:
+    - thermal_transfer
+    - direct_thermal
+  prompt:
+    type: enum
+    values:
+    - ready
+    - paused
+    - calibration_1
+    - calibration_2
+  enabled:
+    type: json
+    source: controller
+  alerts:
+    type: json
+    source: controller
+  verified:
+    type: json
+    source: controller
+  attempted:
+    type: json
+    source: controller
+  notes:
+    type: text
+    author: operator
+reads:
+- asset
+- model
+- print_method
+- prompt
+- enabled
+- alerts
+- verified
+- attempted
+- notes
+retired:
+- dt_media
+- ribbon_absent
+facts:
+  tt_media:
+    check: Current evidence about this printer establishes that thermal-transfer media
+      is loaded. Unstated when no current evidence identifies the media; false when
+      it establishes other media.
+    unstated: true
+  ribbon_loaded:
+    check: Current evidence about this printer establishes that a ribbon is loaded.
+      Unstated when no current evidence states the ribbon; false when it establishes
+      absence.
+    unstated: true
+  detection_symptom:
+    check: Current evidence reports a media or ribbon detection problem on this printer,
+      such as skipped labels or an out alert while the media or ribbon is loaded.
+      Without such a current report it is false.
+  verification_due:
+    check: Inspecting this printer's media and ribbon loading is due because a pressed
+      ribbon-load command or a reported calibration step or completion is not verified,
+      or because a current detection symptom is reported while the printer is ready
+      or paused with configuration consistent with its media and ribbon.
+  step_verified:
+    check: Current evidence verifies that the step requested by this printer's current
+      calibration prompt was completed; a report or command alone is not verification.
+  unverified_step:
+    check: A ribbon-load command on this printer was pressed but the ribbon is not
+      verified as loaded, or a calibration step or calibration completion was reported
+      but not verified.
+  calibration_verified:
+    check: Current evidence verifies that this printer's manual sensor calibration
+      completed. False when a calibration was started, is running, was cancelled or
+      was reported complete without verification; unstated when there is no evidence
+      about calibration.
+    unstated: true
+  method_inconsistent:
+    check: The configured print method is inconsistent with the media established
+      for this printer. Unstated when the method or media is not established.
+    unstated: true
+  ready_to_print:
+    check: This printer is not running a calibration sequence, its configuration is
+      consistent with its loaded media and ribbon, and any detection symptom has been
+      resolved by a verified calibration. When every possible value of a missing or
+      contradictory observation gives the same answer, that answer holds; otherwise
+      it is unstated if an observation is missing.
+    unstated: true
+  needs_observation:
+    check: A decision about this printer depends on a missing, stale or contradictory
+      observation.
+  actions:
+    select: Which menu actions are justified for this printer now under the procedure
+      document?
+    max_claims: 9
+    cards:
+    - id: set_method_tt
+      title: Set print method to thermal transfer
+      requires: print_method == "direct_thermal" and prompt in ["ready", "paused"]
+      applies_when:
+      - fact: tt_media
+    - id: set_method_dt
+      title: Set print method to direct thermal
+      requires: print_method == "thermal_transfer" and prompt in ["ready", "paused"]
+      applies_when: []
+      excludes:
+      - fact: tt_media
+      source:
+        media_universe:
+        - thermal_transfer
+        - direct_thermal
+    - id: load_ribbon
+      title: Load a ribbon
+      requires: print_method == "thermal_transfer" and prompt in ["ready", "paused"]
+      applies_when:
+      - fact: tt_media
+      excludes:
+      - fact: ribbon_loaded
+      source:
+        media_universe:
+        - thermal_transfer
+        - direct_thermal
+    - id: start_calibration
+      title: Start manual sensor calibration
+      requires: prompt in ["ready", "paused"]
+      applies_when:
+      - fact: detection_symptom
+      - fact: ribbon_loaded
+    - id: verify_loading
+      title: Inspect and verify media and ribbon loading
+      applies_when:
+      - fact: verification_due
+    - id: calibration_next
+      title: Confirm the calibration prompt and continue
+      requires: prompt in ["calibration_1", "calibration_2"]
+      applies_when:
+      - fact: step_verified
+    - id: cancel_calibration
+      title: Cancel calibration
+      requires: prompt in ["calibration_1", "calibration_2"]
+      applies_when:
+      - fact: method_inconsistent
+    - id: resume_printing
+      title: Return to printing
+      requires: prompt == "paused"
+      applies_when:
+      - fact: ready_to_print
+      - fact: ribbon_loaded
+    - id: request_observation
+      title: Ask the operator for the missing or conflicting observation
+      applies_when:
+      - fact: needs_observation
+rules:
+- id: act
+  when: not actions is empty
+  then: act
+otherwise: wait

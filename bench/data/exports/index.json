@@ -1,0 +1,173 @@
+{
+  "scope": "Frozen measurement fixtures relocated without changing their bytes; not active training outputs",
+  "files": [
+    {
+      "original_reference": "bench/results/ga-printer-all-20261014.export.answers.cc3cba0e8a3d262f.jsonl",
+      "file": "ga-printer-all-20261014.export.answers.cc3cba0e8a3d262f.jsonl",
+      "sha256": "cc3cba0e8a3d262f337217e479652beaf7030a93d34e5e956eb343ca4e297f35",
+      "bytes": 22479
+    },
+    {
+      "original_reference": "bench/results/ga-printer-all-20261014.export.families.d611b08bf0eea118.jsonl",
+      "file": "ga-printer-all-20261014.export.families.d611b08bf0eea118.jsonl",
+      "sha256": "d611b08bf0eea11852dc51b25015983032491a54dee4556ede6c24ebce77e9fb",
+      "bytes": 2322068
+    },
+    {
+      "original_reference": "bench/results/ga-printer-all-20261014.export.inputs.9e63cdcf164841bb.jsonl",
+      "file": "ga-printer-all-20261014.export.inputs.9e63cdcf164841bb.jsonl",
+      "sha256": "9e63cdcf164841bb3ce847c1ed72340397085c59f3964e876beb6c0e96081431",
+      "bytes": 1307481
+    },
+    {
+      "original_reference": "bench/results/ga-printer-all-20261014.export.jsonl.manifest.json",
+      "file": "ga-printer-all-20261014.export.jsonl.manifest.json",
+      "sha256": "cdd2b4a0b712a7f5e03945025271d2e8453208c73cbfcd8077217ec09765f5d9",
+      "bytes": 12095
+    },
+    {
+      "original_reference": "bench/results/ga-printer-all-20261014.export.observations.c4b484a5b2e831c4.jsonl",
+      "file": "ga-printer-all-20261014.export.observations.c4b484a5b2e831c4.jsonl",
+      "sha256": "c4b484a5b2e831c46559a6b1473902f8f10a8298e19883452c666d431e490ada",
+      "bytes": 17557477
+    },
+    {
+      "original_reference": "bench/results/ga-printer-all-20261014.export.segments.3bf7e72675246bba.jsonl",
+      "file": "ga-printer-all-20261014.export.segments.3bf7e72675246bba.jsonl",
+      "sha256": "3bf7e72675246bba28bc7dc4567a63391216ea49294db31971f5c5eb8b7c3db7",
+      "bytes": 984985
+    },
+    {
+      "original_reference": "bench/results/ga-printer-all-20261014.export.situations.7d3a67c488754b8f.jsonl",
+      "file": "ga-printer-all-20261014.export.situations.7d3a67c488754b8f.jsonl",
+      "sha256": "7d3a67c488754b8f8b6f8686bfc845bdf64572ee8addd4e55ad7011e10ccbdd2",
+      "bytes": 1528992
+    },
+    {
+      "original_reference": "bench/results/ga-printer-full-20261014.export.answers.3d1472492939e03e.jsonl",
+      "file": "ga-printer-full-20261014.export.answers.3d1472492939e03e.jsonl",
+      "sha256": "3d1472492939e03ee34329ba90e6bccdd757a5dc680125fd0b18b5e17183dc03",
+      "bytes": 22479
+    },
+    {
+      "original_reference": "bench/results/ga-printer-full-20261014.export.families.623239ed31d19c95.jsonl",
+      "file": "ga-printer-full-20261014.export.families.623239ed31d19c95.jsonl",
+      "sha256": "623239ed31d19c95e17707812c7ade875e817f6a8de312139d3335a89dae9f4e",
+      "bytes": 605058
+    },
+    {
+      "original_reference": "bench/results/ga-printer-full-20261014.export.inputs.e37b8122571dd679.jsonl",
+      "file": "ga-printer-full-20261014.export.inputs.e37b8122571dd679.jsonl",
+      "sha256": "e37b8122571dd6791ed8429bea9eee567aa7ca6a1e86a210a46ae573fe57a5f8",
+      "bytes": 335696
+    },
+    {
+      "original_reference": "bench/results/ga-printer-full-20261014.export.jsonl.manifest.json",
+      "file": "ga-printer-full-20261014.export.jsonl.manifest.json",
+      "sha256": "367e65f903a490d48325450aa68f6a26cad408c9acdc529e46c8d70d7aaaca99",
+      "bytes": 12102
+    },
+    {
+      "original_reference": "bench/results/ga-printer-full-20261014.export.observations.0f7779a0917599c3.jsonl",
+      "file": "ga-printer-full-20261014.export.observations.0f7779a0917599c3.jsonl",
+      "sha256": "0f7779a0917599c3df1458e64256495bb8239b0d32b7474a1ef2a89ab4a90966",
+      "bytes": 4440510
+    },
+    {
+      "original_reference": "bench/results/ga-printer-full-20261014.export.segments.fd0e9263af29c694.jsonl",
+      "file": "ga-printer-full-20261014.export.segments.fd0e9263af29c694.jsonl",
+      "sha256": "fd0e9263af29c694e7898f0289e9a6aaaa9a27518ca82b257f265706632893c8",
+      "bytes": 273708
+    },
+    {
+      "original_reference": "bench/results/ga-printer-full-20261014.export.situations.f4c06f92937672e9.jsonl",
+      "file": "ga-printer-full-20261014.export.situations.f4c06f92937672e9.jsonl",
+      "sha256": "f4c06f92937672e94fcdb554d2950cfc3a36888770a862692a96969986908728",
+      "bytes": 396000
+    },
+    {
+      "original_reference": "bench/results/ga-printer-tune.export.answers.194dd6fa39811003.jsonl",
+      "file": "ga-printer-tune.export.answers.194dd6fa39811003.jsonl",
+      "sha256": "194dd6fa39811003e4078df841b3edfadf657dfb8b745c78125437bdbbaa052c",
+      "bytes": 390
+    },
+    {
+      "original_reference": "bench/results/ga-printer-tune.export.families.6086b28319744fc0.jsonl",
+      "file": "ga-printer-tune.export.families.6086b28319744fc0.jsonl",
+      "sha256": "6086b28319744fc0aba526b311f1251546d230bccae3e6a41c3e42653ad7be8d",
+      "bytes": 67639
+    },
+    {
+      "original_reference": "bench/results/ga-printer-tune.export.inputs.da29c433b270c597.jsonl",
+      "file": "ga-printer-tune.export.inputs.da29c433b270c597.jsonl",
+      "sha256": "da29c433b270c597613759513a3b1bb68df2126c7afccbbaf52f484c4bd2f657",
+      "bytes": 12402
+    },
+    {
+      "original_reference": "bench/results/ga-printer-tune.export.jsonl.manifest.json",
+      "file": "ga-printer-tune.export.jsonl.manifest.json",
+      "sha256": "c08e116ff58c511d59fa158fee8f6021160f42091662e12af44f555445037953",
+      "bytes": 5730
+    },
+    {
+      "original_reference": "bench/results/ga-printer-tune.export.observations.97fdc49f59a1d23e.jsonl",
+      "file": "ga-printer-tune.export.observations.97fdc49f59a1d23e.jsonl",
+      "sha256": "97fdc49f59a1d23e8f33b38665c589839351f67f0d8258d5882fc1193e9ec730",
+      "bytes": 11828
+    },
+    {
+      "original_reference": "bench/results/ga-printer-tune.export.segments.1395c0fbbb12914c.jsonl",
+      "file": "ga-printer-tune.export.segments.1395c0fbbb12914c.jsonl",
+      "sha256": "1395c0fbbb12914c309a638f43da94ca709f179dd4426e4888c0b754d39848c9",
+      "bytes": 9851
+    },
+    {
+      "original_reference": "bench/results/ga-printer-tune.export.situations.abff4d195c53e3cf.jsonl",
+      "file": "ga-printer-tune.export.situations.abff4d195c53e3cf.jsonl",
+      "sha256": "abff4d195c53e3cf375954943d34b3afc877e3202e0a908f54df29f148841527",
+      "bytes": 2754
+    },
+    {
+      "original_reference": "bench/results/ga-printer.export.answers.194dd6fa39811003.jsonl",
+      "file": "ga-printer.export.answers.194dd6fa39811003.jsonl",
+      "sha256": "194dd6fa39811003e4078df841b3edfadf657dfb8b745c78125437bdbbaa052c",
+      "bytes": 390
+    },
+    {
+      "original_reference": "bench/results/ga-printer.export.families.c98f2d98770709bc.jsonl",
+      "file": "ga-printer.export.families.c98f2d98770709bc.jsonl",
+      "sha256": "c98f2d98770709bc7e6da4ed20d7ba13088c65b8583e46e20bff5d0ee563001c",
+      "bytes": 481679
+    },
+    {
+      "original_reference": "bench/results/ga-printer.export.inputs.a36b03c0b5c8412a.jsonl",
+      "file": "ga-printer.export.inputs.a36b03c0b5c8412a.jsonl",
+      "sha256": "a36b03c0b5c8412a73d04c1b99067af0b8cd31c67f543175d7dd243956690fa4",
+      "bytes": 63828
+    },
+    {
+      "original_reference": "bench/results/ga-printer.export.jsonl.manifest.json",
+      "file": "ga-printer.export.jsonl.manifest.json",
+      "sha256": "ea07ecdaf2b25fd4406d02ce41828216171ad8256566039b48f83209aff1aaa3",
+      "bytes": 5677
+    },
+    {
+      "original_reference": "bench/results/ga-printer.export.observations.c967fb4c7f3d3470.jsonl",
+      "file": "ga-printer.export.observations.c967fb4c7f3d3470.jsonl",
+      "sha256": "c967fb4c7f3d34708989c95c12d61e3c3823d6f9bc8829494ca485879283ff9f",
+      "bytes": 63212
+    },
+    {
+      "original_reference": "bench/results/ga-printer.export.segments.536fa21cf6a72674.jsonl",
+      "file": "ga-printer.export.segments.536fa21cf6a72674.jsonl",
+      "sha256": "536fa21cf6a7267400c677f45eca365d8af7155eb5b32514bd5366b16d3beacd",
+      "bytes": 47807
+    },
+    {
+      "original_reference": "bench/results/ga-printer.export.situations.3e727572c21c20b6.jsonl",
+      "file": "ga-printer.export.situations.3e727572c21c20b6.jsonl",
+      "sha256": "3e727572c21c20b66dbde95dd42f936c4ffc5673395694b0fc05fb62c43b77a4",
+      "bytes": 14688
+    }
+  ]
+}

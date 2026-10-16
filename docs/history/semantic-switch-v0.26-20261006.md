@@ -1,3 +1,5 @@
+> Historical specification, preserved from the 2026-10-06 design. Counts, commands, quality claims and paths below are not current. See [README](../../README.md), [invariants](../invariants.md) and [benchmark catalog](../../bench/README.md).
+
 # Semantic Switch — Specification
 
 | | |

@@ -1,3 +1,5 @@
+
+from semantic_switch import model_jobs
 import re
 
 import pytest
@@ -43,7 +45,7 @@ def run(path, frames, golds, catalog):
 
 
 def test_catalog_presentation_preserves_actions_and_moves_criteria_into_the_cached_prefix(tmp_path, monkeypatch):
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     spec = files.read_yaml(procedures.DEFINITION)
     inline, catalogued = tmp_path / 'inline.yaml', tmp_path / 'catalog.yaml'
     files.publish(inline, spec)
@@ -69,7 +71,7 @@ def test_catalog_identity_follows_content_and_order_and_inline_tasks_keep_their_
 
 
 def test_categorical_catalog_keeps_options_inline_and_the_prefix_cap_reports_overflow(tmp_path, monkeypatch):
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     spec = {'name': 'route', 'fields': {'message': {'type': 'text', 'required': True}}, 'reads': ['message'], 'presentation': 'catalog',
             'facts': {'topic': {'pick': 'Which topic does the message raise?', 'options': {'refund': 'Money back', 'billing': 'Invoice error'}},
                       'urgent': {'check': 'The customer needs an answer today.'}}}

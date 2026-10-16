@@ -6,7 +6,7 @@ from pathlib import Path
 from .. import files
 from ..compiler import Plan
 from ..errors import ConfigError
-from ..examples import LABEL_FIELDS, LABEL_SCHEMA, Frame, removed_warnings
+from ..evidence import LABEL_FIELDS, LABEL_SCHEMA, Frame, removed_warnings
 from ..snapshot import Snapshot
 from ..metrics import wilson
 

@@ -1,0 +1,9 @@
+{
+  "scope": "Existing task/Executor with reference primitive answers; no language model inference. Membership states, not semantic action ranking.",
+  "corpus_sha256": "66d3ae00a9ac53d9feda9afdc7f6bf5f8ebc17db9faec51b5f23a2d970e704e1",
+  "definition_sha256": "f334f5c1e08bf337d7e37e8f99b7f2809901ec9092e4f72947ba7b30ce2bba1c",
+  "frames": 1000,
+  "frames_with_differences": 0,
+  "by_action": {},
+  "mismatches": []
+}

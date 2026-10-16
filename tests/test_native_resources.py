@@ -1,3 +1,5 @@
+
+from semantic_switch import model_jobs
 import ctypes
 import gc
 import json
@@ -11,7 +13,7 @@ import numpy as np
 import pytest
 
 from semantic_switch import Model, Runtime, backend
-from semantic_switch.api import estimate as api_estimate
+from semantic_switch.model_jobs import estimate as api_estimate
 from semantic_switch.resident import Resources
 from semantic_switch.adapters.qwen3 import Qwen3Adapter
 from semantic_switch.errors import ConfigError
@@ -359,7 +361,7 @@ def test_load_failure_closes_scorer(tmp_path, monkeypatch, failure):
     profile = profile_file(tmp_path)
     spec = Model(str(weights), adapter="qwen3", device="cpu", quality_profile=str(profile))
     monkeypatch.setattr(Model, "resources", lambda self: {"weights": api.Resources(1)})
-    monkeypatch.setattr(api, "available_host_bytes", lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, "available_host_bytes", lambda: 1 << 50)
     if failure == "fingerprint":
         def stat_failure(spec):
             raise OSError("stat failed")
@@ -448,7 +450,7 @@ def test_default_runtime_loads_without_a_model_job_and_explicit_jobs_charge(tmp_
     monkeypatch.setenv("SEMANTIC_MODEL_LOCK", str(tmp_path / "model-job.lock"))
     monkeypatch.setattr(backend, "LlamaScorer", LoadedScorer)
     monkeypatch.setattr(Model, "resources", lambda self: {"weights": api.Resources(1)})
-    monkeypatch.setattr(api, "available_host_bytes", lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, "available_host_bytes", lambda: 1 << 50)
     LoadedScorer.built = []
     weights = tmp_path / "model.gguf"
     weights.write_bytes(b"weights")

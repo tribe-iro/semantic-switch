@@ -9,9 +9,9 @@ import pytest
 import yaml
 
 from semantic_switch import Actor, ConfigError, Model, Runtime, cli, files, tools
-from semantic_switch.api import _resolve
+from semantic_switch.models import _resolve
 from semantic_switch.compiler import compile_spec
-from semantic_switch.examples import derive_fact_labels
+from semantic_switch.evidence import derive_fact_labels
 from semantic_switch.heads import LexicalHead
 from semantic_switch.judgment import Policy
 from semantic_switch.judgment import ESCAPE

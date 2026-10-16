@@ -10,7 +10,7 @@ from typing import Iterable
 from . import files
 from .compiler import Plan, compile_spec
 from .errors import ConfigError
-from .examples import Actor, Frame, LabelSource, derive_fact_labels, history_of, label_record, labelled, make_example, recorded, successor
+from .evidence import Actor, Frame, LabelSource, derive_fact_labels, history_of, label_record, labelled, make_example, recorded, successor
 from .executor import SOURCES, Executor, Reuse
 from .results import FactResult, Preview, Row, SwitchResult, freeze
 from .snapshot import Snapshot, draft, from_lock, reconcile

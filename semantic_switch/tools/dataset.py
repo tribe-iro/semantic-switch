@@ -8,7 +8,7 @@ from pathlib import Path
 from .. import files
 from ..compiler import digest
 from ..errors import ConfigError
-from ..examples import DATASET_SCHEMA, ROLES, path_record, role_of
+from ..evidence import DATASET_SCHEMA, ROLES, path_record, role_of
 from ..families import FamilyIndex, seed, valid_seeds
 from ..results import thaw
 from .common import input_key

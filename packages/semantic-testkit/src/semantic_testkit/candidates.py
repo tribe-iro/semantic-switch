@@ -57,8 +57,8 @@ def fake_training(patch, vocab):
     import torch
     from transformers import AutoConfig, AutoModelForCausalLM
     from peft import LoraConfig, get_peft_model
-    from semantic_switch import api
-    from semantic_trainer import lora
+    from semantic_switch import api, model_jobs
+    from semantic_trainer import jobs, lora
     loaded, calls = [], []
     class Loader:
         @staticmethod
@@ -69,8 +69,9 @@ def fake_training(patch, vocab):
             return model
     tokenizer = SimpleNamespace(from_pretrained=lambda *args, **kwargs: SimpleNamespace(pad_token_id=0))
     patch.setattr(lora, 'dependencies', lambda: (torch, AutoConfig, Loader, tokenizer, LoraConfig, get_peft_model))
+    patch.setattr(jobs, 'physical_cores', lambda: 1)
     patch.setattr(lora, 'verify_tokenizer', lambda tokenizer, rows: {**rows[0]['native']['tokenizer'], 'vocab_size': vocab})
-    patch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    patch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     patch.setattr(api.Model, 'resources', lambda self: {'weights': api.Resources()})
     return loaded, calls
 

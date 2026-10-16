@@ -1,9 +1,10 @@
-from .api import DEFAULT_JUDGE, PRECISE_JUDGE, Model, Runtime, check, default, judge, load, pick, rate, select
+from .api import Runtime, check, default, judge, load, pick, rate, select
+from .models import DEFAULT_JUDGE, PRECISE_JUDGE, Model
 from .api import ask_ as ask
 from .guidance import Guidance
 from .errors import ConfigError
 from .events import DecisionEvent
-from .examples import Actor
+from .evidence import Actor
 from .inline import Check, Pick, Rate, Select
 from .judgment import Label, labels
 from .results import CheckResult, FactResult, PickResult, RateResult, SelectResult, SwitchResult

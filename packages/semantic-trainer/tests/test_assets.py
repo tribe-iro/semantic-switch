@@ -1,3 +1,5 @@
+
+from semantic_switch import model_jobs
 from pathlib import Path
 
 import pytest
@@ -10,7 +12,7 @@ from semantic_trainer import assets
 def toolchain(tmp_path, monkeypatch):
     monkeypatch.setenv('SEMANTIC_TRAINER_ASSETS', str(tmp_path / 'assets'))
     monkeypatch.setenv('SEMANTIC_MODEL_LOCK', str(tmp_path / 'model-job.lock'))
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     commands = []
     def run(command, **kwargs):
         command = [str(part) for part in command]

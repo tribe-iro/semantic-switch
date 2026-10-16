@@ -1,10 +1,13 @@
 # routing_v1 specialist
 
+The reusable task, coverage grid and authored check scenarios live here. The explicit acquisition experiment runs with `python -m experiments.routing.acquire`; new outputs go to ignored `work/routing/`. Historical acquisition files are preserved under [archives/routing-20261010](../../archives/routing-20261010/README.md). The dated results below describe that archive, not a newly generated corpus.
+
+
 Data for the single-task Gemma 4 E2B specialist (TODO: "Single-task E2B specialist"). Customer message routing to billing, technical, security, retention or clarify under the `routing_v1` procedure in the prompt.
 
 ## Frozen task
 
-`acquire.py` owns the one task definition (`definition()`): the `routing_v1` guidance and the five options copied verbatim from `tests/fixtures/small-context-cohort.json`. `acquire.py define` emits it as `routing.yaml`; every other step refuses a `routing.yaml` that differs from the generator.
+`experiments/routing/acquire.py` owns the one task definition (`definition()`): the `routing_v1` guidance and the five options copied verbatim from `tests/fixtures/small-context-cohort.json`. `acquire.py define` emits it as `routing.yaml`; every other step refuses a `routing.yaml` that differs from the generator.
 
 A fact never reads a missing field, so the generator emits the one judgment as two concrete facts that differ only in what they read:
 
@@ -70,36 +73,38 @@ Every situation and label record carries its family's planned `role`; the datase
 
 Families are named `routing-NNNN` (plan index) and `routing-check-NNNN`. The role travels from `plan.jsonl` through the collect files and teacher labels into the assembled sets, so `prepare` and `select --check` see the intended roles.
 
-## Pipeline (`acquire.py`, explicit and checkpointed)
+## Pipeline (`experiments/routing/acquire.py`, explicit and checkpointed)
 
 ```
-python specialists/routing/acquire.py define                                 # routing.yaml from the generator definition
-python specialists/routing/acquire.py plan                                   # data/plan.jsonl: 540 families (400 fit, 80 model_select, 60 acceptance_fit)
-python specialists/routing/acquire.py plan --base clarify --fit 60 --model-select 12 --acceptance-fit 8   # appended clarify-based families
-python specialists/routing/acquire.py generate --provider Alibaba Parasail Novita Phala DeepInfra   # qwen/qwen3.5-397b-a17b (Apache-2.0) → data/generated.jsonl, appended per family; rerun resumes
-python specialists/routing/acquire.py check                                  # check/authored.yaml → check/situations.jsonl, check/collect/<fact>.jsonl (role check)
-python specialists/routing/acquire.py situations                             # near-duplicate and leakage filter → data/situations.jsonl, data/collect/<fact>.jsonl
-python specialists/routing/acquire.py label --pool fit --teacher openrouter:google/gemma-4-31b-it --provider Parasail --training-use use-31b.yaml --name gemma-4-31b
-python specialists/routing/acquire.py label --pool fit --teacher openrouter:google/gemma-4-26b-a4b-it --provider Parasail --training-use use-26b.yaml --name gemma-4-26b
-python specialists/routing/acquire.py review --pool fit --name disagreements --size 400 --audit 100 --stratum conflict --stratum teacher_uncertain
-python specialists/routing/acquire.py review --pool check --name check --teachers gemma-4-31b --size 1000 --audit 1000
-python specialists/routing/acquire.py assemble [--reviewed FILE ...]         # data/sets/fit-{100,300,1000}.jsonl (+ model_select and acceptance_fit records)
-python specialists/routing/acquire.py report                                 # assigned roles, families and round coverage per set → data/report.json
+python -m experiments.routing.acquire define                                 # routing.yaml from the generator definition
+python -m experiments.routing.acquire plan                                   # work/routing/data/plan.jsonl: 540 families (400 fit, 80 model_select, 60 acceptance_fit)
+python -m experiments.routing.acquire plan --base clarify --fit 60 --model-select 12 --acceptance-fit 8   # appended clarify-based families
+python -m experiments.routing.acquire generate --provider Alibaba Parasail Novita Phala DeepInfra   # qwen/qwen3.5-397b-a17b (Apache-2.0) → work/routing/data/generated.jsonl, appended per family; rerun resumes
+python -m experiments.routing.acquire check                                  # specialists/routing/check.yaml → work/routing/check/situations.jsonl, work/routing/check/collect/<fact>.jsonl (role check)
+python -m experiments.routing.acquire situations                             # near-duplicate and leakage filter → work/routing/data/situations.jsonl, work/routing/data/collect/<fact>.jsonl
+python -m experiments.routing.acquire label --pool fit --teacher openrouter:google/gemma-4-31b-it --provider Parasail --training-use use-31b.yaml --name gemma-4-31b
+python -m experiments.routing.acquire label --pool fit --teacher openrouter:google/gemma-4-26b-a4b-it --provider Parasail --training-use use-26b.yaml --name gemma-4-26b
+python -m experiments.routing.acquire review --pool fit --name disagreements --size 400 --audit 100 --stratum conflict --stratum teacher_uncertain
+python -m experiments.routing.acquire review --pool check --name check --teachers gemma-4-31b --size 1000 --audit 1000
+python -m experiments.routing.acquire assemble         # work/routing/data/sets/fit-{100,300,1000}.jsonl (+ model_select and acceptance_fit records)
+python -m experiments.routing.acquire report                                 # assigned roles, families and round coverage per set → work/routing/data/report.json
 ```
 
 Details of the steps:
 
-- **Collect envelopes.** `situations` and `check` write schema-3 situation envelopes (`data/collect/<fact>.jsonl`) carrying each family's group, pairs, role and tags.
+- **Collect envelopes.** `situations` and `check` write schema-3 situation envelopes (`work/routing/data/collect/<fact>.jsonl`) carrying each family's group, pairs, role and tags.
 - **Labelling.** `label` runs `semantic-learn collect` once per fact under the declared training use; `labels/<name>/<fact>.collection.json` names the published labels and `<fact>.journal.jsonl` resumes an interrupted run (`--retry-failed` repeats transport failures).
 - **Review.** `review` is `semantic-learn review` over the named teachers' collections: a seeded random audit plus declared triage strata. Two teachers that disagree leave the target unresolved (`conflict` stratum); `claims.jsonl` lists both alternatives for an explicit resolution.
 - **Filtering.** `situations` drops whole families when either holds:
   - a message's word-trigram Jaccard reaches 0.6 against an earlier family;
   - it reaches 0.5 against the check pool or the small-context cohort.
-- **Nested sets.** `assemble` accumulates one teacher's collection with the reviewed files through the correction-history accumulator, excludes unresolved situations, and orders fit families once (`data/sets/order.json`, greedy cover of fact × answer × phenomenon), so the 100, 300 and 1,000 sets are nested.
-- **Receipts.** `data/receipts.jsonl` records generation cost from the OpenRouter usage receipts, and the key's cumulative usage plus collection counts after each labelling run.
-- **Fitting.** Each set is fitted by `semantic-learn round specialists/routing/routing.yaml --labels data/sets/fit-N.jsonl --request RECIPE.json --to WORK --cutoff ... --serving ... --min-reviewed ... --min-per-class ...`, where `RECIPE.json` is a specialization request (task family `customer:routing_v1`).
+- **Nested sets.** `assemble` accumulates one teacher's collection with the reviewed files through the correction-history accumulator, excludes unresolved situations, and orders fit families once (`work/routing/data/sets/order.json`, greedy cover of fact × answer × phenomenon), so the 100, 300 and 1,000 sets are nested.
+- **Receipts.** `work/routing/data/receipts.jsonl` records generation cost from the OpenRouter usage receipts, and the key's cumulative usage plus collection counts after each labelling run.
+- **Fitting.** Each set is fitted by `semantic-learn round specialists/routing/routing.yaml --labels work/routing/data/sets/fit-N.jsonl --request RECIPE.json --to WORK --cutoff ... --serving ... --min-reviewed ... --min-per-class ...`, where `RECIPE.json` is a specialization request (task family `customer:routing_v1`).
 
-Label files collected before schema-3 envelopes (`*/labels/*.jsonl`, `*/collect/shards/`, `check/check.draft*.jsonl`) are an unsupported schema and are not read; rerun `check`, `situations` and `label` to regenerate them. `plan.jsonl`, `generated.jsonl`, `situations.jsonl` and `receipts.jsonl` remain readable.
+All new output paths are under `work/routing/`. `assemble --reviewed FILE` consumes an explicit reviewed addition. The archived acquisition is never used as a writable work directory.
+
+Label files collected before schema-3 envelopes (`*/labels/*.jsonl`, `*/collect/shards/`, `check/check.draft*.jsonl`) are an unsupported schema and are not read; preserve them as history; a new acquisition is an explicit separate run, never an automatic migration or training prerequisite. `plan.jsonl`, `generated.jsonl`, `situations.jsonl` and `receipts.jsonl` remain readable.
 
 ## State (2026-10-10)
 

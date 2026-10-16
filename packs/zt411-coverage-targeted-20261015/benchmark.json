@@ -1,0 +1,1414 @@
+{
+ "schema": 2,
+ "pack": {
+  "name": "zt411-snapshot",
+  "version": "1.2",
+  "subject": {
+   "equipment": "Zebra ZT411/ZT421 industrial printer",
+   "models": [
+    "ZT411",
+    "ZT421"
+   ],
+   "options": "see applicability",
+   "scope": [
+    "print-method/ribbon configuration",
+    "media/ribbon detection",
+    "manual sensor calibration",
+    "return to printing"
+   ]
+  },
+  "extraction": "pdftotext-layout excerpts of pinned user-guide pages",
+  "sources": [
+   {
+    "id": "zt-user-guide",
+    "url": "https://www.zebra.com/content/dam/support-dam/en/documentation/unrestricted/guide/product/zt411-zt421-ug-en.pdf",
+    "section": "Ribbon; firmware version; Print Type; ribbon loaded in direct thermal mode; indicator lights",
+    "edition": "P1106464-07EN Rev A (cover and PDF metadata; copyright page dated 2026/07/08)",
+    "licence": "Zebra Technologies proprietary documentation; fetched for local research review, kept out of version control",
+    "use": "cited",
+    "document": {
+     "path": "sources/raw/zt411-zt421-ug-en.pdf",
+     "media_type": "application/pdf",
+     "retrieved": "2026-10-11",
+     "sha256": "f8b10eaa88b65417d1c054d70c5fbaa316e57f2d485d3d63b9eef1aae9017b41",
+     "bytes": 46480950
+    },
+    "locator": [
+     {
+      "section": "Printer Setup > Ribbon",
+      "pages": [
+       11,
+       11
+      ]
+     },
+     {
+      "section": "Printer Setup > Checking the Current Firmware Version",
+      "pages": [
+       31,
+       31
+      ]
+     },
+     {
+      "section": "Print > Print Quality > Print Type",
+      "pages": [
+       111,
+       111
+      ]
+     },
+     {
+      "section": "Diagnostics: ribbon loaded while set for direct thermal",
+      "pages": [
+       171,
+       171
+      ]
+     },
+     {
+      "section": "Indicator Lights: ribbon supply out",
+      "pages": [
+       174,
+       174
+      ]
+     }
+    ],
+    "extraction": {
+     "method": "pdftotext-layout",
+     "tool": "pdftotext version 26.08.0"
+    },
+    "excerpt": "sources/zt-user-guide.txt",
+    "sha256": "400774a451cc7fe920db21528cab97250c9e48c2dd7da236ae56398197ecf7b4",
+    "access": []
+   },
+   {
+    "id": "zt-calibration",
+    "url": "https://www.zebra.com/content/dam/support-dam/en/documentation/unrestricted/guide/product/zt411-zt421-ug-en.pdf",
+    "section": "Calibrating the Ribbon and Media Sensors; Performing Manual Sensor Calibration",
+    "edition": "P1106464-07EN Rev A (cover and PDF metadata; copyright page dated 2026/07/08)",
+    "licence": "Zebra Technologies proprietary documentation; fetched for local research review, kept out of version control",
+    "use": "cited",
+    "document": {
+     "path": "sources/raw/zt411-zt421-ug-en.pdf",
+     "media_type": "application/pdf",
+     "retrieved": "2026-10-11",
+     "sha256": "f8b10eaa88b65417d1c054d70c5fbaa316e57f2d485d3d63b9eef1aae9017b41",
+     "bytes": 46480950
+    },
+    "locator": [
+     {
+      "section": "Calibrating the Ribbon and Media Sensors; Performing Manual Sensor Calibration",
+      "pages": [
+       132,
+       134
+      ]
+     }
+    ],
+    "extraction": {
+     "method": "pdftotext-layout",
+     "tool": "pdftotext version 26.08.0"
+    },
+    "excerpt": "sources/zt-calibration.txt",
+    "sha256": "31899519e394128e5933508ee5cd17aa725d7e15546222280fd7fd5f72208a43",
+    "access": [
+     {
+      "url": "https://docs.zebra.com/us/en/printers/industrial/zt411-zt421-industrial-printer-user-guide/c-zt4x1-configuration/r-zt4x1-calibrating-the-ribbon-and-media-sensors/t-zt4x1-performing-manual-sensor-calibration.html",
+      "retrieved": "2026-10-11",
+      "outcome": "HTTP 404; the same section is pinned from the user-guide PDF"
+     }
+    ]
+   },
+   {
+    "id": "zt-ribbon-mode",
+    "url": "https://support.zebra.com/article/000017984",
+    "section": "ribbon-mode troubleshooting article 000017984",
+    "edition": "unpinned: the article body was not retrievable",
+    "licence": "Zebra Technologies support content",
+    "use": "unused: the support portal returns a JavaScript application shell without the article text to a direct fetch (2026-10-11); ZT-RIBBON cites the user guide's ribbon sections instead",
+    "document": null,
+    "locator": [],
+    "extraction": null,
+    "excerpt": null,
+    "sha256": null,
+    "access": [
+     {
+      "url": "https://support.zebra.com/article/000017984",
+      "retrieved": "2026-10-11",
+      "outcome": "HTTP 200 portal shell without article content"
+     }
+    ]
+   }
+  ],
+  "rules": [
+   {
+    "id": "ZT-ASSET",
+    "text": "Evidence about another printer establishes nothing about this one.",
+    "source": "benchmark convention"
+   },
+   {
+    "id": "ZT-CURRENT",
+    "text": "A note older than a later state change does not establish current state.",
+    "source": "benchmark convention"
+   },
+   {
+    "id": "ZT-CONFLICT",
+    "text": "Contradictory current indications leave a property unresolved, none preferred by recency or source; a decision is unresolved only if its possible values give different answers.",
+    "source": "benchmark convention"
+   },
+   {
+    "id": "ZT-COMMAND",
+    "text": "A commanded or attempted action is not completion; only a verification establishes a completed step.",
+    "source": "benchmark convention"
+   },
+   {
+    "id": "ZT-METHOD-TT",
+    "text": "With thermal-transfer media established and method direct thermal, setting thermal transfer is justified.",
+    "source": "zt-user-guide"
+   },
+   {
+    "id": "ZT-METHOD-DT",
+    "text": "With direct-thermal media established and method thermal transfer, setting direct thermal is justified.",
+    "source": "zt-user-guide"
+   },
+   {
+    "id": "ZT-RIBBON",
+    "text": "Thermal-transfer printing needs a loaded ribbon: with ribbon absence established, loading one is justified and returning to printing is prohibited.",
+    "source": "zt-user-guide"
+   },
+   {
+    "id": "ZT-CAL-START",
+    "text": "A current media/ribbon detection symptom (an operator reporting an out indication despite loaded media, or a controller out alert while loaded) with consistent configuration justifies starting manual sensor calibration or verifying the loading.",
+    "source": "zt-calibration"
+   },
+   {
+    "id": "ZT-CAL-NEXT",
+    "text": "Continuing a calibration prompt requires verified completion of that prompt's step; continuing without it is prohibited.",
+    "source": "benchmark convention"
+   },
+   {
+    "id": "ZT-CAL-CANCEL",
+    "text": "Cancelling calibration leaves calibration incomplete; it is justified when calibration runs under a configuration inconsistent with the media.",
+    "source": "benchmark convention"
+   },
+   {
+    "id": "ZT-CAL-HOLD",
+    "text": "Print-method changes wait until calibration is cancelled.",
+    "source": "benchmark convention"
+   },
+   {
+    "id": "ZT-RESUME",
+    "text": "Returning to printing is prohibited during calibration, with a current unaddressed detection symptom or with configuration inconsistent with the media; it is justified when paused with consistent configuration and no such symptom.",
+    "source": "zt-calibration"
+   },
+   {
+    "id": "ZT-VERIFY",
+    "text": "An unverified ribbon-load command or reported calibration step or completion justifies verifying it.",
+    "source": "benchmark convention"
+   },
+   {
+    "id": "ZT-DIAGNOSE",
+    "text": "Requesting the observation an unresolved decision needs is justified.",
+    "source": "benchmark convention"
+   },
+   {
+    "id": "ZT-DEFAULT",
+    "text": "An action no rule justifies is not justified.",
+    "source": "benchmark convention"
+   }
+  ],
+  "authored": {
+   "rules": "013fd06f04a2d30cbb2a15d308534247afbeb54c0331f4b568e1de28979aaa6b",
+   "catalogue": "dfaae1a8b1a75e2b2fe8e591700b206794344e17f8c1c47a0f55036085936605"
+  },
+  "applicability": {
+   "models": "ZT411 and ZT421, as titled by user guide P1106464-07EN Rev A",
+   "options": "ribbon and thermal-transfer rules (ZT-RIBBON, ZT-METHOD-TT) apply only to printers with the Thermal Transfer option installed (guide p. 11)",
+   "firmware": "the guide's firmware section (p. 31) asks to verify Link-OS 7.0 or later and recommends Printer OS v92; it states no firmware dependence for the cited procedures; no installed printer's firmware is established",
+   "claim": "decisions are claims about the documented procedure of this edition, not about any particular installed printer"
+  },
+  "contract": {
+   "sources": {
+    "zt-user-guide": "pinned",
+    "zt-calibration": "pinned"
+   },
+   "unused": {
+    "zt-ribbon-mode": "unused: the support portal returns a JavaScript application shell without the article text to a direct fetch (2026-10-11); ZT-RIBBON cites the user guide's ribbon sections instead"
+   },
+   "authored": [
+    "catalogue",
+    "rules"
+   ],
+   "applicability": {
+    "models": "ZT411 and ZT421, as titled by user guide P1106464-07EN Rev A",
+    "options": "ribbon and thermal-transfer rules (ZT-RIBBON, ZT-METHOD-TT) apply only to printers with the Thermal Transfer option installed (guide p. 11)",
+    "firmware": "the guide's firmware section (p. 31) asks to verify Link-OS 7.0 or later and recommends Printer OS v92; it states no firmware dependence for the cited procedures; no installed printer's firmware is established",
+    "claim": "decisions are claims about the documented procedure of this edition, not about any particular installed printer"
+   },
+   "missing": [],
+   "complete": true,
+   "digest": "c673cb01edd8427f99bf25d13d61bb93501a264e70e6bc8e99a6a448b4e62397"
+  }
+ },
+ "reference": {
+  "producer": "bench.procedures.reference",
+  "code": "f7c677ce5364387fada7844ceec1c937e14f540977392783ac3e62a745ce0b14",
+  "revision": "zt411-reference-3",
+  "criteria": {
+   "structured": "98bbcd0a94e1a58d335d272ec3fe0e5111a9c746d59670a1ffc8c745208ac5f2"
+  }
+ },
+ "definition": {
+  "file": "definition.yaml",
+  "sha256": "7a14ff584f5404c3d2445be70d934cd5f9f72d1b717abdd77f0bcb539c6b091a",
+  "condition": "structured"
+ },
+ "assignment": {
+  "seed": 431,
+  "quotas": {
+   "fit": 96
+  },
+  "counts": {
+   "fit": {
+    "frames": 104,
+    "situations": 96,
+    "families": 16,
+    "targets": 936
+   },
+   "model_select": {
+    "frames": 0,
+    "situations": 0,
+    "families": 0,
+    "targets": 0
+   },
+   "check": {
+    "frames": 0,
+    "situations": 0,
+    "families": 0,
+    "targets": 0
+   }
+  },
+  "units": {
+   "frame": "one rendered condition/language evidence item",
+   "situation": "a frame under the declared trained condition with complete supervision (situation_frames)",
+   "family": "one connected assignment component",
+   "target": "one (frame, reference target) membership"
+  }
+ },
+ "unresolved_reference": {
+  "fit": 8,
+  "model_select": 0,
+  "acceptance_fit": 0,
+  "check": 0
+ },
+ "assignment_sha256": "de370a12e86dec50ee0d054d6a7a166dc936fd3d34cea84ccc120d37bc650a36",
+ "review_protocol": {
+  "name": "two-tier-frame-review",
+  "version": 3,
+  "unit": "frame",
+  "mechanical": {
+   "scope": "every frame",
+   "checks": [
+    "evidence",
+    "provenance",
+    "reference",
+    "scope",
+    "rules",
+    "invariance",
+    "assignment"
+   ],
+   "invariance": "frames presenting one observable problem (public input under one effective criterion contract, reference revision and target scope; hidden annotations excluded) share one semantic answer: target values, assessed scope, unresolved state, prohibited actions and composed response; rule and assertion citations are provenance",
+   "limits": "mechanical checks establish rendering, provenance, recomputation and assignment consistency, not the prose's domain interpretation"
+  },
+  "review": {
+   "scope": "every rule/composition branch, unresolved, ambiguous or contradictory frame and condition/language/role/safety stratum, then a seeded sample of the remaining frames",
+   "fraction": 0.2,
+   "actors": "human and agent reviewers use one review operation; each record names its reviewer and actor kind (and an agent's model and session) for traceability; actor kind never weights or completes a decision",
+   "completion": "a current evidence confirmation with an empty target confirms the frame's observable evidence, reference memberships and composed answer against the cited sources/rules; only it completes a required frame",
+   "labels": "a label confirmation supports its declared target, or every target when empty; it never certifies evidence fidelity",
+   "corrections": "skip and replace are frame-scoped evidence decisions on the generated frame's binding; a replacement recomputes gold and needs a current evidence confirmation of the corrected binding",
+   "binding": [
+    "frame evidence",
+    "effective gold and composition",
+    "criterion contract and reference revision",
+    "source contract and authored rules",
+    "protocol"
+   ]
+  },
+  "reviewed": "the used-source contract is complete, every frame passes mechanical validation, every required human frame has a current evidence confirmation, and no dispute or unconfirmed replacement remains; sampled review never means every frame was read",
+  "digest": "bb6d2ff84f9e18aeaaae98bfe3eb737e156e72336d56fe724bf1b5c553e90ba4"
+ },
+ "review_plan": {
+  "protocol": "bb6d2ff84f9e18aeaaae98bfe3eb737e156e72336d56fe724bf1b5c553e90ba4",
+  "seed": 431,
+  "fraction": 0.2,
+  "mechanical": 104,
+  "mandatory": 22,
+  "branches": 30,
+  "compositions": 0,
+  "strata": 0,
+  "sampled": 16,
+  "pool": 82,
+  "review_frames": 38
+ },
+ "review_application": {
+  "stale": [],
+  "skipped": [],
+  "replaced": [],
+  "disputed": [],
+  "withdrawn": []
+ },
+ "mechanical": {
+  "protocol": "bb6d2ff84f9e18aeaaae98bfe3eb737e156e72336d56fe724bf1b5c553e90ba4",
+  "checks": [
+   "evidence",
+   "provenance",
+   "reference",
+   "scope",
+   "rules",
+   "invariance",
+   "assignment"
+  ],
+  "frames": 104,
+  "passed": 104,
+  "failed": 0,
+  "observable_problems": 104,
+  "failures": {}
+ },
+ "review": {
+  "schema": 5,
+  "protocol": "bb6d2ff84f9e18aeaaae98bfe3eb737e156e72336d56fe724bf1b5c553e90ba4",
+  "units": {
+   "frame": "one rendered condition/language evidence item",
+   "situation": "a frame under the declared trained condition with complete supervision (situation_frames)",
+   "family": "one connected assignment component",
+   "target": "one (frame, reference target) membership"
+  },
+  "author": "bench.procedures.reference@zt411-reference-3",
+  "reviewers": [],
+  "actors": [],
+  "self_review": false,
+  "reviewer_distinct": false,
+  "sources": {
+   "complete": true,
+   "digest": "c673cb01edd8427f99bf25d13d61bb93501a264e70e6bc8e99a6a448b4e62397",
+   "states": {
+    "zt-user-guide": "pinned",
+    "zt-calibration": "pinned"
+   },
+   "missing": []
+  },
+  "mechanical": {
+   "frames": 104,
+   "passed": 104,
+   "failed": 0,
+   "observable_problems": 104
+  },
+  "frames": {
+   "frames": 104,
+   "situations": 96,
+   "families": 16,
+   "targets": 936,
+   "required": {
+    "frames": 38,
+    "situations": 30,
+    "families": 15,
+    "targets": 342
+   },
+   "confirmed": {
+    "frames": 0,
+    "situations": 0,
+    "families": 0,
+    "targets": 0
+   },
+   "remaining_frames": 38,
+   "labels": {
+    "targets": 2184,
+    "confirmed": 0
+   }
+  },
+  "roles": {
+   "fit": {
+    "frames": 104,
+    "situations": 96,
+    "families": 16,
+    "targets": 936,
+    "required": {
+     "frames": 38,
+     "situations": 30,
+     "families": 15,
+     "targets": 342
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 38,
+    "labels": {
+     "targets": 2184,
+     "confirmed": 0
+    }
+   }
+  },
+  "phenomena": {
+   "calibration_step": {
+    "frames": 24,
+    "situations": 24,
+    "families": 4,
+    "targets": 216,
+    "required": {
+     "frames": 6,
+     "situations": 6,
+     "families": 4,
+     "targets": 54
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 6,
+    "labels": {
+     "targets": 504,
+     "confirmed": 0
+    }
+   },
+   "cancel_not_completion": {
+    "frames": 8,
+    "situations": 8,
+    "families": 4,
+    "targets": 72,
+    "required": {
+     "frames": 1,
+     "situations": 1,
+     "families": 1,
+     "targets": 9
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 1,
+    "labels": {
+     "targets": 168,
+     "confirmed": 0
+    }
+   },
+   "cancelled": {
+    "frames": 24,
+    "situations": 24,
+    "families": 4,
+    "targets": 216,
+    "required": {
+     "frames": 5,
+     "situations": 5,
+     "families": 4,
+     "targets": 45
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 5,
+    "labels": {
+     "targets": 504,
+     "confirmed": 0
+    }
+   },
+   "commanded_not_verified": {
+    "frames": 24,
+    "situations": 24,
+    "families": 12,
+    "targets": 216,
+    "required": {
+     "frames": 12,
+     "situations": 12,
+     "families": 8,
+     "targets": 108
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 12,
+    "labels": {
+     "targets": 504,
+     "confirmed": 0
+    }
+   },
+   "configured_mode": {
+    "frames": 8,
+    "situations": 8,
+    "families": 4,
+    "targets": 72,
+    "required": {
+     "frames": 1,
+     "situations": 1,
+     "families": 1,
+     "targets": 9
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 1,
+    "labels": {
+     "targets": 168,
+     "confirmed": 0
+    }
+   },
+   "contradiction": {
+    "frames": 8,
+    "situations": 0,
+    "families": 4,
+    "targets": 72,
+    "required": {
+     "frames": 8,
+     "situations": 0,
+     "families": 4,
+     "targets": 72
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 8,
+    "labels": {
+     "targets": 168,
+     "confirmed": 0
+    }
+   },
+   "coverage_experiment": {
+    "frames": 104,
+    "situations": 96,
+    "families": 16,
+    "targets": 936,
+    "required": {
+     "frames": 38,
+     "situations": 30,
+     "families": 15,
+     "targets": 342
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 38,
+    "labels": {
+     "targets": 2184,
+     "confirmed": 0
+    }
+   },
+   "detection": {
+    "frames": 24,
+    "situations": 24,
+    "families": 4,
+    "targets": 216,
+    "required": {
+     "frames": 7,
+     "situations": 7,
+     "families": 3,
+     "targets": 63
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 7,
+    "labels": {
+     "targets": 504,
+     "confirmed": 0
+    }
+   },
+   "early_next": {
+    "frames": 16,
+    "situations": 16,
+    "families": 4,
+    "targets": 144,
+    "required": {
+     "frames": 4,
+     "situations": 4,
+     "families": 3,
+     "targets": 36
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 4,
+    "labels": {
+     "targets": 336,
+     "confirmed": 0
+    }
+   },
+   "early_resume": {
+    "frames": 16,
+    "situations": 16,
+    "families": 4,
+    "targets": 144,
+    "required": {
+     "frames": 5,
+     "situations": 5,
+     "families": 4,
+     "targets": 45
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 5,
+    "labels": {
+     "targets": 336,
+     "confirmed": 0
+    }
+   },
+   "en": {
+    "frames": 52,
+    "situations": 48,
+    "families": 16,
+    "targets": 468,
+    "required": {
+     "frames": 17,
+     "situations": 13,
+     "families": 10,
+     "targets": 153
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 17,
+    "labels": {
+     "targets": 1092,
+     "confirmed": 0
+    }
+   },
+   "media_type:thermal_transfer": {
+    "frames": 104,
+    "situations": 96,
+    "families": 16,
+    "targets": 936,
+    "required": {
+     "frames": 38,
+     "situations": 30,
+     "families": 15,
+     "targets": 342
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 38,
+    "labels": {
+     "targets": 2184,
+     "confirmed": 0
+    }
+   },
+   "no_symptom": {
+    "frames": 8,
+    "situations": 8,
+    "families": 4,
+    "targets": 72,
+    "required": {
+     "frames": 3,
+     "situations": 3,
+     "families": 2,
+     "targets": 27
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 3,
+    "labels": {
+     "targets": 168,
+     "confirmed": 0
+    }
+   },
+   "print_method:direct_thermal": {
+    "frames": 8,
+    "situations": 8,
+    "families": 4,
+    "targets": 72,
+    "required": {
+     "frames": 1,
+     "situations": 1,
+     "families": 1,
+     "targets": 9
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 1,
+    "labels": {
+     "targets": 168,
+     "confirmed": 0
+    }
+   },
+   "print_method:thermal_transfer": {
+    "frames": 96,
+    "situations": 88,
+    "families": 16,
+    "targets": 864,
+    "required": {
+     "frames": 37,
+     "situations": 29,
+     "families": 15,
+     "targets": 333
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 37,
+    "labels": {
+     "targets": 2016,
+     "confirmed": 0
+    }
+   },
+   "prohibited_resume": {
+    "frames": 8,
+    "situations": 8,
+    "families": 4,
+    "targets": 72,
+    "required": {
+     "frames": 1,
+     "situations": 1,
+     "families": 1,
+     "targets": 9
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 1,
+    "labels": {
+     "targets": 168,
+     "confirmed": 0
+    }
+   },
+   "prompt:calibration_1": {
+    "frames": 24,
+    "situations": 24,
+    "families": 4,
+    "targets": 216,
+    "required": {
+     "frames": 6,
+     "situations": 6,
+     "families": 4,
+     "targets": 54
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 6,
+    "labels": {
+     "targets": 504,
+     "confirmed": 0
+    }
+   },
+   "prompt:paused": {
+    "frames": 80,
+    "situations": 72,
+    "families": 12,
+    "targets": 720,
+    "required": {
+     "frames": 32,
+     "situations": 24,
+     "families": 11,
+     "targets": 288
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 32,
+    "labels": {
+     "targets": 1680,
+     "confirmed": 0
+    }
+   },
+   "pt": {
+    "frames": 52,
+    "situations": 48,
+    "families": 16,
+    "targets": 468,
+    "required": {
+     "frames": 21,
+     "situations": 17,
+     "families": 13,
+     "targets": 189
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 21,
+    "labels": {
+     "targets": 1092,
+     "confirmed": 0
+    }
+   },
+   "ribbon_out": {
+    "frames": 32,
+    "situations": 24,
+    "families": 4,
+    "targets": 288,
+    "required": {
+     "frames": 20,
+     "situations": 12,
+     "families": 4,
+     "targets": 180
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 20,
+    "labels": {
+     "targets": 672,
+     "confirmed": 0
+    }
+   },
+   "several_valid": {
+    "frames": 8,
+    "situations": 8,
+    "families": 4,
+    "targets": 72,
+    "required": {
+     "frames": 3,
+     "situations": 3,
+     "families": 3,
+     "targets": 27
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 3,
+    "labels": {
+     "targets": 168,
+     "confirmed": 0
+    }
+   },
+   "structured": {
+    "frames": 104,
+    "situations": 96,
+    "families": 16,
+    "targets": 936,
+    "required": {
+     "frames": 38,
+     "situations": 30,
+     "families": 15,
+     "targets": 342
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 38,
+    "labels": {
+     "targets": 2184,
+     "confirmed": 0
+    }
+   },
+   "verified_completion": {
+    "frames": 24,
+    "situations": 24,
+    "families": 12,
+    "targets": 216,
+    "required": {
+     "frames": 8,
+     "situations": 8,
+     "families": 7,
+     "targets": 72
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 8,
+    "labels": {
+     "targets": 504,
+     "confirmed": 0
+    }
+   },
+   "wrong_machine": {
+    "frames": 8,
+    "situations": 8,
+    "families": 4,
+    "targets": 72,
+    "required": {
+     "frames": 1,
+     "situations": 1,
+     "families": 1,
+     "targets": 9
+    },
+    "confirmed": {
+     "frames": 0,
+     "situations": 0,
+     "families": 0,
+     "targets": 0
+    },
+    "remaining_frames": 1,
+    "labels": {
+     "targets": 168,
+     "confirmed": 0
+    }
+   }
+  },
+  "branches": 30,
+  "compositions": 0,
+  "strata": 0,
+  "records": {
+   "current": 0,
+   "stale": 0,
+   "withdrawn": 0
+  },
+  "disputes": [],
+  "unconfirmed_replacements": [],
+  "stale": [],
+  "skipped": [],
+  "status": "unreviewed: review: 38 of 38 required frames lack a current evidence confirmation",
+  "disclosure": "sampled review: 0 of 104 frames received a current evidence confirmation; no current review; actor kind is disclosed, not validation",
+  "bindings": {
+   "00235e76476763214c918d92ad2c8b41ce9e5611b3d851932d9502caaeb09e0a": [
+    "f62f08ecdb2abf18fdb4c35751129ad29acd6a15c4f9bdeef499d3914849f6f5"
+   ],
+   "0043b768ed74febd9f79e589e3beb73cfdb33d80d6c3557ba20cebad3fd9ff57": [
+    "f80e947975a55f909b5e6371ecb8282a248a28ea289efbb147cd195c230eb464"
+   ],
+   "0088db0cc48027edfa43e741e83c8d53ed984b6d2ed78ddd997d7945b78fee89": [
+    "05d81341701337b70b249c562ae35da29ad2021018b427f9202b56782861be4d"
+   ],
+   "02518ff5cc24b6a34690e226ca738213d77f085dede6693dc1ce200aed8e5f56": [
+    "8e3e4b72ce18e472ec494d163b157d3ee66f01f09c9c8a305b4f505f8b959033"
+   ],
+   "02d5c7c364818f71ae2324895948f9a61966418389c065840ef28924af5acdc2": [
+    "a3666739ca7a6cab54621a30108a94bbaf02877b0ebf8d6860555c60661510bd"
+   ],
+   "09036d5d45b025b53262df4f24bae03dfea0b89b6b98c79c7855b47343e43a11": [
+    "e0279aa32ce6dee2eaf48e7179e73902116776684c27361fbbbcf5e305159ddb"
+   ],
+   "0c3cf5cd84ab1a7f87a4c782bbb5740439ef9570ac5a625ae1b7e86931aeb7e2": [
+    "6391b3a8e1972f9db08a4ea1a5101a28fda6daad21a4d9beb637f5980ca406dc"
+   ],
+   "12d068cec491c875ed58b87630b3216f65ce4052081bfd4579b9accfb6a64f6c": [
+    "ff2ede7c7b16b5ac09eac37183929fb0dc61fb92094fb15e97e4298ce4f4714c"
+   ],
+   "1330774030f6b400211612bcc6356600341c6a7e904c90e9857c47079f59fa80": [
+    "ed22008d25febd92f1478175b323aad48bcc58543b8526f7a2c06b5d8f8290e0"
+   ],
+   "169bfa77193b59d7335be5cd3ea97535251b939d39d748aba99d2a660d61cf9f": [
+    "579f1ce20369f46ea35ebd88807d7dd3cc3114764e10e1373ec781e56340add3"
+   ],
+   "16fd1da6a9b7ede4810804a01491ff586bf9818379b928ac0ba4a1be7990c157": [
+    "45d8668792a7e696de31ba8f00da209a00c9a4146706d0358c290d5c73bc38b0"
+   ],
+   "1c53a57a3c4852fb6559d74bb6261a8b41381691c2ad5821e1467baefe8e3f1c": [
+    "3ac627bce1a6e548011917bfb40c62bdca514b92e19ab8b897c223cb8f364352"
+   ],
+   "1d8c9bb818e2efc9ecac874c7d3ed09f6a1c32a1a1c0186b6870bc815ef7ad6c": [
+    "ef63eb4b56c849d776ae77c55657013be8877dd8a0810db88c0566114155808d"
+   ],
+   "1ef89d7dd8a76d06ec8d4bfae2075d55b8ce1068ccc9349c1f944de5707ded6c": [
+    "51726c3b3c3f1dd39f7b347c23efdebb30024bdb3000c9aa408b33849c0b8a6e"
+   ],
+   "2080debf4c94554fd5c9d91b4251746b5e84e75f29aa540103d99350c4b37868": [
+    "36ec9a32e58218a77ae5abb51e905589f637c241214ed5e59528412b42a4a5d8"
+   ],
+   "2405192895d2d5dcfcea90d6dbb6e9d077a187529f5c308d984fe48693031279": [
+    "fe07114d0c5f4d203dcb47d0d4672a6d9c0a20a07b5954139f76f09e8801259b"
+   ],
+   "24c8de4542d779dc27def284d2deff464334f82349b030f14a5365590315f553": [
+    "baa1216180791399bba52c7170d52b8f6375eca3ffd3b127c18a72720b2c917b"
+   ],
+   "2795ac8a2e14688fd2a527fe36f87d6aca234c66d67a9f02db2f8f95caee2b26": [
+    "775c8517efbd39b43b3464b0ebf25d77a4ff20bc6f375f9e2457902700c62a4e"
+   ],
+   "28100b7b79a249cfb0df35ca43ee8c142381b17fbd88fa86e9654981fba09097": [
+    "e96cb60c2a25af7723bb9a83546b0b017e23fc719587f033f3fcc212c4e76e8a"
+   ],
+   "2840d5bd7847c228036b1a4430252c0b1a70a6711d7e84c7a68e07e970ca7825": [
+    "6cbfb3b8655b1416b81b693ee312a81a5c9702ad118a8a1392253295492669ad"
+   ],
+   "2b86ab774ac51c71f467c728afe70a322718ec35121cd247fdac32399b99be3f": [
+    "14895eb80cc50c5b4f0346b4fd7834ec1708de151965ad50ddb40abed111577d"
+   ],
+   "2ff1adebfd9f3a4818a45281642ff18a1cec5f999802e17b0920d47cffc95cad": [
+    "6637964eb13a8cfd4d600683e29da23c54266a93328cd4ec969513b2a92495ab"
+   ],
+   "3408232947c20361bdd4db4c4c7599a8751e7ac9481449610db66fab76112013": [
+    "0b2c49a5e991d263528947570c26bdffb25e656efbf3af20252c7ff8eeb19170"
+   ],
+   "3432ac38ece0cefa971f6e1cdbb31c52d8821341d1cee1a1e9e0102846ab4af9": [
+    "9e384136b407e15c9390f9d9dbeece2def970fa80ce3a457836acd81d79692fb"
+   ],
+   "379b563c5cdb4e0452ee50d86e0c1e50be9a670f01dadaa69df712b5460ef0fb": [
+    "d98cfaef043cdeba511d9298c3abc2ba06fa80e3694b1551bcd5f36a5ec8c443"
+   ],
+   "390109f211e5e9e2ac5793a0df4365c711fbe302f6c0ff29615e627c341e2edc": [
+    "ab709f81c36dbb10e220f722b9111789bf00b4ed08aef49b13750f5d803242ef"
+   ],
+   "393b3edfb9d5fe29ebd42e359a272e4c88dd4276b648c49d35e5d51f5bf31206": [
+    "2fecef5b7680a40184474d8cf034484f57ee257db1d821a50af2cdb809f193d8"
+   ],
+   "39509fe67308228e8622224f08c1984d1bf13b58250bb689fdeb0f7991df8438": [
+    "ad49a144501637c0d65bae86fc7433281e0abd2f41ccc95b167a2ffc67ec42cd"
+   ],
+   "39b7d5a3787dbbd5268c80996c4462ae95ef2e100b3792d2d96815cc0ebee92b": [
+    "d9beca5ebcc7c338b84988a4a5da443c7764958a0edca42febe87e1ca07a256a"
+   ],
+   "3c30b7a33a4206aeef0c515e03cacbc37ee0b98d5a007bfb63d49ecc9fe0a6a3": [
+    "eecaa8b2e81c62fb1d5a29ef893e21a4c44d710a097bb3aa76902a23f8ecd884"
+   ],
+   "3e3560e1bae6b8e98e0b847ab8cf5f786a5ad2ce74900312f716f197dea2cc0d": [
+    "d170f5aaf85d0a0621f5ee3976f6ad368aaae2d2913cf600b5f6853225fd084b"
+   ],
+   "3f63ae75b0b38c88bfde00ba6c57c3c5f4f40120ef7aeda28ef859e7f5a4ca7f": [
+    "e177eb644aed6fd620b84ca803d8b14bcc0e511e8e0bd281a4721eede9c21715"
+   ],
+   "40e53e8c290c66f1f888d8399b4c200f7ffeb14e8591ed059a10cf64b59f2f7a": [
+    "f7b537ecae3b7920e6b4f285f3a2543495ff55f7b01acec041b6f3180b1b0b90"
+   ],
+   "41904e9dba618b140898dce576e887949da32d9b5056e75d4c8d9a115e9c1b5d": [
+    "04e792d399f12a287442a4290492e37d5a3d93e51532f5d7e26f6264b53e2538"
+   ],
+   "45b5b7740b8218769b2a87aa0792a37f8076b75082593b54f1d0299488f06168": [
+    "d5b344e579817223e513bd67dad7275f653015f120c3dfe27dffaa50db25d304"
+   ],
+   "48b99e14b77ba1be894d05d61bf258504eab51014502c3eb2d3dbaf36a8c22b2": [
+    "7a583c70c69a953185b88a77324a18385d95523e067cb9554cc44b5d01c67180"
+   ],
+   "49bbdf3682bf66a4e5a029ff8bb7e2267d3399135c45f1dd86de4c15e32356f6": [
+    "7b68f252299dcd92efb5dafc96c1adc37f7ddde479cef334bec032460a42dff8"
+   ],
+   "4d608ed0f71e646b3648434304f2f735f51cd4dfea534dbfc1bdd2ef8ecc37e2": [
+    "c61575667e5dcb1e721667cb0e385fe436caa63efd52c28179665b6f43a4ad2f"
+   ],
+   "5421565f1e3f23da619274b8d43589169d8413a4abda11eed8e003305ce3b93b": [
+    "e37a5cecd04523e276ff25093eb0f73db579e41a466ce176637bd2b144753f8d"
+   ],
+   "54eba56fee547e4c1dfe390b22f749fb126091dce2aa5fd102ff297395d5a1e8": [
+    "1a834938dc96648b21fcc7e703b728afe264abb2af21f9b14a18bd0a3334a6ed"
+   ],
+   "58f322a139fde0a358f2dde54307f0595a6e8f70569fbbe83bf02758c8878f34": [
+    "7c355ce7e116837a53e76f4d431ba074e78676359a6c9e110757f317a116f061"
+   ],
+   "5b479b2478bbb8f6ba344172884eaa37f91bcf0c845270f56a5ef6a4fe1fbe65": [
+    "3d4b542e1b613d6960671c97bdae9bfd73a1a09ec97dfe77b885dba1f44289e4"
+   ],
+   "5c2b8d5f344a8e483a6507a46a61567d4591fff8c2923ee7ec3209a601a8bc62": [
+    "25a96c4176cef8a374f6c0ba47452219e263e016adc04ea89d5c84dcdd42192a"
+   ],
+   "60c22880a2e6af6a00051417061a44d76e237c79b98c3532620c690f4321e4ad": [
+    "4ea826bcaf80ab49b6c21f076900ea9cfd9ab7d45509b187b9ecafed3cc324bb"
+   ],
+   "6338918ae56dd6ba4748ee3672b422de920645303c7a7772fdd219a1a60369e5": [
+    "3a3bca97b041f977b28fae8c24a8259f5332adef8b844fdb9734cafae7715d51"
+   ],
+   "698a7f764378ec8d451892cf0ddde1fafde28ba27ef3daab9f0be209bbe8e9a1": [
+    "23e83d2b6c9a54c7abf5bb47157fe5126724cb8d5c75c5bc509da75473825269"
+   ],
+   "69fddba6fba1cd5c50d98764fbe701c8ddc2218f82118c5ab58ebe1a43831123": [
+    "9b325140558fa8f11d93407babb06e3b3016d9fccc0e7b56260e204f7d1319a2"
+   ],
+   "6d6df552d594c2cec08f92fc44c42b2bd03b4d2bf24245dc90081854cbebcc4d": [
+    "40589df6e0d7a170c966d365f966786d11d28563751670c604933a4de8699265"
+   ],
+   "711142e51a13ed4b06f03660d52feb6bf229bf0ae57720f0f80f8069ca3118d0": [
+    "4a394f87072325e957321c6e52fa914f586050e6e53ff0d11a3178a2f18ff17e"
+   ],
+   "73dd3ca47da5c6626a355213ceeca0c00b8a1487f717fb509afdb3e3d4dcd1ef": [
+    "ae736a7f17303dca25c7bc1ab00f6054e188841f36957c55d479ad0a3cc2245c"
+   ],
+   "7429e251dca9a1a7751e43f8550deeee5629f06c749c7655f693cfd38df1fc83": [
+    "f992a7d9c2ede065b44bc68226974acc85d20dd21ab71a57fd830f1a502fba80"
+   ],
+   "753bfae91c558f6107e89771602636ddfccb339d625899fd600beb3350b691e0": [
+    "121b05daa7946a9b4682fcdc1432e8cf8ffa8397bc142ea89068d4a312ab5606"
+   ],
+   "761850976a77174b8efe72522212b373dfab7faafd89cd8281e9392e10b8ac83": [
+    "ce00c6379a74f9fc0e69dfdae246d39962c42e243074b20d650ee4039dd71069"
+   ],
+   "7ae2719ba4709e04f86bc2096c38a07f0c6be301bc98d2e72a168481e40ed68d": [
+    "96e751002f0d0a750c51143926c18b1a87e53220abdb188bdc9990af0ad05a31"
+   ],
+   "7b65e9a36e1e043363ba5ee97e506b57e1bc16819a8ae43f2414531b5077c0fd": [
+    "9e1006264133b983a49988e6ae38e5ee17ed733685a032f40f73d940225bdc6b"
+   ],
+   "7dce5e801d7ecef5a416270368531062e9bc26dd61e67b5f3f22615f9e7ad069": [
+    "e1c31b4e0d89322801d203367e99f8536d9700fbd004a3e51337e6678bb3b8bf"
+   ],
+   "88167aaf61c413e1368d270adf35bb2ee3ba95d6a3fe3d6194ba31ff0e788857": [
+    "e495c3764cf22d9c7e4f98a0c5a6aa493c1bf55766b0540b20dad89f203e933a"
+   ],
+   "885f97924f3da20fd6539b2a6f9f270debdb4aacd3263e17274ec1ce2602c296": [
+    "de535159e80f0c2a62d8f07c2b0d6bf60c0f2023336dfa7090ba5e85e0c06bca"
+   ],
+   "8baf460885fa91391c677ade6bcc373d72c0cbd6457176fbcf6a4d45c1fe4a72": [
+    "ffae962fb223253176fd98ee806a35913dc66265cf13c8e13561bfc188a2729b"
+   ],
+   "8e96383bd8eef74e57a611269898cd5d3ffde5e95075f30cd3490816470067aa": [
+    "9b1f2a15954d347a501c9bf12f3ec77adc0042a16967a6f18a5ee240bb391d9b"
+   ],
+   "8fc1d495340cb0c7ad7334ffce2ad18c408b00ae97707f6e4edd33bcb41626cc": [
+    "05aad4a6d2f02f6e0db11955af389bd823f974617aaffb3274bedd2043a07b85"
+   ],
+   "90e7d111995c05c6a8e2e67400bb9ce487cc14caff46a0ec690ee6ffa5455850": [
+    "c9a5ea2a57cf392c114f5c999a353ae6362cb38acb23f0a85299cb1625bfc939"
+   ],
+   "97ef9bf6e9aa553db4a09ec57b6d86239b4b1e5bc570680aa75a8e908bba4c80": [
+    "6909e8446dd571875f3136f4479e6cfdc1a731b55e94f7d3800cdb9f1d61ca1e"
+   ],
+   "a7a6e7155fcba1b91d288b87246cf76fd21af60e7ba4d84cc78fae8cad7ef6bf": [
+    "fe4ef6948b78134c2813099da563a90a06b691eebecb82a51dc3733baea0fe45"
+   ],
+   "a84bb303bd7a066213b8ec92d4f7a4050b36a56844de3fa6f43b7b68765a51b0": [
+    "5ee348adbf483b94f69835d9d6fa01c59ec755664bdd77a541eb98dda381371c"
+   ],
+   "aa41c18082221be125686ac90c47c64ff82830805ee8b6c7b80fc240e1621e7d": [
+    "551481f00bf3f48b368fc3362940bee6b2d7780c1aeba4618fbc1c3215e5eea9"
+   ],
+   "aac2309a84dc1f5e763d0a5edffdf3d9b1bfefc620c294220173cc3788890bca": [
+    "ab6568cfdcc2548d88847127d52117d1693534e23871ff04d831d191ab28ce07"
+   ],
+   "acd9b5c6c7857f132a81a8ad811fab004aefc7db74d6e60f9d635b24d3711c92": [
+    "a8e53de3050ae0735452dcfe12a749af8509aca45b79bed0e7837ed9127cbef1"
+   ],
+   "acfc24bb19e155413af3cc08df17a28e366a7bc833d60bad116827a0acb3144b": [
+    "2885bff3e87663ecbeaf6a8f7e128b2194abea21b873e4421f48676b2a6602be"
+   ],
+   "ad8587af68abd7aab2bd16189ab140742bfcbedfe9998e74ec62c045899cf822": [
+    "502668977b28ddc6fee8549ad111d88a3dc1711f5af46ec524464cbb3295cd25"
+   ],
+   "affb267635765f90837ba2fa947a97d920a868016c33433cbeea5b80cc422fe6": [
+    "73821738c4d4c6fff3d5e601eedd8bee4ec38066bb23ce9bba4ef01ad7530b6d"
+   ],
+   "b3448195ae0c793e8d8b9394378c684ab07c83dddcf4bf3e024e819d0e940b78": [
+    "17985f3497c4b1c3a7db9d2cd5e595d1cb335828199f121f030fcc25cbc3f7dc"
+   ],
+   "b37210c5c7448c486a1b47de2d08cc0792c06f340d655e76e160b4e9220d8379": [
+    "319c2f48f7b7d54587ebc23a49ea44e4eae66550e036e3e2544f4149e9b35883"
+   ],
+   "b4131d1a28dd8913851222f029ac00d92c0d933782dd633a7228f17ddddc594e": [
+    "c66d698616a441beb8d3a37ebd17c1c14694f3069c531e5df0abd99fcbbe9db1"
+   ],
+   "c0522c0293f466dc85cbe33d7b78656ef02596e5744f70dbd53ad51fa7bcceb0": [
+    "28b62e7d4dc4188f94ef227a330f50c01d3f9a5ddf82f34d6e3cda7db55bdb8b"
+   ],
+   "c081058a268807e6336d5987f794cde3b6f19e76fb7c5b46d76f63ca5c03e7a1": [
+    "1d3222c4b9ce68ec8a85c36fbdbee8680c07745c53729cb8fab5d9045a28e88a"
+   ],
+   "c1435acef5312006a906d1b74c05d0bc2f1ff0675e8397cf5ce4c1e8943ebd1a": [
+    "5b80920a9e7614aec6eccae9aebf67bcb60d6620f0420788ea66fd679bbeb5d3"
+   ],
+   "c1709373d1e74d1aeb22888e378740abdc14aa1ab9edeba74fd7afb9397b5495": [
+    "3e68d958772c4a0ea5b194ff8cc776ba8dab8183c2e0bc1e691749ba105d0e55"
+   ],
+   "c26f6bc2e26c5ece6a312b0eae0f01396121025c0e1bf287713f55c309691f4b": [
+    "5ce1e50138249df885988c0ca70fc958e3e9f182775a04765304d7451f5ff152"
+   ],
+   "c6af9712efa009edf128b4001efae3e7dae248590554cc84b6abc3d5e58d1833": [
+    "d165984054032355bdc11f141935e249e309e4c06c9843345c42b4338fcaefc1"
+   ],
+   "c6fb512c109ad61dbc982ebf94ffd7b173b8868c5247637466e8b0571aba992f": [
+    "47396bf7530702bc85233a7c8ddbb0dbee7a0727856631352eeeaa2dd0543330"
+   ],
+   "c8b23eaa221bcdff2cdebce39e7c8abf0fd51eca9751267babc4ffecf3b8ab28": [
+    "399bb580519a2d9fe9854b9155ce8cc81e1e3a7bd29462785669520828a07b29"
+   ],
+   "cd639f454830dd4ab731fa8620682b36941bdf13c6b50ca5b05e932a71845dbf": [
+    "cf5383210075b831aa746f54fd96b6d9a5be21446059360291affbee74e0588b"
+   ],
+   "cf37c292b556801afa44708a97facdf934379d82fc17fcbcf60f31b95ca5e09c": [
+    "e0be0720d4ac636281c4ee970c674d4f75e61fccc1a661ea9c335a7f2fec2914"
+   ],
+   "d631895e1058191d553e2309077855f3c52b5063ae9dad11b1216c52b8496ef5": [
+    "baf90489628651d214b52c7bd2d85324f4da0150764280326af35a1a700219fd"
+   ],
+   "da88852f3abe60cdef3d13839a707e9bd00a15d7d40a743080cdfa368f4c916e": [
+    "897955d57e0f86f47e3f64d35aa7f6dcc8dd414d457ed7174ced9bec0ae7544e"
+   ],
+   "dc8a1fdceff3449de31c4c26a28c51ca3427b197dfbe5c8816913dc5ba80579e": [
+    "635baeb9339070b05bd94007330f8644cf9626af9d9795a2b8e35fa5c95318f0"
+   ],
+   "de9c326baacbf70d0178e47427800bb7fa7427b29240b0a6fb375518b23523c8": [
+    "0c921bd08c95a754c520cee09e00207595bb512b16b86a1dd6186f09d3d56d1c"
+   ],
+   "df21c752d05c2ba02f2387287b7028f81c54b0cb6d508f480c33cd85c281f63c": [
+    "c79ee1f5740c3e344e591cd5ab478b59049b3dd46b89a3a8cf2ce63584dd00a8"
+   ],
+   "e004e3cfa7a080e37b881ad7b41a7628d0c2eb262a0b30f2c56d07f0bb29efd5": [
+    "837409f40cb5724b0b5b394f202d871851522347bd45fe963b4b9b532f6854a6"
+   ],
+   "e38ff0a8c7ef352a3b6a4da0398eec59601f1a5463aa92a6f777e8d299ffd84e": [
+    "2c8a20bc730a6176af1444853fd0991364d06f442fa9724d1f5e9b11ed6386ca"
+   ],
+   "e4b8ca3afc8832151eafeae52b7f38cc5de6643312fd9b5ff85fd65328204fb6": [
+    "0c26aee2e7b1f9c13eefc8ee5ff83f17cc043e0afad73b38aa48b930c2c51ee6"
+   ],
+   "e8e3c14aa5755b4fa6636a59448ba6083ab25ca9f13b72e81bae42bf885d20ae": [
+    "a7ead1c506a9f3ad6c66fc1f40df3cab0874d45bf67ab8a56f425dba62c68e91"
+   ],
+   "ec048910654647d1daa519f9548d898be7fceae0f89ee0c50c07174f1230a3b9": [
+    "b15363fe4675e92039d36c3b8a5f2c4b5491372b8a2d31ee77c40cf7435aee8e"
+   ],
+   "eeea2578160d6d4d980687fa137677b3e7f1f5ff392df9f6ce17d709a18515b4": [
+    "d36601cc8f31e02aea880e556fdecbba0905d4ef823c716d5b1b3fb68d34779f"
+   ],
+   "f1b39971404200bff2d603cc3b2d622dd197ed14a9d9645ceabb53f13257d7c7": [
+    "748b1b341cb05f3438f3dd7b17a1d4fce78f75f1ebc506b13a7a1989810c41db"
+   ],
+   "f21ef284a6383afc4766ee18ea3e6a1f97ae784cbfa8b644935dfba8e12aac9e": [
+    "785da9aa5aa29ad3c0adc4317b56f034a1c85ac45924a394f49458699621b87b"
+   ],
+   "f3f6f2b59b84c00a93d04ba145c19c5816b16df40e976336920b32f97109be80": [
+    "7f58d390707ca834c28a4831bfa3cb6749c829ccfd2bada8ee9815781fe7d0c4"
+   ],
+   "f6c84630506ce1ab6466a47caed57c27645c59573556f98868099ba7225104c4": [
+    "dca401a6fc157c6bde41b9dfc22d85607eb66b0102580ef5529c15c813371861"
+   ],
+   "fa919727e3a95371ac2885c4131896ef0adf9e6b1bdf7a794326277d2723d2ad": [
+    "6febf40aab9ae37b8c683cf2a00462297424542d6116562351c7c7788437dfea"
+   ],
+   "fb244ed3dc2a46e114459842693c61bd8a6bccc5c6d99676056906b7d6b4abb4": [
+    "58ea555834bc7dfdb09a02c729eb39c1b47a5ffaeaa651678b5a6e5011930cf1"
+   ],
+   "fef274c9687bb80e556a7b0f17d9c3e9bafb5652ad39f734721a3732ff72b340": [
+    "bcc015b6252789f767c23ee9b40521a91331c1df4f0daebe1229f5f806fa92ca"
+   ],
+   "ff1d31790779a349edf32ce0b19aba21935b39629efd9b282142fb9fa5dd5783": [
+    "947bd93970b02c23bcfb40f37a88caf2647d8856d5ef784c50db5a430ec4a544"
+   ],
+   "ffc90d28fcfdebe4d52d8085032038fcfe1abdbda99626b35df2e299b1f07273": [
+    "e0cc0f9c0d30097305c943ac88a8a4cad23604f4e90e621fedf64d10da3be460"
+   ]
+  }
+ },
+ "experiment": {
+  "parent": "66d3ae00a9ac53d9feda9afdc7f6bf5f8ebc17db9faec51b5f23a2d970e704e1",
+  "arm": "targeted",
+  "cells": [
+   {
+    "name": "readiness_detection",
+    "target": "ready_to_print",
+    "class": true,
+    "tags": [
+     "detection"
+    ]
+   },
+   {
+    "name": "readiness_after_calibration",
+    "target": "ready_to_print",
+    "class": true,
+    "tags": [
+     "cancelled"
+    ]
+   },
+   {
+    "name": "mismatch_during_calibration",
+    "target": "method_inconsistent",
+    "class": true,
+    "tags": [
+     "calibration_step"
+    ]
+   },
+   {
+    "name": "missing_ribbon",
+    "target": "ribbon_loaded",
+    "class": "unstated",
+    "tags": [
+     "ribbon_out"
+    ]
+   }
+  ]
+ },
+ "payloads": {
+  "definition.yaml": {
+   "file": "definition.7a14ff584f5404c3.yaml",
+   "sha256": "7a14ff584f5404c3d2445be70d934cd5f9f72d1b717abdd77f0bcb539c6b091a",
+   "count": 164
+  },
+  "scenarios.jsonl": {
+   "file": "scenarios.7d855942874fa65f.jsonl",
+   "sha256": "7d855942874fa65f449fd542407d306a66957e9443d5743fc9e04d8eae1ecf3d",
+   "count": 52
+  },
+  "annotations.jsonl": {
+   "file": "annotations.5c863a5b892750c3.jsonl",
+   "sha256": "5c863a5b892750c3e858655c830d265134b7a41d24172cf95a472f8a89e996ad",
+   "count": 104
+  },
+  "situations.jsonl": {
+   "file": "situations.86d4466afbf19412.jsonl",
+   "sha256": "86d4466afbf194124247062bb2d60cd9fd663cc39442a3c7b1b26def5732eafd",
+   "count": 104
+  },
+  "labels.jsonl": {
+   "file": "labels.f0063a08bbf0f421.jsonl",
+   "sha256": "f0063a08bbf0f4212b72d6835a632d8cea88e6bd2d2f44f9ba14dfe9d4fe2079",
+   "count": 96
+  },
+  "reviews.jsonl": {
+   "file": "reviews.e3b0c44298fc1c14.jsonl",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "count": 0
+  },
+  "review_worksheet.jsonl": {
+   "file": "review_worksheet.04343701b91644be.jsonl",
+   "sha256": "04343701b91644bee4e01bf08133af5a6e8bf7cb1cd9b1fdce8648917f145bcb",
+   "count": 38
+  },
+  "reference.jsonl": {
+   "file": "reference.1d4afc718c8c013f.jsonl",
+   "sha256": "1d4afc718c8c013f0c484aef9bbf33defbfbfe604dd9c6e49f23b04cbc3b38dd",
+   "count": 104
+  }
+ }
+}

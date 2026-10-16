@@ -9,7 +9,7 @@ from types import SimpleNamespace
 import pytest
 
 from semantic_switch import Runtime, files
-from semantic_switch.examples import path_record
+from semantic_switch.evidence import path_record
 from semantic_switch.tools.common import input_key
 from semantic_switch.tools.data import Labels
 from semantic_switch.training import EvidenceContext, Task, assess_lineage

@@ -1,3 +1,5 @@
+
+from semantic_switch import model_jobs
 import ctypes
 import re
 import struct
@@ -10,7 +12,7 @@ import pytest
 
 from semantic_switch import Model, Runtime, api, backend
 from semantic_switch.training import model_job
-from semantic_switch.api import estimate
+from semantic_switch.model_jobs import estimate
 from semantic_switch.backend import Placement
 from semantic_switch.errors import ConfigError
 from semantic_switch.protocols import ScoreRequest
@@ -144,7 +146,7 @@ def assets(tmp_path):
 def jobs(tmp_path, monkeypatch):
     monkeypatch.setenv("SEMANTIC_MODEL_LOCK", str(tmp_path / "model-job.lock"))
     monkeypatch.setenv("SEMANTIC_SWITCH_CACHE", str(tmp_path / "cache"))
-    monkeypatch.setattr(api, "available_host_bytes", lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, "available_host_bytes", lambda: 1 << 50)
 
     @contextmanager
     def reserve(envelope: Resources):

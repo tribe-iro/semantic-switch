@@ -9,7 +9,7 @@ import pytest
 
 from semantic_switch import ConfigError, Runtime, files, tools
 from semantic_switch.compiler import compile_spec, digest, is_digest
-from semantic_switch.examples import Claim, LabelSource, collect, resolve_claims
+from semantic_switch.evidence import Claim, LabelSource, collect, resolve_claims
 from semantic_switch.families import FamilyIndex, exact_families
 from semantic_switch.selection import Selection
 from semantic_switch.training import Actor, Task

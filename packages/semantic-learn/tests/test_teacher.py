@@ -1,3 +1,5 @@
+
+from semantic_switch import model_jobs
 import json
 from pathlib import Path
 
@@ -38,7 +40,7 @@ def envelope(message, **meta):
 
 
 def test_collection_accounts_every_target_and_publishes_reviewable_labels(tmp_path, monkeypatch):
-    from semantic_switch.examples import ROLES
+    from semantic_switch.evidence import ROLES
     from semantic_learn import teacher as module
     path, situations = collection_task(tmp_path, [envelope('please refund me', groups=['a'], tags=['direct'], role='check', pairs=['p']),
                                                   envelope('wrong invoice total', groups=['b']), envelope('maybe something', groups=['c']),
@@ -47,9 +49,9 @@ def test_collection_accounts_every_target_and_publishes_reviewable_labels(tmp_pa
     monkeypatch.setattr(module, 'judge', lambda source, provider=None: teacher)
     joined, runtime = [], module.Runtime
     monkeypatch.setattr(module, 'Runtime', lambda models, **kwargs: joined.append(kwargs['job']) or runtime(models, **kwargs))
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     to = tmp_path / 'labels.collection.json'
-    with api.model_job() as parent:
+    with model_jobs.model_job() as parent:
         report = module.collect(path, situations, to, teacher=TEACHER, training_use=declared('Example'), provider='Example', job=parent, window=2)
     counts = report['counts']
     assert joined == [parent] and counts['situations'] == 4 and counts['targets'] == 12 and counts['settled'] == 4
@@ -246,7 +248,7 @@ def test_declared_semantic_unknowns_become_labels_while_uncertain_and_missing_st
     files.publish(situations, ''.join(json.dumps(envelope(message, groups=[str(i)])) + '\n'
                                       for i, message in enumerate(['ribbon loaded, refund', 'ribbon empty', 'weather report', 'maybe'])))
     monkeypatch.setattr(module, 'judge', lambda source, provider=None: FakeScorer(special_oracle))
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     report = module.collect(path, situations, tmp_path / 'special.collection.json', teacher=TEACHER, training_use=declared('Example'), provider='Example')
     labels = {row['input']['message']: row['facts'] for row in files.read_jsonl(report['labels'])}
     assert labels['ribbon loaded, refund']['ribbon'] is True and labels['ribbon empty']['ribbon'] is False

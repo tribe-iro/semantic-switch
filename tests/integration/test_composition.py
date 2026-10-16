@@ -7,7 +7,7 @@ import pytest
 torch = pytest.importorskip('torch')
 import semantic_switch as ss
 from semantic_switch import ConfigError, Runtime, api, backend, files
-from semantic_switch.examples import reviewed_content
+from semantic_switch.evidence import reviewed_content
 from semantic_switch.tools.data import Labels
 from semantic_switch.training import (Actor, LabelSource, Task, TrainingUse, Verification, compare_deployments, current, declaration, entry, point,
                                       recompute_comparison, rollback, specialization_request, specialize)
@@ -106,7 +106,7 @@ def baseline(root, frozen):
     return root / 'task.lock.json'
 
 
-def test_ordinary_data_composes_from_accumulation_through_pipeline_publication_comparison_and_promotion(tmp_path, monkeypatch):
+def test_controller_composes_accumulation_publication_comparison_and_promotion_with_scripted_deployment(tmp_path, monkeypatch):
     from semantic_trainer import jobs
     from semantic_trainer.pipeline import Controller, read_export
     manifest, gguf = base(tmp_path, monkeypatch)

@@ -136,7 +136,7 @@ def run_audit(runtime, receipts, definition, audit, after_row=None):
 
 
 def regression_binding(runtime, directory, audit):
-    from semantic_switch.examples import each_target, label_record
+    from semantic_switch.evidence import each_target, label_record
     from bench.policy_adaptation import CODEX
     directory.mkdir(parents=True, exist_ok=True)
     definition = directory / 'decision.yaml'

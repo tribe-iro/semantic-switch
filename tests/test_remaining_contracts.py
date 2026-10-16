@@ -26,7 +26,7 @@ def definition(tmp_path, **changes):
 
 @pytest.mark.parametrize("name,value", [("n_ctx", 2**32), ("n_batch", 2**31), ("threads", 2**31), ("prefix_slots", 2**32)])
 def test_native_integer_overflow_rejected_before_resolution(monkeypatch, name, value):
-    monkeypatch.setattr("semantic_switch.api._resolve", lambda _: pytest.fail("resolved invalid model"))
+    monkeypatch.setattr("semantic_switch.models._resolve", lambda _: pytest.fail("resolved invalid model"))
     with pytest.raises(ConfigError, match="native integer limit"):
         Model("unresolved:model.gguf", **{name: value})
 
@@ -235,7 +235,7 @@ def test_allow_model_change_resets_receipt_baseline_and_policy(tmp_path):
 
 def test_policy_audit_replays_frozen_labels_and_denominators(tmp_path):
     from bench.policy_audit import run, summarize
-    from semantic_switch.examples import label_record
+    from semantic_switch.evidence import label_record
     path = definition(tmp_path)
     audit = tmp_path / 'audit.jsonl'
     with Runtime(FakeScorer(lambda *args: [.99, .005, .005])) as rt:
@@ -258,7 +258,7 @@ def test_model_derived_sequence_overflow_rejected_before_resolution():
 
 
 def test_native_topology_rejected_before_resolution(monkeypatch):
-    monkeypatch.setattr('semantic_switch.api._resolve', lambda _: pytest.fail('resolved invalid topology'))
+    monkeypatch.setattr('semantic_switch.models._resolve', lambda _: pytest.fail('resolved invalid topology'))
     with pytest.raises(ConfigError, match='sequence slots'):
         Model('unresolved.gguf', device='cpu', n_batch=4)
 
@@ -277,7 +277,7 @@ def test_policy_audit_case_and_fact_denominators_separate():
 
 def test_policy_audit_raw_argmax_keeps_abstentions_in_denominator(tmp_path):
     from bench.policy_audit import run
-    from semantic_switch.examples import label_record
+    from semantic_switch.evidence import label_record
     path = definition(tmp_path)
     audit = tmp_path / 'audit.jsonl'
     with Runtime(FakeScorer(lambda *args: [.6, .2, .2])) as rt:
@@ -295,7 +295,7 @@ def test_policy_audit_raw_argmax_keeps_abstentions_in_denominator(tmp_path):
 
 def test_policy_audit_invalid_metadata_fails_before_predictor(tmp_path):
     from bench.policy_audit import run
-    from semantic_switch.examples import label_record
+    from semantic_switch.evidence import label_record
     path = definition(tmp_path)
     audit = tmp_path / 'audit.jsonl'
     with Runtime(FakeScorer()) as rt:

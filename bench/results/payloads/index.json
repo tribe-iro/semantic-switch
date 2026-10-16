@@ -1,0 +1,68 @@
+{
+  "scope": "Preserved native diagnostic payloads; historical reports remain byte-for-byte unchanged",
+  "payloads": [
+    {
+      "report": "native-segmentation-f16.json",
+      "original_reference": "/home/tribeiro/Projects/semantic-select/.artifacts/native-segmentation/f16-verified.npz",
+      "file": "fa254a7baf71d0a0c82dbcb6512c8e7594d9dedb6a20b6ea5542e2815e6251ac.npz",
+      "sha256": "fa254a7baf71d0a0c82dbcb6512c8e7594d9dedb6a20b6ea5542e2815e6251ac",
+      "bytes": 1662502
+    },
+    {
+      "report": "native-segmentation-q8-f32attention.json",
+      "original_reference": "/home/tribeiro/Projects/semantic-select/.artifacts/native-segmentation/q8-f32attention.npz",
+      "file": "53eeb80c05e2bba78aa89eca6441f6f9569920cf68262fd713c6d63478ef9e0e.npz",
+      "sha256": "53eeb80c05e2bba78aa89eca6441f6f9569920cf68262fd713c6d63478ef9e0e",
+      "bytes": 1670656
+    },
+    {
+      "report": "native-segmentation-q8-f32kv.json",
+      "original_reference": "/home/tribeiro/Projects/semantic-select/.artifacts/native-segmentation/q8-f32kv.npz",
+      "file": "6aab7a9525911d2d6b2e46ada9937403283d0d07e8835171d5b08cc47c724304.npz",
+      "sha256": "6aab7a9525911d2d6b2e46ada9937403283d0d07e8835171d5b08cc47c724304",
+      "bytes": 1670572
+    },
+    {
+      "report": "native-segmentation-q8-no-flash-cpu.json",
+      "original_reference": "/home/tribeiro/Projects/semantic-select/.artifacts/native-segmentation/q8-no-flash-cpu.npz",
+      "file": "14984af616dd97c2849accd10947572ff5d9004960437f7ef888c0bce9db67ef.npz",
+      "sha256": "14984af616dd97c2849accd10947572ff5d9004960437f7ef888c0bce9db67ef",
+      "bytes": 1670350
+    },
+    {
+      "report": "native-segmentation-q8-no-flash-gpu.json",
+      "original_reference": "/home/tribeiro/Projects/semantic-select/.artifacts/native-segmentation/q8-no-flash-gpu.npz",
+      "file": "740ee535b40218dd38b01ca427642b9f65d8754dc7dcdd1afb8cfe08bf4f1845.npz",
+      "sha256": "740ee535b40218dd38b01ca427642b9f65d8754dc7dcdd1afb8cfe08bf4f1845",
+      "bytes": 1674628
+    },
+    {
+      "report": "native-segmentation-q8-plain.json",
+      "original_reference": "/home/tribeiro/Projects/semantic-select/.artifacts/native-segmentation/q8-plain.npz",
+      "file": "6aab7a9525911d2d6b2e46ada9937403283d0d07e8835171d5b08cc47c724304.npz",
+      "sha256": "6aab7a9525911d2d6b2e46ada9937403283d0d07e8835171d5b08cc47c724304",
+      "bytes": 1670572
+    },
+    {
+      "report": "native-segmentation-q8.json",
+      "original_reference": "/home/tribeiro/Projects/semantic-select/.artifacts/native-segmentation/q8-verified.npz",
+      "file": "6aab7a9525911d2d6b2e46ada9937403283d0d07e8835171d5b08cc47c724304.npz",
+      "sha256": "6aab7a9525911d2d6b2e46ada9937403283d0d07e8835171d5b08cc47c724304",
+      "bytes": 1670572
+    },
+    {
+      "report": "native-segmentation-stability.json",
+      "original_reference": ".artifacts/native-segmentation/q8.npz",
+      "file": "c3a19ce3a8d312ab7c552971e52026ba1f87ce3d74163c70f40f375b730bc764.npz",
+      "sha256": "c3a19ce3a8d312ab7c552971e52026ba1f87ce3d74163c70f40f375b730bc764",
+      "bytes": 1670560
+    },
+    {
+      "report": "native-segmentation-stability.json",
+      "original_reference": ".artifacts/native-segmentation/f16.npz",
+      "file": "735192860c0b6076b2c6469897652b25b717c7895cc33d2569556d89631a802b.npz",
+      "sha256": "735192860c0b6076b2c6469897652b25b717c7895cc33d2569556d89631a802b",
+      "bytes": 1662490
+    }
+  ]
+}

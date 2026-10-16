@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from semantic_switch import models
+
 import asyncio
 import json
 import os
@@ -119,7 +121,7 @@ def test_renamed_rule_vocabulary_has_concrete_regeneration_errors(tmp_path):
 
 
 def test_a_runtime_with_only_other_roles_never_resolves_the_default_judge(monkeypatch):
-    monkeypatch.setattr(api, '_resolve', lambda source: pytest.fail(f'resolved {source}'))
+    monkeypatch.setattr(models, '_resolve', lambda source: pytest.fail(f'resolved {source}'))
     runtime = Runtime(bindings={'refund': FakeScorer()})
     assert set(runtime.models) == {'refund'}
     with pytest.raises(ConfigError, match="model role 'judge' is not bound"):

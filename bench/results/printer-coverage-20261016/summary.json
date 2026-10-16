@@ -1,0 +1,353 @@
+{
+  "scope": "Synthetic structured-input regression; repeatedly consulted check population; reference unreviewed; no adoption",
+  "arms": {
+    "random|workflow|structured": {
+      "units": {
+        "frames": 736,
+        "gold_complete_frames": 560,
+        "situations": 560,
+        "families": 164,
+        "targets": 15456,
+        "definitions": {
+          "frame": "one rendered condition/language evidence item",
+          "situation": "a frame under the declared trained condition with complete supervision (situation_frames)",
+          "family": "one connected assignment component",
+          "target": "one (frame, reference target) membership"
+        }
+      },
+      "exact_action_sets": {
+        "metric": "exact_sets",
+        "version": 5,
+        "situations": 736,
+        "gold_complete": 560,
+        "incomplete_reference": 176,
+        "prediction_complete": 560,
+        "failed": 0,
+        "exact": 560,
+        "exact_rate": 1.0,
+        "denominator": "gold-complete situations; failed, partial, unresolved or absent predictions count as not exact; incomplete-reference situations are reported, never scored"
+      },
+      "actions": {
+        "metric": "action_sets",
+        "version": 5,
+        "frames": 736,
+        "known_reference_support": 6184,
+        "precision": 0.9953917050691244,
+        "recall": 0.9250535331905781,
+        "known_reference": {
+          "true_positive": 864,
+          "false_positive": 4,
+          "false_negative": 70,
+          "true_negative": 5246,
+          "positive_precision": 0.9953917050691244,
+          "positive_recall": 0.9250535331905781,
+          "negative_precision": 0.9868322046651617
+        },
+        "reference_unresolved": 440,
+        "unassessed_selected": 30,
+        "prohibited_selected": 4,
+        "frames_with_prohibited": 4,
+        "required_omissions": 70,
+        "prediction_unresolved": 402,
+        "failed": 0,
+        "denominator": "known-reference memberships; selections of unresolved reference memberships are unassessed, not false positives"
+      },
+      "per_action": {
+        "per_class": {
+          "set_method_tt": {
+            "support": 66,
+            "f1": 1.0
+          },
+          "set_method_dt": {
+            "support": 50,
+            "f1": 1.0
+          },
+          "load_ribbon": {
+            "support": 48,
+            "f1": 1.0
+          },
+          "start_calibration": {
+            "support": 146,
+            "f1": 1.0
+          },
+          "verify_loading": {
+            "support": 256,
+            "f1": 1.0
+          },
+          "calibration_next": {
+            "support": 34,
+            "f1": 1.0
+          },
+          "cancel_calibration": {
+            "support": 36,
+            "f1": 1.0
+          },
+          "resume_printing": {
+            "support": 122,
+            "f1": 0.9838709677419355
+          },
+          "request_observation": {
+            "support": 176,
+            "f1": 0.75177304964539
+          }
+        },
+        "macro_f1": 0.9706271130430362,
+        "classes_with_support": 9
+      },
+      "latency": {
+        "frames": 736,
+        "unit": "ms",
+        "samples": 736,
+        "interpolation": "linear between closest ranks",
+        "p50": 1262.7136429946404,
+        "p95": 1330.7671309885336,
+        "throughput_per_s": 0.7852832212837066,
+        "requests": {
+          "sum": 0,
+          "rows": 736,
+          "of": 736,
+          "bound": "total",
+          "unavailable": []
+        },
+        "logical_tokens": {
+          "sum": 804806,
+          "rows": 736,
+          "of": 736,
+          "bound": "total",
+          "unavailable": []
+        },
+        "native_work": {
+          "sum": {
+            "adapter_switches": 0,
+            "failures": 0,
+            "prefix_evictions": 0,
+            "prefix_hits": 1472,
+            "prefix_misses": 0,
+            "prefix_tokens": 0,
+            "state_hits": 737,
+            "state_misses": 735,
+            "state_tokens": 104558,
+            "submissions": 8095,
+            "submitted_tokens": 699982,
+            "suffix_rows": 7360,
+            "suffix_tokens": 595424
+          },
+          "rows": 736,
+          "of": 736,
+          "bound": "total",
+          "unavailable": []
+        },
+        "questions": {
+          "rows": 7360,
+          "per_situation": 10.0,
+          "ms_per_question": 127.34259091456134,
+          "suffix_tokens_per_question": 80.9
+        },
+        "failed": 0,
+        "setup": {
+          "ms": 1938.40739200823,
+          "native_work": {
+            "prefix_hits": 1,
+            "prefix_misses": 1,
+            "state_hits": 1,
+            "state_misses": 1,
+            "state_tokens": 133,
+            "suffix_tokens": 809,
+            "suffix_rows": 10,
+            "failures": 0,
+            "prefix_tokens": 40,
+            "prefix_evictions": 0,
+            "adapter_switches": 0,
+            "submissions": 12,
+            "submitted_tokens": 982
+          },
+          "requests": 0,
+          "outcome": "predicted"
+        },
+        "boundary": "public call: bind, render, request, compose and JSON serialization; failed attempts included",
+        "order": "arms alternate per frame (even frames in declared order, odd frames reversed)",
+        "cache": "each arm owns one runtime and its warm caches; one warmup call per arm and condition, measured as setup outside the rows",
+        "scope": "workflow: one public call demands the decision plus every scored target on the same Call; direct: one typed ask per frame",
+        "concurrency": "serial calls, one frame at a time"
+      },
+      "unresolved_reference": {
+        "frames": 176,
+        "abstained_on_unresolved": 122
+      }
+    },
+    "targeted|workflow|structured": {
+      "units": {
+        "frames": 736,
+        "gold_complete_frames": 560,
+        "situations": 560,
+        "families": 164,
+        "targets": 15456,
+        "definitions": {
+          "frame": "one rendered condition/language evidence item",
+          "situation": "a frame under the declared trained condition with complete supervision (situation_frames)",
+          "family": "one connected assignment component",
+          "target": "one (frame, reference target) membership"
+        }
+      },
+      "exact_action_sets": {
+        "metric": "exact_sets",
+        "version": 5,
+        "situations": 736,
+        "gold_complete": 560,
+        "incomplete_reference": 176,
+        "prediction_complete": 560,
+        "failed": 0,
+        "exact": 560,
+        "exact_rate": 1.0,
+        "denominator": "gold-complete situations; failed, partial, unresolved or absent predictions count as not exact; incomplete-reference situations are reported, never scored"
+      },
+      "actions": {
+        "metric": "action_sets",
+        "version": 5,
+        "frames": 736,
+        "known_reference_support": 6184,
+        "precision": 0.9912854030501089,
+        "recall": 0.974304068522484,
+        "known_reference": {
+          "true_positive": 910,
+          "false_positive": 8,
+          "false_negative": 24,
+          "true_negative": 5242,
+          "positive_precision": 0.9912854030501089,
+          "positive_recall": 0.974304068522484,
+          "negative_precision": 0.9954424610710216
+        },
+        "reference_unresolved": 440,
+        "unassessed_selected": 0,
+        "prohibited_selected": 8,
+        "frames_with_prohibited": 8,
+        "required_omissions": 24,
+        "prediction_unresolved": 371,
+        "failed": 0,
+        "denominator": "known-reference memberships; selections of unresolved reference memberships are unassessed, not false positives"
+      },
+      "per_action": {
+        "per_class": {
+          "set_method_tt": {
+            "support": 66,
+            "f1": 1.0
+          },
+          "set_method_dt": {
+            "support": 50,
+            "f1": 1.0
+          },
+          "load_ribbon": {
+            "support": 48,
+            "f1": 1.0
+          },
+          "start_calibration": {
+            "support": 146,
+            "f1": 1.0
+          },
+          "verify_loading": {
+            "support": 256,
+            "f1": 1.0
+          },
+          "calibration_next": {
+            "support": 34,
+            "f1": 1.0
+          },
+          "cancel_calibration": {
+            "support": 36,
+            "f1": 1.0
+          },
+          "resume_printing": {
+            "support": 122,
+            "f1": 0.9682539682539683
+          },
+          "request_observation": {
+            "support": 176,
+            "f1": 0.926829268292683
+          }
+        },
+        "macro_f1": 0.9883425818385168,
+        "classes_with_support": 9
+      },
+      "latency": {
+        "frames": 736,
+        "unit": "ms",
+        "samples": 736,
+        "interpolation": "linear between closest ranks",
+        "p50": 1098.1617769866716,
+        "p95": 1159.7121255108505,
+        "throughput_per_s": 0.903014725208542,
+        "requests": {
+          "sum": 0,
+          "rows": 736,
+          "of": 736,
+          "bound": "total",
+          "unavailable": []
+        },
+        "logical_tokens": {
+          "sum": 804806,
+          "rows": 736,
+          "of": 736,
+          "bound": "total",
+          "unavailable": []
+        },
+        "native_work": {
+          "sum": {
+            "adapter_switches": 0,
+            "failures": 0,
+            "prefix_evictions": 0,
+            "prefix_hits": 1472,
+            "prefix_misses": 0,
+            "prefix_tokens": 0,
+            "state_hits": 737,
+            "state_misses": 735,
+            "state_tokens": 104558,
+            "submissions": 8095,
+            "submitted_tokens": 699982,
+            "suffix_rows": 7360,
+            "suffix_tokens": 595424
+          },
+          "rows": 736,
+          "of": 736,
+          "bound": "total",
+          "unavailable": []
+        },
+        "questions": {
+          "rows": 7360,
+          "per_situation": 10.0,
+          "ms_per_question": 110.74016536873862,
+          "suffix_tokens_per_question": 80.9
+        },
+        "failed": 0,
+        "setup": {
+          "ms": 1157.9732109967154,
+          "native_work": {
+            "prefix_hits": 1,
+            "prefix_misses": 1,
+            "state_hits": 1,
+            "state_misses": 1,
+            "state_tokens": 133,
+            "suffix_tokens": 809,
+            "suffix_rows": 10,
+            "failures": 0,
+            "prefix_tokens": 40,
+            "prefix_evictions": 0,
+            "adapter_switches": 0,
+            "submissions": 12,
+            "submitted_tokens": 982
+          },
+          "requests": 0,
+          "outcome": "predicted"
+        },
+        "boundary": "public call: bind, render, request, compose and JSON serialization; failed attempts included",
+        "order": "arms alternate per frame (even frames in declared order, odd frames reversed)",
+        "cache": "each arm owns one runtime and its warm caches; one warmup call per arm and condition, measured as setup outside the rows",
+        "scope": "workflow: one public call demands the decision plus every scored target on the same Call; direct: one typed ask per frame",
+        "concurrency": "serial calls, one frame at a time"
+      },
+      "unresolved_reference": {
+        "frames": 176,
+        "abstained_on_unresolved": 152
+      }
+    }
+  }
+}

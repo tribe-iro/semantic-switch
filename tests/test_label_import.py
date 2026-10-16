@@ -7,7 +7,7 @@ import pytest
 from semantic_switch import ConfigError, Runtime, files, tools
 from semantic_switch.artifacts import read_export
 from semantic_switch.compiler import digest
-from semantic_switch.examples import ROLES, Actor, LabelSource, Verification, each_target, label_record, reviewed_content, role_of
+from semantic_switch.evidence import ROLES, Actor, LabelSource, Verification, each_target, label_record, reviewed_content, role_of
 
 from semantic_testkit.scoring import FakeScorer
 from .test_classification import LABELS, saved
@@ -289,7 +289,7 @@ def test_training_eligibility_is_expressed_over_derivation_permission_and_restri
 
 
 def test_per_target_assessment_accepts_only_current_confirmations_for_the_addressed_content_and_criterion():
-    from semantic_switch.examples import Criteria, assess, target_assessments
+    from semantic_switch.evidence import Criteria, assess, target_assessments
     data, path = {'message': 'refund please'}, ('refund',)
     content = lambda value: reviewed_content('label', data, path, value)
     confirm = lambda value, criterion='meaning-1', outcome='confirm': Verification('label', 'claude-code', AGENT, 'procedure-recompute', criterion, content(value), outcome)

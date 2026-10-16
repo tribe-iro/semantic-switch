@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from semantic_switch import model_jobs
+
 import os
 
 import pytest
@@ -78,9 +80,9 @@ def test_model_lock_without_runtime_dir(tmp_path, monkeypatch):
     monkeypatch.delenv('SEMANTIC_MODEL_LOCK', raising=False)
     monkeypatch.delenv('XDG_RUNTIME_DIR', raising=False)
     monkeypatch.setattr('tempfile.tempdir', str(tmp_path))
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     directory = tmp_path / f'semantic-switch-{os.getuid()}'
-    assert api._model_lock() == directory / 'model-job.lock'
+    assert model_jobs._model_lock() == directory / 'model-job.lock'
     assert directory.stat().st_mode & 0o777 == 0o700
     with model_job() as job:
         assert job.available_bytes == 1 << 50
@@ -89,21 +91,21 @@ def test_model_lock_without_runtime_dir(tmp_path, monkeypatch):
 def meminfo(tmp_path, monkeypatch):
     path = tmp_path / 'meminfo'
     path.write_text('MemTotal:       33554432 kB\nMemAvailable:    8388608 kB\n')
-    monkeypatch.setattr(api, 'MEMINFO', path)
-    monkeypatch.setattr(api, 'CGROUP_ROOT', tmp_path / 'cgroup')
+    monkeypatch.setattr(model_jobs, 'MEMINFO', path)
+    monkeypatch.setattr(model_jobs, 'CGROUP_ROOT', tmp_path / 'cgroup')
 
 
 def test_admission_without_cgroup_v2(tmp_path, monkeypatch):
     meminfo(tmp_path, monkeypatch)
     cgroup = tmp_path / 'self-cgroup'
     cgroup.write_text('12:memory:/user.slice\n1:name=systemd:/user.slice\n')
-    monkeypatch.setattr(api, 'SELF_CGROUP', cgroup)
-    assert api.available_host_bytes() == 8 << 30
-    monkeypatch.setattr(api, 'SELF_CGROUP', tmp_path / 'absent')
-    assert api.available_host_bytes() == 8 << 30
+    monkeypatch.setattr(model_jobs, 'SELF_CGROUP', cgroup)
+    assert model_jobs.available_host_bytes() == 8 << 30
+    monkeypatch.setattr(model_jobs, 'SELF_CGROUP', tmp_path / 'absent')
+    assert model_jobs.available_host_bytes() == 8 << 30
 
 
 def test_admission_unsupported_platform(tmp_path, monkeypatch):
-    monkeypatch.setattr(api, 'MEMINFO', tmp_path / 'absent')
+    monkeypatch.setattr(model_jobs, 'MEMINFO', tmp_path / 'absent')
     with pytest.raises(ConfigError, match='memory admission is unsupported on this platform'):
-        api.available_host_bytes()
+        model_jobs.available_host_bytes()

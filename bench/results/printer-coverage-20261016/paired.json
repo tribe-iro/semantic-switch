@@ -1,0 +1,131 @@
+{
+ "scope": "Descriptive within-pack paired family bootstrap, conditional on these selected training cohorts; exposed development/regression evidence, not independent confirmation",
+ "comparisons": {
+  "random minus original": {
+   "primitive_accuracy": {
+    "method": "family percentile bootstrap",
+    "implementation": "family-pcg64-int64-v1",
+    "weighting": "row",
+    "scope": "within-pack family-resampling interval: each draw resamples whole canonical families with all their rows; it does not certify production precision or representative sampling of real customer or equipment populations",
+    "seed": 0,
+    "replicates": 2000,
+    "level": 0.95,
+    "families": 40,
+    "rows": 1500,
+    "estimate": 0.04533333333333334,
+    "interval": [
+     0.028258573178199638,
+     0.06266666666666666
+    ],
+    "valid_replicates": 2000,
+    "empty_replicates": 0,
+    "support": "reported",
+    "flags": []
+   },
+   "exact_actions": {
+    "method": "family percentile bootstrap",
+    "implementation": "family-pcg64-int64-v1",
+    "weighting": "row",
+    "scope": "within-pack family-resampling interval: each draw resamples whole canonical families with all their rows; it does not certify production precision or representative sampling of real customer or equipment populations",
+    "seed": 0,
+    "replicates": 2000,
+    "level": 0.95,
+    "families": 164,
+    "rows": 560,
+    "estimate": 0.33214285714285713,
+    "interval": [
+     0.2771279488037477,
+     0.38597298010913567
+    ],
+    "valid_replicates": 2000,
+    "empty_replicates": 0,
+    "support": "reported",
+    "flags": []
+   }
+  },
+  "targeted minus original": {
+   "primitive_accuracy": {
+    "method": "family percentile bootstrap",
+    "implementation": "family-pcg64-int64-v1",
+    "weighting": "row",
+    "scope": "within-pack family-resampling interval: each draw resamples whole canonical families with all their rows; it does not certify production precision or representative sampling of real customer or equipment populations",
+    "seed": 0,
+    "replicates": 2000,
+    "level": 0.95,
+    "families": 40,
+    "rows": 1500,
+    "estimate": 0.04933333333333333,
+    "interval": [
+     0.0319429347826087,
+     0.06733478260869565
+    ],
+    "valid_replicates": 2000,
+    "empty_replicates": 0,
+    "support": "reported",
+    "flags": []
+   },
+   "exact_actions": {
+    "method": "family percentile bootstrap",
+    "implementation": "family-pcg64-int64-v1",
+    "weighting": "row",
+    "scope": "within-pack family-resampling interval: each draw resamples whole canonical families with all their rows; it does not certify production precision or representative sampling of real customer or equipment populations",
+    "seed": 0,
+    "replicates": 2000,
+    "level": 0.95,
+    "families": 164,
+    "rows": 560,
+    "estimate": 0.3,
+    "interval": [
+     0.24634545199326222,
+     0.3510448157770429
+    ],
+    "valid_replicates": 2000,
+    "empty_replicates": 0,
+    "support": "reported",
+    "flags": []
+   }
+  },
+  "targeted minus random": {
+   "primitive_accuracy": {
+    "method": "family percentile bootstrap",
+    "implementation": "family-pcg64-int64-v1",
+    "weighting": "row",
+    "scope": "within-pack family-resampling interval: each draw resamples whole canonical families with all their rows; it does not certify production precision or representative sampling of real customer or equipment populations",
+    "seed": 0,
+    "replicates": 2000,
+    "level": 0.95,
+    "families": 40,
+    "rows": 1500,
+    "estimate": 0.004,
+    "interval": [
+     0.0013698630136986301,
+     0.006944444444444444
+    ],
+    "valid_replicates": 2000,
+    "empty_replicates": 0,
+    "support": "reported",
+    "flags": []
+   },
+   "exact_actions": {
+    "method": "family percentile bootstrap",
+    "implementation": "family-pcg64-int64-v1",
+    "weighting": "row",
+    "scope": "within-pack family-resampling interval: each draw resamples whole canonical families with all their rows; it does not certify production precision or representative sampling of real customer or equipment populations",
+    "seed": 0,
+    "replicates": 2000,
+    "level": 0.95,
+    "families": 164,
+    "rows": 560,
+    "estimate": -0.03214285714285714,
+    "interval": [
+     -0.06137263284565203,
+     -0.006825938566552901
+    ],
+    "valid_replicates": 2000,
+    "empty_replicates": 0,
+    "support": "reported",
+    "flags": []
+   }
+  }
+ }
+}

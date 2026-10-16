@@ -20,8 +20,9 @@ def answers(state, question, width):
     return [0.94] + [0.06 / (width - 1)] * (width - 1)
 
 
-def test_readme_inline_calls():
-    with ss.Runtime(FakeScorer(answers)) as rt:
+def test_readme_inline_api_with_scripted_scores():
+    scorer = FakeScorer(answers)
+    with ss.Runtime(scorer) as rt:
         r = rt.check(MESSAGE, "Is the customer threatening legal action against us?", excludes=["merely mentioning a lawyer"])
         assert (r.status, r.value) == ("ok", True)
         assert rt.pick(MESSAGE, "What should support do?", {"legal": "Escalate to the legal team", "billing": "Fix a billing problem",
@@ -31,9 +32,10 @@ def test_readme_inline_calls():
                                   "refund": ss.Check("Is the customer asking to get money back?")})
         assert shared["legal"].value is True and shared["refund"].value is False
         assert rt.check({"subject": "", "body": " "}, "Is the customer asking to get money back?", fields=["subject", "body"]).status == "needs_input"
+    assert scorer.requests and all(MESSAGE in state for state, question in scorer.requests)
 
 
-def test_readme_switch(tmp_path):
+def test_readme_switch_dispatch_with_scripted_scores(tmp_path):
     (tmp_path / "policies").mkdir()
     (tmp_path / "policies" / "refunds.md").write_text("Duplicate charges qualify for refunds.", encoding="utf-8")
     definition = tmp_path / "support_route.yaml"

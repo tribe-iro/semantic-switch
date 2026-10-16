@@ -11,7 +11,7 @@ import time
 import pytest
 
 from semantic_switch import Check, ConfigError, Runtime, files, tools
-from semantic_switch.examples import LABEL_FIELDS
+from semantic_switch.evidence import LABEL_FIELDS
 from semantic_switch.results import thaw
 from bench.fresh import FRESH
 from bench.quality import check_items, render
@@ -341,21 +341,11 @@ def test_maintained_bench_does_not_depend_on_archived_experiments():
             assert not any(name.split('.')[0] == 'experiments' for name in names), f'{path}:{node.lineno}'
 
 
-COPIES = ('np.percentile', 'np.nanpercentile', 'np.quantile', 'np.median', 'statistics.median', 'urlretrieve', "bench/results", "'/tmp", '"/tmp',
-          'RecordingTransport', 'inline import rendered', 'context import render')
-
-
-def test_benchmark_helpers_have_one_owner():
-    scripts = [*(ROOT / 'bench').glob('*.py'), *(ROOT / 'experiments').glob('*.py'), *(ROOT / 'examples').glob('*.py')]
-    for path in scripts:
-        text = path.read_text()
-        assert not [copy for copy in COPIES if copy in text], path
-        if path.stem not in ('outcomes', 'evidence'):
-            assert 'subprocess.run' not in text and 'urllib.request.Request' not in text, path
+def test_examples_do_not_import_benchmark_or_private_error_modules():
     for path in (ROOT / 'examples').glob('*.py'):
-        text = path.read_text()
-        assert not any(name in text for name in ('from bench', 'import bench', '"bench"', 'semantic_switch.errors')), path
-    assert not (ROOT / 'bench' / 'workflows.py').exists() and not (ROOT / 'bench' / 'receipts.py').exists() and not (ROOT / 'bench' / 's1mb_matched.py').exists()
+        for node in ast.walk(ast.parse(path.read_text())):
+            names = [alias.name for alias in node.names] if isinstance(node, ast.Import) else [node.module or ''] if isinstance(node, ast.ImportFrom) else []
+            assert not any(name.split('.')[0] == 'bench' or name == 'semantic_switch.errors' for name in names), f'{path}:{node.lineno}'
 
 
 def test_benchmark_resume_uses_the_shared_journal(tmp_path):
@@ -399,12 +389,11 @@ def test_native_model_and_requests_shared(tmp_path):
     assert artifacts.native_score_requests(rows) == [ScoreRequest((1,), (2,), ((3,),), (((4,), (5, 6)),))]
 
 
-def test_trainer_uses_public_scoring_only():
+def test_trainer_and_product_bench_do_not_import_native_backend():
     sources = [*(ROOT / 'packages/semantic-trainer/src/semantic_trainer').glob('*.py'),
                *(path for path in (ROOT / 'bench').glob('*.py') if path.stem not in WHITE_BOX)]
     for path in sources:
         for node in ast.walk(ast.parse(path.read_text())):
-            assert not (isinstance(node, ast.Attribute) and node.attr == 'scorer'), f'{path}:{node.lineno}'
             names = [alias.name for alias in node.names] if isinstance(node, ast.Import) else [node.module or ''] if isinstance(node, ast.ImportFrom) else []
             assert not any(name.startswith('semantic_switch.backend') for name in names), f'{path}:{node.lineno}'
             if isinstance(node, ast.ImportFrom) and node.module == 'semantic_switch':

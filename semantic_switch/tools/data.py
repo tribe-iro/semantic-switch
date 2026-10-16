@@ -11,7 +11,7 @@ from ..selection import occurrences
 from ..compiler import digest
 from ..context import canonical, render
 from ..errors import ConfigError
-from ..examples import Frame, derivation_summary, history_of, merge_sources, sources_at, targets, validate_role, validate_tags
+from ..evidence import Frame, derivation_summary, history_of, merge_sources, sources_at, targets, validate_role, validate_tags
 from ..switch import Switch
 from .common import input_key, test_items
 
@@ -86,7 +86,7 @@ class Labels:
         self.warnings = tuple(self.warnings)
         from .dataset import restore, materialize
         restore(self.families, previous)
-        from ..examples import collect
+        from ..evidence import collect
         current_examples, _ = collect(plan, files.read_jsonl(sw.paths.examples))
         records = [(Frame.projected(plan, e.input), e.fact, e.value, group, True, e.selections, e.sources, (), None) for exs in current_examples.values() for e in exs
                    for group in (e.groups or (None,))

@@ -7,7 +7,7 @@ import yaml
 
 from semantic_switch import Actor, ConfigError, Runtime, tools
 from semantic_switch.context import canonical, project
-from semantic_switch.examples import derive_fact_labels
+from semantic_switch.evidence import derive_fact_labels
 
 from semantic_testkit.scoring import FakeScorer
 

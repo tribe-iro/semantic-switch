@@ -18,9 +18,8 @@ import yaml
 
 from semantic_switch import Actor, ConfigError, files
 from semantic_switch.compiler import compile_spec, digest
-from semantic_switch import examples
 from semantic_switch.families import FamilyIndex
-from semantic_switch.examples import LABEL_SCHEMA, role_of, LabelSource, label_record, reviewed_content, situation_record
+from semantic_switch.evidence import LABEL_SCHEMA, role_of, LabelSource, Verification, label_record, reviewed_content, situation_record
 
 SCHEMA = 2
 REVIEW_SCHEMA = 5
@@ -701,7 +700,7 @@ def sources_for(gold: Gold, data, frame: Frame, producer: str, producer_digest: 
         if decision.value is None:
             continue
         path = tuple(target.split("/"))
-        checked = tuple(examples.Verification(r.kind, r.reviewer, r.actor,
+        checked = tuple(Verification(r.kind, r.reviewer, r.actor,
                                               "source-check" if r.kind == "evidence" else "review", r.binding,
                                               reviewed_content(r.kind, data, path, decision.value), r.decision)
                         for r in confirmed if holds(r, bindings or {}, path))

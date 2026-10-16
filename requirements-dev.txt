@@ -1,0 +1,5 @@
+-e .[local,hosted,dev]
+-e packages/semantic-testkit
+-e packages/semantic-learn
+-e packages/semantic-trainer[lexical,lora]
+sentencepiece>=0.2

@@ -15,7 +15,7 @@ MESSAGES = {'please refund the double charge': 'Billing', 'the app crashes with 
 
 
 def load():
-    spec = importlib.util.spec_from_file_location('routing_acquire', HERE / 'acquire.py')
+    spec = importlib.util.spec_from_file_location('routing_acquire', HERE.parents[1] / 'experiments' / 'routing' / 'acquire.py')
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module

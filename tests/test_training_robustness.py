@@ -1,3 +1,5 @@
+
+from semantic_switch import model_jobs
 from types import SimpleNamespace
 
 import pytest
@@ -105,7 +107,7 @@ def test_prose_guards_preserve_structured_action_states(tmp_path, monkeypatch):
     from bench import procedures
     from tests.test_printer_retirement import decisions
     from semantic_switch import api
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     planned = procedures.scenarios(92, 1, 2)
     structured = procedures.frames(planned, conditions=('structured',))
     prose = procedures.frames(planned, conditions=('prose',))
@@ -195,7 +197,7 @@ def test_prose_guards_keep_unknown_and_conflicting_context_unresolved(tmp_path, 
     from bench import procedures as p
     from semantic_switch import api
     from tests.test_printer_retirement import decisions
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     structured, prose = [], []
     for methods in ((p.TT,), (p.DT,), (), (p.TT, p.DT)):
         for prompts in (('ready',), ('paused',), ('calibration_1',), ('calibration_2',), (), ('ready', 'calibration_1')):

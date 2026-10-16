@@ -7,7 +7,7 @@ from pathlib import Path
 from ..artifacts import ExportEncoder
 from ..compiler import digest
 from ..context import bind_input
-from ..examples import path_record, read_envelopes
+from ..evidence import path_record, read_envelopes
 from ..errors import ConfigError
 from ..protocols import MAX_QUESTION_TOKENS
 from ..kernel import F

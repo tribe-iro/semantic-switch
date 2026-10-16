@@ -229,7 +229,7 @@ def native_score_requests(rows):
     return [ScoreRequest(p.prefix, p.input, (p.question,), (p.answers.slots,)) for row in rows for p in row['presentations']]
 
 def native_model(resolved, source=None, provenance=None, lora=None):
-    from .api import native_spec
+    from .models import native_spec
     return native_spec(source or resolved['model']['gguf'], dict(resolved['native']), provenance, lora)
 
 
@@ -282,7 +282,7 @@ class Receipt:
         return self.directory / self.data['task']
 
     def model(self, **settings):
-        from .api import native_spec
+        from .models import native_spec
         return native_spec(self.gguf, {**self.native, **settings}, self.provenance, self.lora)
 
 
@@ -537,7 +537,7 @@ def _presentations(found, target, label, segments, answers):
 
 
 def _observations(stream, manifest, tables, fitting):
-    from .examples import history_of
+    from .evidence import history_of
     targets, (inputs, families, segments, answers) = manifest['targets'], tables
     native, rows, digests = manifest['native'], {}, []
     for row in _lines(stream):

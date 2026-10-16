@@ -253,7 +253,7 @@ def test_label_confirmations_support_only_their_targets_and_never_complete_frame
     records = {(r["frame"], r["scope"]) for r in partial_data["reviews"]}
     assert records == {(labelled, "label tt_media"), (labelled, "label ribbon_loaded")} and all(r["current"] for r in partial_data["reviews"])
     from semantic_switch.compiler import compile_spec
-    from semantic_switch.examples import assessments
+    from semantic_switch.evidence import assessments
     plan = compile_spec(files.read_yaml(procedures.DEFINITION), procedures.DEFINITION.name, procedures.DEFINITION.parent)
     record = lambda rows: next(r for r in rows["labels"] if r["label_sources"]["tt_media"][0]["address"][0] == labelled)
     other = next(name for name in current if name not in ("tt_media", "ribbon_loaded"))

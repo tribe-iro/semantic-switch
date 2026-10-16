@@ -31,7 +31,7 @@ class Baseline:
         self.path, self.selected, self.outcomes, self.failures = path, [], {}, {}
 
     def pytest_collection_finish(self, session):
-        self.selected = [{"id": item.nodeid, "kind": "native_or_hosted_experiment" if item.get_closest_marker("slow") else "fake_behavior"}
+        self.selected = [{"id": item.nodeid, "slow": bool(item.get_closest_marker("slow"))}
                          for item in session.items]
 
     def pytest_runtest_logreport(self, report):
@@ -53,7 +53,7 @@ class Baseline:
             except metadata.PackageNotFoundError:
                 return None
         counts = {state: sum(value == state for value in self.outcomes.values()) for state in ("passed", "failed", "skipped")}
-        files.publish(self.path, {"schema": 1, "command": sys.argv, "code": fingerprint(), "exit_status": int(exitstatus),
+        files.publish(self.path, {"schema": 2, "command": sys.argv, "code": fingerprint(), "exit_status": int(exitstatus),
                                   "environment": {"python": platform.python_version(), "platform": platform.platform(),
                                                   "dependencies": {name: version(name) for name in DEPENDENCIES}},
                                   "selected": self.selected, **counts, "failures": self.failures,

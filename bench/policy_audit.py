@@ -12,7 +12,7 @@ from bench.outcomes import failure, latency, measure, output_argument, report, r
 from bench.outcomes import Progress
 from semantic_switch.context import ContextError
 from semantic_switch.families import FamilyIndex
-from semantic_switch.examples import derivation_summary, label_record, metadata_values, target_histories
+from semantic_switch.evidence import derivation_summary, label_record, metadata_values, target_histories
 from semantic_switch.results import thaw
 from semantic_switch.selection import occurrences
 from semantic_switch.tools.common import test_items, input_key, taught, uses

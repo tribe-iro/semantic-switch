@@ -1,5 +1,5 @@
 # Python environments, bytecode and tool caches
-.venv/
+.venv*/
 venv/
 __pycache__/
 *.py[cod]
@@ -27,7 +27,12 @@ coverage.xml
 # Downloaded models and generated benchmark feature caches
 *.gguf
 *.safetensors
-/bench/results/*.npz
+*.pt
+*.pth
+*.key
+*.pem
+*.npz
+!/bench/results/payloads/*.npz
 
 # Runtime logs, editor leftovers and OS metadata
 *.log
@@ -43,6 +48,12 @@ Thumbs.db
 # Training exports and their manifests
 *.export.jsonl
 *.export.jsonl.manifest.json
+*.export.*.jsonl
+*.export.*.json
+!/bench/data/exports/*.export.*.jsonl
+!/bench/data/exports/*.export.*.json
+!/archives/routing-20261010/data/sets/exports/*.jsonl
+!/archives/routing-20261010/data/sets/exports/*.json
 
 # Stable advisory lock sidecars
 *.write-lock
@@ -52,10 +63,10 @@ Thumbs.db
 # Resumable benchmark checkpoints
 *.checkpoint.jsonl
 *.checkpoint.jsonl.*
-# Preserve the printer benchmark's generated evidence and review history.
-/packs/*
-!/packs/zt411/
+# Published corpora under packs/ are reusable source data, not scratch.
 work/
 
 # Fetched proprietary source documents and their extracted excerpts
 bench/data/*/sources/
+
+.claude/

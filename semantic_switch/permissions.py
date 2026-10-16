@@ -70,7 +70,7 @@ class TrainingUse:
 
 
 def admit(addressed) -> int:
-    from .examples import LabelSource
+    from .evidence import LabelSource
     count = 0
     for where, history in addressed:
         for source in map(LabelSource.parse, history):

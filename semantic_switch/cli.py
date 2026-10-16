@@ -14,7 +14,7 @@ from . import judgment, tools
 from .api import DEFAULT_JUDGE, PRECISE_JUDGE, Runtime, judge
 from .drivers import REGISTRY, pairs
 from .errors import ConfigError
-from .examples import Actor
+from .evidence import Actor
 from .inline import Check, Pick, Rate, Select
 
 EXIT = {"ok": 0, "none": 0, "uncertain": 2, "needs_input": 2, "failed": 3}

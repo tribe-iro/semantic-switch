@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from semantic_switch.examples import LabelSource, each_target, label_record
+from semantic_switch.evidence import LabelSource, each_target, label_record
 from semantic_switch import Model, DEFAULT_JUDGE, files, tools
 from bench.external_audit import fetched, load
 from semantic_switch.metrics import Progress

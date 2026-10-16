@@ -5,7 +5,7 @@ import json
 import pytest
 
 from semantic_switch import ConfigError, Runtime, api, files, tools
-from semantic_switch.examples import Actor, Criteria, LabelSource, Verification, assess, reviewed_content
+from semantic_switch.evidence import Actor, Criteria, LabelSource, Verification, assess, reviewed_content
 from semantic_switch.metrics import scored_answer, semantic_answer
 from semantic_switch.results import Prediction
 from semantic_switch.tools import deployment

@@ -1,0 +1,54 @@
+{
+ "corpus_sha256": "66d3ae00a9ac53d9feda9afdc7f6bf5f8ebc17db9faec51b5f23a2d970e704e1",
+ "source_job": "/home/tribeiro/Projects/semantic-select/work/zt411-t7/specializations/66d3ae00a9ac53d9/finalize/c529d6723d394035-33c99a90/job.yaml",
+ "original_fit_id": "0fde84ad8f2a8c26aedf3b6e47666363244f5145a85f1b605eba40f774e613ea",
+ "criterion": "6dcf4e76f6ce5503061b667bb6ea8cf50e1536d6dcd9eed41bfb951e8f369cf8",
+ "recipe": {
+  "epochs": 4,
+  "evaluation_batch_size": 1,
+  "min_epochs": 4,
+  "seed": 0,
+  "selection_unit": "complete_situation",
+  "eval_every_examples": 1200
+ },
+ "arms": {
+  "random": {
+   "pack": "/home/tribeiro/Projects/semantic-select/work/coverage-experiment-20261015/random",
+   "sha256": "ad5cdd2470748d867707a736c8f12444e5bf419371ee7323548f24babc05cb20",
+   "families": 16,
+   "family_size_histogram": {
+    "6": 16
+   },
+   "fit_situations": 96,
+   "labels": 96,
+   "coverage": {
+    "readiness_detection": 4,
+    "readiness_after_calibration": 6,
+    "mismatch_during_calibration": 4,
+    "missing_ribbon": 2
+   },
+   "overlap_between_arms": 0
+  },
+  "targeted": {
+   "pack": "/home/tribeiro/Projects/semantic-select/work/coverage-experiment-20261015/targeted",
+   "sha256": "27f852000976749fce52f3d70bb2caddfb47762fb14e00f4516bc0937d79d7cf",
+   "families": 16,
+   "family_size_histogram": {
+    "6": 16
+   },
+   "fit_situations": 96,
+   "labels": 96,
+   "coverage": {
+    "readiness_detection": 4,
+    "readiness_after_calibration": 4,
+    "mismatch_during_calibration": 4,
+    "missing_ribbon": 4
+   },
+   "overlap_between_arms": 0
+  }
+ },
+ "evaluation": "unchanged T7 model_select IDs; original exposed check for operational regression only",
+ "comparison": "Random and targeted add 96 situations/16 size-matched families to the same original fit. Original historical T7 has fewer updates; random versus targeted is the matched intervention.",
+ "paid_calls": false,
+ "promotion": false
+}

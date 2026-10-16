@@ -11,7 +11,7 @@ import unicodedata
 from semantic_switch import ConfigError, Model, Runtime, files, judge
 from semantic_switch.artifacts import read_export
 from semantic_switch.compiler import compile_spec
-from semantic_switch.examples import LABEL_SCHEMA
+from semantic_switch.evidence import LABEL_SCHEMA
 from semantic_switch.metrics import comparison_identity, paired, per_class as reduce_classes
 from bench.outcomes import Progress
 from semantic_switch.tools import score_observations

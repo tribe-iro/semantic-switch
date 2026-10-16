@@ -4,7 +4,7 @@ import pytest
 from semantic_switch import Runtime, files
 from semantic_switch.compiler import compile_spec, digest
 from semantic_switch.context import json_value
-from semantic_switch.examples import Claim, Frame, LabelSource
+from semantic_switch.evidence import Claim, Frame, LabelSource
 from semantic_switch.judge import Request
 from semantic_switch.results import freeze
 from semantic_testkit.scoring import FakeScorer

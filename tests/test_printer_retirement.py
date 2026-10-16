@@ -1,3 +1,5 @@
+
+from semantic_switch import model_jobs
 from pathlib import Path
 
 import pytest
@@ -37,7 +39,7 @@ def decisions(path, frames, golds):
 
 
 def test_retired_printer_complements_preserve_every_action_state_over_the_reference(tmp_path, monkeypatch):
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     frames = [frame for frame in procedures.frames(procedures.scenarios(0, 1, 2)) if frame.condition == procedures.TRAINED]
     golds = {frame.id: procedures.reference(frame) for frame in frames}
     for gold in golds.values():
@@ -72,7 +74,7 @@ def complement(folded):
 
 @pytest.mark.parametrize('truth', [True, False, 'unstated', None])
 def test_card_exclusion_is_the_kleene_complement_of_an_independently_judged_negation(tmp_path, monkeypatch, truth):
-    monkeypatch.setattr(api, 'available_host_bytes', lambda: 1 << 50)
+    monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
     negated = {True: False, False: True}.get(truth, truth)
     states = []
     for folded in (False, True):
@@ -94,7 +96,7 @@ def test_card_exclusion_is_the_kleene_complement_of_an_independently_judged_nega
 def test_retired_names_load_historical_labels_without_accepting_unknown_facts(tmp_path):
     spec = {**complement(True), 'retired': ['absent']}
     plan = compile_spec(spec)
-    from semantic_switch.examples import decode
+    from semantic_switch.evidence import decode
     record = {'schema': 3, 'input': {'message': 'x'}, 'facts': {'loaded': True, 'absent': False}, 'revs': {}, 'label_sources': {}}
     with pytest.raises(ConfigError):
         decode(plan, {**record, 'facts': {'loaded': True, 'typo': False}}, labelled=True)

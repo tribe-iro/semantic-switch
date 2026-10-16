@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ..api import Model
+from ..models import Model
 from . import CONTRACT, DriverSpec
 
 

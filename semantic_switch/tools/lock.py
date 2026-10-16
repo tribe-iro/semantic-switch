@@ -37,7 +37,7 @@ def judged(sw: Switch, snap: Snapshot, f: int, examples: list[Example], reuse: R
 def audit_population(sw, snap, labels):
     from ..compiler import digest
     from ..context import ContextError, bind_input
-    from ..examples import Frame
+    from ..evidence import Frame
     from .evaluate import embedded_failures
     plan, units, held = snap.plan, {}, {}
     def unit(data):
@@ -115,7 +115,7 @@ def audit_population(sw, snap, labels):
 
 
 def specialization(rt, role='judge'):
-    from ..api import Model
+    from ..models import Model
     model = rt.models.get(role)
     if not isinstance(model, Model):
         return None, ()

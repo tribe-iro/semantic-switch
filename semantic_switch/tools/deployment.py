@@ -12,7 +12,7 @@ from ..artifacts import RECEIPT_NAME, Receipt, artifact_digest, bundle_task, fam
 from ..compiler import compile_spec, digest
 from ..context import bind_input, canonical, project
 from ..errors import ConfigError
-from ..examples import ASSESSMENT, assessments, collect, label_provenance, labelled, partial, read_envelopes, record_path
+from ..evidence import ASSESSMENT, assessments, collect, label_provenance, labelled, partial, read_envelopes, record_path
 from ..metrics import METRICS, recall_counts, recall_floor
 from ..results import freeze, thaw
 from ..snapshot import LOCK_SCHEMA, lock_id

@@ -1,0 +1,10 @@
+prune tests
+prune bench
+prune experiments
+prune specialists
+prune packs
+prune archives
+prune work
+prune packages
+exclude TODO.md
+exclude requirements-dev.txt

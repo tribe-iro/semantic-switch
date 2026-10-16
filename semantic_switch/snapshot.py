@@ -8,7 +8,7 @@ import math
 from .compiler import FactPlan, Plan, compile_spec, digest
 from .results import freeze, thaw
 from .errors import ConfigError
-from .examples import DATASET_SCHEMA, Example, collect, make_example, overrides_of, reduced
+from .evidence import DATASET_SCHEMA, Example, collect, make_example, overrides_of, reduced
 from .families import valid_seeds
 from .heads import LexicalHead
 from .judgment import CERTAIN, OFF, Policy

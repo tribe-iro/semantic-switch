@@ -1,0 +1,333 @@
+guidance: {}
+name: zt411_snapshot
+fields:
+  asset:
+    type: text
+    required: true
+    max_chars: null
+    truncate: end
+    values: null
+    author: null
+    source: null
+  model:
+    type: enum
+    required: true
+    max_chars: null
+    truncate: end
+    values:
+    - ZT411
+    - ZT421
+    author: null
+    source: null
+  print_method:
+    type: enum
+    required: false
+    max_chars: null
+    truncate: end
+    values:
+    - thermal_transfer
+    - direct_thermal
+    author: null
+    source: null
+  prompt:
+    type: enum
+    required: false
+    max_chars: null
+    truncate: end
+    values:
+    - ready
+    - paused
+    - calibration_1
+    - calibration_2
+    author: null
+    source: null
+  enabled:
+    type: json
+    required: false
+    max_chars: null
+    truncate: end
+    values: null
+    author: null
+    source: controller
+  alerts:
+    type: json
+    required: false
+    max_chars: null
+    truncate: end
+    values: null
+    author: null
+    source: controller
+  verified:
+    type: json
+    required: false
+    max_chars: null
+    truncate: end
+    values: null
+    author: null
+    source: controller
+  attempted:
+    type: json
+    required: false
+    max_chars: null
+    truncate: end
+    values: null
+    author: null
+    source: controller
+  notes:
+    type: text
+    required: false
+    max_chars: null
+    truncate: end
+    values: null
+    author: operator
+    source: null
+reads:
+- asset
+- model
+- print_method
+- prompt
+- enabled
+- alerts
+- verified
+- attempted
+- notes
+facts:
+  tt_media:
+    guidance: null
+    check: Current evidence about this printer establishes that thermal-transfer media
+      is loaded. Unstated when no current evidence identifies the media; false when
+      it establishes other media.
+    excludes: []
+    unstated: true
+    min_score: null
+    reads: null
+    target: 0.95
+    examples: []
+  ribbon_loaded:
+    guidance: null
+    check: Current evidence about this printer establishes that a ribbon is loaded.
+      Unstated when no current evidence states the ribbon; false when it establishes
+      absence.
+    excludes: []
+    unstated: true
+    min_score: null
+    reads: null
+    target: 0.95
+    examples: []
+  detection_symptom:
+    guidance: null
+    check: Current evidence reports a media or ribbon detection problem on this printer,
+      such as skipped labels or an out alert while the media or ribbon is loaded.
+      Without such a current report it is false.
+    excludes: []
+    unstated: false
+    min_score: null
+    reads: null
+    target: 0.95
+    examples: []
+  verification_due:
+    guidance: null
+    check: Inspecting this printer's media and ribbon loading is due because a pressed
+      ribbon-load command or a reported calibration step or completion is not verified,
+      or because a current detection symptom is reported while the printer is ready
+      or paused with configuration consistent with its media and ribbon.
+    excludes: []
+    unstated: false
+    min_score: null
+    reads: null
+    target: 0.95
+    examples: []
+  step_verified:
+    guidance: null
+    check: Current evidence verifies that the step requested by this printer's current
+      calibration prompt was completed; a report or command alone is not verification.
+    excludes: []
+    unstated: false
+    min_score: null
+    reads: null
+    target: 0.95
+    examples: []
+  unverified_step:
+    guidance: null
+    check: A ribbon-load command on this printer was pressed but the ribbon is not
+      verified as loaded, or a calibration step or calibration completion was reported
+      but not verified.
+    excludes: []
+    unstated: false
+    min_score: null
+    reads: null
+    target: 0.95
+    examples: []
+  calibration_verified:
+    guidance: null
+    check: Current evidence verifies that this printer's manual sensor calibration
+      completed. False when a calibration was started, is running, was cancelled or
+      was reported complete without verification; unstated when there is no evidence
+      about calibration.
+    excludes: []
+    unstated: true
+    min_score: null
+    reads: null
+    target: 0.95
+    examples: []
+  method_inconsistent:
+    guidance: null
+    check: The configured print method is inconsistent with the media established
+      for this printer. Unstated when the method or media is not established.
+    excludes: []
+    unstated: true
+    min_score: null
+    reads: null
+    target: 0.95
+    examples: []
+  ready_to_print:
+    guidance: null
+    check: This printer is not running a calibration sequence, its configuration is
+      consistent with its loaded media and ribbon, and any detection symptom has been
+      resolved by a verified calibration. When every possible value of a missing or
+      contradictory observation gives the same answer, that answer holds; otherwise
+      it is unstated if an observation is missing.
+    excludes: []
+    unstated: true
+    min_score: null
+    reads: null
+    target: 0.95
+    examples: []
+  needs_observation:
+    guidance: null
+    check: A decision about this printer depends on a missing, stale or contradictory
+      observation.
+    excludes: []
+    unstated: false
+    min_score: null
+    reads: null
+    target: 0.95
+    examples: []
+  actions:
+    guidance: null
+    select: Which menu actions are justified for this printer now under the procedure
+      document?
+    catalog: null
+    cards:
+    - id: set_method_tt
+      title: Set print method to thermal transfer
+      requires: print_method == "direct_thermal" and prompt in ["ready", "paused"]
+      aliases: []
+      applies_when:
+      - fact: tt_media
+      excludes: []
+      supersedes: []
+      source: {}
+      payload: null
+      guidance: null
+    - id: set_method_dt
+      title: Set print method to direct thermal
+      requires: print_method == "thermal_transfer" and prompt in ["ready", "paused"]
+      aliases: []
+      applies_when: []
+      excludes:
+      - fact: tt_media
+      supersedes: []
+      source:
+        media_universe:
+        - thermal_transfer
+        - direct_thermal
+      payload: null
+      guidance: null
+    - id: load_ribbon
+      title: Load a ribbon
+      requires: print_method == "thermal_transfer" and prompt in ["ready", "paused"]
+      aliases: []
+      applies_when:
+      - fact: tt_media
+      excludes:
+      - fact: ribbon_loaded
+      supersedes: []
+      source:
+        media_universe:
+        - thermal_transfer
+        - direct_thermal
+      payload: null
+      guidance: null
+    - id: start_calibration
+      title: Start manual sensor calibration
+      requires: prompt in ["ready", "paused"]
+      aliases: []
+      applies_when:
+      - fact: detection_symptom
+      - fact: ribbon_loaded
+      excludes: []
+      supersedes: []
+      source: {}
+      payload: null
+      guidance: null
+    - id: verify_loading
+      title: Inspect and verify media and ribbon loading
+      requires: null
+      aliases: []
+      applies_when:
+      - fact: verification_due
+      excludes: []
+      supersedes: []
+      source: {}
+      payload: null
+      guidance: null
+    - id: calibration_next
+      title: Confirm the calibration prompt and continue
+      requires: prompt in ["calibration_1", "calibration_2"]
+      aliases: []
+      applies_when:
+      - fact: step_verified
+      excludes: []
+      supersedes: []
+      source: {}
+      payload: null
+      guidance: null
+    - id: cancel_calibration
+      title: Cancel calibration
+      requires: prompt in ["calibration_1", "calibration_2"]
+      aliases: []
+      applies_when:
+      - fact: method_inconsistent
+      excludes: []
+      supersedes: []
+      source: {}
+      payload: null
+      guidance: null
+    - id: resume_printing
+      title: Return to printing
+      requires: prompt == "paused"
+      aliases: []
+      applies_when:
+      - fact: ready_to_print
+      - fact: ribbon_loaded
+      excludes: []
+      supersedes: []
+      source: {}
+      payload: null
+      guidance: null
+    - id: request_observation
+      title: Ask the operator for the missing or conflicting observation
+      requires: null
+      aliases: []
+      applies_when:
+      - fact: needs_observation
+      excludes: []
+      supersedes: []
+      source: {}
+      payload: null
+      guidance: null
+    max_claims: 9
+    exclusive: false
+    reads: null
+rules:
+- id: act
+  when: not actions is empty
+  then: act
+otherwise: wait
+resolve: first
+exact_override: true
+tests: []
+retired:
+- dt_media
+- ribbon_absent

@@ -6,7 +6,7 @@ from pathlib import Path
 import random
 
 from semantic_switch import ConfigError
-from semantic_switch.training import artifact_digest, files
+from semantic_switch.training import artifact_digest, files, read_learning
 
 from .capture import captured
 from .common import BUDGET, Families, addresses, predictions, task_of
@@ -77,6 +77,41 @@ class Population:
     def unresolved(self, record):
         self.unit(record['input'])['outcomes']['/'.join(record['address'])] = record['outcome']
 
+    def learning(self, path):
+        path = Path(path)
+        report = read_learning(path)
+        evidence = report['files']['predictions']
+        for row in files.iter_records(path.parent / evidence['file']):
+            if row['candidate'] != report['selected']:
+                continue
+            address = '/'.join([row['fact'], *([row['member']] if 'member' in row else [])])
+            if row.get('meaning_rev') != self.meanings.get(address):
+                self.stale += 1
+                continue
+            common = {'groups': row.get('groups', [row['family']]), 'pairs': row.get('pairs', []),
+                      'tags': row.get('tags', []), 'role': row.get('role'),
+                      'selections': [{'selected_by': 'manual', 'selection_id': f"learning:{report['id']}"}]}
+            target = self.task.targets()[address]
+            if row.get('label_sources') and row.get('gold_class') in target['answers']:
+                name, _, member = address.partition('/')
+                reference = target['answers'][row['gold_class']]
+                facts = {name: {member: reference} if member else reference}
+                sources = {name: {member: row['label_sources']} if member else row['label_sources']}
+                envelope = self.task.label(row['input'], facts, sources=sources, **common)
+            else:
+                envelope = self.task.situation(row['input'], **common)
+            envelope.pop('created', None)
+            unit = self.unit(row['input'])
+            self.merge(unit, envelope)
+            event = f"learning:{report['id']}:{unit['key']}"
+            if event not in self.events:
+                self.events[event] = {'unit': (unit, len(unit['student']))}
+                unit['student'].append({})
+            if row.get('answer') in target['answers']:
+                unit['student'][self.events[event]['unit'][1]][address] = target['answers'][row['answer']]
+            if row.get('outcome') == 'uncertain':
+                unit['outcomes'][address] = 'uncertain'
+
     def link(self):
         for found in self.events.values():
             if 'unit' in found:
@@ -104,7 +139,7 @@ def support(units, index) -> dict:
             'teacher_labelled': sum(bool(teacher(unit)) for unit in units), 'conflicted': sum(bool(unit['unresolved']) for unit in units)}
 
 
-def review_export(definition, to, *, size, audit, captures=(), collected=(), strata=(), seed=0, budget=BUDGET) -> dict:
+def review_export(definition, to, *, size, audit, captures=(), collected=(), strata=(), seed=0, budget=BUDGET, learning=()) -> dict:
     to = Path(to)
     if not to.name.endswith('.review.json'):
         raise ConfigError(f'{to}: review exports are named NAME.review.json')
@@ -126,6 +161,8 @@ def review_export(definition, to, *, size, audit, captures=(), collected=(), str
             population.label(record)
         for record in files.iter_records(payloads['unresolved.jsonl']):
             population.unresolved(record)
+    for path in learning:
+        population.learning(path)
     population.settle()
     population.link()
     eligible = [unit for unit in population.units.values() if unit['envelope'] is not None]
@@ -180,6 +217,7 @@ def review_export(definition, to, *, size, audit, captures=(), collected=(), str
     reviewed = to.with_name(to.name.removesuffix('.review.json') + '.reviewed.jsonl')
     manifest = {'schema': SCHEMA, 'kind': 'review-export', 'id': run, 'definition': str(Path(definition).resolve()), 'seed': seed, 'budget': size,
                 'identity': {'situations': population.scope, 'families': index.scope},
+                'learning': {str(Path(path).resolve()): read_learning(path)['id'] for path in learning},
                 'population': support(units, index), 'stale': population.stale,
                 'conflicts': sorted({address for unit in units for address in unit['unresolved']}),
                 'audit': {**support(drawn, index), 'inclusion_probability': len(drawn) / len(units) if drawn else None},

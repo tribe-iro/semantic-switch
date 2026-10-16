@@ -40,7 +40,10 @@ def test_cohort_maps_authored_gold_and_freezes_one_family_assignment(cohort):
     assert expected[('duplicate', 'false')]['raw_value'] is False
     assert expected[('routing_v1', '"clarify"')] == {'value': 'clarify', 'raw_value': 'clarify', 'status': 'ok'}
     assert all(set(case['evidence']) == {'message', *({'reference'} & set(case['input']))} for case in cases)
+    labels = tmp_path / 'cohort/cohort.test.jsonl'
+    original = labels.read_bytes()
     assert materialize_cohort(runtime, tmp_path / 'cohort')[0] == assignment
+    assert labels.read_bytes() == original
     data = json.loads(SMALL_CONTEXT.read_text())
     data['situations'][0]['variants'][0]['gold'] = 'technical'
     files.publish(tmp_path / 'changed.json', data)

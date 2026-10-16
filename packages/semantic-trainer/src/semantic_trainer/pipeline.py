@@ -23,8 +23,8 @@ from . import __version__, assets
 REVISION, JOURNAL = 3, 'pipeline.journal.jsonl'
 BUNDLE, LABELS, MANIFEST = 'task', 'labels.jsonl', 'frozen-inputs.json'
 SOURCES = {'definition': 'task definition', 'description': 'task meaning or guidance', 'corrections': 'corrections', 'labels': 'labels'}
-STAGES = ('freeze', 'assets', 'export', 'population', 'profile', 'cadence', 'finalize', 'fit', 'select', 'lock')
-NEEDS = {'freeze': (), 'assets': (), 'export': ('freeze', 'assets'), 'population': ('freeze', 'assets', 'export'), 'profile': ('population',),
+STAGES = ('freeze', 'assets', 'export', 'population', 'baseline', 'profile', 'cadence', 'finalize', 'fit', 'select', 'lock')
+NEEDS = {'freeze': (), 'assets': (), 'export': ('freeze', 'assets'), 'population': ('freeze', 'assets', 'export'), 'baseline': ('population',), 'profile': ('population',),
          'cadence': ('population', 'profile'), 'finalize': ('population', 'profile', 'cadence'), 'fit': ('finalize',), 'select': ('finalize', 'fit'),
          'lock': ('select',)}
 IGNORED = ('.write-lock', '.run')
@@ -136,9 +136,11 @@ def implementation(name, built):
         if 'imports' not in built[package]:
             selected[package] = dict(built[package])
     numerical = ['numpy', 'pyyaml', 'pydantic', 'jinja2']
+    if name == 'baseline':
+        numerical.extend(('scikit-learn', 'scipy'))
     if name in ('profile', 'fit', 'select'):
         numerical.extend(('torch', 'transformers', 'peft'))
-    if name in ('export', 'fit', 'select'):
+    if name in ('export', 'baseline', 'fit', 'select'):
         selected['native'] = built.get('native')
         numerical.append('llama-cpp-python')
     return {'producer': entry['source'], 'build': selected, 'numerical_builds': {package: version(package) for package in numerical}}
@@ -235,12 +237,18 @@ def freeze(context, directory, settings):
         entry['families'].add(row['component'])
     assignment = {'dataset_id': evidence['dataset_id'],
                   'roles': {role: {'observations': entry['observations'], 'families': len(entry['families'])} for role, entry in sorted(roles.items())},
-                  'check_components': sorted(roles.get('check', {'families': set()})['families']), 'support': support['roles']}
+                  'check_components': sorted(roles.get('check', {'families': set()})['families']), 'support': support['roles'],
+                  'unsupported_classes': support['unsupported_classes'], 'absent_fit_support': support['absent_fit_support'],
+                  'input_contract': evidence['input_contract'], **evidence['assignment']}
     manifest = {'kind': 'frozen-inputs', 'sources': declared, 'scope': evidence['scope'], 'assignment': assignment,
                 'task': {'bundle': BUNDLE, 'behavior': frozen['behavior'], 'switch': frozen['switch'], 'description': described},
                 'labels': {'file': LABELS, 'sha256': labels}}
     files.write_new(directory / MANIFEST, manifest)
-    return output('frozen-inputs', artifact_digest(manifest), directory, task=frozen['behavior'], roles=assignment['roles'])
+    files.write_new(directory / 'training-support.json', assignment)
+    return output('frozen-inputs', artifact_digest(manifest), directory, task=frozen['behavior'], roles=assignment['roles'],
+                  training_support={'path': str(directory / 'training-support.json'), 'roles': assignment['roles'],
+                                    'unsupported_classes': support['unsupported_classes'], 'absent_fit_support': support['absent_fit_support'],
+                                    'conflicting_families': assignment['conflicting_families'], 'input_findings': len(assignment['input_contract']['findings'])})
 
 
 def materialized(record) -> dict:
@@ -319,7 +327,12 @@ def population(context, directory, settings):
                                               device=context.request['devices']['fit'], budget=context.budget, recipe=context.recipe,
                                               native={'device': context.request['devices']['native']}, acceptance_fit=selection['acceptance_fit'],
                                               fit_situations=selection['fit_situations'], scope=context.request['task']['scope'])
-    record = output('prepared-population', found['id'], summary['job'], directory, fit_id=found['fit']['id'], roles=found['populations'])
+    support = {**context.materialized()['manifest']['assignment'], **found['support'], 'allocation': found['objective_weights']}
+    files.write_new(directory / 'training-support.json', support)
+    record = output('prepared-population', found['id'], summary['job'], directory, fit_id=found['fit']['id'], roles=found['populations'],
+                    training_support={'path': str(directory / 'training-support.json'), 'roles': found['populations'],
+                                      'unsupported_classes': found['support']['unsupported_classes'], 'absent_fit_support': found['support']['absent_fit_support'],
+                                      'conflicting_families': support['conflicting_families'], 'input_findings': len(support['input_contract']['findings'])})
     context.cache[('population', found['id'])] = found, assigned
     return record
 
@@ -330,6 +343,19 @@ def verify_population(context, record):
         raise ConfigError(f"population resolves to {found['id']}, not the committed {record['id']}")
     if set(found['tasks']) != {context.outputs['freeze']['summary']['task']}:
         raise ConfigError(f"population task contracts {sorted(found['tasks'])} differ from the frozen task {context.outputs['freeze']['summary']['task']}")
+
+
+def baseline(context, directory, settings):
+    from .controls import baseline as measure
+    record = measure(*context.population(), directory, lexical='lexical' in settings['controls'])
+    return output('training-baseline', record['id'], directory / 'baseline.json', directory, controls=record['controls'])
+
+
+def verify_baseline(context, record):
+    from .controls import load
+    measured = load(record['path'], *context.population())
+    if measured['id'] != record['id']:
+        raise ConfigError('baseline changed since its committed measurement')
 
 
 def profile(context, directory, settings):
@@ -408,10 +434,10 @@ def verify_fit(context, record):
 
 def select(context, directory, settings):
     from .select import application
-    chosen = application(*context.resolved(), context.outputs['finalize']['path'], context.outputs['fit']['path'], context.request['representation'], to=directory)
+    chosen = application(*context.resolved(), context.outputs['finalize']['path'], context.outputs['fit']['path'], context.request['representation'], to=directory, baseline=context.outputs.get('baseline', {}).get('path'))
     receipt = load_receipt(chosen['receipt'])
     return output('deployment', receipt.id, directory, receipt=chosen['receipt'], selected=chosen['selected'], representation=chosen['representation'],
-                  candidates=chosen['candidates'])
+                  candidates=chosen['candidates'], learning=chosen['learning'])
 
 
 def verify_select(context, record):
@@ -436,7 +462,7 @@ def verify_lock(context, record):
 
 
 OPERATIONS = {'freeze': Operation(freeze, verify_freeze), 'assets': Operation(model, verify_model), 'export': Operation(export, verify_export),
-              'population': Operation(population, verify_population), 'profile': Operation(profile, verify_profile),
+              'population': Operation(population, verify_population), 'baseline': Operation(baseline, verify_baseline), 'profile': Operation(profile, verify_profile),
               'cadence': Operation(cadence, verify_cadence), 'finalize': Operation(finalize, verify_finalize), 'fit': Operation(fit, verify_fit),
               'select': Operation(select, verify_select), 'lock': Operation(lock, verify_lock)}
 
@@ -455,6 +481,8 @@ class Controller:
             raise ConfigError('--attempt is a positive fit attempt number')
         self.path = Path(request).resolve()
         self.request = read_request(self.path)
+        if self.request['schema'] == 2 and until == 'baseline':
+            raise ConfigError('schema-2 requests have no baseline stage; create a new request to measure controls before fitting')
         if until == 'profile' and self.request['profile'] is None:
             raise ConfigError('profiling is disabled in this request; opt in with --profile-steps when creating the request')
         if cadence is not None and self.request['cadence'] not in (None, cadence):
@@ -462,6 +490,7 @@ class Controller:
         self.context = Context(self.request, settings(self.request['recipe'], DEFAULTS, 'recipe'), settings(self.request['budget'], BUDGET, 'budget'), cadence, {})
         self.until, self.attempt, self.operations, self.emit = until, attempt, operations, emit
         self.work, self.stage, self.states, self.built = Path(self.request['work']), None, {}, build()
+        self.interruption = None
 
     def settings(self, name, journal) -> dict:
         request = self.request
@@ -471,7 +500,7 @@ class Controller:
         if name == 'assets':
             return {'manifest': model['assets'], 'quant': model['quant']} if 'assets' in model else {'repo': model['repo'], 'commit': self.revision(journal), 'quant': model['quant']}
         return {'freeze': {'sources': request['sources'], 'scope': scope}, 'export': {'family': request['task']['family'], 'scope': scope, 'native_device': devices['native']},
-                'population': numerical, 'profile': request['profile'], 'cadence': {}, 'finalize': {},
+                'population': numerical, 'baseline': {'controls': request.get('baselines', [])}, 'profile': request['profile'], 'cadence': {}, 'finalize': {},
                 'fit': {'attempt': self.fit_attempt(journal)}, 'select': {'representation': request['representation']}, 'lock': {}}[name]
 
     def revision(self, journal) -> str:
@@ -507,11 +536,11 @@ class Controller:
     def execute(self, name, journal, key, settings):
         execution = uuid.uuid4().hex
         directory = self.work / name / f'{key[:16]}-{execution[:8]}'
-        if name in ('fit', 'profile'):
+        if name in ('fit', 'profile', 'baseline'):
             prior = [record for record in journal.payloads() if record.get('computation') == key and record.get('directory')]
             if prior:
                 directory = Path(prior[-1]['directory'])
-        if name in ('fit', 'profile'):
+        if name in ('fit', 'profile', 'baseline'):
             journal.commit([(artifact_digest({'start': key, 'execution': execution}),
                              {'stage': name, 'state': 'started', 'computation': key, 'execution': execution, 'settings': settings, 'directory': str(directory)})])
         self.emit(stage=name, state='started', computation=key, execution=execution)
@@ -521,6 +550,8 @@ class Controller:
         except Awaiting:
             raise
         except BaseException as error:
+            self.interruption = {'stage': name, 'directory': str(directory),
+                                 **{file.removesuffix('.jsonl').removesuffix('.json'): str(directory / file) for file in ('progress.jsonl', 'updates.jsonl', 'recovery.json') if (directory / file).exists()}}
             state = 'cancelled' if isinstance(error, KeyboardInterrupt) else 'failed'
             try:
                 journal.commit([(artifact_digest({'failure': key, 'execution': execution}),
@@ -538,6 +569,8 @@ class Controller:
     def run(self) -> dict:
         with Journal(self.work / JOURNAL, self.request) as journal:
             for name in STAGES:
+                if name == 'baseline' and self.request['schema'] == 2:
+                    continue
                 if name == 'profile' and self.request['profile'] is None:
                     continue
                 self.stage = name
@@ -569,7 +602,11 @@ class Controller:
                         lock=path('lock'), receipt=path('lock', 'receipt'), representation=self.request['representation'], profile=path('profile'),
                         job=path('finalize'), run=path('fit'), cadence=path('cadence', 'cadence'),
                         base={'path': path('assets', 'base'), 'sha256': path('assets', 'sha256'), 'manifest': outputs['assets']['id'] if 'assets' in outputs else None},
-                        selection=path('select', 'candidates'), environment=environment(self.request), **values)
+                        selection=path('select', 'candidates'),
+                        training_support=next((outputs[name]['summary']['training_support'] for name in ('population', 'freeze')
+                                               if name in outputs and 'training_support' in outputs[name]['summary']), None),
+                        baseline=path('baseline'), learning=path('select', 'learning'), interruption=self.interruption,
+                        environment=environment(self.request), **values)
 
 
 def _interrupted(signum, frame):
@@ -598,6 +635,10 @@ def command(request, *, until=None, attempt=None, cadence=None) -> int:
         os.dup2(stdout, 1)
         os.close(stdout)
         signal.signal(signal.SIGTERM, previous)
+    if result.get('learning'):
+        learning = result['learning']
+        print(f"{learning['outcome']}: {learning['correct']}/{learning['submitted']} correct, {learning['wrong_accepted']} wrong accepted; "
+              f"assessment {learning['path']}", file=sys.stderr)
     print(json.dumps(result, default=str), flush=True)
     return code
 

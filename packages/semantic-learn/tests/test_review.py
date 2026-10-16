@@ -38,9 +38,11 @@ def test_review_export_samples_a_random_audit_then_declared_strata_with_disclose
                              collected=[collected['manifest']], strata=('teacher_uncertain', 'disagreement'), seed=3)
     rows = files.read_jsonl(exported['queue'])
     by_message = {row['input']['message']: row for row in rows}
-    assert len(rows) == 3 and exported['population']['rows'] == 6 and exported['population']['families'] == 6
+    assert exported['population']['rows'] == 6 and exported['population']['families'] == 6
+    audited_message = next(row['input']['message'] for row in rows if row['selections'][-1]['selected_by'] == 'random')
+    assert set(by_message) == {audited_message, 'maybe something', 'refund now flip'}
     assert exported['audit']['rows'] == 1 and exported['audit']['inclusion_probability'] == pytest.approx(1 / 6)
-    assert exported['strata']['teacher_uncertain']['rows'] + exported['strata']['disagreement']['rows'] == 2
+    assert exported['strata']['teacher_uncertain']['rows'] + exported['strata']['disagreement']['rows'] == len(rows) - 1
     assert {'maybe something', 'refund now flip'} <= set(by_message)
     assert by_message['refund now flip']['facts'] == {'refund': True} and by_message['refund now flip']['label_sources']['refund'][0]['derivation'] == 'judged'
     assert 'facts' not in by_message['maybe something']
@@ -193,3 +195,37 @@ def test_review_export_queues_a_partial_envelope_and_publishes_every_unresolved_
         [(False, ['teacher-b']), (True, ['teacher-a'])]
     resolved = task.resolve(data, 'refund', claims['alternatives'], False, reviewer='lead', actor=Actor('human'))
     assert task.merge(task.merge(teacher, resolved), other)['facts'] == {'refund': False, 'issues': {'refund': True}}
+
+
+def test_learning_review_preserves_reference_history_and_never_labels_from_predictions(tmp_path):
+    from semantic_switch import Runtime
+    from semantic_switch.training import LabelSource, artifact_digest
+    from semantic_learn.common import task_of
+    path = tmp_path / 'task.yaml'
+    files.publish(path, {'name': 'support', 'fields': {'message': {'type': 'text'}}, 'reads': ['message'],
+                         'facts': {'refund': {'check': 'The customer requests a refund.'}}})
+    task = task_of(path)
+    meaning = task.targets()['refund']['meaning_rev']
+    source = LabelSource('authored', 'author', actor=Actor('human')).record()
+    rows = [{'candidate': 'student', 'fact': 'refund', 'meaning_rev': meaning, 'input': {'message': text},
+             'family': family, 'groups': [family], 'role': role, 'classes': ['true', 'false'],
+             'gold_class': 'false', 'answer': 'true', 'outcome': 'ok', 'label_sources': history}
+            for text, family, role, history in [('my sister wants money back', 'held', 'model_select', [source]),
+                                               ('please return my payment', 'new', 'fit', [])]]
+    evidence = tmp_path / 'selection.rows.jsonl'
+    files.publish(evidence, files.jsonl(rows))
+    report = {'schema': 1, 'kind': 'learning-assessment', 'selected': 'student',
+              'files': {'predictions': {'file': evidence.name, 'sha256': files.sha256_file(evidence)}}}
+    report['id'] = artifact_digest(report)
+    learning = tmp_path / 'learning.json'
+    files.publish(learning, report)
+    result = review_export(path, tmp_path / 'failures.review.json', size=2, audit=2, learning=[learning], strata=['disagreement'])
+    queued = files.read_jsonl(result['queue'])
+    assert len(queued) == 2 and result['learning'][str(learning.resolve())] == report['id']
+    reference = next(row for row in queued if row['role'] == 'model_select')
+    suggestion = next(row for row in queued if row['role'] == 'fit')
+    assert reference['facts'] == {'refund': False} and reference['label_sources']['refund'][0]['producer'] == 'author'
+    assert 'facts' not in suggestion and 'label_sources' not in suggestion
+    evidence.write_text(evidence.read_text() + '\n')
+    with pytest.raises(ConfigError, match='learning evidence changed'):
+        review_export(path, tmp_path / 'changed.review.json', size=1, audit=1, learning=[learning])

@@ -1198,12 +1198,27 @@ def ranking_rule(points, unit):
     return {'unit': unit, 'order': order, 'nll': 'available' if 'nll' in order else 'unavailable'}
 
 
+def rank_value(point, unit, field):
+    return {'qualified': lambda: point.get('qualification', {}).get('state') != 'met',
+            'correct': lambda: -point['correct']['macro'][unit], 'regressions': lambda: len(point.get('regressions', ())),
+            'nll': lambda: point['nll'], 'base': lambda: not point.get('base', False), 'step': lambda: point['step']}[field]()
+
+
 def ranking(points, unit):
-    keys = {'qualified': lambda point: point.get('qualification', {}).get('state') != 'met',
-            'correct': lambda point: -point['correct']['macro'][unit], 'regressions': lambda point: len(point.get('regressions', ())), 'nll': lambda point: point['nll'],
-            'base': lambda point: not point.get('base', False), 'step': lambda point: point['step']}
     order = ranking_rule(points, unit)['order']
-    return sorted(points, key=lambda point: tuple(keys[field](point) for field in order))
+    return sorted(points, key=lambda point: tuple(rank_value(point, unit, field) for field in order))
+
+
+def selection_reason(points, unit, selected):
+    ordered = ranking(points, unit)
+    winner = next(point for point in ordered if point['name'] == selected)
+    other = next((point for point in ordered if point['name'] != selected), None)
+    field = next((field for field in ranking_rule(points, unit)['order']
+                  if other is not None and rank_value(winner, unit, field) != rank_value(other, unit, field)), None)
+    return {'selected': selected, 'compared_with': other['name'] if other else None, 'first_differing_key': field,
+            'selected_value': rank_value(winner, unit, field) if field else None,
+            'alternative_value': rank_value(other, unit, field) if field else None,
+            'rule': ranking_rule(points, unit), 'accepted_errors_determine_ranking': False}
 
 
 DENOMINATORS = {'observation': 'observations', 'complete_situation': 'situations'}

@@ -42,6 +42,7 @@ def parser():
     review.add_argument('--collection', action='append', default=[], help='NAME.collection.json from semantic-learn collect, repeatable')
     review.add_argument('--stratum', action='append', default=[], help='triage stratum in priority order: teacher_uncertain, disagreement, inconsistency, feedback, conflict')
     review.add_argument('--seed', type=int, default=0)
+    review.add_argument('--learning', action='append', default=[], help='verified learning.json assessment; predictions only select review, repeatable')
     diagnose = commands.add_parser('diagnose', help='record an evidence-backed review reason without creating a training label')
     diagnose.add_argument('review')
     diagnose.add_argument('unit')
@@ -63,8 +64,8 @@ def parser():
     round_.add_argument('--trainer', default=os.environ.get('SEMANTIC_TRAINER'), help='absolute semantic-trainer executable (default: SEMANTIC_TRAINER)')
     round_.add_argument('--cutoff', required=True, help='ISO time with UTC offset; later labels are excluded')
     round_.add_argument('--serving', required=True, choices=('separate_host', 'interrupt', 'fallback'), help='serving policy while this round fits')
-    round_.add_argument('--min-reviewed', type=int, required=True, help='reviewed targets required per target address')
-    round_.add_argument('--min-per-class', type=int, required=True, help='examples required per answer of every target')
+    round_.add_argument('--min-reviewed', type=int, default=0, help='reviewed targets required per target address')
+    round_.add_argument('--min-per-class', type=int, default=0, help='examples required per answer of every target')
     round_.add_argument('--incumbent', help='receipt.json of the active deployment, recorded for the later comparison')
     round_.add_argument('--tombstones', help='deletion tombstone store; tombstoned inputs are excluded')
     round_.add_argument('--cap', action='append', default=[], metavar='ORIGIN:PRODUCER=N', help='maximum examples from one label producer')
@@ -97,7 +98,7 @@ def run(args):
     if args.command == 'review':
         from .review import review_export
         return review_export(args.definition, args.to, size=args.size, audit=args.audit, captures=args.capture, collected=args.collection,
-                             strata=tuple(args.stratum), seed=args.seed)
+                             strata=tuple(args.stratum), seed=args.seed, learning=args.learning)
     if args.command == 'situations':
         from .review import situations
         return situations(args.definition, args.captures, args.to)

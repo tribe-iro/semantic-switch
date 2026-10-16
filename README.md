@@ -22,7 +22,8 @@ The 0.9 cutoff is an acceptance setting, not a promised precision. `ss lock` fit
 | Finite batches, bounded streams, async | `spec.run`, `spec.many`, `Runtime.ask_many`, `Runtime.aask` |
 | Inspect requests and record decisions | `Runtime.preview`, `Runtime(on_decision=...)`, `result.as_dict()` |
 | Label, evaluate and fit acceptance thresholds | `ss label`, `ss test`, `ss lock`; Python `semantic_switch.tools` |
-| Optional task specialization | CPU lexical heads or LoRA through `semantic-trainer` |
+| Optional task specialization | CPU lexical heads or LoRA, with support reports, matched controls and checkpoint selection |
+| Understand a training result | `semantic-trainer assess`, fit-family `diagnose`, assessment-driven review |
 | Optional data collection and repeated fitting | Explicit capture, teacher collection, review and rounds through `semantic-learn` |
 | Deploy and recover a chosen version | Frozen locks, `ss compare`, `ss promote`, `ss rollback` |
 
@@ -317,9 +318,41 @@ ss specialize switches/support_route.yaml --examples reviewed.jsonl --to work/su
 ss specialize --to work/support --trainer /absolute/path/to/semantic-trainer
 ```
 
-Choose `cpu`, `xpu:N` or `cuda:N` for fitting; the native scorer separately uses `auto`, `cpu` or `gpu`. The first command freezes inputs, resolves assets, exports model-specific token rows, prepares the population, fits, selects and publishes a deployment. The second resumes the same request. Corpus generation is separate: these commands consume existing labels and never regenerate situations. Token exports depend on the task, tokenizer and presentation; reuse requires the same content and settings. Completed pipeline stages are reused within the work root, not through a global cross-run stage cache.
+Choose `cpu`, `xpu:N` or `cuda:N` for fitting; the native scorer separately uses `auto`, `cpu` or `gpu`. The first command freezes inputs, resolves assets, exports model-specific token rows, prepares the population, measures fit-majority/native-base controls, fits, selects and publishes a deployment. The second resumes the same request. Corpus generation is separate: these commands consume existing labels and never regenerate situations. Token exports depend on the task, tokenizer and presentation; reuse requires the same content and settings. Completed pipeline stages are reused within the work root, not through a global cross-run stage cache.
 
 Profiling is optional. The default monitoring cadence is one fit epoch; `--cadence` overrides it. Monitoring uses the full model-selection population, with separate `evaluation_batch_size` and no fit probe by default. Fits preserve evaluated candidates and rolling recovery checkpoints; repeating `semantic-trainer lora JOB --to RUN` resumes that identified attempt. A new `--attempt` starts a fresh fit. Selection compares retained candidates on development data, so training longer does not imply deploying the last weights. See [training and recovery](packages/semantic-trainer/README.md#monitoring-and-interruption). For CPU lexical fitting without LoRA, see [the lexical-head example](examples/lexical_head.py): export labeled rows, call `train_lexical`, then pass the resulting bundle to `tools.lock(..., head_bundles=...)`.
+
+## Train and understand the result
+
+Semantic-switch supplies the training and evaluation tools. You supply the task meaning, relevant inputs, trustworthy labels and acceptable error costs. Training can complete correctly while retaining the base model; that is a measured outcome, not a failed command or proof of a model-size limit.
+
+The workflow is: inspect supplied evidence → measure controls → fit → compare checkpoints → report the selected model. Collection and label generation happen separately. Start with the same work directory for every command below; completed stages are reused.
+
+```bash
+ss specialize task.yaml --examples labels.jsonl --to work/task --trainer /absolute/path/to/semantic-trainer --device xpu:0 --native-device gpu --until freeze
+ss specialize --to work/task --trainer /absolute/path/to/semantic-trainer --until baseline
+ss specialize --to work/task --trainer /absolute/path/to/semantic-trainer
+```
+
+`--until freeze` checks the supplied inputs and support on CPU, without loading torch or the native model. `training_support.path` names class/family support, missing input dependencies and, after population preparation, objective shares. Sparse classes are reported without forcing another data-generation round. `--until baseline` measures the matched native base and fit-only majority on model-selection data, before any optimizer updates. Add `--baseline lexical` to the first command only if you want the optional lexical control; install the trainer's `lexical` extra in that environment. Resuming uses the frozen request.
+
+The completed result's `learning.path` names `learning.json`: candidate/class/behavior outcomes, confident errors, coverage, checkpoint regressions, acceptance status and the actual reason a candidate won. Model-selection correctness remains the default ranking objective; accepted errors are reported separately. An accuracy win can still have more accepted errors. Uncalibrated thresholds remain explicitly uncalibrated. Raw model scores are not demonstrated probabilities of correctness.
+
+```bash
+semantic-trainer assess work/task/select/DEPLOYMENT --to work/task-assessment.json
+semantic-learn review task.yaml --learning work/task/select/DEPLOYMENT/learning.json --size 20 --audit 10 --stratum disagreement --to work/failures.review.json
+```
+
+Use the actual deployment path returned by specialization. `assess` rebuilds the report from stored rows without inference; `--development CONFIG.json` explicitly requests composed evaluation using existing action references. Review preserves supplied reference histories and family roles; predictions select review and never become gold labels. Keep selection/check families out of fit. Acquire new fit families for missing behaviors and retain the original fit examples when running another [learning round](packages/semantic-trainer/README.md#reviewed-additions-through-the-same-pipeline). Adoption remains a separate compare/promote operation.
+
+For a fitting problem, isolate existing fit families before changing the recipe:
+
+```bash
+semantic-trainer diagnose JOB.yaml --family FIT_COMPONENT_ID --to work/fit-diagnostic
+semantic-trainer diagnose JOB.yaml --family FIT_COMPONENT_ID --to work/fit-diagnostic --run
+```
+
+Use the resolved job and family IDs from the run's support report. The first command prepares the diagnostic; `--run` executes it. Repeated `--family` options include whole related families. A probe already correct before training reports `already_solved`; it does not justify increasing rank or model size. This is an in-sample fitting check, not a generalization test. See [assessment and diagnosis](packages/semantic-trainer/README.md#baselines-assessments-and-controlled-diagnosis) for rank/alpha controls and report preservation.
 
 ## Collection and observability
 
@@ -336,10 +369,13 @@ The optional `semantic-learn` package provides `Capture` in `semantic_learn.capt
 | [Procedure and equipment studies](bench/README.md) | Exact-rule composition, procedure applicability and SDK/CLI behavior | Authored fixtures and historical runs; source, prompt and execution versions differ |
 | [Native and training measurements](docs/ga-measurements.md) | Cache/residency controls, latency, allocation and completed training operations | Hardware/build/workload-specific; historical timings are not current performance promises |
 | [Printer enrichment experiment](#measured-readiness-2b-printer-specialist-2026-10-16) | Completed LoRA deployment comparison with random and targeted fit additions | Synthetic structured text, repeatedly consulted check population, unreviewed reference |
+| [Training workflow verification](bench/results/training-workflow-20261016/README.md) | Real 2B fitting, native selection, controls, interruption/resume and stored-row reports | Small development evidence; both task runs retained the base; no adoption |
 
 Raw accuracy, accepted-answer precision, coverage, per-class recall and exact action-set agreement answer different questions. A 0.9 score cutoff is not 90% correctness. Latency must name its unit: one question and one whole situation with ten questions are different workloads. Provider and quantization changes also change the comparison.
 
 The [benchmark catalog](bench/README.md) lists commands, artifacts, versions and historical limitations. Start quality comparisons with `python -m bench.model_comparison --model MODEL --output result.json`; maintained report writers require an explicit output path. Snapshot experiments consume an existing published corpus; [printer commands](bench/README.md#printer-fit-and-comparison) describe fitting, recovery and optional paid reference arms. Running examples demonstrates API behavior, not task accuracy.
+
+The latest [training workflow verification](bench/results/training-workflow-20261016/README.md) exercised actual E2B LoRA fits and merged Q4_0 native selection. On 14 customer/verification development observations, the base scored 11/14 with two wrong accepted answers; the two student checkpoints scored 8/14 with six and 11/14 with three. Selection retained the base. On a six-observation operation view of the same corpus, the base and one student tied at 6/6, so the base was retained again. These small, related populations verify the controls and selection workflow; they do not establish unfamiliar-language quality. The same verification resumed an interrupted fit, reused committed base scores and rebuilt assessments without inference. No adoption occurred.
 
 ## Measured readiness: 2B printer specialist (2026-10-16)
 
@@ -367,7 +403,7 @@ Published evidence: [summary](bench/results/printer-coverage-20261016/summary.js
 
 ## Repository
 
-See [repository layout, preservation and developer setup](docs/repository.md) for directory ownership, ignored outputs, corpus preservation, archives and complete multi-package test installation. Public usage stays in this README; current contracts are in [invariants](docs/invariants.md), unfinished work in [TODO](TODO.md), and the superseded specification is explicitly [historical](docs/history/semantic-switch-v0.26-20261006.md).
+See [repository layout, preservation and developer setup](docs/repository.md) for directory ownership, ignored outputs, corpus preservation, archives and complete multi-package test installation. Public usage stays in this README; current contracts are in [invariants](docs/invariants.md), implementation status in [TODO](TODO.md), and the superseded specification is explicitly [historical](docs/history/semantic-switch-v0.26-20261006.md).
 
 Tests cover numerical correctness, decision logic, ownership, concurrency, recovery and SDK behavior. Scripted SDK examples and controller integrations do not measure model quality. A separate real deployment test checks nonzero LoRA → merge → Q8_0 GGUF → native probabilities against PyTorch, using a tiny locally generated model. See [test scope and commands](docs/repository.md#what-the-tests-establish). Passing tests do not establish accuracy on unfamiliar language; the benchmark results above retain their stated limitations.
 
@@ -381,3 +417,9 @@ Authored thresholds are uncalibrated unless an acceptance-fit population was use
 Training recipes can opt into class/family effort allocation, authored behavioral slices and development recall requirements. See [trainer usage](packages/semantic-trainer/README.md) for bounded seed/LR qualification and fit-only diagnosis. Data generation and input-view materialization remain explicit separate operations; reusing a corpus does not regenerate it.
 
 Reviewed failures can be recorded with `semantic-learn diagnose REVIEW.json UNIT --reason coverage --reviewer NAME --evidence ARTIFACT --note TEXT --to DIAGNOSES.jsonl`. Reasons route work to materialization, production, review, task interpretation, fit diagnosis or acceptance calibration. These records are review metadata, never training labels. Keep existing fit examples when consuming approved additions through `semantic-learn round`; promotion remains a separate decision.
+
+New unassigned label families now receive deterministic allocation using their answer classes and declared behavior tags. Existing published roles stay fixed, including check families. Allocation reports actual counts and missing support; it does not claim every behavior is covered or refuse an ordinary diagnostic fit.
+
+For a fair lexical baseline, pass resolved fitting observation IDs with `train_lexical(..., fit_cohort=IDS)`. Its default tune-wide cross-fitting remains a different protocol. Optional recipe qualification can also evaluate composed actions through the existing development evaluator. See [the behavioral development command](bench/README.md#behavioral-decision-development) and [operational qualification](packages/semantic-trainer/README.md#fixed-role-lexical-controls-and-operational-qualification).
+
+The [dependability implementation report](bench/results/dependability-20261016/README.md) and subsequent [training workflow verification](bench/results/training-workflow-20261016/README.md) include actual 2B fits and native selection on a family-audited language corpus. Neither established a student improvement over the base. Independent unfamiliar-language confirmation remains outstanding; the earlier synthetic printer gains do not establish it.

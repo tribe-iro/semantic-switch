@@ -23,14 +23,14 @@ from .journal import Journal
 from .journal import replay as read_journal
 from .judge import validate_requests
 from .judgment import ESCAPE
-from .metrics import OPTION_SOFTMAX, Progress, class_changes, correctness, nested, observed, per_class, primitive, probabilities, recall_counts, recall_floor, regressions, scored_answer, semantic_answer
+from .metrics import OPTION_SOFTMAX, Progress, class_changes, correctness, nested, observed, per_class, primitive, probabilities, prediction_report, recall_counts, recall_floor, regressions, scored_answer, semantic_answer
 from .permissions import TrainingUse, admit, restriction
 from .protocols import MAX_QUESTION_TOKENS, ScoreBlock, ScoreLedger, ScoreRequest, Tokens
 from .resident import Adapter, Resources, binding_identity
 from .results import thaw
-from .tools.dataset import EvidenceContext, evaluation_plan
+from .tools.dataset import EvidenceContext, allocate, evaluation_plan
 from .tools.deployment import (DECISION_SCHEMA, Entry, arm_summary, assess_lineage, check_deployment, comparable, compare_deployments, current, decide,
-                               declaration, entry, fitted, freeze_specialization, frozen, point, promote, promotion_decision, realized, recompute_comparison,
+                               declaration, entry, evaluate_development, fitted, freeze_specialization, frozen, point, promote, promotion_decision, realized, recompute_comparison,
                                reference_support, rollback, unproven)
 from .tools.evaluate import contrast_pairs, score_observations
 from .tools.specialize import REQUEST_SCHEMA, RESULT_SCHEMA, decode_request, read_request, sources, specialize, terminal
@@ -79,6 +79,24 @@ def describe_task(definition, scope=None) -> dict:
     return {**describe(plan), **({'scope': ['/'.join(target) for target in target_scope(plan, scope)]} if scope is not None else {})}
 
 
+def inspect_inputs(definition, inputs):
+    from .context import bind_input, project
+    path = Path(definition)
+    plan = compile_spec(files.read_yaml(path), path.name, path.parent)
+    rows = []
+    for index, data in enumerate(inputs):
+        try:
+            values = project(plan.fields, bind_input(plan.fields, data))
+        except ContextError as error:
+            rows.append({'index': index, 'state': 'invalid', 'reason': str(error), 'inference': False})
+            continue
+        missing = {'/'.join(plan.facts[f].path): [name for name in plan.facts[f].reads if name not in values] for f in plan.observed}
+        rows.append({'index': index, 'state': 'missing_dependencies' if any(missing.values()) else 'valid',
+                     'missing': {target: names for target, names in missing.items() if names},
+                     'semantic_unknown': 'assessed by the judgment, never inferred from schema validity'})
+    return {'task': describe(plan), 'inputs': rows}
+
+
 def assigned_evidence(definition, labels, scope=None) -> dict:
     from .tools.data import Labels
     with Runtime() as runtime:
@@ -89,7 +107,17 @@ def assigned_evidence(definition, labels, scope=None) -> dict:
     rows = [{'id': example.id, **path_record(fact.path), 'classes': list(fact.keys), 'label': example.label, 'role': role_of(example.split, example.fold),
              'tags': list(example.tags), 'component': assigned.component(example.group)}
             for name, examples in assigned.by_fact.items() if list((fact := plan.fact(name)).path) in addresses for example in examples]
-    return {'dataset_id': assigned.dataset_id, 'scope': ['/'.join(address) for address in addresses], 'rows': rows}
+    inputs = inspect_inputs(definition, (item['input'] for item in assigned.items))
+    findings = []
+    for row in inputs['inputs']:
+        missing = {target: names for target, names in row.get('missing', {}).items() if target in {'/'.join(address) for address in addresses}}
+        if row['state'] == 'invalid' or missing:
+            findings.append({**row, 'missing': missing})
+    return {'dataset_id': assigned.dataset_id, 'scope': ['/'.join(address) for address in addresses], 'rows': rows,
+            'input_contract': {'situations': len(inputs['inputs']), 'findings': findings,
+                               'semantic_sufficiency': 'unassessed; schema validity does not establish evidence sufficiency'},
+            'assignment': {'conflicting_families': sum(record['split'] == 'conflict' for record in assigned.manifest['families'].values()),
+                           'allocation': assigned.manifest.get('allocation'), 'warnings': list(assigned.warnings)}}
 
 
 def export_native(definition, to, *, judge, labels, task_family, scope=None) -> dict:
@@ -287,3 +315,18 @@ class Selection(Engine):
         finally:
             for ledger in self._ledgers.values():
                 ledger.release()
+
+
+def read_learning(path):
+    path = Path(path)
+    record = files.read_json(path)
+    if not isinstance(record, dict) or record.get('schema') != 1 or record.get('kind') != 'learning-assessment' \
+            or record.get('id') != artifact_digest({key: value for key, value in record.items() if key != 'id'}):
+        raise ConfigError(f'{path}: invalid learning assessment')
+    for entry in record['files'].values():
+        if not isinstance(entry, dict) or not isinstance(entry.get('file'), str) or not is_digest(entry.get('sha256')):
+            raise ConfigError(f'{path}: invalid learning evidence reference')
+        target = path.parent / entry['file']
+        if not target.is_file() or files.sha256_file(target) != entry['sha256']:
+            raise ConfigError(f'{target}: learning evidence changed')
+    return record

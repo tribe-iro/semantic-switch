@@ -14,7 +14,7 @@ from bench.evidence import Assertion, Decision, Frame, Gold, Prose
 
 DATA = Path(__file__).parent / "data" / "zt411"
 PACK, DEFINITION = DATA / "pack.json", Path(__file__).parents[1] / "examples" / "data" / "printer.yaml"
-REVISION = "zt411-reference-3"
+REVISION = "zt411-reference-4"
 ACTIONS = {"set_method_tt": "Set print method to thermal transfer", "set_method_dt": "Set print method to direct thermal",
            "load_ribbon": "Load a ribbon", "start_calibration": "Start manual sensor calibration",
            "verify_loading": "Inspect and verify media and ribbon loading", "calibration_next": "Confirm the calibration prompt and continue",
@@ -23,14 +23,14 @@ ACTIONS = {"set_method_tt": "Set print method to thermal transfer", "set_method_
 MENU = tuple(ACTIONS)
 SCOPE = tuple(f"actions/{action}" for action in MENU)
 PRIMITIVES = ("tt_media", "dt_media", "ribbon_loaded", "ribbon_absent", "detection_symptom", "verification_due", "step_verified", "unverified_step",
-              "calibration_verified", "method_inconsistent", "ready_to_print", "needs_observation")
+              "calibration_verified", "method_inconsistent", "calibration_setup_inconsistent", "ready_to_print", "needs_observation")
 FIELDS = ("asset", "model", "print_method", "prompt", "enabled", "alerts", "verified", "attempted", "notes")
 IDLE, CALIBRATION = ("ready", "paused"), ("calibration_1", "calibration_2")
 TT, DT = "thermal_transfer", "direct_thermal"
 ABSENT, CONFLICT, UNREAD = "absent", "conflict", "unknown"
 PROPERTIES = ("prompt", "print_method", "media_type", "ribbon_loaded", "detection_symptom")
 DOMAIN = {"prompt": (*IDLE, *CALIBRATION), "print_method": (TT, DT), "media_type": (TT, DT), "ribbon_loaded": (True, False), "detection_symptom": (True, False)}
-UNSTATED = ("tt_media", "dt_media", "ribbon_loaded", "ribbon_absent", "calibration_verified", "method_inconsistent", "ready_to_print")
+UNSTATED = ("tt_media", "dt_media", "ribbon_loaded", "ribbon_absent", "calibration_verified", "method_inconsistent", "calibration_setup_inconsistent", "ready_to_print")
 STRUCTURED = {"configuration": "print_method", "display": "prompt", "reading": "alerts", "verification": "verified", "command": "attempted"}
 TRAINED = "structured"
 CONDITIONS = ("structured", "prose", "structured_permuted")
@@ -261,6 +261,7 @@ def judge(v: View, world: dict) -> dict:
             "unverified_step": (unverified(v), ("ZT-VERIFY", "ZT-COMMAND"), ()),
             "calibration_verified": (True if calibrated else False if calibration else "unstated", ("ZT-RESUME", "ZT-COMMAND"), ()),
             "method_inconsistent": (method != media, ("ZT-CAL-CANCEL",), ()),
+            "calibration_setup_inconsistent": (not fits, ("ZT-CAL-CANCEL",), ()),
             "ready_to_print": (not calibrating and fits and (calibrated or not symptom), ("ZT-RESUME",), ())}
 
 
@@ -370,6 +371,9 @@ def definition(condition: str) -> dict:
 
 
 def view_gold(frame, gold):
+    if 'calibration_setup_inconsistent' not in gold.primitives:
+        view = View(frame)
+        gold = replace(gold, primitives={**gold.primitives, 'calibration_setup_inconsistent': settle(view, worlds(view), 'calibration_setup_inconsistent')})
     if frame.condition != 'prose':
         return gold
     view, extra = View(frame), {}
@@ -636,7 +640,7 @@ def transfer_command(args):
     pack = evidence.load_pack(PACK)
     planned = scenarios(args.seed, args.per_template, args.variants)
     built, _ = build(planned)
-    assignment = evidence.quota_assignment(built, args, counted={f.id for f in built if f.condition == TRAINED})
+    assignment = evidence.quota_assignment(built, args, counted={f.id for f in built if f.condition == TRAINED}, golds={f.id: reference(f) for f in built})
     role = {f.id: assignment["families"][assignment["components"][f.id]] for f in built}
     spec = transfer_definition(pack)
     ref = evidence.Reference(lambda frame: transfer_gold(frame, role[frame.id]), REVISION, TRANSFER_SCOPE, FIELDS, dict.fromkeys(CONDITIONS, evidence.criterion(spec)))
@@ -655,7 +659,7 @@ def pack_command(args):
     planned = scenarios(args.seed, args.per_template, args.variants)
     ref = standard()
     reviewed = evidence.reviewed_pack(args, sys.modules[__name__], pack, frames(planned), ref)
-    assignment = evidence.quota_assignment(reviewed.frames, args, counted=evidence.situation_frames(reviewed.frames, reviewed.golds, TRAINED))
+    assignment = evidence.quota_assignment(reviewed.frames, args, counted=evidence.situation_frames(reviewed.frames, reviewed.golds, TRAINED), golds=reviewed.golds)
     return evidence.publish_domain(args, sys.modules[__name__], pack, reviewed, ref, scenarios=planned, assignment=assignment, producer="bench.procedures.reference",
                                    extra={"menu": ACTIONS, "revision": REVISION})
 

@@ -622,19 +622,6 @@ def components(frames) -> dict:
     return {frame.id: index.name(("group", frame.family)) for frame in frames}
 
 
-def _pick(sizes, order, target, minimum):
-    reach = {(0, 0): ()}
-    for family in order:
-        for (total, count), chosen in list(reach.items()):
-            key = (total + sizes[family], count + 1)
-            if key[0] <= target and key not in reach:
-                reach[key] = (*chosen, family)
-        found = [chosen for (total, count), chosen in reach.items() if total == target and count >= minimum]
-        if found:
-            return max(found, key=len)
-    return None
-
-
 def contrast_quota(variants, quota, key) -> list:
     if quota is None:
         return variants
@@ -651,7 +638,7 @@ def tally(group, counted, component, golds=None) -> dict:
             **({"targets": sum(golds[f.id].targets for f in group)} if golds is not None else {})}
 
 
-def assign(frames, quotas, *, seed, counted=None, families_minimum=None, check_only=lambda frame: False) -> dict:
+def assign(frames, quotas, *, seed, counted=None, families_minimum=None, check_only=lambda frame: False, cells=None) -> dict:
     component = components(frames)
     counted = {frame.id for frame in frames} if counted is None else set(counted)
     sizes, forced = dict.fromkeys(component.values(), 0), set()
@@ -660,25 +647,20 @@ def assign(frames, quotas, *, seed, counted=None, families_minimum=None, check_o
         if check_only(frame):
             forced.add(component[frame.id])
     forced |= {family for family, size in sizes.items() if not size}
-    order = sorted(sizes, key=lambda family: hashlib.sha256(f"{seed}:{family}".encode()).hexdigest())
-    roles, free = {}, [family for family in order if family not in forced]
-    families_minimum = families_minimum or {}
-    for role in ("fit", "model_select", "acceptance_fit"):
-        if not quotas.get(role):
-            continue
-        chosen = _pick(sizes, free, quotas[role], families_minimum.get(role, 1))
-        if chosen is None:
-            raise ConfigError(f"no whole-family selection yields exactly {quotas[role]} {role} situations across at least {families_minimum.get(role, 1)} families; "
-                              f"available families {len(free)} with sizes {dict(sorted(Counter(sizes[f] for f in free).items()))}")
-        roles |= dict.fromkeys(chosen, role)
-        free = [family for family in free if family not in roles]
-    roles |= dict.fromkeys([*free, *forced], "check")
-    check = sum(sizes[f] for f, role in roles.items() if role == "check")
-    if check < quotas.get("check", 0) or sum(r == "check" for r in roles.values()) < families_minimum.get("check", 1):
-        raise ConfigError(f"check has {check} situations in {sum(r == 'check' for r in roles.values())} families; need at least {quotas.get('check', 0)} situations")
-    return {"seed": seed, "quotas": dict(quotas), "families": dict(sorted(roles.items())), "components": component, "counted": sorted(counted),
+    from semantic_switch.training import allocate
+    cells = cells or {}
+    population = {family: {'size': size, 'cells': set()} for family, size in sizes.items()}
+    for frame in frames:
+        population[component[frame.id]]['cells'].update(cells.get(frame.id, ()))
+    targets_ = {role: quotas.get(role, 0) for role in ('fit', 'model_select', 'acceptance_fit')}
+    targets_['check'] = max(quotas.get('check', 0), sum(sizes.values()) - sum(targets_.values()))
+    allocation = allocate(population, targets_, pinned=dict.fromkeys(forced, 'check'), seed=seed)
+    roles = allocation['families']
+    return {"seed": seed, "quotas": dict(quotas), "families": roles, "components": component, "counted": sorted(counted),
+            "allocation": allocation,
             "counts": {role: tally([frame for frame in frames if roles[component[frame.id]] == role], counted, component)
                        for role in ("fit", "model_select", "acceptance_fit", "check")},
+            "family_deficits": {role: max(0, minimum - sum(value == role for value in roles.values())) for role, minimum in (families_minimum or {}).items()},
             "units": UNITS}
 
 
@@ -1049,7 +1031,8 @@ def publish(directory, pack: Pack, reviewed: Reviewed, ref: Reference, *, scenar
                                             "authored": pack.authored, "applicability": pack.applicability, "contract": terms},
                 "reference": {"producer": producer, "code": producer_digest, "revision": ref.revision, "criteria": ref.criteria},
                 "definition": {"file": name, "sha256": hashlib.sha256(text.encode()).hexdigest(), "condition": condition},
-                "assignment": {"seed": assignment["seed"], "quotas": assignment["quotas"], "counts": counts, "units": UNITS},
+                "assignment": {"seed": assignment["seed"], "quotas": assignment["quotas"], "counts": counts, "units": UNITS,
+                               **({"allocation": assignment["allocation"]} if "allocation" in assignment else {})},
                 "unresolved_reference": {role: sum(roles[f.id] == role and f.condition == condition and f.id not in counted for f in frames)
                                          for role in ("fit", "model_select", "acceptance_fit", "check")}, "assignment_sha256": digest(assignment["families"]),
                 "review_protocol": {**PROTOCOL, "digest": PROTOCOL_DIGEST},
@@ -1073,9 +1056,11 @@ def pack_arguments(parser):
     parser.add_argument("--output", type=Path, required=True)
 
 
-def quota_assignment(frames, args, *, counted, check_only=lambda frame: False) -> dict:
+def quota_assignment(frames, args, *, counted, check_only=lambda frame: False, golds=None) -> dict:
     return assign(frames, {role: getattr(args, role) for role in QUOTAS}, seed=args.seed, counted=counted,
-                  families_minimum=FAMILIES_MINIMUM if args.fit == QUOTAS["fit"] else None, check_only=check_only)
+                  families_minimum=FAMILIES_MINIMUM if args.fit == QUOTAS["fit"] else None, check_only=check_only,
+                  cells={frame.id: [json.dumps([target, decision.value, tag], sort_keys=True) for target, decision in golds[frame.id].supervision.items()
+                                    if decision.value is not None for tag in ('', *frame.tags)] for frame in frames} if golds else None)
 
 
 def publish_domain(args, module, pack: Pack, reviewed: Reviewed, ref: Reference, *, scenarios, assignment, producer, definition=None, name=None, extra=None) -> dict:

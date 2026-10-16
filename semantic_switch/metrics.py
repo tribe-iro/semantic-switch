@@ -94,6 +94,39 @@ def rates(counts: dict) -> dict:
             "correct_rejected": c["correct_rejected"], "wrong_rejected": c["wrong_rejected"]}
 
 
+def prediction_report(rows):
+    rows = list(rows)
+    def reduce(group):
+        out = correctness((row.get('correct'), row.get('accepted', False) and row.get('gold') is not None, row.get('outcome')) for row in group)
+        if group and all(row.get('acceptance') == 'unassessed' for row in group):
+            out.update({key: None for key in ('accepted', 'correct_accepted', 'wrong_accepted', 'coverage', 'precision',
+                                             'correct_accepted_rate', 'correct_rejected', 'wrong_rejected')})
+            out['acceptance'] = 'unassessed'
+        return out
+    groups, pairs = {}, {}
+    for row in rows:
+        for tag in row.get('tags', ()):
+            groups.setdefault(tag, []).append(row)
+        for pair in row.get('pairs', ()):
+            pairs.setdefault((row.get('target'), pair), []).append(row)
+    return {**reduce(rows), 'unassessed_reference': sum(row.get('gold') is None for row in rows),
+            'accepted_unassessed': sum(row.get('gold') is None and row.get('accepted', False) for row in rows), 'failed': sum(row.get('outcome') == 'failed' for row in rows),
+            'unavailable': sum(row.get('outcome') in ('unavailable', 'unexamined') for row in rows),
+            'wrong_accepted_per_submission': None if rows and all(row.get('acceptance') == 'unassessed' for row in rows) else
+                ratio(sum(row.get('accepted', False) and row.get('correct') is False for row in rows), len(rows)),
+            'per_class': per_class((row['target'], row['options'], row['gold'], row.get('answer'), row.get('correct')) for row in rows if row.get('gold') is not None),
+            'behaviors': {tag: reduce(group) for tag, group in sorted(groups.items())},
+            'pairs': {'assessed': sum(len(group) >= 2 for group in pairs.values()),
+                      'all_correct': sum(len(group) >= 2 and all(row.get('correct') is True for row in group) for group in pairs.values())}}
+
+
+def zero_failure_bound(families, *, level=.95):
+    if type(families) is not int or families < 0 or not 0 < level < 1:
+        raise ConfigError('zero-failure bound needs a nonnegative family count and a confidence level in (0, 1)')
+    return {'level': level, 'families': families, 'upper': -math.expm1(math.log1p(-level) / families) if families else None,
+            'scope': 'zero observed failures in independently sampled family-level binary events; not per-answer or targeted-audit risk'}
+
+
 def comparison_identity(*, task, projection, gold, answers, scope, condition) -> str:
     return digest({"metrics": METRICS, "task": task, "projection": projection, "gold": gold, "answers": answers, "scope": scope, "condition": condition})
 

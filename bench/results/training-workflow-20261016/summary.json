@@ -1,0 +1,3948 @@
+{
+ "schema": 1,
+ "kind": "training-workflow-verification",
+ "independent": false,
+ "experiments": {
+  "customer": {
+   "state": "completed",
+   "request": "72a4c9d748de94600cc4b4e9c66c615f733e9043083097bcbdc82b30bd8685d0",
+   "job_id": "71d02365521edbcb09ec6027bcdfb04cd094b35fe44cd8b667c68009719f58df",
+   "fit_id": "00faffe3513f4cd12eaa07858b8c68f92f6df8ce8a3f264f4110b2f0d69a4b44",
+   "receipt_id": "191308eb22184ae88ab24da79c08d7bd18474fa7c6a2d9d010aab107fc37e206",
+   "assessment_id": "5ef72f31acb419d5dbbe070aa7f2f4944734be84618d6c4120b872a764bc4ad3",
+   "selected": "base",
+   "summary": {
+    "outcome": "base_retained",
+    "selected": "base",
+    "comparator": "base",
+    "correct": 11,
+    "submitted": 14,
+    "wrong_accepted": 2,
+    "coverage": 0.9285714285714286,
+    "independent": false,
+    "ranking_key": "regressions",
+    "compared_with": "step-10"
+   },
+   "reason": {
+    "selected": "base",
+    "compared_with": "step-10",
+    "first_differing_key": "regressions",
+    "selected_value": 0,
+    "alternative_value": 1,
+    "rule": {
+     "unit": "observation",
+     "order": [
+      "correct",
+      "regressions",
+      "base",
+      "step"
+     ],
+     "nll": "unavailable"
+    },
+    "accepted_errors_determine_ranking": false
+   },
+   "support": {
+    "roles": {
+     "fit": {
+      "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+       "refund": {
+        "true": {
+         "observations": 7,
+         "families": 7,
+         "objective": 0.19444444444444445,
+         "tags": {
+          "hypothetical": 1,
+          "negation": 1,
+          "keyword": 1,
+          "double_negation": 1,
+          "attribution": 1,
+          "quotation": 1,
+          "temporal": 1
+         }
+        },
+        "false": {
+         "observations": 7,
+         "families": 7,
+         "objective": 0.19444444444444445,
+         "tags": {
+          "hypothetical": 1,
+          "negation": 1,
+          "keyword": 1,
+          "double_negation": 1,
+          "attribution": 1,
+          "quotation": 1,
+          "temporal": 1
+         }
+        }
+       },
+       "human": {
+        "true": {
+         "observations": 4,
+         "families": 2,
+         "objective": 0.1111111111111111,
+         "tags": {
+          "implicit": 2,
+          "contrast": 2
+         }
+        },
+        "false": {
+         "observations": 4,
+         "families": 2,
+         "objective": 0.1111111111111111,
+         "tags": {
+          "implicit": 2,
+          "contrast": 2
+         }
+        }
+       },
+       "verified": {
+        "true": {
+         "observations": 7,
+         "families": 7,
+         "objective": 0.19444444444444445,
+         "tags": {
+          "performed-vs-verified": 1,
+          "attribution": 1,
+          "supersession": 1,
+          "command-vs-result": 1,
+          "hypothetical": 1,
+          "conflict": 1,
+          "quoted-instruction": 1
+         }
+        },
+        "false": {
+         "observations": 7,
+         "families": 7,
+         "objective": 0.19444444444444445,
+         "tags": {
+          "performed-vs-verified": 1,
+          "attribution": 1,
+          "supersession": 1,
+          "command-vs-result": 1,
+          "hypothetical": 1,
+          "conflict": 1,
+          "quoted-instruction": 1
+         }
+        }
+       }
+      }
+     },
+     "model_select": {
+      "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+       "refund": {
+        "true": {
+         "observations": 2,
+         "families": 2,
+         "objective": 0.14285714285714285,
+         "tags": {
+          "attribution": 1,
+          "supersession": 1
+         }
+        },
+        "false": {
+         "observations": 2,
+         "families": 2,
+         "objective": 0.14285714285714285,
+         "tags": {
+          "attribution": 1,
+          "supersession": 1
+         }
+        }
+       },
+       "human": {
+        "true": {
+         "observations": 2,
+         "families": 2,
+         "objective": 0.14285714285714285,
+         "tags": {
+          "attribution": 1,
+          "supersession": 1
+         }
+        },
+        "false": {
+         "observations": 2,
+         "families": 2,
+         "objective": 0.14285714285714285,
+         "tags": {
+          "attribution": 1,
+          "supersession": 1
+         }
+        }
+       },
+       "verified": {
+        "true": {
+         "observations": 3,
+         "families": 3,
+         "objective": 0.21428571428571427,
+         "tags": {
+          "temporal": 1,
+          "performed-vs-verified": 1,
+          "requested-vs-verified": 1
+         }
+        },
+        "false": {
+         "observations": 3,
+         "families": 3,
+         "objective": 0.21428571428571427,
+         "tags": {
+          "temporal": 1,
+          "performed-vs-verified": 1,
+          "requested-vs-verified": 1
+         }
+        }
+       }
+      }
+     }
+    },
+    "unsupported_classes": {},
+    "absent_fit_support": {
+     "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": []
+    },
+    "slices": {}
+   },
+   "acceptance": {
+    "policy": "authored",
+    "calibration": "absent",
+    "acceptance_fit": {},
+    "targets": [
+     "human",
+     "refund",
+     "verified"
+    ],
+    "evidence": "in-sample threshold-fit diagnostics; the independent check supplies held-out evidence",
+    "policies": {
+     "refund": {
+      "judge": {
+       "true": {
+        "theta": 0.9,
+        "status": "uncalibrated_default",
+        "calibration": "absent",
+        "fit": null,
+        "state": "absent"
+       },
+       "false": {
+        "theta": 0.9,
+        "status": "uncalibrated_default",
+        "calibration": "absent",
+        "fit": null,
+        "state": "absent"
+       }
+      }
+     },
+     "human": {
+      "judge": {
+       "true": {
+        "theta": 0.9,
+        "status": "uncalibrated_default",
+        "calibration": "absent",
+        "fit": null,
+        "state": "absent"
+       },
+       "false": {
+        "theta": 0.9,
+        "status": "uncalibrated_default",
+        "calibration": "absent",
+        "fit": null,
+        "state": "absent"
+       }
+      }
+     },
+     "verified": {
+      "judge": {
+       "true": {
+        "theta": 0.9,
+        "status": "uncalibrated_default",
+        "calibration": "absent",
+        "fit": null,
+        "state": "absent"
+       },
+       "false": {
+        "theta": 0.9,
+        "status": "uncalibrated_default",
+        "calibration": "absent",
+        "fit": null,
+        "state": "absent"
+       }
+      }
+     }
+    }
+   },
+   "candidates": [
+    {
+     "name": "base",
+     "raw_correct": 11,
+     "submitted": 14,
+     "wrong_accepted": 2,
+     "accepted": 13,
+     "class_regressions": [],
+     "selection_work": {
+      "public_seconds": 2.7553579680097755,
+      "diagnostic_seconds": 0.00108269602060318,
+      "total_seconds": 2.7564406640303787,
+      "diagnostic_reuse": {
+       "requests": 14,
+       "reused": 14,
+       "scored": 0,
+       "rows": 14,
+       "scored_rows": 0
+      },
+      "reused_public_rows": 0,
+      "reused_native_rows": 0,
+      "invocation_seconds": 0.0,
+      "reused_baseline": true
+     }
+    },
+    {
+     "name": "step-10",
+     "raw_correct": 11,
+     "submitted": 14,
+     "wrong_accepted": 3,
+     "accepted": 14,
+     "class_regressions": [
+      "verified:false"
+     ],
+     "selection_work": {
+      "public_seconds": 2.9520150760072283,
+      "diagnostic_seconds": 0.0004631149931810796,
+      "total_seconds": 2.9524781910004094,
+      "diagnostic_reuse": {
+       "requests": 14,
+       "reused": 14,
+       "scored": 0,
+       "rows": 14,
+       "scored_rows": 0
+      },
+      "reused_public_rows": 14,
+      "reused_native_rows": 14,
+      "invocation_seconds": 0.0007228720060084015
+     }
+    },
+    {
+     "name": "step-5",
+     "raw_correct": 8,
+     "submitted": 14,
+     "wrong_accepted": 6,
+     "accepted": 14,
+     "class_regressions": [
+      "human:false",
+      "refund:false",
+      "verified:false"
+     ],
+     "selection_work": {
+      "public_seconds": 3.250088308006525,
+      "diagnostic_seconds": 0.0011019509984180331,
+      "total_seconds": 3.251190259004943,
+      "diagnostic_reuse": {
+       "requests": 14,
+       "reused": 14,
+       "scored": 0,
+       "rows": 14,
+       "scored_rows": 0
+      },
+      "reused_public_rows": 14,
+      "reused_native_rows": 14,
+      "invocation_seconds": 0.00018632900901138783
+     }
+    }
+   ],
+   "work_root": "/home/tribeiro/Projects/semantic-select/work/training-workflow-20261016/customer",
+   "recipe": {
+    "rank": 16,
+    "alpha": 32,
+    "dropout": 0.0,
+    "learning_rate": 0.0002,
+    "schedule": "constant",
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "epochs": 2,
+    "min_epochs": 2,
+    "seed": 0,
+    "batch_size": 8,
+    "microbatch": 1,
+    "evaluation_batch_size": 1,
+    "fit_probe_observations": 0,
+    "max_padded_tokens": 8192,
+    "target_modules": [
+     "q_proj",
+     "k_proj",
+     "v_proj",
+     "o_proj",
+     "gate_proj",
+     "up_proj",
+     "down_proj"
+    ],
+    "warmup_examples": 6,
+    "patience_examples": 36,
+    "min_improvement": 0.001,
+    "selection_unit": "observation",
+    "objective_balance": "situation",
+    "behavior_slices": [],
+    "development_recall": [],
+    "eval_every_examples": 36
+   },
+   "base": {
+    "manifest": "1091cf490496e232e5f97d712f496b9cf839fa7441eed47d617f7a67a22e7477",
+    "quant": "Q4_0",
+    "sha256": "4d0933b6e1b8ac3e176939544c95fcb10f968bebac8cc783891acced981ccbbe",
+    "repo": "google/gemma-4-E2B-it",
+    "commit": "3e22461f65e89153144f8adb70e3b8c2cc9845a7"
+   }
+  },
+  "operations": {
+   "state": "completed",
+   "request": "1959fb82b63163f9486054814a52fa716b075ac383ee0ee78d799d9c99beb3a4",
+   "job_id": "f5934fc5adfd2fe4227e6eac9abf13cb2045a508f2a9255891e9fb5fc73cac59",
+   "fit_id": "23f978fe3b2a6d1b6557d9bfbe866f4416cacba4fc8008ce16665a20a295deb8",
+   "receipt_id": "bbad5d8ed20942e70a5d8fb5a2665b51e12bb5298c2f6c7cfae312b9f4dc1c54",
+   "assessment_id": "3f7fb3497986dd763922117f7c6e443e34c42102ab4422d13f625221294a53f4",
+   "selected": "base",
+   "summary": {
+    "outcome": "base_retained",
+    "selected": "base",
+    "comparator": "base",
+    "correct": 6,
+    "submitted": 6,
+    "wrong_accepted": 0,
+    "coverage": 1.0,
+    "independent": false,
+    "ranking_key": "base",
+    "compared_with": "step-4"
+   },
+   "reason": {
+    "selected": "base",
+    "compared_with": "step-4",
+    "first_differing_key": "base",
+    "selected_value": false,
+    "alternative_value": true,
+    "rule": {
+     "unit": "observation",
+     "order": [
+      "correct",
+      "regressions",
+      "base",
+      "step"
+     ],
+     "nll": "unavailable"
+    },
+    "accepted_errors_determine_ranking": false
+   },
+   "support": {
+    "roles": {
+     "fit": {
+      "86f6e39789ab450746461fd0d9fd1418b87390db397338a15489f473a2da90a6": {
+       "verified": {
+        "true": {
+         "observations": 7,
+         "families": 7,
+         "objective": 0.5,
+         "tags": {
+          "performed-vs-verified": 1,
+          "attribution": 1,
+          "supersession": 1,
+          "command-vs-result": 1,
+          "hypothetical": 1,
+          "conflict": 1,
+          "quoted-instruction": 1
+         }
+        },
+        "false": {
+         "observations": 7,
+         "families": 7,
+         "objective": 0.5,
+         "tags": {
+          "performed-vs-verified": 1,
+          "attribution": 1,
+          "supersession": 1,
+          "command-vs-result": 1,
+          "hypothetical": 1,
+          "conflict": 1,
+          "quoted-instruction": 1
+         }
+        }
+       }
+      }
+     },
+     "model_select": {
+      "86f6e39789ab450746461fd0d9fd1418b87390db397338a15489f473a2da90a6": {
+       "verified": {
+        "true": {
+         "observations": 3,
+         "families": 3,
+         "objective": 0.5,
+         "tags": {
+          "temporal": 1,
+          "performed-vs-verified": 1,
+          "requested-vs-verified": 1
+         }
+        },
+        "false": {
+         "observations": 3,
+         "families": 3,
+         "objective": 0.5,
+         "tags": {
+          "temporal": 1,
+          "performed-vs-verified": 1,
+          "requested-vs-verified": 1
+         }
+        }
+       }
+      }
+     }
+    },
+    "unsupported_classes": {},
+    "absent_fit_support": {
+     "86f6e39789ab450746461fd0d9fd1418b87390db397338a15489f473a2da90a6": []
+    },
+    "slices": {}
+   },
+   "acceptance": {
+    "policy": "authored",
+    "calibration": "absent",
+    "acceptance_fit": {},
+    "targets": [
+     "verified"
+    ],
+    "evidence": "in-sample threshold-fit diagnostics; the independent check supplies held-out evidence",
+    "policies": {
+     "verified": {
+      "judge": {
+       "true": {
+        "theta": 0.9,
+        "status": "uncalibrated_default",
+        "calibration": "absent",
+        "fit": null,
+        "state": "absent"
+       },
+       "false": {
+        "theta": 0.9,
+        "status": "uncalibrated_default",
+        "calibration": "absent",
+        "fit": null,
+        "state": "absent"
+       }
+      }
+     }
+    }
+   },
+   "candidates": [
+    {
+     "name": "base",
+     "raw_correct": 6,
+     "submitted": 6,
+     "wrong_accepted": 0,
+     "accepted": 6,
+     "class_regressions": [],
+     "selection_work": {
+      "public_seconds": 1.1920533850206994,
+      "diagnostic_seconds": 0.0004273040103726089,
+      "total_seconds": 1.192480689031072,
+      "diagnostic_reuse": {
+       "requests": 6,
+       "reused": 6,
+       "scored": 0,
+       "rows": 6,
+       "scored_rows": 0
+      },
+      "reused_public_rows": 0,
+      "reused_native_rows": 0,
+      "invocation_seconds": 0.0,
+      "reused_baseline": true
+     }
+    },
+    {
+     "name": "step-4",
+     "raw_correct": 6,
+     "submitted": 6,
+     "wrong_accepted": 0,
+     "accepted": 5,
+     "class_regressions": [],
+     "selection_work": {
+      "public_seconds": 1.1257018789765425,
+      "diagnostic_seconds": 0.0005426320130936801,
+      "total_seconds": 1.1262445109896362,
+      "diagnostic_reuse": {
+       "requests": 6,
+       "reused": 6,
+       "scored": 0,
+       "rows": 6,
+       "scored_rows": 0
+      },
+      "reused_public_rows": 0,
+      "reused_native_rows": 0,
+      "invocation_seconds": 1.1658008719969075
+     }
+    },
+    {
+     "name": "step-8",
+     "raw_correct": 3,
+     "submitted": 6,
+     "wrong_accepted": 3,
+     "accepted": 6,
+     "class_regressions": [
+      "verified:false"
+     ],
+     "selection_work": {
+      "public_seconds": 1.1006564760173205,
+      "diagnostic_seconds": 0.00029442302184179425,
+      "total_seconds": 1.1009508990391623,
+      "diagnostic_reuse": {
+       "requests": 6,
+       "reused": 6,
+       "scored": 0,
+       "rows": 6,
+       "scored_rows": 0
+      },
+      "reused_public_rows": 0,
+      "reused_native_rows": 0,
+      "invocation_seconds": 1.1132029099971987
+     }
+    }
+   ],
+   "work_root": "/home/tribeiro/Projects/semantic-select/work/training-workflow-20261016/operations/run",
+   "recipe": {
+    "rank": 16,
+    "alpha": 32,
+    "dropout": 0.0,
+    "learning_rate": 0.0002,
+    "schedule": "constant",
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "epochs": 2,
+    "min_epochs": 2,
+    "seed": 0,
+    "batch_size": 4,
+    "microbatch": 1,
+    "evaluation_batch_size": 1,
+    "fit_probe_observations": 0,
+    "max_padded_tokens": 8192,
+    "target_modules": [
+     "q_proj",
+     "k_proj",
+     "v_proj",
+     "o_proj",
+     "gate_proj",
+     "up_proj",
+     "down_proj"
+    ],
+    "warmup_examples": 3,
+    "patience_examples": 14,
+    "min_improvement": 0.001,
+    "selection_unit": "observation",
+    "objective_balance": "situation",
+    "behavior_slices": [],
+    "development_recall": [],
+    "eval_every_examples": 14
+   },
+   "base": {
+    "manifest": "1091cf490496e232e5f97d712f496b9cf839fa7441eed47d617f7a67a22e7477",
+    "quant": "Q4_0",
+    "sha256": "4d0933b6e1b8ac3e176939544c95fcb10f968bebac8cc783891acced981ccbbe",
+    "repo": "google/gemma-4-E2B-it",
+    "commit": "3e22461f65e89153144f8adb70e3b8c2cc9845a7"
+   }
+  }
+ },
+ "controls": {
+  "methods": {
+   "majority": {
+    "tie_break": "declared class order",
+    "role": "fit"
+   },
+   "lexical": {
+    "role": "fit",
+    "c": 10.0,
+    "seed": 0,
+    "max_iter": 5000,
+    "tolerance": 0.0001,
+    "solver": "lbfgs",
+    "versions": {
+     "scikit-learn": "1.9.1",
+     "scipy": "1.18.1"
+    }
+   }
+  },
+  "outcomes": {
+   "majority": {
+    "submitted": 14,
+    "predicted": 14,
+    "raw_correct": 7,
+    "raw_wrong": 7,
+    "correct_per_submission": 0.5,
+    "accuracy_given_prediction": 0.5,
+    "accepted": null,
+    "correct_accepted": null,
+    "wrong_accepted": null,
+    "coverage": null,
+    "precision": null,
+    "correct_accepted_rate": null,
+    "correct_rejected": null,
+    "wrong_rejected": null,
+    "acceptance": "unassessed",
+    "unassessed_reference": 0,
+    "accepted_unassessed": 0,
+    "failed": 0,
+    "unavailable": 0,
+    "wrong_accepted_per_submission": null,
+    "per_class": {
+     "refund": {
+      "true": {
+       "gold": 2,
+       "predicted": 4,
+       "correct": 2,
+       "recall": 1.0
+      },
+      "false": {
+       "gold": 2,
+       "predicted": 0,
+       "correct": 0,
+       "recall": 0.0
+      }
+     },
+     "human": {
+      "true": {
+       "gold": 2,
+       "predicted": 4,
+       "correct": 2,
+       "recall": 1.0
+      },
+      "false": {
+       "gold": 2,
+       "predicted": 0,
+       "correct": 0,
+       "recall": 0.0
+      }
+     },
+     "verified": {
+      "true": {
+       "gold": 3,
+       "predicted": 6,
+       "correct": 3,
+       "recall": 1.0
+      },
+      "false": {
+       "gold": 3,
+       "predicted": 0,
+       "correct": 0,
+       "recall": 0.0
+      }
+     }
+    },
+    "behaviors": {
+     "attribution": {
+      "submitted": 4,
+      "predicted": 4,
+      "raw_correct": 2,
+      "raw_wrong": 2,
+      "correct_per_submission": 0.5,
+      "accuracy_given_prediction": 0.5,
+      "accepted": null,
+      "correct_accepted": null,
+      "wrong_accepted": null,
+      "coverage": null,
+      "precision": null,
+      "correct_accepted_rate": null,
+      "correct_rejected": null,
+      "wrong_rejected": null,
+      "acceptance": "unassessed"
+     },
+     "performed-vs-verified": {
+      "submitted": 2,
+      "predicted": 2,
+      "raw_correct": 1,
+      "raw_wrong": 1,
+      "correct_per_submission": 0.5,
+      "accuracy_given_prediction": 0.5,
+      "accepted": null,
+      "correct_accepted": null,
+      "wrong_accepted": null,
+      "coverage": null,
+      "precision": null,
+      "correct_accepted_rate": null,
+      "correct_rejected": null,
+      "wrong_rejected": null,
+      "acceptance": "unassessed"
+     },
+     "requested-vs-verified": {
+      "submitted": 2,
+      "predicted": 2,
+      "raw_correct": 1,
+      "raw_wrong": 1,
+      "correct_per_submission": 0.5,
+      "accuracy_given_prediction": 0.5,
+      "accepted": null,
+      "correct_accepted": null,
+      "wrong_accepted": null,
+      "coverage": null,
+      "precision": null,
+      "correct_accepted_rate": null,
+      "correct_rejected": null,
+      "wrong_rejected": null,
+      "acceptance": "unassessed"
+     },
+     "supersession": {
+      "submitted": 4,
+      "predicted": 4,
+      "raw_correct": 2,
+      "raw_wrong": 2,
+      "correct_per_submission": 0.5,
+      "accuracy_given_prediction": 0.5,
+      "accepted": null,
+      "correct_accepted": null,
+      "wrong_accepted": null,
+      "coverage": null,
+      "precision": null,
+      "correct_accepted_rate": null,
+      "correct_rejected": null,
+      "wrong_rejected": null,
+      "acceptance": "unassessed"
+     },
+     "temporal": {
+      "submitted": 2,
+      "predicted": 2,
+      "raw_correct": 1,
+      "raw_wrong": 1,
+      "correct_per_submission": 0.5,
+      "accuracy_given_prediction": 0.5,
+      "accepted": null,
+      "correct_accepted": null,
+      "wrong_accepted": null,
+      "coverage": null,
+      "precision": null,
+      "correct_accepted_rate": null,
+      "correct_rejected": null,
+      "wrong_rejected": null,
+      "acceptance": "unassessed"
+     }
+    },
+    "pairs": {
+     "assessed": 7,
+     "all_correct": 0
+    }
+   },
+   "base": {
+    "submitted": 14,
+    "predicted": 14,
+    "raw_correct": 11,
+    "raw_wrong": 3,
+    "correct_per_submission": 0.7857142857142857,
+    "accuracy_given_prediction": 0.7857142857142857,
+    "accepted": 13,
+    "correct_accepted": 11,
+    "wrong_accepted": 2,
+    "coverage": 0.9285714285714286,
+    "precision": 0.8461538461538461,
+    "correct_accepted_rate": 0.7857142857142857,
+    "correct_rejected": 0,
+    "wrong_rejected": 1,
+    "unassessed_reference": 0,
+    "accepted_unassessed": 0,
+    "failed": 0,
+    "unavailable": 0,
+    "wrong_accepted_per_submission": 0.14285714285714285,
+    "per_class": {
+     "refund": {
+      "true": {
+       "gold": 2,
+       "predicted": 1,
+       "correct": 1,
+       "recall": 0.5
+      },
+      "false": {
+       "gold": 2,
+       "predicted": 3,
+       "correct": 2,
+       "recall": 1.0
+      }
+     },
+     "human": {
+      "true": {
+       "gold": 2,
+       "predicted": 0,
+       "correct": 0,
+       "recall": 0.0
+      },
+      "false": {
+       "gold": 2,
+       "predicted": 4,
+       "correct": 2,
+       "recall": 1.0
+      }
+     },
+     "verified": {
+      "true": {
+       "gold": 3,
+       "predicted": 3,
+       "correct": 3,
+       "recall": 1.0
+      },
+      "false": {
+       "gold": 3,
+       "predicted": 3,
+       "correct": 3,
+       "recall": 1.0
+      }
+     }
+    },
+    "behaviors": {
+     "attribution": {
+      "submitted": 4,
+      "predicted": 4,
+      "raw_correct": 2,
+      "raw_wrong": 2,
+      "correct_per_submission": 0.5,
+      "accuracy_given_prediction": 0.5,
+      "accepted": 3,
+      "correct_accepted": 2,
+      "wrong_accepted": 1,
+      "coverage": 0.75,
+      "precision": 0.6666666666666666,
+      "correct_accepted_rate": 0.5,
+      "correct_rejected": 0,
+      "wrong_rejected": 1
+     },
+     "performed-vs-verified": {
+      "submitted": 2,
+      "predicted": 2,
+      "raw_correct": 2,
+      "raw_wrong": 0,
+      "correct_per_submission": 1.0,
+      "accuracy_given_prediction": 1.0,
+      "accepted": 2,
+      "correct_accepted": 2,
+      "wrong_accepted": 0,
+      "coverage": 1.0,
+      "precision": 1.0,
+      "correct_accepted_rate": 1.0,
+      "correct_rejected": 0,
+      "wrong_rejected": 0
+     },
+     "requested-vs-verified": {
+      "submitted": 2,
+      "predicted": 2,
+      "raw_correct": 2,
+      "raw_wrong": 0,
+      "correct_per_submission": 1.0,
+      "accuracy_given_prediction": 1.0,
+      "accepted": 2,
+      "correct_accepted": 2,
+      "wrong_accepted": 0,
+      "coverage": 1.0,
+      "precision": 1.0,
+      "correct_accepted_rate": 1.0,
+      "correct_rejected": 0,
+      "wrong_rejected": 0
+     },
+     "supersession": {
+      "submitted": 4,
+      "predicted": 4,
+      "raw_correct": 3,
+      "raw_wrong": 1,
+      "correct_per_submission": 0.75,
+      "accuracy_given_prediction": 0.75,
+      "accepted": 4,
+      "correct_accepted": 3,
+      "wrong_accepted": 1,
+      "coverage": 1.0,
+      "precision": 0.75,
+      "correct_accepted_rate": 0.75,
+      "correct_rejected": 0,
+      "wrong_rejected": 0
+     },
+     "temporal": {
+      "submitted": 2,
+      "predicted": 2,
+      "raw_correct": 2,
+      "raw_wrong": 0,
+      "correct_per_submission": 1.0,
+      "accuracy_given_prediction": 1.0,
+      "accepted": 2,
+      "correct_accepted": 2,
+      "wrong_accepted": 0,
+      "coverage": 1.0,
+      "precision": 1.0,
+      "correct_accepted_rate": 1.0,
+      "correct_rejected": 0,
+      "wrong_rejected": 0
+     }
+    },
+    "pairs": {
+     "assessed": 7,
+     "all_correct": 4
+    }
+   },
+   "lexical": {
+    "submitted": 14,
+    "predicted": 14,
+    "raw_correct": 7,
+    "raw_wrong": 7,
+    "correct_per_submission": 0.5,
+    "accuracy_given_prediction": 0.5,
+    "accepted": null,
+    "correct_accepted": null,
+    "wrong_accepted": null,
+    "coverage": null,
+    "precision": null,
+    "correct_accepted_rate": null,
+    "correct_rejected": null,
+    "wrong_rejected": null,
+    "acceptance": "unassessed",
+    "unassessed_reference": 0,
+    "accepted_unassessed": 0,
+    "failed": 0,
+    "unavailable": 0,
+    "wrong_accepted_per_submission": null,
+    "per_class": {
+     "refund": {
+      "true": {
+       "gold": 2,
+       "predicted": 0,
+       "correct": 0,
+       "recall": 0.0
+      },
+      "false": {
+       "gold": 2,
+       "predicted": 4,
+       "correct": 2,
+       "recall": 1.0
+      }
+     },
+     "human": {
+      "true": {
+       "gold": 2,
+       "predicted": 0,
+       "correct": 0,
+       "recall": 0.0
+      },
+      "false": {
+       "gold": 2,
+       "predicted": 4,
+       "correct": 2,
+       "recall": 1.0
+      }
+     },
+     "verified": {
+      "true": {
+       "gold": 3,
+       "predicted": 0,
+       "correct": 0,
+       "recall": 0.0
+      },
+      "false": {
+       "gold": 3,
+       "predicted": 6,
+       "correct": 3,
+       "recall": 1.0
+      }
+     }
+    },
+    "behaviors": {
+     "attribution": {
+      "submitted": 4,
+      "predicted": 4,
+      "raw_correct": 2,
+      "raw_wrong": 2,
+      "correct_per_submission": 0.5,
+      "accuracy_given_prediction": 0.5,
+      "accepted": null,
+      "correct_accepted": null,
+      "wrong_accepted": null,
+      "coverage": null,
+      "precision": null,
+      "correct_accepted_rate": null,
+      "correct_rejected": null,
+      "wrong_rejected": null,
+      "acceptance": "unassessed"
+     },
+     "performed-vs-verified": {
+      "submitted": 2,
+      "predicted": 2,
+      "raw_correct": 1,
+      "raw_wrong": 1,
+      "correct_per_submission": 0.5,
+      "accuracy_given_prediction": 0.5,
+      "accepted": null,
+      "correct_accepted": null,
+      "wrong_accepted": null,
+      "coverage": null,
+      "precision": null,
+      "correct_accepted_rate": null,
+      "correct_rejected": null,
+      "wrong_rejected": null,
+      "acceptance": "unassessed"
+     },
+     "requested-vs-verified": {
+      "submitted": 2,
+      "predicted": 2,
+      "raw_correct": 1,
+      "raw_wrong": 1,
+      "correct_per_submission": 0.5,
+      "accuracy_given_prediction": 0.5,
+      "accepted": null,
+      "correct_accepted": null,
+      "wrong_accepted": null,
+      "coverage": null,
+      "precision": null,
+      "correct_accepted_rate": null,
+      "correct_rejected": null,
+      "wrong_rejected": null,
+      "acceptance": "unassessed"
+     },
+     "supersession": {
+      "submitted": 4,
+      "predicted": 4,
+      "raw_correct": 2,
+      "raw_wrong": 2,
+      "correct_per_submission": 0.5,
+      "accuracy_given_prediction": 0.5,
+      "accepted": null,
+      "correct_accepted": null,
+      "wrong_accepted": null,
+      "coverage": null,
+      "precision": null,
+      "correct_accepted_rate": null,
+      "correct_rejected": null,
+      "wrong_rejected": null,
+      "acceptance": "unassessed"
+     },
+     "temporal": {
+      "submitted": 2,
+      "predicted": 2,
+      "raw_correct": 1,
+      "raw_wrong": 1,
+      "correct_per_submission": 0.5,
+      "accuracy_given_prediction": 0.5,
+      "accepted": null,
+      "correct_accepted": null,
+      "wrong_accepted": null,
+      "coverage": null,
+      "precision": null,
+      "correct_accepted_rate": null,
+      "correct_rejected": null,
+      "wrong_rejected": null,
+      "acceptance": "unassessed"
+     }
+    },
+    "pairs": {
+     "assessed": 7,
+     "all_correct": 0
+    }
+   }
+  },
+  "replay": {
+   "freeze": "reused",
+   "assets": "reused",
+   "export": "reused",
+   "population": "reused",
+   "baseline": "reused"
+  }
+ },
+ "recovery": {
+  "interrupted_state": "cancelled",
+  "resumed_state": "completed",
+  "updates": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ],
+  "same_fit_directory": true
+ },
+ "fit_diagnosis": {
+  "kind": "fit-diagnostic",
+  "target": null,
+  "class": null,
+  "requested_families": 4,
+  "fit_families": [
+   "41b24de8f05abcf92e9a8a03d87d0bf8d18c61f16713f13714a6f9168f7886a0",
+   "746205d4c9d2e3b4cc959cbd80e0eca3ee41c869d7f4c16e01e22a5041017bd6",
+   "752ebd45fb900fc3294f213688091a97b0a9ff32b387c4e173e0d2be8d712e50",
+   "f13d09ef749539deb771bfbd81211e35a64191ee9828df92455507e4418c7718"
+  ],
+  "observations": 10,
+  "role": "fit",
+  "probe": "in_sample",
+  "rank": 16,
+  "alpha": 32,
+  "effective_scale": 2.0,
+  "learning_rate": 0.0002,
+  "batch_size": 8,
+  "initializer": "fresh",
+  "cohort": [
+   {
+    "id": "8a920597aaf4c0f9b071a2c48f12a190ad59074d121a68db024d7686fc6d486c",
+    "family": "746205d4c9d2e3b4cc959cbd80e0eca3ee41c869d7f4c16e01e22a5041017bd6",
+    "role": "fit",
+    "target": "refund",
+    "class": "true",
+    "presentations": [
+     "7a2b0d423580d41a69f3acf09ef1337a79561eb4a9a2354e33ba72c6ba0b2462"
+    ]
+   },
+   {
+    "id": "a8bcb617b39ce98adb5d5ea5b2e89d2fdeb5930eba72669e9ae4c6aee07b410c",
+    "family": "746205d4c9d2e3b4cc959cbd80e0eca3ee41c869d7f4c16e01e22a5041017bd6",
+    "role": "fit",
+    "target": "refund",
+    "class": "false",
+    "presentations": [
+     "ad9d9b085332833d8169326ac8006462139bd6d38985bded6f322df595e7a32c"
+    ]
+   },
+   {
+    "id": "8e9e04504850d7545047b65d0de50ac191ce98098fd8122e4efb3e329671d510",
+    "family": "752ebd45fb900fc3294f213688091a97b0a9ff32b387c4e173e0d2be8d712e50",
+    "role": "fit",
+    "target": "refund",
+    "class": "false",
+    "presentations": [
+     "17e465c5d24d3bf42512e700003ea6cf94707b2acd810614d7fe9d6a32504fb5"
+    ]
+   },
+   {
+    "id": "077d2dce8927eca4c0114dff20dafd63558be317883a932c7de64a32fa613a36",
+    "family": "752ebd45fb900fc3294f213688091a97b0a9ff32b387c4e173e0d2be8d712e50",
+    "role": "fit",
+    "target": "refund",
+    "class": "true",
+    "presentations": [
+     "d70389b669ef66a2e0ab63e0a0634cd61771537f69d722b8928c28ee70a9a795"
+    ]
+   },
+   {
+    "id": "e5cffaaa888e9ff60fe83e1e719df056630e8d86bab1266f3e9e42af0dff1ee6",
+    "family": "41b24de8f05abcf92e9a8a03d87d0bf8d18c61f16713f13714a6f9168f7886a0",
+    "role": "fit",
+    "target": "human",
+    "class": "true",
+    "presentations": [
+     "7236b830c227e50f678576d5fc762d8d22e4a311bd4f61196c3a2f8670bd58c9"
+    ]
+   },
+   {
+    "id": "2dee55584ac379291a702a706b2e77d98e1b9a11fbe315e8cbccecc931e94233",
+    "family": "41b24de8f05abcf92e9a8a03d87d0bf8d18c61f16713f13714a6f9168f7886a0",
+    "role": "fit",
+    "target": "human",
+    "class": "false",
+    "presentations": [
+     "5abff41fe486309c78734764262d4e944a1f80cd62a2aa34d1b4cfa104fb030b"
+    ]
+   },
+   {
+    "id": "518b058f1501846920b2056cfd219c24681caa7dcb9f5082abde2af7adeb5aff",
+    "family": "41b24de8f05abcf92e9a8a03d87d0bf8d18c61f16713f13714a6f9168f7886a0",
+    "role": "fit",
+    "target": "human",
+    "class": "true",
+    "presentations": [
+     "f700c229f93b59c82ebf41e4123e43c60c952e7299e3c6a73a35d83b39f891f9"
+    ]
+   },
+   {
+    "id": "fab0952187b4f662be9b1bf272384406f53a98d26dd77bda0a46cfd61c4872b0",
+    "family": "41b24de8f05abcf92e9a8a03d87d0bf8d18c61f16713f13714a6f9168f7886a0",
+    "role": "fit",
+    "target": "human",
+    "class": "false",
+    "presentations": [
+     "89c8cc88cde8a4331a3e900a40277a54dc2ed040e75414327a5bccd8b054b477"
+    ]
+   },
+   {
+    "id": "a7bbe03afd3dbbf6cb4baae41a11394318fed8c4c95cf0f689cbff85b1dea314",
+    "family": "29a21d8d6afe51fe13260b0d3b925b31029d4a5e8be68def504fe36b1696206f",
+    "role": "model_select",
+    "target": "verified",
+    "class": "false",
+    "presentations": [
+     "39fcf9737e766c4817026b12921ff55a92e666cf566ed4c4b3e8740eb9aa721f"
+    ]
+   },
+   {
+    "id": "2822ce62c3938b2d233b1b40cfae55fd978878ade4fc8f37edd80355d5caf3fd",
+    "family": "29a21d8d6afe51fe13260b0d3b925b31029d4a5e8be68def504fe36b1696206f",
+    "role": "model_select",
+    "target": "verified",
+    "class": "true",
+    "presentations": [
+     "89c8d0fb15f0836c0a516f94e087a9fe7389022ca3a068574b93b40943443f85"
+    ]
+   },
+   {
+    "id": "74e6a4bb35ab181b3e0012f8c812ae1d0d9465e6355800c2e1f71404e3675667",
+    "family": "f13d09ef749539deb771bfbd81211e35a64191ee9828df92455507e4418c7718",
+    "role": "fit",
+    "target": "verified",
+    "class": "false",
+    "presentations": [
+     "813a1cdb87dc421411e0bb663b206c6a4439f555d1a68e74b6db716f09b26272"
+    ]
+   },
+   {
+    "id": "c91b862824e3b3b74058500c16e3ab231a3ee084efc75cc76210abad6b863371",
+    "family": "f13d09ef749539deb771bfbd81211e35a64191ee9828df92455507e4418c7718",
+    "role": "fit",
+    "target": "verified",
+    "class": "true",
+    "presentations": [
+     "ac27e7822b3d10da60fd7b1ee2662ea80065d82b82f8e78f584825be267f722e"
+    ]
+   }
+  ],
+  "classes": {
+   "refund=true": 2,
+   "refund=false": 2,
+   "human=true": 2,
+   "human=false": 2,
+   "verified=false": 1,
+   "verified=true": 1
+  },
+  "contrasting_labels": true,
+  "baseline_errors": 0,
+  "assessment": "already_solved",
+  "trainable_parameters": 24158208,
+  "slot_errors": [],
+  "contradictions": [],
+  "probe_before": {
+   "enabled": true,
+   "correct": 10,
+   "submitted": 10,
+   "per_class": {
+    "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+     "verified": {
+      "true": {
+       "gold": 1,
+       "predicted": 1,
+       "correct": 1,
+       "recall": 1.0
+      },
+      "false": {
+       "gold": 1,
+       "predicted": 1,
+       "correct": 1,
+       "recall": 1.0
+      }
+     },
+     "refund": {
+      "true": {
+       "gold": 2,
+       "predicted": 2,
+       "correct": 2,
+       "recall": 1.0
+      },
+      "false": {
+       "gold": 2,
+       "predicted": 2,
+       "correct": 2,
+       "recall": 1.0
+      }
+     },
+     "human": {
+      "true": {
+       "gold": 2,
+       "predicted": 2,
+       "correct": 2,
+       "recall": 1.0
+      },
+      "false": {
+       "gold": 2,
+       "predicted": 2,
+       "correct": 2,
+       "recall": 1.0
+      }
+     }
+    }
+   },
+   "probabilities": {
+    "metric": "probabilities",
+    "protocol": {
+     "revision": 1,
+     "tolerance": 0.001,
+     "brier": "sum over every declared option of (p_k - 1[k = gold])**2; range [0, 2] at every width, never divided by the width",
+     "nll": "-ln p(gold) over the declared options; zero gold probability is an infinite-loss event reported as nonfinite, never floored",
+     "unconditioned_nll": "-ln(p(gold) * answer mass) for option-conditioned distributions whose computation supplies answer mass",
+     "top": "first maximal option in declared order",
+     "complete": "every declared option has a finite probability in [0, 1], the total is within 0.001 of one and the normalization is one of ['option-softmax@1', 'renormalize-within-rounding-bound@1']; nothing is renormalized or reconstructed from lower bounds, witnesses or composed output",
+     "scope": "final: one full-stage presentation produced the deployed distribution; staged final distributions are unassessed and their valid primitive stages are reported separately per stage",
+     "reliability": "top-answer probability in ten equal-width bins [k/10, (k+1)/10), the last bin closed so probability 1 is included; observed correctness is raw top-answer agreement with the declared reference",
+     "macro": "unweighted mean over the fixed tasks that have scored rows; describes these tasks, no unseen-task interval",
+     "micro": "every submitted target observation weighted equally",
+     "accepted": "correctness of policy-accepted answers; a separate population from model probability reliability",
+     "reference": "agreement with the declared reference; reviewed correctness only under a reviewed reference"
+    },
+    "micro": {
+     "submitted": 10,
+     "scored": 8,
+     "unscored": {
+      "failed": 0,
+      "missing": 0,
+      "unexamined": 0,
+      "not_judge": 0,
+      "staged": 0,
+      "no_distribution": 0,
+      "unknown_gold": 0,
+      "normalization": 0,
+      "invalid": 2,
+      "partial_options": 0,
+      "gold_outside_options": 0,
+      "incomplete": 0
+     },
+     "targets": 3,
+     "families": 4,
+     "scored_families": 4,
+     "brier": {
+      "value": 1.6313249954478251e-06,
+      "nonfinite": null,
+      "infinite": 0,
+      "finite_mean": 1.6313249954478251e-06,
+      "rows": 8
+     },
+     "nll": {
+      "value": 0.00033614842141105073,
+      "nonfinite": null,
+      "infinite": 0,
+      "finite_mean": 0.00033614842141105073,
+      "rows": 8
+     },
+     "unconditioned_nll": {
+      "value": 0.00033614842141105073,
+      "nonfinite": null,
+      "infinite": 0,
+      "finite_mean": 0.00033614842141105073,
+      "rows": 8,
+      "unavailable": 0
+     },
+     "zero_gold": 0,
+     "reliability": {
+      "bins": 10,
+      "edges": [
+       0.0,
+       0.1,
+       0.2,
+       0.3,
+       0.4,
+       0.5,
+       0.6,
+       0.7,
+       0.8,
+       0.9,
+       1.0
+      ],
+      "rows": 8,
+      "table": [
+       {
+        "lower": 0.0,
+        "upper": 0.1,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.1,
+        "upper": 0.2,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.2,
+        "upper": 0.3,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.3,
+        "upper": 0.4,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.4,
+        "upper": 0.5,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.5,
+        "upper": 0.6,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.6,
+        "upper": 0.7,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.7,
+        "upper": 0.8,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.8,
+        "upper": 0.9,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.9,
+        "upper": 1.0,
+        "upper_included": true,
+        "count": 8,
+        "families": 4,
+        "mean_predicted": 0.9996642600961329,
+        "observed_correct": 1.0,
+        "support": "sparse"
+       }
+      ],
+      "ece": {
+       "value": 0.00033573990386714936,
+       "edges": "the ten equal-width bins above",
+       "scope": "descriptive expected calibration error; not a gate"
+      }
+     },
+     "accepted": {
+      "accepted": 0,
+      "correct": 0,
+      "precision": null
+     }
+    },
+    "macro": {
+     "tasks": 1,
+     "contributing": 1,
+     "brier": {
+      "value": 1.6313249954478251e-06,
+      "nonfinite": null,
+      "infinite": 0,
+      "finite_mean": 1.6313249954478251e-06,
+      "rows": 1
+     },
+     "nll": {
+      "value": 0.00033614842141105073,
+      "nonfinite": null,
+      "infinite": 0,
+      "finite_mean": 0.00033614842141105073,
+      "rows": 1
+     }
+    },
+    "tasks": {
+     "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+      "submitted": 10,
+      "scored": 8,
+      "unscored": {
+       "failed": 0,
+       "missing": 0,
+       "unexamined": 0,
+       "not_judge": 0,
+       "staged": 0,
+       "no_distribution": 0,
+       "unknown_gold": 0,
+       "normalization": 0,
+       "invalid": 2,
+       "partial_options": 0,
+       "gold_outside_options": 0,
+       "incomplete": 0
+      },
+      "targets": 3,
+      "families": 4,
+      "scored_families": 4,
+      "brier": {
+       "value": 1.6313249954478251e-06,
+       "nonfinite": null,
+       "infinite": 0,
+       "finite_mean": 1.6313249954478251e-06,
+       "rows": 8
+      },
+      "nll": {
+       "value": 0.00033614842141105073,
+       "nonfinite": null,
+       "infinite": 0,
+       "finite_mean": 0.00033614842141105073,
+       "rows": 8
+      },
+      "unconditioned_nll": {
+       "value": 0.00033614842141105073,
+       "nonfinite": null,
+       "infinite": 0,
+       "finite_mean": 0.00033614842141105073,
+       "rows": 8,
+       "unavailable": 0
+      },
+      "zero_gold": 0,
+      "reliability": {
+       "bins": 10,
+       "edges": [
+        0.0,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        1.0
+       ],
+       "rows": 8,
+       "table": [
+        {
+         "lower": 0.0,
+         "upper": 0.1,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.1,
+         "upper": 0.2,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.2,
+         "upper": 0.3,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.3,
+         "upper": 0.4,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.4,
+         "upper": 0.5,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.5,
+         "upper": 0.6,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.6,
+         "upper": 0.7,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.7,
+         "upper": 0.8,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.8,
+         "upper": 0.9,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.9,
+         "upper": 1.0,
+         "upper_included": true,
+         "count": 8,
+         "families": 4,
+         "mean_predicted": 0.9996642600961329,
+         "observed_correct": 1.0,
+         "support": "sparse"
+        }
+       ],
+       "ece": {
+        "value": 0.00033573990386714936,
+        "edges": "the ten equal-width bins above",
+        "scope": "descriptive expected calibration error; not a gate"
+       }
+      },
+      "accepted": {
+       "accepted": 0,
+       "correct": 0,
+       "precision": null
+      }
+     }
+    },
+    "kinds": {
+     "check": {
+      "submitted": 10,
+      "scored": 8,
+      "unscored": {
+       "failed": 0,
+       "missing": 0,
+       "unexamined": 0,
+       "not_judge": 0,
+       "staged": 0,
+       "no_distribution": 0,
+       "unknown_gold": 0,
+       "normalization": 0,
+       "invalid": 2,
+       "partial_options": 0,
+       "gold_outside_options": 0,
+       "incomplete": 0
+      },
+      "targets": 3,
+      "families": 4,
+      "scored_families": 4,
+      "brier": {
+       "value": 1.6313249954478251e-06,
+       "nonfinite": null,
+       "infinite": 0,
+       "finite_mean": 1.6313249954478251e-06,
+       "rows": 8
+      },
+      "nll": {
+       "value": 0.00033614842141105073,
+       "nonfinite": null,
+       "infinite": 0,
+       "finite_mean": 0.00033614842141105073,
+       "rows": 8
+      },
+      "unconditioned_nll": {
+       "value": 0.00033614842141105073,
+       "nonfinite": null,
+       "infinite": 0,
+       "finite_mean": 0.00033614842141105073,
+       "rows": 8,
+       "unavailable": 0
+      },
+      "zero_gold": 0,
+      "reliability": {
+       "bins": 10,
+       "edges": [
+        0.0,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        1.0
+       ],
+       "rows": 8,
+       "table": [
+        {
+         "lower": 0.0,
+         "upper": 0.1,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.1,
+         "upper": 0.2,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.2,
+         "upper": 0.3,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.3,
+         "upper": 0.4,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.4,
+         "upper": 0.5,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.5,
+         "upper": 0.6,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.6,
+         "upper": 0.7,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.7,
+         "upper": 0.8,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.8,
+         "upper": 0.9,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.9,
+         "upper": 1.0,
+         "upper_included": true,
+         "count": 8,
+         "families": 4,
+         "mean_predicted": 0.9996642600961329,
+         "observed_correct": 1.0,
+         "support": "sparse"
+        }
+       ],
+       "ece": {
+        "value": 0.00033573990386714936,
+        "edges": "the ten equal-width bins above",
+        "scope": "descriptive expected calibration error; not a gate"
+       }
+      },
+      "accepted": {
+       "accepted": 0,
+       "correct": 0,
+       "precision": null
+      }
+     }
+    },
+    "stages": {}
+   },
+   "population": "in-sample fit probe; never independent quality"
+  },
+  "probe_after": {
+   "enabled": true,
+   "correct": 10,
+   "submitted": 10,
+   "per_class": {
+    "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+     "verified": {
+      "true": {
+       "gold": 1,
+       "predicted": 1,
+       "correct": 1,
+       "recall": 1.0
+      },
+      "false": {
+       "gold": 1,
+       "predicted": 1,
+       "correct": 1,
+       "recall": 1.0
+      }
+     },
+     "refund": {
+      "true": {
+       "gold": 2,
+       "predicted": 2,
+       "correct": 2,
+       "recall": 1.0
+      },
+      "false": {
+       "gold": 2,
+       "predicted": 2,
+       "correct": 2,
+       "recall": 1.0
+      }
+     },
+     "human": {
+      "true": {
+       "gold": 2,
+       "predicted": 2,
+       "correct": 2,
+       "recall": 1.0
+      },
+      "false": {
+       "gold": 2,
+       "predicted": 2,
+       "correct": 2,
+       "recall": 1.0
+      }
+     }
+    }
+   },
+   "probabilities": {
+    "metric": "probabilities",
+    "protocol": {
+     "revision": 1,
+     "tolerance": 0.001,
+     "brier": "sum over every declared option of (p_k - 1[k = gold])**2; range [0, 2] at every width, never divided by the width",
+     "nll": "-ln p(gold) over the declared options; zero gold probability is an infinite-loss event reported as nonfinite, never floored",
+     "unconditioned_nll": "-ln(p(gold) * answer mass) for option-conditioned distributions whose computation supplies answer mass",
+     "top": "first maximal option in declared order",
+     "complete": "every declared option has a finite probability in [0, 1], the total is within 0.001 of one and the normalization is one of ['option-softmax@1', 'renormalize-within-rounding-bound@1']; nothing is renormalized or reconstructed from lower bounds, witnesses or composed output",
+     "scope": "final: one full-stage presentation produced the deployed distribution; staged final distributions are unassessed and their valid primitive stages are reported separately per stage",
+     "reliability": "top-answer probability in ten equal-width bins [k/10, (k+1)/10), the last bin closed so probability 1 is included; observed correctness is raw top-answer agreement with the declared reference",
+     "macro": "unweighted mean over the fixed tasks that have scored rows; describes these tasks, no unseen-task interval",
+     "micro": "every submitted target observation weighted equally",
+     "accepted": "correctness of policy-accepted answers; a separate population from model probability reliability",
+     "reference": "agreement with the declared reference; reviewed correctness only under a reviewed reference"
+    },
+    "micro": {
+     "submitted": 10,
+     "scored": 10,
+     "unscored": {
+      "failed": 0,
+      "missing": 0,
+      "unexamined": 0,
+      "not_judge": 0,
+      "staged": 0,
+      "no_distribution": 0,
+      "unknown_gold": 0,
+      "normalization": 0,
+      "invalid": 0,
+      "partial_options": 0,
+      "gold_outside_options": 0,
+      "incomplete": 0
+     },
+     "targets": 3,
+     "families": 4,
+     "scored_families": 4,
+     "brier": {
+      "value": 1.018500037302498e-11,
+      "nonfinite": null,
+      "infinite": 0,
+      "finite_mean": 1.018500037302498e-11,
+      "rows": 10
+     },
+     "nll": {
+      "value": 7.629369008533827e-07,
+      "nonfinite": null,
+      "infinite": 0,
+      "finite_mean": 7.629369008533827e-07,
+      "rows": 10
+     },
+     "unconditioned_nll": {
+      "value": 1.1444066274103659e-06,
+      "nonfinite": null,
+      "infinite": 0,
+      "finite_mean": 1.1444066274103659e-06,
+      "rows": 10,
+      "unavailable": 0
+     },
+     "zero_gold": 0,
+     "reliability": {
+      "bins": 10,
+      "edges": [
+       0.0,
+       0.1,
+       0.2,
+       0.3,
+       0.4,
+       0.5,
+       0.6,
+       0.7,
+       0.8,
+       0.9,
+       1.0
+      ],
+      "rows": 10,
+      "table": [
+       {
+        "lower": 0.0,
+        "upper": 0.1,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.1,
+        "upper": 0.2,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.2,
+        "upper": 0.3,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.3,
+        "upper": 0.4,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.4,
+        "upper": 0.5,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.5,
+        "upper": 0.6,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.6,
+        "upper": 0.7,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.7,
+        "upper": 0.8,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.8,
+        "upper": 0.9,
+        "upper_included": false,
+        "count": 0,
+        "families": 0,
+        "mean_predicted": null,
+        "observed_correct": null,
+        "support": "empty"
+       },
+       {
+        "lower": 0.9,
+        "upper": 1.0,
+        "upper_included": true,
+        "count": 10,
+        "families": 4,
+        "mean_predicted": 0.9999992370656627,
+        "observed_correct": 1.0,
+        "support": "reported"
+       }
+      ],
+      "ece": {
+       "value": 7.629343372617114e-07,
+       "edges": "the ten equal-width bins above",
+       "scope": "descriptive expected calibration error; not a gate"
+      }
+     },
+     "accepted": {
+      "accepted": 0,
+      "correct": 0,
+      "precision": null
+     }
+    },
+    "macro": {
+     "tasks": 1,
+     "contributing": 1,
+     "brier": {
+      "value": 1.018500037302498e-11,
+      "nonfinite": null,
+      "infinite": 0,
+      "finite_mean": 1.018500037302498e-11,
+      "rows": 1
+     },
+     "nll": {
+      "value": 7.629369008533827e-07,
+      "nonfinite": null,
+      "infinite": 0,
+      "finite_mean": 7.629369008533827e-07,
+      "rows": 1
+     }
+    },
+    "tasks": {
+     "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+      "submitted": 10,
+      "scored": 10,
+      "unscored": {
+       "failed": 0,
+       "missing": 0,
+       "unexamined": 0,
+       "not_judge": 0,
+       "staged": 0,
+       "no_distribution": 0,
+       "unknown_gold": 0,
+       "normalization": 0,
+       "invalid": 0,
+       "partial_options": 0,
+       "gold_outside_options": 0,
+       "incomplete": 0
+      },
+      "targets": 3,
+      "families": 4,
+      "scored_families": 4,
+      "brier": {
+       "value": 1.018500037302498e-11,
+       "nonfinite": null,
+       "infinite": 0,
+       "finite_mean": 1.018500037302498e-11,
+       "rows": 10
+      },
+      "nll": {
+       "value": 7.629369008533827e-07,
+       "nonfinite": null,
+       "infinite": 0,
+       "finite_mean": 7.629369008533827e-07,
+       "rows": 10
+      },
+      "unconditioned_nll": {
+       "value": 1.1444066274103659e-06,
+       "nonfinite": null,
+       "infinite": 0,
+       "finite_mean": 1.1444066274103659e-06,
+       "rows": 10,
+       "unavailable": 0
+      },
+      "zero_gold": 0,
+      "reliability": {
+       "bins": 10,
+       "edges": [
+        0.0,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        1.0
+       ],
+       "rows": 10,
+       "table": [
+        {
+         "lower": 0.0,
+         "upper": 0.1,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.1,
+         "upper": 0.2,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.2,
+         "upper": 0.3,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.3,
+         "upper": 0.4,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.4,
+         "upper": 0.5,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.5,
+         "upper": 0.6,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.6,
+         "upper": 0.7,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.7,
+         "upper": 0.8,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.8,
+         "upper": 0.9,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.9,
+         "upper": 1.0,
+         "upper_included": true,
+         "count": 10,
+         "families": 4,
+         "mean_predicted": 0.9999992370656627,
+         "observed_correct": 1.0,
+         "support": "reported"
+        }
+       ],
+       "ece": {
+        "value": 7.629343372617114e-07,
+        "edges": "the ten equal-width bins above",
+        "scope": "descriptive expected calibration error; not a gate"
+       }
+      },
+      "accepted": {
+       "accepted": 0,
+       "correct": 0,
+       "precision": null
+      }
+     }
+    },
+    "kinds": {
+     "check": {
+      "submitted": 10,
+      "scored": 10,
+      "unscored": {
+       "failed": 0,
+       "missing": 0,
+       "unexamined": 0,
+       "not_judge": 0,
+       "staged": 0,
+       "no_distribution": 0,
+       "unknown_gold": 0,
+       "normalization": 0,
+       "invalid": 0,
+       "partial_options": 0,
+       "gold_outside_options": 0,
+       "incomplete": 0
+      },
+      "targets": 3,
+      "families": 4,
+      "scored_families": 4,
+      "brier": {
+       "value": 1.018500037302498e-11,
+       "nonfinite": null,
+       "infinite": 0,
+       "finite_mean": 1.018500037302498e-11,
+       "rows": 10
+      },
+      "nll": {
+       "value": 7.629369008533827e-07,
+       "nonfinite": null,
+       "infinite": 0,
+       "finite_mean": 7.629369008533827e-07,
+       "rows": 10
+      },
+      "unconditioned_nll": {
+       "value": 1.1444066274103659e-06,
+       "nonfinite": null,
+       "infinite": 0,
+       "finite_mean": 1.1444066274103659e-06,
+       "rows": 10,
+       "unavailable": 0
+      },
+      "zero_gold": 0,
+      "reliability": {
+       "bins": 10,
+       "edges": [
+        0.0,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        1.0
+       ],
+       "rows": 10,
+       "table": [
+        {
+         "lower": 0.0,
+         "upper": 0.1,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.1,
+         "upper": 0.2,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.2,
+         "upper": 0.3,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.3,
+         "upper": 0.4,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.4,
+         "upper": 0.5,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.5,
+         "upper": 0.6,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.6,
+         "upper": 0.7,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.7,
+         "upper": 0.8,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.8,
+         "upper": 0.9,
+         "upper_included": false,
+         "count": 0,
+         "families": 0,
+         "mean_predicted": null,
+         "observed_correct": null,
+         "support": "empty"
+        },
+        {
+         "lower": 0.9,
+         "upper": 1.0,
+         "upper_included": true,
+         "count": 10,
+         "families": 4,
+         "mean_predicted": 0.9999992370656627,
+         "observed_correct": 1.0,
+         "support": "reported"
+        }
+       ],
+       "ece": {
+        "value": 7.629343372617114e-07,
+        "edges": "the ten equal-width bins above",
+        "scope": "descriptive expected calibration error; not a gate"
+       }
+      },
+      "accepted": {
+       "accepted": 0,
+       "correct": 0,
+       "precision": null
+      }
+     }
+    },
+    "stages": {}
+   },
+   "population": "in-sample fit probe; never independent quality"
+  },
+  "job": "/home/tribeiro/Projects/semantic-select/work/training-workflow-20261016/diagnostic-rank-16/job.yaml",
+  "curve": [
+   {
+    "step": 0,
+    "examples_seen": 0,
+    "nll": 0.0001650487561164482,
+    "correct": {
+     "observation": 2,
+     "complete_situation": 0,
+     "situations": 0,
+     "observations": 2,
+     "macro": {
+      "observation": 1.0,
+      "complete_situation": null
+     },
+     "tasks": {
+      "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+       "observation": 2,
+       "complete_situation": 0,
+       "situations": 0,
+       "observations": 2
+      }
+     }
+    },
+    "per_class": {
+     "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+      "verified": {
+       "true": {
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1,
+        "recall": 1.0
+       },
+       "false": {
+        "gold": 1,
+        "predicted": 1,
+        "correct": 1,
+        "recall": 1.0
+       }
+      }
+     }
+    },
+    "qualification": {
+     "state": "not_declared",
+     "requirements": []
+    },
+    "class_changes": {
+     "base": [],
+     "previous": [],
+     "best": []
+    },
+    "probe": {
+     "enabled": true,
+     "correct": 10,
+     "submitted": 10,
+     "per_class": {
+      "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+       "verified": {
+        "true": {
+         "gold": 1,
+         "predicted": 1,
+         "correct": 1,
+         "recall": 1.0
+        },
+        "false": {
+         "gold": 1,
+         "predicted": 1,
+         "correct": 1,
+         "recall": 1.0
+        }
+       },
+       "refund": {
+        "true": {
+         "gold": 2,
+         "predicted": 2,
+         "correct": 2,
+         "recall": 1.0
+        },
+        "false": {
+         "gold": 2,
+         "predicted": 2,
+         "correct": 2,
+         "recall": 1.0
+        }
+       },
+       "human": {
+        "true": {
+         "gold": 2,
+         "predicted": 2,
+         "correct": 2,
+         "recall": 1.0
+        },
+        "false": {
+         "gold": 2,
+         "predicted": 2,
+         "correct": 2,
+         "recall": 1.0
+        }
+       }
+      }
+     },
+     "probabilities": {
+      "metric": "probabilities",
+      "protocol": {
+       "revision": 1,
+       "tolerance": 0.001,
+       "brier": "sum over every declared option of (p_k - 1[k = gold])**2; range [0, 2] at every width, never divided by the width",
+       "nll": "-ln p(gold) over the declared options; zero gold probability is an infinite-loss event reported as nonfinite, never floored",
+       "unconditioned_nll": "-ln(p(gold) * answer mass) for option-conditioned distributions whose computation supplies answer mass",
+       "top": "first maximal option in declared order",
+       "complete": "every declared option has a finite probability in [0, 1], the total is within 0.001 of one and the normalization is one of ['option-softmax@1', 'renormalize-within-rounding-bound@1']; nothing is renormalized or reconstructed from lower bounds, witnesses or composed output",
+       "scope": "final: one full-stage presentation produced the deployed distribution; staged final distributions are unassessed and their valid primitive stages are reported separately per stage",
+       "reliability": "top-answer probability in ten equal-width bins [k/10, (k+1)/10), the last bin closed so probability 1 is included; observed correctness is raw top-answer agreement with the declared reference",
+       "macro": "unweighted mean over the fixed tasks that have scored rows; describes these tasks, no unseen-task interval",
+       "micro": "every submitted target observation weighted equally",
+       "accepted": "correctness of policy-accepted answers; a separate population from model probability reliability",
+       "reference": "agreement with the declared reference; reviewed correctness only under a reviewed reference"
+      },
+      "micro": {
+       "submitted": 10,
+       "scored": 8,
+       "unscored": {
+        "failed": 0,
+        "missing": 0,
+        "unexamined": 0,
+        "not_judge": 0,
+        "staged": 0,
+        "no_distribution": 0,
+        "unknown_gold": 0,
+        "normalization": 0,
+        "invalid": 2,
+        "partial_options": 0,
+        "gold_outside_options": 0,
+        "incomplete": 0
+       },
+       "targets": 3,
+       "families": 4,
+       "scored_families": 4,
+       "brier": {
+        "value": 1.6313249954478251e-06,
+        "nonfinite": null,
+        "infinite": 0,
+        "finite_mean": 1.6313249954478251e-06,
+        "rows": 8
+       },
+       "nll": {
+        "value": 0.00033614842141105073,
+        "nonfinite": null,
+        "infinite": 0,
+        "finite_mean": 0.00033614842141105073,
+        "rows": 8
+       },
+       "unconditioned_nll": {
+        "value": 0.00033614842141105073,
+        "nonfinite": null,
+        "infinite": 0,
+        "finite_mean": 0.00033614842141105073,
+        "rows": 8,
+        "unavailable": 0
+       },
+       "zero_gold": 0,
+       "reliability": {
+        "bins": 10,
+        "edges": [
+         0.0,
+         0.1,
+         0.2,
+         0.3,
+         0.4,
+         0.5,
+         0.6,
+         0.7,
+         0.8,
+         0.9,
+         1.0
+        ],
+        "rows": 8,
+        "table": [
+         {
+          "lower": 0.0,
+          "upper": 0.1,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.1,
+          "upper": 0.2,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.2,
+          "upper": 0.3,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.3,
+          "upper": 0.4,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.4,
+          "upper": 0.5,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.5,
+          "upper": 0.6,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.6,
+          "upper": 0.7,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.7,
+          "upper": 0.8,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.8,
+          "upper": 0.9,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.9,
+          "upper": 1.0,
+          "upper_included": true,
+          "count": 8,
+          "families": 4,
+          "mean_predicted": 0.9996642600961329,
+          "observed_correct": 1.0,
+          "support": "sparse"
+         }
+        ],
+        "ece": {
+         "value": 0.00033573990386714936,
+         "edges": "the ten equal-width bins above",
+         "scope": "descriptive expected calibration error; not a gate"
+        }
+       },
+       "accepted": {
+        "accepted": 0,
+        "correct": 0,
+        "precision": null
+       }
+      },
+      "macro": {
+       "tasks": 1,
+       "contributing": 1,
+       "brier": {
+        "value": 1.6313249954478251e-06,
+        "nonfinite": null,
+        "infinite": 0,
+        "finite_mean": 1.6313249954478251e-06,
+        "rows": 1
+       },
+       "nll": {
+        "value": 0.00033614842141105073,
+        "nonfinite": null,
+        "infinite": 0,
+        "finite_mean": 0.00033614842141105073,
+        "rows": 1
+       }
+      },
+      "tasks": {
+       "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+        "submitted": 10,
+        "scored": 8,
+        "unscored": {
+         "failed": 0,
+         "missing": 0,
+         "unexamined": 0,
+         "not_judge": 0,
+         "staged": 0,
+         "no_distribution": 0,
+         "unknown_gold": 0,
+         "normalization": 0,
+         "invalid": 2,
+         "partial_options": 0,
+         "gold_outside_options": 0,
+         "incomplete": 0
+        },
+        "targets": 3,
+        "families": 4,
+        "scored_families": 4,
+        "brier": {
+         "value": 1.6313249954478251e-06,
+         "nonfinite": null,
+         "infinite": 0,
+         "finite_mean": 1.6313249954478251e-06,
+         "rows": 8
+        },
+        "nll": {
+         "value": 0.00033614842141105073,
+         "nonfinite": null,
+         "infinite": 0,
+         "finite_mean": 0.00033614842141105073,
+         "rows": 8
+        },
+        "unconditioned_nll": {
+         "value": 0.00033614842141105073,
+         "nonfinite": null,
+         "infinite": 0,
+         "finite_mean": 0.00033614842141105073,
+         "rows": 8,
+         "unavailable": 0
+        },
+        "zero_gold": 0,
+        "reliability": {
+         "bins": 10,
+         "edges": [
+          0.0,
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+         ],
+         "rows": 8,
+         "table": [
+          {
+           "lower": 0.0,
+           "upper": 0.1,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.1,
+           "upper": 0.2,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.2,
+           "upper": 0.3,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.3,
+           "upper": 0.4,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.4,
+           "upper": 0.5,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.5,
+           "upper": 0.6,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.6,
+           "upper": 0.7,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.7,
+           "upper": 0.8,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.8,
+           "upper": 0.9,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.9,
+           "upper": 1.0,
+           "upper_included": true,
+           "count": 8,
+           "families": 4,
+           "mean_predicted": 0.9996642600961329,
+           "observed_correct": 1.0,
+           "support": "sparse"
+          }
+         ],
+         "ece": {
+          "value": 0.00033573990386714936,
+          "edges": "the ten equal-width bins above",
+          "scope": "descriptive expected calibration error; not a gate"
+         }
+        },
+        "accepted": {
+         "accepted": 0,
+         "correct": 0,
+         "precision": null
+        }
+       }
+      },
+      "kinds": {
+       "check": {
+        "submitted": 10,
+        "scored": 8,
+        "unscored": {
+         "failed": 0,
+         "missing": 0,
+         "unexamined": 0,
+         "not_judge": 0,
+         "staged": 0,
+         "no_distribution": 0,
+         "unknown_gold": 0,
+         "normalization": 0,
+         "invalid": 2,
+         "partial_options": 0,
+         "gold_outside_options": 0,
+         "incomplete": 0
+        },
+        "targets": 3,
+        "families": 4,
+        "scored_families": 4,
+        "brier": {
+         "value": 1.6313249954478251e-06,
+         "nonfinite": null,
+         "infinite": 0,
+         "finite_mean": 1.6313249954478251e-06,
+         "rows": 8
+        },
+        "nll": {
+         "value": 0.00033614842141105073,
+         "nonfinite": null,
+         "infinite": 0,
+         "finite_mean": 0.00033614842141105073,
+         "rows": 8
+        },
+        "unconditioned_nll": {
+         "value": 0.00033614842141105073,
+         "nonfinite": null,
+         "infinite": 0,
+         "finite_mean": 0.00033614842141105073,
+         "rows": 8,
+         "unavailable": 0
+        },
+        "zero_gold": 0,
+        "reliability": {
+         "bins": 10,
+         "edges": [
+          0.0,
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+         ],
+         "rows": 8,
+         "table": [
+          {
+           "lower": 0.0,
+           "upper": 0.1,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.1,
+           "upper": 0.2,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.2,
+           "upper": 0.3,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.3,
+           "upper": 0.4,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.4,
+           "upper": 0.5,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.5,
+           "upper": 0.6,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.6,
+           "upper": 0.7,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.7,
+           "upper": 0.8,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.8,
+           "upper": 0.9,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.9,
+           "upper": 1.0,
+           "upper_included": true,
+           "count": 8,
+           "families": 4,
+           "mean_predicted": 0.9996642600961329,
+           "observed_correct": 1.0,
+           "support": "sparse"
+          }
+         ],
+         "ece": {
+          "value": 0.00033573990386714936,
+          "edges": "the ten equal-width bins above",
+          "scope": "descriptive expected calibration error; not a gate"
+         }
+        },
+        "accepted": {
+         "accepted": 0,
+         "correct": 0,
+         "precision": null
+        }
+       }
+      },
+      "stages": {}
+     },
+     "population": "in-sample fit probe; never independent quality"
+    }
+   },
+   {
+    "step": 8,
+    "examples_seen": 40,
+    "nll": 1.1607971722855268,
+    "correct": {
+     "observation": 1,
+     "complete_situation": 0,
+     "situations": 0,
+     "observations": 2,
+     "macro": {
+      "observation": 0.5,
+      "complete_situation": null
+     },
+     "tasks": {
+      "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+       "observation": 1,
+       "complete_situation": 0,
+       "situations": 0,
+       "observations": 2
+      }
+     }
+    },
+    "per_class": {
+     "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+      "verified": {
+       "true": {
+        "gold": 1,
+        "predicted": 2,
+        "correct": 1,
+        "recall": 1.0
+       },
+       "false": {
+        "gold": 1,
+        "predicted": 0,
+        "correct": 0,
+        "recall": 0.0
+       }
+      }
+     }
+    },
+    "qualification": {
+     "state": "not_declared",
+     "requirements": []
+    },
+    "class_changes": {
+     "base": [
+      {
+       "scope": "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8:verified",
+       "class": "false",
+       "gold": 1,
+       "correct": 0,
+       "reference_correct": 1,
+       "reference_step": 0
+      }
+     ],
+     "previous": [
+      {
+       "scope": "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8:verified",
+       "class": "false",
+       "gold": 1,
+       "correct": 0,
+       "reference_correct": 1,
+       "reference_step": 0
+      }
+     ],
+     "best": [
+      {
+       "scope": "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8:verified",
+       "class": "false",
+       "gold": 1,
+       "correct": 0,
+       "reference_correct": 1,
+       "reference_step": 0
+      }
+     ]
+    },
+    "probe": {
+     "enabled": true,
+     "correct": 10,
+     "submitted": 10,
+     "per_class": {
+      "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+       "verified": {
+        "true": {
+         "gold": 1,
+         "predicted": 1,
+         "correct": 1,
+         "recall": 1.0
+        },
+        "false": {
+         "gold": 1,
+         "predicted": 1,
+         "correct": 1,
+         "recall": 1.0
+        }
+       },
+       "refund": {
+        "true": {
+         "gold": 2,
+         "predicted": 2,
+         "correct": 2,
+         "recall": 1.0
+        },
+        "false": {
+         "gold": 2,
+         "predicted": 2,
+         "correct": 2,
+         "recall": 1.0
+        }
+       },
+       "human": {
+        "true": {
+         "gold": 2,
+         "predicted": 2,
+         "correct": 2,
+         "recall": 1.0
+        },
+        "false": {
+         "gold": 2,
+         "predicted": 2,
+         "correct": 2,
+         "recall": 1.0
+        }
+       }
+      }
+     },
+     "probabilities": {
+      "metric": "probabilities",
+      "protocol": {
+       "revision": 1,
+       "tolerance": 0.001,
+       "brier": "sum over every declared option of (p_k - 1[k = gold])**2; range [0, 2] at every width, never divided by the width",
+       "nll": "-ln p(gold) over the declared options; zero gold probability is an infinite-loss event reported as nonfinite, never floored",
+       "unconditioned_nll": "-ln(p(gold) * answer mass) for option-conditioned distributions whose computation supplies answer mass",
+       "top": "first maximal option in declared order",
+       "complete": "every declared option has a finite probability in [0, 1], the total is within 0.001 of one and the normalization is one of ['option-softmax@1', 'renormalize-within-rounding-bound@1']; nothing is renormalized or reconstructed from lower bounds, witnesses or composed output",
+       "scope": "final: one full-stage presentation produced the deployed distribution; staged final distributions are unassessed and their valid primitive stages are reported separately per stage",
+       "reliability": "top-answer probability in ten equal-width bins [k/10, (k+1)/10), the last bin closed so probability 1 is included; observed correctness is raw top-answer agreement with the declared reference",
+       "macro": "unweighted mean over the fixed tasks that have scored rows; describes these tasks, no unseen-task interval",
+       "micro": "every submitted target observation weighted equally",
+       "accepted": "correctness of policy-accepted answers; a separate population from model probability reliability",
+       "reference": "agreement with the declared reference; reviewed correctness only under a reviewed reference"
+      },
+      "micro": {
+       "submitted": 10,
+       "scored": 10,
+       "unscored": {
+        "failed": 0,
+        "missing": 0,
+        "unexamined": 0,
+        "not_judge": 0,
+        "staged": 0,
+        "no_distribution": 0,
+        "unknown_gold": 0,
+        "normalization": 0,
+        "invalid": 0,
+        "partial_options": 0,
+        "gold_outside_options": 0,
+        "incomplete": 0
+       },
+       "targets": 3,
+       "families": 4,
+       "scored_families": 4,
+       "brier": {
+        "value": 1.018500037302498e-11,
+        "nonfinite": null,
+        "infinite": 0,
+        "finite_mean": 1.018500037302498e-11,
+        "rows": 10
+       },
+       "nll": {
+        "value": 7.629369008533827e-07,
+        "nonfinite": null,
+        "infinite": 0,
+        "finite_mean": 7.629369008533827e-07,
+        "rows": 10
+       },
+       "unconditioned_nll": {
+        "value": 1.1444066274103659e-06,
+        "nonfinite": null,
+        "infinite": 0,
+        "finite_mean": 1.1444066274103659e-06,
+        "rows": 10,
+        "unavailable": 0
+       },
+       "zero_gold": 0,
+       "reliability": {
+        "bins": 10,
+        "edges": [
+         0.0,
+         0.1,
+         0.2,
+         0.3,
+         0.4,
+         0.5,
+         0.6,
+         0.7,
+         0.8,
+         0.9,
+         1.0
+        ],
+        "rows": 10,
+        "table": [
+         {
+          "lower": 0.0,
+          "upper": 0.1,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.1,
+          "upper": 0.2,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.2,
+          "upper": 0.3,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.3,
+          "upper": 0.4,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.4,
+          "upper": 0.5,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.5,
+          "upper": 0.6,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.6,
+          "upper": 0.7,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.7,
+          "upper": 0.8,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.8,
+          "upper": 0.9,
+          "upper_included": false,
+          "count": 0,
+          "families": 0,
+          "mean_predicted": null,
+          "observed_correct": null,
+          "support": "empty"
+         },
+         {
+          "lower": 0.9,
+          "upper": 1.0,
+          "upper_included": true,
+          "count": 10,
+          "families": 4,
+          "mean_predicted": 0.9999992370656627,
+          "observed_correct": 1.0,
+          "support": "reported"
+         }
+        ],
+        "ece": {
+         "value": 7.629343372617114e-07,
+         "edges": "the ten equal-width bins above",
+         "scope": "descriptive expected calibration error; not a gate"
+        }
+       },
+       "accepted": {
+        "accepted": 0,
+        "correct": 0,
+        "precision": null
+       }
+      },
+      "macro": {
+       "tasks": 1,
+       "contributing": 1,
+       "brier": {
+        "value": 1.018500037302498e-11,
+        "nonfinite": null,
+        "infinite": 0,
+        "finite_mean": 1.018500037302498e-11,
+        "rows": 1
+       },
+       "nll": {
+        "value": 7.629369008533827e-07,
+        "nonfinite": null,
+        "infinite": 0,
+        "finite_mean": 7.629369008533827e-07,
+        "rows": 1
+       }
+      },
+      "tasks": {
+       "8cebe7db403a379ac13e374c249aa5abee7b1786bc65960d040c22c44a03e6e8": {
+        "submitted": 10,
+        "scored": 10,
+        "unscored": {
+         "failed": 0,
+         "missing": 0,
+         "unexamined": 0,
+         "not_judge": 0,
+         "staged": 0,
+         "no_distribution": 0,
+         "unknown_gold": 0,
+         "normalization": 0,
+         "invalid": 0,
+         "partial_options": 0,
+         "gold_outside_options": 0,
+         "incomplete": 0
+        },
+        "targets": 3,
+        "families": 4,
+        "scored_families": 4,
+        "brier": {
+         "value": 1.018500037302498e-11,
+         "nonfinite": null,
+         "infinite": 0,
+         "finite_mean": 1.018500037302498e-11,
+         "rows": 10
+        },
+        "nll": {
+         "value": 7.629369008533827e-07,
+         "nonfinite": null,
+         "infinite": 0,
+         "finite_mean": 7.629369008533827e-07,
+         "rows": 10
+        },
+        "unconditioned_nll": {
+         "value": 1.1444066274103659e-06,
+         "nonfinite": null,
+         "infinite": 0,
+         "finite_mean": 1.1444066274103659e-06,
+         "rows": 10,
+         "unavailable": 0
+        },
+        "zero_gold": 0,
+        "reliability": {
+         "bins": 10,
+         "edges": [
+          0.0,
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+         ],
+         "rows": 10,
+         "table": [
+          {
+           "lower": 0.0,
+           "upper": 0.1,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.1,
+           "upper": 0.2,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.2,
+           "upper": 0.3,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.3,
+           "upper": 0.4,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.4,
+           "upper": 0.5,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.5,
+           "upper": 0.6,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.6,
+           "upper": 0.7,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.7,
+           "upper": 0.8,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.8,
+           "upper": 0.9,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.9,
+           "upper": 1.0,
+           "upper_included": true,
+           "count": 10,
+           "families": 4,
+           "mean_predicted": 0.9999992370656627,
+           "observed_correct": 1.0,
+           "support": "reported"
+          }
+         ],
+         "ece": {
+          "value": 7.629343372617114e-07,
+          "edges": "the ten equal-width bins above",
+          "scope": "descriptive expected calibration error; not a gate"
+         }
+        },
+        "accepted": {
+         "accepted": 0,
+         "correct": 0,
+         "precision": null
+        }
+       }
+      },
+      "kinds": {
+       "check": {
+        "submitted": 10,
+        "scored": 10,
+        "unscored": {
+         "failed": 0,
+         "missing": 0,
+         "unexamined": 0,
+         "not_judge": 0,
+         "staged": 0,
+         "no_distribution": 0,
+         "unknown_gold": 0,
+         "normalization": 0,
+         "invalid": 0,
+         "partial_options": 0,
+         "gold_outside_options": 0,
+         "incomplete": 0
+        },
+        "targets": 3,
+        "families": 4,
+        "scored_families": 4,
+        "brier": {
+         "value": 1.018500037302498e-11,
+         "nonfinite": null,
+         "infinite": 0,
+         "finite_mean": 1.018500037302498e-11,
+         "rows": 10
+        },
+        "nll": {
+         "value": 7.629369008533827e-07,
+         "nonfinite": null,
+         "infinite": 0,
+         "finite_mean": 7.629369008533827e-07,
+         "rows": 10
+        },
+        "unconditioned_nll": {
+         "value": 1.1444066274103659e-06,
+         "nonfinite": null,
+         "infinite": 0,
+         "finite_mean": 1.1444066274103659e-06,
+         "rows": 10,
+         "unavailable": 0
+        },
+        "zero_gold": 0,
+        "reliability": {
+         "bins": 10,
+         "edges": [
+          0.0,
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+         ],
+         "rows": 10,
+         "table": [
+          {
+           "lower": 0.0,
+           "upper": 0.1,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.1,
+           "upper": 0.2,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.2,
+           "upper": 0.3,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.3,
+           "upper": 0.4,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.4,
+           "upper": 0.5,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.5,
+           "upper": 0.6,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.6,
+           "upper": 0.7,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.7,
+           "upper": 0.8,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.8,
+           "upper": 0.9,
+           "upper_included": false,
+           "count": 0,
+           "families": 0,
+           "mean_predicted": null,
+           "observed_correct": null,
+           "support": "empty"
+          },
+          {
+           "lower": 0.9,
+           "upper": 1.0,
+           "upper_included": true,
+           "count": 10,
+           "families": 4,
+           "mean_predicted": 0.9999992370656627,
+           "observed_correct": 1.0,
+           "support": "reported"
+          }
+         ],
+         "ece": {
+          "value": 7.629343372617114e-07,
+          "edges": "the ten equal-width bins above",
+          "scope": "descriptive expected calibration error; not a gate"
+         }
+        },
+        "accepted": {
+         "accepted": 0,
+         "correct": 0,
+         "precision": null
+        }
+       }
+      },
+      "stages": {}
+     },
+     "population": "in-sample fit probe; never independent quality"
+    }
+   }
+  ]
+ },
+ "rank_64_control": {
+  "executed": false,
+  "rank": 64,
+  "alpha": 128,
+  "effective_scale": 2.0,
+  "observations": 10
+ },
+ "controlled_fit": {
+  "population": "synthetic assigned registry; fitting-mechanism fixture, not language-quality evidence",
+  "state": "stopped",
+  "stage": "fit",
+  "probe": [
+   {
+    "step": 0,
+    "correct": 4,
+    "submitted": 8,
+    "nll": 10.426936388015747
+   },
+   {
+    "step": 8,
+    "correct": 4,
+    "submitted": 8,
+    "nll": 0.6857950687408447
+   }
+  ],
+  "native_student_assessed": false
+ },
+ "review_round": {
+  "state": "stopped",
+  "eligible": 54,
+  "stage": "freeze",
+  "new_fit_evidence": false,
+  "timestamped_reimport": {
+   "source": "work/decision-family-audited-20261016/decisions.test.jsonl",
+   "sha256": "8e3a8b1d37690a923c264aa10e718cd19fee2d73e377d2124c42ff74d92c5dfe",
+   "output": "work/training-workflow-20261016/timestamped-reimport.labels.jsonl",
+   "output_sha256": "a9eaef75a6f1148685f0a5ba1ec26ed7d743ec9c1cacf8b00fbb224bde495ccd",
+   "reason": "Timestamped reimport of existing references: legacy benchmark producer put its name in created. Inputs, reference histories, task revisions, groups and roles are unchanged. Parent publication preserved.",
+   "legacy_created": [
+    "bench.policy_adaptation"
+   ]
+  }
+ },
+ "parent_printer_sha256": "66d3ae00a9ac53d9feda9afdc7f6bf5f8ebc17db9faec51b5f23a2d970e704e1",
+ "adoption": false,
+ "validation": {
+  "core_passed": 1353,
+  "trainer_passed": 288,
+  "learn_passed": 50,
+  "slow_deselected": 33
+ },
+ "id": "615b1f72b7e6287e0ca8d715841400953f3082f132f8056d239b2fa84ef20c31",
+ "payloads": {
+  "predictions.jsonl": {
+   "file": "predictions.dee9c5d58824d0e3.jsonl",
+   "sha256": "dee9c5d58824d0e3f9b18665254d50054534f0a66d1186324321379aa8136896",
+   "count": 60
+  }
+ }
+}

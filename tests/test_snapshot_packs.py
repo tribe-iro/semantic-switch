@@ -165,20 +165,22 @@ def test_orphan_rules_and_unknown_rule_sources(tmp_path):
         evidence.load_pack(manifest)
 
 
-def test_whole_family_assignment_is_exact_or_rejected():
+def test_whole_family_assignment_reports_targets_and_achieved_sizes():
     rows = procedures.scenarios(0, 2)
     built, golds = procedures.build(rows)
     counted = evidence.situation_frames(built, golds, procedures.TRAINED)
     assert counted and all(f.condition == "structured" for f in built if f.id in counted) and len(counted) < sum(f.condition == "structured" for f in built)
     assignment = evidence.assign(built, {"fit": 12, "model_select": 14}, seed=4, counted=counted)
     roles = {f.id: assignment["families"][assignment["components"][f.id]] for f in built}
-    assert assignment["counts"]["fit"]["situations"] == 12 and assignment["counts"]["model_select"]["situations"] == 14
+    assert assignment["allocation"]["targets"]["fit"] == 12 and assignment["allocation"]["targets"]["model_select"] == 14
+    assert assignment["allocation"]["achieved"]["fit"] == assignment["counts"]["fit"]["situations"]
     assert sum(c["frames"] for c in assignment["counts"].values()) == len(built)
     assert sum(c["situations"] for c in assignment["counts"].values()) == len(counted)
     for frame in built:
         assert len({roles[other] for other in (frame.id, *frame.pairs)}) == 1
-    with pytest.raises(ConfigError, match="exactly 7 fit situations"):
-        evidence.assign(built, {"fit": 7}, seed=4, counted=counted)
+    approximate = evidence.assign(built, {"fit": 7}, seed=4, counted=counted)
+    assert approximate["allocation"]["targets"]["fit"] == 7
+    assert approximate["counts"]["fit"]["families"] > 0
     held = evidence.assign(built, {"fit": 48}, seed=4, check_only=lambda frame: "cancelled" in frame.tags)
     assert all(roles_ == "check" for f in built if "cancelled" in f.tags for roles_ in [held["families"][held["components"][f.id]]])
 
@@ -618,7 +620,7 @@ def test_rule_texts_cover_the_reference_behaviour():
     ribbon = rule(procedures.PACK, "ZT-RIBBON").text
     assert "with ribbon absence established" in ribbon and "no ribbon established" not in ribbon
     assert {rule(procedures.PACK, r).source for r in ("ZT-CAL-NEXT", "ZT-CAL-CANCEL", "ZT-CAL-HOLD")} == {evidence.CONVENTION}
-    assert procedures.REVISION == "zt411-reference-3" and support.REVISION == "support-reference-3"
+    assert procedures.REVISION == "zt411-reference-4" and support.REVISION == "support-reference-3"
 
 
 def test_ready_to_print_is_false_while_calibrating():

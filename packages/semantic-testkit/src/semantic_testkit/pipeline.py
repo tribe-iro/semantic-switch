@@ -62,3 +62,15 @@ def worker(directory, monkeypatch, *, gguf, vocab) -> str:
     path.chmod(0o755)
     monkeypatch.setenv(WORKER, json.dumps({'gguf': str(gguf), 'vocab': vocab}))
     return str(path)
+
+
+def native_scoring(monkeypatch, scorer=None):
+    from contextlib import nullcontext
+    from semantic_switch.training import Selection
+    from semantic_trainer import controls, pipeline, select
+    from .scoring import FakeScorer
+    scorer = scorer or FakeScorer()
+    monkeypatch.setattr(controls, 'model_job', lambda *args: nullcontext())
+    monkeypatch.setattr(select, 'Selection', lambda models, population, job=None: Selection(scorer, population, job=job))
+    monkeypatch.setattr(pipeline, 'native_judge', lambda path, device: scorer)
+    return scorer

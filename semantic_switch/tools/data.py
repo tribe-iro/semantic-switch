@@ -189,10 +189,6 @@ class Labels:
     def group(self, node) -> str:
         return self.families.name(node)
 
-    @staticmethod
-    def split_of_group(group: str) -> str:
-        return "tune" if int(digest(["split", group])[:8], 16) % 2 == 0 else "check"
-
     def component(self, group) -> str:
         return digest([self.manifest["namespace"], group])
 

@@ -89,7 +89,7 @@ if [[ -n "$MAX_TOKENS" ]]; then BUDGET_ARGS+=(--budget "max_tokens=$MAX_TOKENS")
 if [[ -n "$MAX_MONITOR_TOKENS" ]]; then BUDGET_ARGS+=(--budget "max_monitor_tokens=$MAX_MONITOR_TOKENS"); fi
 for cadence in $PROFILE_CADENCES; do PROFILING+=(--profile-cadence "$cadence"); done
 SPECIALIZE_ARGS=("$PY/ss" --json specialize "$TASK" --examples "$LABELS" --to "$SPECIALIZATION" --trainer "$XPU/semantic-trainer"
-  --device xpu:0 --native-device gpu --model "$MODEL" --revision "$REVISION" --quant Q8_0 --task-family "bench:$PACK_KIND" --fit-situations 100
+  --device xpu:0 --native-device gpu --model "$MODEL" --revision "$REVISION" --quant Q8_0 --task-family "bench:$PACK_KIND"
   --recipe selection_unit=complete_situation --recipe seed=0 --recipe "epochs=$EPOCHS" --recipe "evaluation_batch_size=$EVALUATION_BATCH_SIZE"
   "${BUDGET_ARGS[@]}" "${PROFILING[@]}")
 if [[ -n "$MIN_EPOCHS" ]]; then SPECIALIZE_ARGS+=(--recipe "min_epochs=$MIN_EPOCHS"); fi

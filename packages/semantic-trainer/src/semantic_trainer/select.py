@@ -28,19 +28,29 @@ RANKED = ('judge',)
 INITIALIZER = ('kind', 'evidence', 'candidate', 'step', 'job_id', 'fit_id', 'fitted_job_id', 'peft_sha256', 'config_sha256')
 
 
+def observation_metadata(row):
+    seeds = [*row['family_seeds'], *(node for origin in row['sources'] for node in origin['family_seeds'])]
+    return {'input': row['bound_input'], 'meaning_rev': row['meaning_rev'], 'classes': row['classes'],
+            'label_sources': row['label_sources'], 'role': row['role'], 'task': row['task'], 'family': row['component'],
+            'groups': sorted({row['component'], *(value for kind, value in seeds if kind == 'group')}),
+            'tags': row.get('tags', []), 'pairs': sorted({*row.get('pairs', []), *(value for kind, value in seeds if kind == 'pair')})}
+
+
 def evaluate(runtime, switch, rows, name, role='judge', journal=None):
     keys = {row['id']: artifact_digest(['public', row['id']]) for row in rows}
     cached = {row['id']: journal.payload(keys[row['id']]) for row in rows if journal is not None and keys[row['id']] in journal.current}
     progress = Progress(f'select {name}', len(rows), unit='model_select observations', resumed=cached.values())
     scored, pending, began = [], [], time.perf_counter()
     for row in rows:
+        metadata = observation_metadata(row)
         if row['id'] in cached:
-            scored.append(cached[row['id']])
+            scored.append({**cached[row['id']], **metadata})
             continue
         started = time.perf_counter()
         (result,) = score_observations(switch, [row], sources=RANKED)
         compact = {key: value for key, value in result.items() if key != 'result'}
-        compact |= {'gold_class': row['classes'][row['label']], 'ms': (time.perf_counter() - started) * 1000}
+        compact |= {**metadata, 'gold_class': row['classes'][row['label']], 'ms': (time.perf_counter() - started) * 1000,
+                    'outcome': result['result']['status']}
         if journal is not None:
             pending.append((keys[row['id']], compact))
             if len(pending) >= 16:
@@ -82,10 +92,15 @@ def trial_models(representation, resolved, deployed):
     return {name: replace(native_model(resolved, entry['source'], lora=entry['lora']), max_adapters=bound) for name, (_, entry, _) in deployed.items()}
 
 
-def evaluations(representation, definition, targets, models, rows, job, *, journal_root=None, job_id=None):
+def evaluations(representation, definition, targets, models, rows, job, *, journal_root=None, job_id=None, baseline=None):
     population = native_score_requests(rows)
     def measured(runtime, name, role):
-        config = {'job': job_id, 'representation': representation, 'model': realized(runtime, role), 'rows': [row['id'] for row in rows]}
+        current = realized(runtime, role)
+        if name == 'base' and baseline is not None and current == baseline['realized']:
+            if [row['id'] for row in baseline['scored']] != [row['id'] for row in rows]:
+                raise ConfigError('baseline observation order changed')
+            return [{**scored, **observation_metadata(row)} for row, scored in zip(rows, baseline['scored'])], current, baseline['predictions'], {**baseline['work'], 'invocation_seconds': 0., 'reused_baseline': True}
+        config = {'job': job_id, 'representation': representation, 'model': current, 'rows': [row['id'] for row in rows]}
         held = Journal(Path(journal_root) / f'{name}.jsonl', config) if journal_root is not None else nullcontext(None)
         with held as journal:
             return evaluate(runtime, trial(runtime, definition, targets, role), rows, name, role, journal)
@@ -316,8 +331,12 @@ def select(job, run, representation='merged', to=None, bindings=None):
     return application(*resolve(job), job, run, representation, to=to, bindings=bindings)
 
 
-def application(resolved, observations, job, run, representation='merged', to=None, bindings=None):
+def application(resolved, observations, job, run, representation='merged', to=None, bindings=None, baseline=None):
     chosen = admission(resolved, observations, job, run, representation)
+    baseline_path = baseline
+    if baseline_path is not None:
+        from .controls import load, native_result
+        baseline = native_result(load(baseline_path, resolved, observations), baseline_path, observations)
     contract, task = single_task(resolved)
     scope = resolved['scope'][contract]
     composed = publication(task['definition'], scope, bindings)
@@ -326,7 +345,7 @@ def application(resolved, observations, job, run, representation='merged', to=No
     representation, rows, unit, located, base = chosen.representation, chosen.rows, chosen.unit, chosen.located, chosen.base
     def evaluate(deployed, models, handle):
         return evaluations(representation, task['definition'], scope['targets'], models, rows, handle,
-                           journal_root=chosen.run / 'native-selection' / representation, job_id=resolved['id'])
+                           journal_root=chosen.run / 'native-selection' / representation, job_id=resolved['id'], baseline=baseline)
     with publishing(output, output.parent, '.deployment-') as (work, staged), \
             trialled(chosen, work, evaluate, representation == 'runtime-adapter') as (deployed, trials, winner, handle):
         _, entry, _ = deployed[winner['name']]
@@ -365,12 +384,17 @@ def application(resolved, observations, job, run, representation='merged', to=No
                    'initialization': {key: resolved['initialization'][key] for key in INITIALIZER if key in resolved['initialization']},
                    'recipe': resolved['recipe'], 'job_id': resolved['id'], 'fit_id': resolved['fit']['id'], 'monitor_id': resolved['monitor']['id'],
                    'selection': report, 'acceptance': frozen['acceptance']}
+        from .assessment import publish
+        learning = publish(staged, resolved, observations, report, frozen['acceptance'], chosen.run, baseline_path)
+        receipt['learning'] = {'file': 'learning.json', 'sha256': files.sha256_file(staged / 'learning.json')}
+        receipt['files']['learning.json'] = receipt['learning']['sha256']
         receipt['id'] = artifact_digest(receipt)
         files.write_new(staged / RECEIPT_NAME, receipt)
         load_receipt(staged / RECEIPT_NAME)
     path = output / RECEIPT_NAME
     return {'receipt': str(path), 'gguf': str(output / weights), **({'lora': str(output / adapter_file)} if adapter_file else {}), 'selected': winner['name'], 'unit': unit,
             'representation': deployed_model.representation, 'candidates': outcomes(trials),
+            'learning': {**learning['summary'], 'path': str(output / 'learning.json')},
             'publication': composed['publication'], 'binding': composed['binding'],
             'loading': {'deployment': f'Runtime({"bindings={...}" if bindings else ""}).load({str(output)!r})'
                         if composed['publication'] == 'application' else None,

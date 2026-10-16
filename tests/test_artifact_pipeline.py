@@ -66,7 +66,7 @@ def test_family_merge_quarantines_old_fold_or_partition_conflict(tmp_path):
     with Runtime(FakeScorer()) as rt:
         labels = Labels(rt.load(path))
         a = labels.examples('refund')[0]
-        b = next(e for e in labels.examples('refund') if (e.split, e.fold) != (a.split, a.fold))
+        b = next(e for e in labels.examples('refund') if e.split != a.split)
         records = files.read_jsonl(path.with_suffix('.test.jsonl'))
         group = next(r['groups'][0] for r in records if r['input'] == b.data)
         files.append(path.with_suffix('.test.jsonl'), files.jsonl(envelopes([{'input': a.data, 'facts': {'refund': a.label == 0}, 'group': group}])))

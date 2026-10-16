@@ -3,6 +3,10 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 from functools import cached_property
+from collections import Counter
+import heapq
+import math
+import json
 from pathlib import Path
 
 from .. import files
@@ -17,6 +21,74 @@ from .data import merged_sources, observation_id
 AUDIT_SCHEMA = 2
 DISCLOSURE = 'tool-recorded exposure; external inspections require caller disclosure'
 REGENERATE = f'delete it and re-run ss lock (or bench.evidence stage) to rebuild a schema-{DATASET_SCHEMA} evidence assignment; keep its audit ledger'
+
+
+ALLOCATION = 'grouped-iterative-v2'
+
+
+def allocate(families, targets, *, pinned=None, seed=0):
+    if type(seed) is not int or seed < 0:
+        raise ConfigError('family allocation seed must be a nonnegative integer')
+    targets = dict(sorted(targets.items()))
+    if not targets or any(isinstance(n, bool) or not isinstance(n, (int, float)) or not math.isfinite(n) or n < 0 for n in targets.values()) or sum(targets.values()) <= 0:
+        raise ConfigError('family allocation needs finite nonnegative target sizes with a positive total')
+    assigned = dict(pinned or {})
+    if set(assigned) - set(families) or set(assigned.values()) - set(targets):
+        raise ConfigError('pinned family assignments must name known families and target roles')
+    sizes, cells = {}, {}
+    for family, record in sorted(families.items()):
+        size = record['size']
+        if isinstance(size, bool) or not isinstance(size, (int, float)) or not math.isfinite(size) or size < 0:
+            raise ConfigError(f'{family}: family size must be finite and nonnegative')
+        sizes[family], cells[family] = size, frozenset(record.get('cells', ()))
+        if any(not isinstance(cell, str) or not cell for cell in cells[family]):
+            raise ConfigError(f'{family}: cells must be nonempty canonical strings')
+    support = Counter(cell for found in cells.values() for cell in found)
+    counts = {role: Counter() for role in targets}
+    actual = Counter()
+    for family, role in assigned.items():
+        actual[role] += sizes[family]
+        counts[role].update(cells[family])
+    total = sum(targets.values())
+    desired = {role: {cell: number * targets[role] / total for cell, number in support.items()} for role in targets}
+    priority = {family: digest([ALLOCATION, seed, family]) for family in families}
+    members, remaining = {}, Counter()
+    for family in sizes.keys() - assigned.keys():
+        for cell in cells[family]:
+            members.setdefault(cell, []).append((priority[family], family))
+            remaining[cell] += 1
+    for found in members.values():
+        heapq.heapify(found)
+    queue = [(number, cell) for cell, number in remaining.items()]
+    heapq.heapify(queue)
+    free = [(priority[family], family) for family in sizes.keys() - assigned.keys()]
+    heapq.heapify(free)
+    while len(assigned) < len(families):
+        while queue and (queue[0][0] != remaining[queue[0][1]] or not queue[0][0]):
+            heapq.heappop(queue)
+        cell = queue[0][1] if queue else None
+        available = members[cell] if cell is not None else free
+        while available and available[0][1] in assigned:
+            heapq.heappop(available)
+        _, family = heapq.heappop(available)
+        candidates = [role for role in targets if targets[role] > actual[role]] or [role for role in targets if targets[role] > 0]
+        def deficit(role):
+            missing = sum(max(0., desired[role][entry] - counts[role][entry]) for entry in cells[family])
+            empty_fit = role == 'fit' and any(counts[role][entry] == 0 for entry in cells[family])
+            return (actual[role] == 0, missing, empty_fit, desired[role].get(cell, 0.) - counts[role][cell] if cell is not None else 0.,
+                    (targets[role] - actual[role]) / max(targets[role], 1.))
+        role = max(candidates, key=deficit)
+        assigned[family] = role
+        actual[role] += sizes[family]
+        counts[role].update(cells[family])
+        for entry in cells[family]:
+            remaining[entry] -= 1
+            heapq.heappush(queue, (remaining[entry], entry))
+    report = {'algorithm': ALLOCATION, 'seed': seed, 'targets': targets, 'achieved': {role: actual[role] for role in targets},
+              'families': dict(sorted(assigned.items())),
+              'support': {cell: {role: counts[role][cell] for role in targets} for cell in sorted(support)},
+              'deficits': {role: [cell for cell in sorted(support) if targets[role] > 0 and not counts[role][cell]] for role in targets}}
+    return {**report, 'id': digest(report)}
 
 
 def source_digests(sw, data=None):
@@ -61,6 +133,26 @@ def materialize(labels, previous, sources):
     roles = {}
     for node, role in labels._roles:
         roles.setdefault(index.find(node), set()).add(role)
+    population = {index.name(root): {'size': 0, 'cells': set()} for root in index.roots()}
+    pinned = {}
+    for root in index.roots():
+        family = index.name(root)
+        inherited = prior.get(root, {})
+        historical = {_role(record) for record in inherited.values()}
+        explicit = roles.get(root, set())
+        if inherited:
+            pinned[family] = next(iter(historical)) if len(historical) == 1 else 'conflict'
+        elif len(explicit) == 1:
+            pinned[family] = next(iter(explicit))
+    for (name, projection), record in labels._merged.items():
+        family = index.name(record['nodes'][0])
+        fact = labels.sw.plan.fact(name)
+        cell = json.dumps([list(fact.path), fact.keys[record['label']]], ensure_ascii=False, separators=(',', ':'))
+        population[family]['size'] += 1
+        population[family]['cells'].add(cell)
+        population[family]['cells'].update(json.dumps([list(fact.path), fact.keys[record['label']], tag], ensure_ascii=False, separators=(',', ':')) for tag in record['tags'])
+    total = sum(row['size'] for row in population.values()) or len(population) or 1
+    allocation = allocate(population, {'fit': total * .3, 'model_select': total * .1, 'acceptance_fit': total * .1, 'check': total * .5, 'conflict': 0}, pinned=pinned)
     families = {}
     for root in index.roots():
         inherited = prior.get(root, {})
@@ -84,8 +176,8 @@ def materialize(labels, previous, sources):
             split, folds = ROLES[role]
             fold = folds[int(digest(['fold', family])[:8], 16) % len(folds)]
         else:
-            split = labels.split_of_group(family)
-            fold = int(digest(['fold', family])[:8], 16) % 5
+            split, folds = ROLES[allocation['families'][family]]
+            fold = folds[int(digest(['fold', family])[:8], 16) % len(folds)]
         index.add(root, family)
         families[family] = {'split': split, 'fold': fold, 'seeds': [list(n) for n in index.seeds(root)], 'aliases': list(index.history(root)),
                             **({'conflicts': dict(sorted(conflicts.items()))} if conflicts else {})}
@@ -101,6 +193,8 @@ def materialize(labels, previous, sources):
                    for (name, projection), entry in labels._merged.items()], key=lambda r: r['id'])
     out = {'schema': DATASET_SCHEMA, 'namespace': labels.sw.plan.name, 'audit': labels.sw.paths.audit.name, 'sources': sources,
            'families': families, 'observations': rows,
+           **({'allocation': previous['allocation']} if previous and set(previous['families']) == set(families) and 'allocation' in previous else
+              {'allocation': allocation} if any(not prior.get(root) for root in index.roots()) else {}),
            **({'review': previous['review']} if previous and 'review' in previous and previous['sources'] == sources else {})}
     out['training_id'] = digest([r for r in rows if families[r['family']]['split'] == 'tune'])
     out['id'] = digest(out)

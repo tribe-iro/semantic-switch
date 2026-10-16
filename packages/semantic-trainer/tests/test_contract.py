@@ -142,3 +142,19 @@ def test_lexical_and_lora_reject_the_same_restricted_history_before_publication(
     with pytest.raises(ConfigError, match='forbidden'):
         prepare(definition, [exported['path']], tmp_path / 'job', assets_manifest=manifest, recipe={'eval_every_examples': 8})
     assert not (tmp_path / 'head').exists() and not (tmp_path / 'job' / 'job.yaml').exists()
+
+
+def test_fixed_role_lexical_baseline_never_extracts_held_out_features(tmp_path, monkeypatch):
+    from semantic_testkit.labels import authored_export
+    from semantic_switch import Check
+    from semantic_trainer import lexical
+    runtime, path, source, rows = authored_export(tmp_path, Check('The customer requests a refund.'), native=False)
+    fitting = rows[:max(4, len(rows) // 2)]
+    seen, original = [], lexical.features
+    monkeypatch.setattr(lexical, 'features', lambda text: seen.append(text) or original(text))
+    report = lexical.train(str(path.with_suffix('.export.jsonl')) + '.manifest.json', tmp_path / 'fixed',
+                           fit_cohort=[row['id'] for row in fitting])
+    assert report['rows'] == len(fitting) and set(seen) == {row['text'] for row in fitting}
+    manifest = files.read_published(tmp_path / 'fixed' / 'manifest.json')
+    assert manifest['protocol'] == 'fixed-role-fit' and manifest['fit_cohort'] == sorted(row['id'] for row in fitting)
+    runtime.close()

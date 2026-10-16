@@ -158,7 +158,7 @@ def assignment(row):
     return role_of(row['split'], row['fold'])
 
 
-def test_explicit_roles_assign_families_and_unroled_families_keep_the_hash(tmp_path):
+def test_explicit_roles_assign_families_and_unroled_families_use_supported_roles(tmp_path):
     path = switch(tmp_path)
     with Runtime(FakeScorer()) as runtime:
         labels = publish(tmp_path / 'synthetic.jsonl', roled(runtime.load(path, draft=True)))
@@ -169,8 +169,8 @@ def test_explicit_roles_assign_families_and_unroled_families_keep_the_hash(tmp_p
         if given[row['group']] is not None:
             assert assignment(row) == given[row['group']]
         else:
-            assert row['split'] == ('tune' if int(digest(['split', row['group']])[:8], 16) % 2 == 0 else 'check')
-            assert row['fold'] == int(digest(['fold', row['group']])[:8], 16) % 5
+            assert assignment(row) in ROLES
+            assert 0 <= row['fold'] < 5
     assert {assignment(row) for row in rows if given[row['group']]} == set(ROLES)
     assert tuned and all(given[row['group']] != 'check' and row['split'] == 'tune' for row in tuned)
 

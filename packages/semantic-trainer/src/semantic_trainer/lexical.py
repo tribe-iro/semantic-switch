@@ -55,10 +55,11 @@ def fit(x, active, y, classes, *, c=10.0, seed=0, max_iter=5000, tolerance=1e-4)
     return LexicalHead(tuple(classes), active[kept], w[kept], b)
 
 
-def train(export, to, *, fact=None, c=10.0, seed=0, max_iter=5000, tolerance=1e-4):
+def train(export, to, *, fact=None, c=10.0, seed=0, max_iter=5000, tolerance=1e-4, fit_cohort=None):
     if isinstance(c, bool) or isinstance(tolerance, bool) or type(seed) is not int or not np.isfinite(c) or c <= 0 or not np.isfinite(tolerance) or tolerance <= 0 or type(max_iter) is not int or max_iter < 1:
         raise ConfigError('invalid lexical fitting parameters')
     source, rows = read_export(export)
+    known_ids = {row['id'] for row in rows}
     rows = [r for r in rows if 'member' not in r]
     names = {r['fact'] for r in rows}
     if fact is None:
@@ -66,6 +67,14 @@ def train(export, to, *, fact=None, c=10.0, seed=0, max_iter=5000, tolerance=1e-
             raise ConfigError('select one --fact from the exported dataset')
         fact = next(iter(names))
     rows = [r for r in rows if r['fact'] == fact]
+    if fit_cohort is not None:
+        if not isinstance(fit_cohort, (list, tuple, set, frozenset)) or not fit_cohort or any(not isinstance(value, str) for value in fit_cohort):
+            raise ConfigError('fit_cohort must contain resolved observation IDs')
+        cohort = set(fit_cohort)
+        unknown = cohort - known_ids
+        if unknown:
+            raise ConfigError(f'fit_cohort includes observations outside {fact}: {sorted(unknown)}')
+        rows = [row for row in rows if row['id'] in cohort]
     if not rows:
         raise ConfigError(f'{fact}: no tune observations')
     classes, revision = rows[0]['classes'], rows[0]['meaning_rev']
@@ -92,6 +101,8 @@ def train(export, to, *, fact=None, c=10.0, seed=0, max_iter=5000, tolerance=1e-
     manifest = {'schema': BUNDLE_SCHEMA, 'kind': 'lexical-bundle', 'feature_identity': FEATURE_IDENTITY,
                 'fact': fact, 'meaning_rev': revision, 'classes': classes, 'dataset_id': source['dataset_id'],
                 'training_id': source['training_id'], 'export_id': source['export_id'], 'trainer': {'name': 'semantic-trainer', 'version': __version__, 'solver': 'lbfgs', **params},
+                'protocol': 'fixed-role-fit' if fit_cohort is not None else 'tune-crossfit',
+                'fit_cohort': sorted(row['id'] for row in rows),
                 'final': {'head': 'final.head.json'}, 'folds': folds,
                 'unobserved_classes': [classes[i] for i in range(len(classes)) if i not in {r['label'] for r in rows}],
                 'rows': [{k: r[k] for k in ('id', 'fact', 'projection', 'group', 'fold', 'family_seeds')} for r in rows]}

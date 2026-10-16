@@ -153,3 +153,23 @@ Membership transport stores each distinct `{family_seeds, sources}` descriptor o
 ## Module ownership
 
 `models.py` owns model configuration, native settings and source resolution. `model_jobs.py` owns resource admission and leases. `api.py` owns Runtime and convenience calls. `evidence.py` owns label envelopes, claims and ingestion. Optional packages consume `semantic_switch.training`; they do not depend on these internal module paths. See [repository preservation](repository.md).
+
+## Family allocation and fixed-role controls
+
+`tools.dataset.allocate` assigns whole families from sparse named cells and size targets. Pinned assignments win. New assignments use deterministic seeded ties, rare-cell ordering and aggregate deficits; positive buckets receive a family when available. Requested counts are targets, and achieved counts and uncovered cells are returned. Core roles and benchmark producers share this owner. Existing manifests retain their roles and allocation identity.
+
+`train_lexical(..., fit_cohort=IDS)` extracts features and fits only those exported observation IDs. Omitting the cohort retains the explicitly named tune-crossfit protocol. Raw majority/lexical controls have unassessed acceptance; they have no vocabulary mass or accepted-precision claim.
+
+`tools.deployment.evaluate_development` evaluates one declared development role through the normal Executor. Its journal binds deployment, dataset, reference bytes and role. It joins existing reference decisions to composed action states and preserves partial references. Only explicitly prohibited actions contribute forbidden counts. Composed results carry no invented probability. Qualification consumes these same rows and reducers.
+
+The printer method predicate compares method and media only. `calibration_setup_inconsistent` additionally represents supply incompatibility, including thermal-transfer media without a ribbon. Cancellation uses that setup predicate. Existing deployed tasks keep their frozen definitions; notes-only serving uses a separately materialized prose task.
+
+### Public training assessment
+
+Schema-3 specialization requests measure fit-majority and the native base before profiling/fitting; lexical controls are explicit. Schema-2 requests skip the new stage. Controls consume resolved fit IDs only; the native base uses the selected asset, presentation and execution. A matching committed baseline is reused during final selection without scoring it again. Changing execution invalidates that reuse.
+
+Support and input findings are descriptive and do not add arbitrary admission rules. The existing family allocator and source histories own role separation. Neither a reviewed selection error nor a new round moves a consulted family into fit.
+
+`jobs.rank_value` owns ranking semantics for selection and its explanation. `learning.json` distinguishes completed computation, selected candidate, acceptance fitting and independent confirmation. Accepted-error counts remain visible even when they are not the declared selection objective. Core reducers own outcome/class/behavior counts; assessment rebuilding performs no inference. Native selection and HF monitoring retain separate populations and numerical results.
+
+Fit diagnosis closes explicit fit families, records observed errors and contrasts, and labels a zero-error initial probe already solved. Rank-only diagnosis preserves alpha/rank. Predictions imported for review are suggestions; only retained reference histories or explicit new reference labels can supply gold. Optional review/class quotas default to disabled, not implicit permission to make an independence claim.

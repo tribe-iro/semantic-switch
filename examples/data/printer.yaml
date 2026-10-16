@@ -35,6 +35,9 @@ facts:
   method_inconsistent:
     check: The configured print method is inconsistent with the media established for this printer. Unstated when the method or media is not established.
     unstated: true
+  calibration_setup_inconsistent:
+    check: Printer setup is incompatible when the print method differs from the media type, or thermal-transfer media has no ribbon. False when method and media agree and either media is direct thermal or a ribbon is present. Unstated when a decisive observation is unavailable.
+    unstated: true
   ready_to_print:
     check: This printer is not running a calibration sequence, its configuration is consistent with its loaded media and ribbon, and any detection symptom has been resolved by a verified calibration. When every possible value of a missing or contradictory observation gives the same answer, that answer holds; otherwise it is unstated if an observation is missing.
     unstated: true
@@ -74,7 +77,7 @@ facts:
       - id: cancel_calibration
         title: Cancel calibration
         requires: 'prompt in ["calibration_1", "calibration_2"]'
-        applies_when: [{ fact: method_inconsistent }]
+        applies_when: [{ fact: calibration_setup_inconsistent }]
       - id: resume_printing
         title: Return to printing
         requires: 'prompt == "paused"'

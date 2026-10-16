@@ -13,11 +13,11 @@ from .. import files
 from ..compiler import digest
 from ..errors import ConfigError
 
-REQUEST_SCHEMA, RESULT_SCHEMA = 2, 1
+REQUEST_SCHEMA, RESULT_SCHEMA = 3, 1
 REQUEST_KIND, RESULT_KIND, REQUEST_NAME = 'specialization-request', 'specialization-result', 'request.json'
 STATES = ('completed', 'stopped', 'awaiting_configuration', 'failed', 'cancelled')
 REPRESENTATIONS, NATIVE_DEVICES = ('merged', 'runtime-adapter'), ('auto', 'cpu', 'gpu')
-FIELDS = {'schema', 'kind', 'sources', 'task', 'model', 'devices', 'recipe', 'budget', 'selection', 'profile', 'cadence', 'representation', 'work'}
+FIELDS = {'schema', 'kind', 'sources', 'task', 'model', 'devices', 'recipe', 'budget', 'selection', 'profile', 'cadence', 'representation', 'work', 'baselines'}
 COMMIT, SETTING = re.compile('[0-9a-f]{40}'), re.compile(r'[A-Za-z_]+=.+')
 GRACE, HANDSHAKE = 30., 60.
 INSTALL = ('install semantic-trainer with its fitting extras in the fitting environment (pip install "semantic-trainer[lora]") and configure its absolute '
@@ -35,7 +35,7 @@ def sources(definition, labels) -> dict:
 
 
 def request(definition, labels, work, *, devices, model=None, assets=None, quant='Q8_0', recipe=(), budget=(), fit_situations=None, acceptance_fit=False,
-            task_family=None, scope=None, profile=None, measure=None, cadence=None, representation='merged') -> dict:
+            task_family=None, scope=None, profile=None, measure=None, cadence=None, representation='merged', baselines=()) -> dict:
     from ..api import located
     definition = located(definition)
     if (model is None) == (assets is None):
@@ -45,15 +45,18 @@ def request(definition, labels, work, *, devices, model=None, assets=None, quant
              'model': {'assets': assets, 'quant': quant} if assets else {**model, 'quant': quant}, 'devices': dict(devices),
              'recipe': sorted(recipe), 'budget': sorted(budget), 'selection': {'fit_situations': fit_situations, 'acceptance_fit': bool(acceptance_fit)},
              'profile': {'path': str(Path(profile).resolve()), 'sha256': files.sha256_file(profile)} if profile else ({'measure': {'steps': 3, 'warmup': 1, 'cadences': [], **measure}} if measure is not None else None),
-             'cadence': cadence, 'representation': representation, 'work': str(Path(work).resolve())}
+             'cadence': cadence, 'representation': representation, 'work': str(Path(work).resolve()), 'baselines': list(baselines)}
     return decode_request(built, 'specialize')
 
 
 def decode_request(record, where) -> dict:
     def fail(message):
         raise ConfigError(f'{where}: {message}; write a new request with ss specialize')
-    if not isinstance(record, dict) or record.get('schema') != REQUEST_SCHEMA or record.get('kind') != REQUEST_KIND or set(record) != FIELDS:
+    if not isinstance(record, dict) or record.get('schema') not in (2, REQUEST_SCHEMA) or record.get('kind') != REQUEST_KIND \
+            or set(record) != (FIELDS - {'baselines'} if record.get('schema') == 2 else FIELDS):
         fail(f'not a schema-{REQUEST_SCHEMA} specialization request')
+    if record['schema'] == REQUEST_SCHEMA and record['baselines'] not in ([], ['lexical']):
+        fail('baselines lists optional lexical; majority and native base are included by default')
     model, devices, selection = record['model'], record['devices'], record['selection']
     if not isinstance(model, dict) or not isinstance(model.get('quant'), str) or set(model) not in ({'assets', 'quant'}, {'repo', 'revision', 'quant'}) \
             or not all(isinstance(value, str) and value for value in model.values()):

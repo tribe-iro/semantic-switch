@@ -1008,3 +1008,17 @@ This materializes labels from existing situations, annotations and reference val
 For explicit additive production, `python -m bench.procedures coverage PARENT REQUEST.json --output NEW_PACK --per-template N` runs a bounded existing scenario producer. Requests contain `seed` and `requests`, each with `target`, semantic `class`, metadata `tags` and `families`. Positive/negative/unknown requests can share contrast families. The publication reports requested and achieved coverage, skips parent input duplicates, retains source ancestry across context variants and labels only through the deterministic reference. It does not run as part of training.
 
 `bench.backend_diagnostics grouped` now defaults to production capacity and groups in the available free streams. Its report includes whole-workflow timing and accepted-output comparison as well as raw readout differences. It remains a white-box experiment; production scheduling is unchanged.
+
+### Behavioral decision development
+
+`bench/data/decision-adaptation.json` contains disclosed authored customer-intent and operation-verification contrasts. It includes previously observed failures and is development evidence, not independent confirmation.
+
+```bash
+python -m bench.policy_adaptation WORK --behavioral bench/data/decision-adaptation.json \
+  --base PIPELINE_BASE.gguf --assets ASSET_MANIFEST --quant Q4_0 \
+  --native-device gpu --device xpu:0
+semantic-trainer lora WORK/nominal/job.yaml --to WORK/nominal/run
+semantic-trainer select WORK/nominal/job.yaml --run WORK/nominal/run
+```
+
+The first command materializes labels and whole-family assignments once, then calls the same trainer control implementation used by specialization. It publishes fit-only majority/lexical and matched native-base results on model-selection rows only, plus a prepared job. Acceptance and check rows are not consulted during preparation. Fitting never calls the authoring step. Reusing a published study requires identical inputs. The base must match the trainer asset manifest. The existing `behavioral_evaluate` client records the selected deployment through the SDK and derives class, behavior, pair and acceptance-fit reports from saved rows. A selector retaining the base is reported as no demonstrated LoRA improvement.

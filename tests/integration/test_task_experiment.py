@@ -14,6 +14,7 @@ from semantic_switch.tools.specialize import request
 from semantic_switch.training import artifact_digest
 from semantic_testkit.assets import fake_assets
 from semantic_testkit.scoring import FakeScorer
+from semantic_testkit.pipeline import native_scoring
 from semantic_trainer import jobs, pipeline
 from semantic_trainer.pipeline import Controller, Operation, output
 from bench import evidence, procedures, task_experiment
@@ -29,9 +30,9 @@ def staged(tmp_path, monkeypatch):
     identity = api.Runtime.identity
     monkeypatch.setattr(api.Runtime, 'identity', lambda self, role='judge': {**identity(self, role), 'sha256': files.sha256_file(str(gguf))})
     monkeypatch.setattr(model_jobs, 'available_host_bytes', lambda: 1 << 50)
-    monkeypatch.setattr(pipeline, 'native_judge', lambda path, device: FakeScorer())
+    native_scoring(monkeypatch)
     monkeypatch.setattr(task_experiment, 'DEVICES', {'fit': 'cpu', 'native': 'cpu'})
-    monkeypatch.setattr(task_experiment, 'FIT_SITUATIONS', FIT)
+    monkeypatch.setattr(task_experiment, 'FIT_SITUATIONS', None)
     procedures.pack_command(Namespace(seed=0, per_template=2, variants=3, reviews=None, output=tmp_path / 'pack', fit=FIT, model_select=2, check=16))
     return manifest, evidence.stage_under(tmp_path / 'pack', tmp_path / 'stages')
 
@@ -49,7 +50,7 @@ def measured(context, directory, settings):
 def profiled(tmp_path, manifest, staged, name='profiling', recipe=task_experiment.RECIPE):
     work = tmp_path / name
     files.write_new(work / 'request.json', request(staged['definition'], staged['labels'], work, devices=task_experiment.DEVICES, assets=manifest, quant='Q8_0',
-                                                  recipe=recipe, budget=task_experiment.BUDGET, fit_situations=FIT, task_family=task_experiment.TASK_FAMILY, measure={}))
+                                                  recipe=recipe, budget=task_experiment.BUDGET, task_family=task_experiment.TASK_FAMILY, measure={}))
     operations = {**pipeline.OPERATIONS, 'profile': Operation(measured, pipeline.verify_profile)}
     return Path(Controller(work / 'request.json', operations=operations, until='profile', emit=lambda **event: None).run()['profile'])
 
@@ -91,7 +92,7 @@ def test_descriptor_binds_the_staged_pack_profile_and_fixed_recipe_and_prepares_
     declared = files.read_json(path)
     assert declared['model'] == {'assets': manifest, 'quant': 'Q8_0'} and declared['cadence'] == 552 and declared['representation'] == 'merged'
     assert declared['profile'] == {'path': str(profile.resolve()), 'sha256': files.sha256_file(profile)}
-    assert declared['selection'] == {'fit_situations': FIT, 'acceptance_fit': False} and declared['task']['family'] == 'bench:zt411'
+    assert declared['selection'] == {'fit_situations': None, 'acceptance_fit': False} and declared['task']['family'] == 'bench:zt411'
     assert declared['sources']['definition']['path'] == str(Path(stage['definition']).resolve())
     assert Path(stage['definition']).parent.name == files.sha256_file(tmp_path / 'pack' / 'benchmark.json')[:16]
     audit = Path(stage['audit'])
@@ -112,7 +113,7 @@ def test_descriptor_binds_the_staged_pack_profile_and_fixed_recipe_and_prepares_
          'min_epochs': 2, 'seed': 0, 'selection_unit': 'complete_situation'}
     assert {key: resolved['budget'][key] for key in ('max_sequence_tokens', 'max_seconds', 'max_tokens', 'max_monitor_tokens')} == \
         {'max_sequence_tokens': 1024, 'max_seconds': 18000, 'max_tokens': None, 'max_monitor_tokens': None}
-    assert resolved['assets'] == {'manifest': manifest, 'quant': 'Q8_0'} and resolved['populations']['fit']['situations'] == FIT
+    assert resolved['assets'] == {'manifest': manifest, 'quant': 'Q8_0'} and resolved['populations']['fit']['situations'] > 0
     assignment = files.read_json(Path(result['stages']['freeze']['path']) / pipeline.MANIFEST)['assignment']
     held = set(assignment['check_components'])
     assert len(held) == assignment['roles']['check']['families'] > 0

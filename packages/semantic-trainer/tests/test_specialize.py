@@ -126,7 +126,7 @@ def test_role_crossing_family_join_fails(tmp_path, monkeypatch):
     role = next(role for role in TUNING if role != roles[f"group:{rows[index]['groups'][0]}"])
     rows[index] = {**rows[index], 'groups': ['moved'], 'role': role}
     files.publish(tmp_path / 'other.jsonl', ''.join(json.dumps(row) + '\n' for row in rows))
-    with Runtime(FakeScorer()) as runtime:
+    with Runtime(Native.tokens) as runtime:
         other = tools.export(runtime, definition, to=tmp_path / 'other.export.jsonl', native=True, task_family='maintenance:test', labels=tmp_path / 'other.jsonl')
     with pytest.raises(ConfigError, match='conflicting roles'):
         prepare(definition, [export, other['path']], tmp_path / 'job', assets_manifest=manifest, recipe=RECIPE)
@@ -422,7 +422,7 @@ def test_select_publishes_a_self_contained_deployment_with_retained_provenance(t
     data = thaw(receipt.data)
     assert data['selection']['rule']['order'] == ['correct', 'regressions', 'base', 'step'] and data['selection']['rule']['nll'] == 'unavailable'
     assert data['selection']['loss'] == resolved['loss']
-    assert set(data['files']) == {'specialist.gguf', 'task.yaml', 'task.lock.json', 'guidance/0.txt', 'selection.rows.jsonl'}
+    assert set(data['files']) == {'specialist.gguf', 'task.yaml', 'task.lock.json', 'guidance/0.txt', 'selection.rows.jsonl', 'learning.json'}
     assert data['execution'] == execution_identity(REALIZED) and data['native'] == {**data['native'], 'adapter': 'qwen3', 'device': 'cpu'}
     assert data['acceptance'] == {**data['acceptance'], 'policy': 'authored', 'calibration': 'absent', 'acceptance_fit': {}} and not resolved['roles']['acceptance_fit']
     lock = files.read_json(run / 'deployment' / 'task.lock.json')

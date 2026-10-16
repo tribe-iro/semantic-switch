@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+from fractions import Fraction
+from collections import Counter
 import statistics
 
 from semantic_switch import ConfigError
@@ -40,7 +42,7 @@ def curve(run):
              'probe': point['probe']} for point in files.iter_records(path) if point['kind'] == 'evaluation'] if path.exists() else []
 
 
-def completed(directory, *, run=None, receipt=None):
+def completed(directory, *, run=None, receipt=None, development=None):
     directory = Path(directory)
     run = Path(run) if run is not None else directory / 'run'
     receipt_path = Path(receipt) if receipt is not None else run / 'deployment' / 'receipt.json'
@@ -58,10 +60,16 @@ def completed(directory, *, run=None, receipt=None):
     winner = next((row for row in candidates if row.get('name') == name), None)
     fitted = files.read_json(run / 'resolved-job.json') or {}
     limited = (state.get('stop') or {}).get('reason') in ('time_budget', 'token_budget', 'monitor_budget')
+    assessed = None
+    operational = {'state': 'unassessed', 'reason': 'target_only_evaluation'}
+    if development is not None:
+        from semantic_switch.training import evaluate_development
+        assessed = evaluate_development(receipt_path, to=directory / 'development', **development)
+        operational = assessed['operational_actions']
     return {'state': 'budget_limited' if limited else 'completed', 'receipt': str(receipt_path), 'selected': name,
             'selection': report, 'winner': winner, 'curve': points, 'stop': state.get('stop'),
             'environment': {'dependencies': fitted.get('dependencies'), 'fitting': fitted.get('fitting'), 'execution': published.get('execution')},
-            'operational_actions': {'state': 'unassessed', 'reason': 'target_only_evaluation'}}
+            'operational_actions': operational, 'development': assessed}
 
 
 def spread(values):
@@ -71,7 +79,7 @@ def spread(values):
 
 
 def summarize(records):
-    completed_ = [row for row in records if row.get('state') == 'completed']
+    completed_ = [row for row in records if row.get('state') in ('completed', 'budget_limited')]
     metrics, classes = {}, {}
     for row in completed_:
         winner = row.get('winner')
@@ -81,6 +89,8 @@ def summarize(records):
             metrics.setdefault(unit, []).append(value)
         for key in ('precision', 'coverage', 'correct_accepted_rate'):
             metrics.setdefault(key, []).append(winner.get(key))
+        pairs = winner.get('pairs') or {}
+        metrics.setdefault('pair_success', []).append(pairs['both_correct'] / pairs['pairs'] if pairs.get('pairs') else None)
         for scope, answers in winner.get('per_class', {}).items():
             for name, cell in answers.items():
                 classes.setdefault((scope, name), []).append(cell['recall'])
@@ -91,8 +101,20 @@ def summarize(records):
             slices.setdefault(key, []).append(requirement['recall'])
     qualified = [row.get('winner', {}).get('qualification', {}).get('state') for row in completed_ if row.get('winner')]
     comparable = len({artifact_digest(row.get('environment')) for row in completed_}) <= 1
-    state = 'incomplete' if len(completed_) != len(records) else 'not_declared' if not qualified or all(value in (None, 'not_declared') for value in qualified) else 'met' if all(value == 'met' for value in qualified) else 'unmet'
-    return {'state': state if comparable else 'incomparable', 'comparable': comparable, 'completed': len(completed_), 'declared': len(records),
+    state = 'incomplete' if len(completed_) != len(records) or any(row['state'] == 'budget_limited' for row in completed_) else 'not_declared' if not qualified or all(value in (None, 'not_declared') for value in qualified) else 'met' if all(value == 'met' for value in qualified) else 'unmet'
+    actions, behaviors = {}, {}
+    for row in records:
+        for name, cell in (row.get('development') or {}).get('targets', {}).get('behaviors', {}).items():
+            for key in ('correct_per_submission', 'precision', 'coverage'):
+                behaviors.setdefault(f'{name}:{key}', []).append(cell.get(key))
+        for name, assessed in row.get('operational_actions', {}).get('sets', {}).items():
+            for key in ('precision', 'recall', 'required_omissions', 'frames_with_prohibited'):
+                actions.setdefault(f'{name}:{key}', []).append(assessed['actions'][key])
+    return {'behaviors': {key: spread(values) for key, values in behaviors.items()} if comparable else {},
+            'operational_actions': {key: {**spread(values), 'worst': max(values) if key.endswith(('required_omissions', 'frames_with_prohibited')) else min(values)}
+                                    for key, values in actions.items() if values and all(value is not None for value in values)} if comparable else {},
+            'state': state if comparable else 'incomparable', 'comparable': comparable, 'completed': sum(row.get('state') == 'completed' for row in records), 'evaluated': len(completed_), 'declared': len(records),
+            'run_states': {state: sum(row.get('state') == state for row in records) for state in sorted({row.get('state', 'unknown') for row in records})},
             'metrics': {name: spread(values) for name, values in metrics.items()} if comparable else {},
             'per_class': [{'target': target, 'class': name, **spread(values)} for (target, name), values in sorted(classes.items())] if comparable else [],
             'requirements': [{'task': task, 'target': target, 'class': name, 'slice': slice_, **spread(values)}
@@ -100,7 +122,7 @@ def summarize(records):
             'population': 'model_select'}
 
 
-def qualify(source, to, *, execute=False, representation='merged', nominal_run=None, nominal_receipt=None):
+def qualify(source, to, *, execute=False, representation='merged', nominal_run=None, nominal_receipt=None, development=None):
     source, to = Path(source).resolve(), Path(to).resolve()
     resolved, _ = jobs.resolve(source)
     nominal = None
@@ -118,7 +140,8 @@ def qualify(source, to, *, execute=False, representation='merged', nominal_run=N
     declaration = {'schema': 1, 'kind': 'recipe-qualification', 'job': str(source), 'job_sha256': files.sha256_file(source),
                    'nominal_fit': resolved['fit']['id'], 'monitor': resolved['monitor']['id'],
                    'population': resolved['cohort'], 'requirements': resolved['recipe']['development_recall'],
-                   'variants': variants(resolved['recipe']), 'representation': representation, 'nominal': nominal}
+                   'variants': variants(resolved['recipe']), 'representation': representation, 'nominal': nominal,
+                   **({'development': development} if development is not None else {})}
     declaration['id'] = artifact_digest(declaration)
     path = to / 'qualification.json'
     with files.Lease(to):
@@ -131,7 +154,7 @@ def qualify(source, to, *, execute=False, representation='merged', nominal_run=N
             directory = to / variant['name']
             job = directory / 'job.yaml'
             write_job(source, job, {key: variant[key] for key in ('seed', 'learning_rate')})
-            result = completed(directory, run=nominal['run'], receipt=nominal['receipt']) if nominal and variant == declaration['variants'][0] else completed(directory)
+            result = completed(directory, run=nominal['run'], receipt=nominal['receipt'], development=development) if nominal and variant == declaration['variants'][0] else completed(directory, development=development)
             if result['state'] not in ('completed', 'budget_limited') and variant['name'] in previous:
                 result = {**previous[variant['name']], **result, 'state': previous[variant['name']]['state']}
             records.append({**variant, **result, 'job': str(job)})
@@ -149,7 +172,7 @@ def qualify(source, to, *, execute=False, representation='merged', nominal_run=N
                 from .select import select
                 train(record['job'], directory / 'run')
                 select(record['job'], directory / 'run', representation)
-                result = completed(directory)
+                result = completed(directory, development=development)
             except (KeyboardInterrupt, SystemExit):
                 records[index] = {**record, **completed(directory), 'state': 'interrupted'}
                 publish()
@@ -164,13 +187,25 @@ def qualify(source, to, *, execute=False, representation='merged', nominal_run=N
         return publish()
 
 
-def diagnostic(source, to, *, target, answer, families, epochs=4, execute=False, rank=None):
+def diagnostic(source, to, *, target=None, answer=None, families=4, epochs=4, execute=False, rank=None, alpha=None, family_ids=()):
     if type(families) is not int or families < 1 or type(epochs) is not int or epochs < 1:
         raise ConfigError('diagnostic families and epochs must be positive integers')
     if rank is not None and (type(rank) is not int or rank < 1):
         raise ConfigError('diagnostic rank must be a positive integer')
+    if alpha is not None and (type(alpha) is not int or alpha < 1):
+        raise ConfigError('diagnostic alpha must be a positive integer')
     resolved, rows = jobs.resolve(source)
-    found = sorted({row['component'] for row in rows if row['role'] == 'fit' and '/'.join(record_path(row)) == target and row['classes'][row['label']] == answer})[:families]
+    if family_ids:
+        if len(set(family_ids)) != len(family_ids):
+            raise ConfigError('diagnostic family IDs must be distinct')
+        fitting_ids = {row['component'] for row in rows if row['role'] == 'fit'}
+        if set(family_ids) - fitting_ids:
+            raise ConfigError(f'diagnostic families are not fit families: {sorted(set(family_ids) - fitting_ids)}')
+        found = sorted(family_ids)
+    else:
+        if not target or answer is None:
+            raise ConfigError('diagnose needs --target and --class, or explicit --family IDs')
+        found = sorted({row['component'] for row in rows if row['role'] == 'fit' and '/'.join(record_path(row)) == target and row['classes'][row['label']] == answer})[:families]
     if not found:
         raise ConfigError('no fit families support the requested target/class; materialize or review evidence first')
     select = {row['component'] for row in rows if row['role'] == 'model_select'}
@@ -198,15 +233,38 @@ def diagnostic(source, to, *, target, answer, families, epochs=4, execute=False,
     selection = {'fit_situations': None, 'families': found, 'situation_ids': sorted({value for row in fitting for value in row['situations']})}
     overrides = {'epochs': epochs, 'min_epochs': epochs, 'fit_probe_observations': len(fitting), jobs.CADENCE: len(fitting) * epochs,
                  'warmup_examples': min(resolved['recipe']['warmup_examples'], len(fitting)), 'development_recall': []}
-    if rank is not None:
-        overrides['rank'] = rank
+    effective_rank = rank or resolved['recipe']['rank']
+    scale = Fraction(resolved['recipe']['alpha'], resolved['recipe']['rank'])
+    scaled_alpha = scale * effective_rank
+    if alpha is None and scaled_alpha.denominator != 1:
+        raise ConfigError('rank-only control cannot preserve alpha/rank with an integer alpha; declare --alpha explicitly')
+    effective_alpha = alpha if alpha is not None else int(scaled_alpha)
+    overrides.update(rank=effective_rank, alpha=effective_alpha)
     to = Path(to).resolve()
     job = to / 'job.yaml'
     write_job(source, job, overrides, selection=selection, exports=exports)
     record = {'kind': 'fit-diagnostic', 'target': target, 'class': answer, 'requested_families': families, 'fit_families': found, 'observations': len(fitting),
-              'role': 'fit', 'probe': 'in_sample', 'rank': rank or resolved['recipe']['rank'], 'alpha': resolved['recipe']['alpha'], 'slot_errors': slots, 'contradictions': contradictions}
+              'role': 'fit', 'probe': 'in_sample', 'rank': effective_rank, 'alpha': effective_alpha,
+              'effective_scale': effective_alpha / effective_rank, 'learning_rate': resolved['recipe']['learning_rate'],
+              'batch_size': resolved['recipe']['batch_size'], 'initializer': resolved['initialization']['kind'],
+              'cohort': [{'id': row['id'], 'family': row['component'], 'role': row['role'], 'target': '/'.join(record_path(row)),
+                          'class': row['classes'][row['label']], 'presentations': [entry.id for entry in row['presentations']]} for row in cohort],
+              'classes': dict(Counter(f"{'/'.join(record_path(row))}={row['classes'][row['label']]}" for row in fitting)),
+              'contrasting_labels': any(len({row['label'] for row in fitting if record_path(row) == address}) > 1 for address in {record_path(row) for row in fitting}),
+              'baseline_errors': None, 'assessment': 'unassessed', 'trainable_parameters': None,
+              'slot_errors': slots, 'contradictions': contradictions}
     files.publish(to / 'diagnostic.json', record)
     if execute:
         from .lora import train
         train(job, to / 'run')
-    return {**record, 'job': str(job), 'curve': curve(to / 'run')}
+    points = curve(to / 'run')
+    if points:
+        before, after = points[0]['probe'], points[-1]['probe']
+        errors = before['submitted'] - before['correct']
+        record.update(baseline_errors=errors, assessment='already_solved' if errors == 0 else 'measured_fit_deficit',
+                      probe_before=before, probe_after=after)
+        fitted = files.read_json(to / 'run' / 'resolved-job.json') or {}
+        if fitted.get('targets'):
+            record['trainable_parameters'] = sum((shape[0] + shape[1]) * effective_rank for shape in fitted['targets'].values())
+        files.publish(to / 'diagnostic.json', record)
+    return {**record, 'job': str(job), 'curve': points}

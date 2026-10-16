@@ -2,6 +2,7 @@ import argparse
 import json
 
 from semantic_switch import ConfigError
+from semantic_switch.training import files
 
 
 def bound(pairs) -> dict:
@@ -33,6 +34,15 @@ def settings(pairs, defaults, kind) -> dict:
     return parsed
 
 
+def development_settings(path):
+    if path is None:
+        return None
+    record = files.read_json(path)
+    if not isinstance(record, dict) or not {'labels', 'evidence'} <= set(record) or set(record) - {'labels', 'evidence', 'role', 'references', 'bindings'}:
+        raise ConfigError(f'{path}: development configuration needs labels, evidence and optional role, references, bindings')
+    return record
+
+
 def main():
     from .deploy import REPRESENTATIONS
     parser = argparse.ArgumentParser(prog='semantic-trainer')
@@ -41,6 +51,7 @@ def main():
     lexical.add_argument('export')
     lexical.add_argument('--to', required=True)
     lexical.add_argument('--fact')
+    lexical.add_argument('--fit-cohort', help='JSON array of resolved fit observation IDs; omitted: tune-wide cross-fitting')
     lexical.add_argument('--c', type=float, default=10.)
     assets = commands.add_parser('assets', help='build or verify the pinned HF snapshot, F16/quantized GGUF bases and llama.cpp toolchain')
     assets.add_argument('--model', required=True, help='Hugging Face repository, e.g. google/gemma-4-E2B-it')
@@ -104,6 +115,10 @@ def main():
     pipeline.add_argument('--until', metavar='STAGE', help='stop after this stage, whether reused or computed')
     pipeline.add_argument('--attempt', type=int, help='fit attempt number; a new number fits a new run from the pinned base')
     pipeline.add_argument('--cadence', type=int, help='commit this monitoring cadence (eval_every_examples) for the measured profile')
+    assess = commands.add_parser('assess', help='rebuild a learning assessment from stored rows without inference; optional composed development evaluation')
+    assess.add_argument('source', help='receipt, deployment directory or learning.json')
+    assess.add_argument('--to', help='new assessment JSON; omitted: return recomputed report')
+    assess.add_argument('--development', help='explicit JSON with labels, evidence, optional role and references for composed evaluation')
     commands.add_parser('protocol', help='print the specialization request/result protocol this trainer speaks')
     qualify = commands.add_parser('qualify', help='declare or resume five seed/LR perturbations through existing fit and selection')
     qualify.add_argument('job')
@@ -111,34 +126,42 @@ def main():
     qualify.add_argument('--run', action='store_true', help='execute incomplete runs; otherwise materialize jobs and summarize available results')
     qualify.add_argument('--representation', choices=REPRESENTATIONS, default='merged')
     qualify.add_argument('--nominal-run', help='reuse a ready matching seed-0 run without copying weights')
+    qualify.add_argument('--development', help='JSON with labels, evidence and optional role for composed development evaluation')
     qualify.add_argument('--nominal-receipt', help='native receipt of --nominal-run when published outside RUN/deployment')
     diagnose = commands.add_parser('diagnose', help='bounded fit-only cohort and slot/label audit; no deployment or check calls')
     diagnose.add_argument('job')
     diagnose.add_argument('--to', required=True)
-    diagnose.add_argument('--target', required=True)
-    diagnose.add_argument('--class', dest='answer', required=True)
+    diagnose.add_argument('--target')
+    diagnose.add_argument('--class', dest='answer')
     diagnose.add_argument('--families', type=int, default=4)
     diagnose.add_argument('--epochs', type=int, default=4)
     diagnose.add_argument('--rank', type=int)
+    diagnose.add_argument('--alpha', type=int)
+    diagnose.add_argument('--family', dest='family_ids', action='append', default=[], help='explicit resolved fit-family ID, repeatable')
     diagnose.add_argument('--run', action='store_true')
     args = parser.parse_args()
     if args.command == 'pipeline':
         from .pipeline import command
         raise SystemExit(command(args.request, until=args.until, attempt=args.attempt, cadence=args.cadence))
     try:
-        if args.command == 'qualify':
+        if args.command == 'assess':
+            from .assessment import rebuild
+            result = rebuild(args.source, args.to, development=development_settings(args.development))
+        elif args.command == 'qualify':
             from .qualification import qualify
             result = qualify(args.job, args.to, execute=args.run, representation=args.representation,
-                             nominal_run=args.nominal_run, nominal_receipt=args.nominal_receipt)
+                             nominal_run=args.nominal_run, nominal_receipt=args.nominal_receipt,
+                             development=development_settings(args.development))
         elif args.command == 'diagnose':
             from .qualification import diagnostic
-            result = diagnostic(args.job, args.to, target=args.target, answer=args.answer, families=args.families, epochs=args.epochs, rank=args.rank, execute=args.run)
+            result = diagnostic(args.job, args.to, target=args.target, answer=args.answer, families=args.families, epochs=args.epochs, rank=args.rank, alpha=args.alpha, family_ids=args.family_ids, execute=args.run)
         elif args.command == 'lexical':
             try:
                 from . import train_lexical
             except ImportError as error:
                 raise ConfigError(str(error)) from error
-            result = train_lexical(args.export, args.to, fact=args.fact, c=args.c)
+            result = train_lexical(args.export, args.to, fact=args.fact, c=args.c,
+                                   fit_cohort=files.read_json(args.fit_cohort) if args.fit_cohort else None)
         elif args.command == 'assets':
             from .assets import REPOSITORY, build
             result = build(args.model, args.quant, revision=args.revision, source=args.toolchain_source or REPOSITORY)

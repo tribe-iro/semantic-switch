@@ -50,7 +50,7 @@ def test_retired_printer_complements_preserve_every_action_state_over_the_refere
     new, new_asked = decisions(procedures.DEFINITION, frames, golds)
     assert old == new and len(frames) > 20
     assert {'ribbon_absent', 'dt_media'} <= set(old_asked) and not {'ribbon_absent', 'dt_media'} & set(new_asked)
-    assert len(old_asked) / len(frames) == 12 and len(new_asked) / len(frames) == 10
+    assert len(old_asked) / len(frames) == 12 and len(new_asked) / len(frames) == 11
 
 
 def test_media_universe_is_declared_where_negation_relies_on_it():

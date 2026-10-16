@@ -307,7 +307,7 @@ def pack_command(args):
                          "frames": len(realism), "slice": "check realism slice, reported separately"}
     ref = standard()
     reviewed = evidence.reviewed_pack(args, sys.modules[__name__], pack, built, ref, slices=("abcd",) if args.abcd else ())
-    assignment = evidence.quota_assignment(reviewed.frames, args, counted=evidence.situation_frames(reviewed.frames, reviewed.golds, TRAINED),
+    assignment = evidence.quota_assignment(reviewed.frames, args, counted=evidence.situation_frames(reviewed.frames, reviewed.golds, TRAINED), golds=reviewed.golds,
                                            check_only=lambda frame: "abcd_realism" in frame.tags)
     return evidence.publish_domain(args, sys.modules[__name__], pack, reviewed, ref, scenarios=planned, assignment=assignment, producer="bench.support.reference", extra=extra)
 

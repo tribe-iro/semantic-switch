@@ -52,7 +52,7 @@ def test_frozen_job_keeps_declared_corrections_guidance_and_provenance_through_d
     by_input = {item['projection']: item for item in resolved['corrections']}
     assert len(resolved['corrections']) == 3 and single_task(resolved)[1]['exact_override'] and single_task(resolved)[1]['source'] == str(definition)
     seven, authored_, absent = (by_input[json.dumps({'message': f'report {n}'}, separators=(',', ':'))] for n in (7, 998, 500))
-    assert seven['value'] == label_of(7) and len(seven['label_sources']) == 2 and not seven['observed'] and not absent['observed']
+    assert seven['value'] == label_of(7) and len(seven['label_sources']) == 2 and not absent['observed']
     assert authored_['observed'] and authored_['value'] == 'clarify' and module.resolve(job)[1] and authored_['id'] in resolved['roles']['fit']
     bundle = Path(single_task(resolved)[1]['bundle'])
     assert (bundle / 'guidance' / '0.txt').read_text() == POLICY and len(files.read_jsonl(bundle / 'task.examples.jsonl')) == 3
@@ -73,7 +73,9 @@ def test_frozen_job_keeps_declared_corrections_guidance_and_provenance_through_d
     assert data['behavior']['overrides'] == artifact_digest(files.read_json(bundle / 'frozen-task.json')['overrides'])
     assert data['selection']['sources'] == ['judge'] and 'scope' not in data['selection']
     uses = {row['id']: row['uses'] for row in data['provenance']['rows']}
-    assert uses[authored_['id']] == ['adaptation', 'selection', 'override'] and uses[seven['id']] == uses[absent['id']] == ['override']
+    assert uses[authored_['id']] == ['adaptation', 'selection', 'override'] and uses[absent['id']] == ['override']
+    assert 'override' in uses[seven['id']]
+    assert bool(set(uses[seven['id']]) & {'adaptation', 'selection'}) == seven['observed']
     only = [row for row in receipt.provenance.rows if row['uses'] == ('override',)]
     assert {row['projection'] for row in only} == {item['projection'] for item in resolved['corrections'] if not item['observed']} and all(not row['sources'] for row in only)
     assert next(row for row in data['provenance']['rows'] if row['id'] == seven['id'])['label_sources'] == seven['label_sources']

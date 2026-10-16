@@ -154,12 +154,12 @@ def specialization_request(definition, labels, work, settings) -> dict:
     return decode_request({**settings, 'sources': sources(definition, labels), 'work': str(Path(work).resolve())}, 'round')
 
 
-def freeze_round(definition, labels, work, *, cutoff, serving, min_reviewed, min_per_class, settings, incumbent=None, deleted=None, caps=None) -> dict:
+def freeze_round(definition, labels, work, *, cutoff, serving, min_reviewed=0, min_per_class=0, settings, incumbent=None, deleted=None, caps=None) -> dict:
     work = Path(work).resolve()
     if serving not in SERVING:
         raise ConfigError(f"declare the serving policy during fitting: one of {', '.join(SERVING)}; a background thread never bypasses the GPU envelope")
-    if any(type(value) is not int or value < 1 for value in (min_reviewed, min_per_class)):
-        raise ConfigError('declare positive min_reviewed and min_per_class feasibility requirements; there is no production default')
+    if any(type(value) is not int or value < 0 for value in (min_reviewed, min_per_class)):
+        raise ConfigError('min_reviewed and min_per_class must be nonnegative; zero leaves that optional requirement disabled')
     cutoff = available(cutoff, 'round cutoff')
     task = task_of(definition)
     caps = dict(caps or {})
@@ -188,7 +188,7 @@ def freeze_round(definition, labels, work, *, cutoff, serving, min_reviewed, min
     return record
 
 
-def run_round(definition, labels, work, *, trainer, request, cutoff, serving, min_reviewed, min_per_class, incumbent=None, deleted=None, caps=None,
+def run_round(definition, labels, work, *, trainer, request, cutoff, serving, min_reviewed=0, min_per_class=0, incumbent=None, deleted=None, caps=None,
               until=None, attempt=None, cadence=None) -> dict:
     work, settings = Path(work).resolve(), recipe(request)
     record = freeze_round(definition, labels, work, cutoff=cutoff, serving=serving, min_reviewed=min_reviewed, min_per_class=min_per_class, settings=settings,

@@ -34,10 +34,10 @@ def write_test_file(path, n=60):
 
 
 def test_lock_dry_run_reports_without_writing(rt, path):
-    write_test_file(path, 90)
+    write_test_file(path, 360)
     report = tools.lock(rt, path, dry_run=True)
     side = report["policies"]["legal_threat"]["judge"]
-    assert report["lock"] is None and side["true"]["state"] == "met" and side["true"]["theta"] == 0.9
+    assert report["lock"] is None and side["true"]["state"] == "met" and side["true"]["theta"] == pytest.approx(0.97)
     assert side["false"]["state"] == "met" and side["false"]["held_out_precision"] >= 0.95
     assert side["false"]["interval_95"] is None
     assert side["false"]["interval_reason"]

@@ -637,7 +637,7 @@ def test_selected_fact_export_keeps_dataset_families(tmp_path):
     assert selected['dataset_id'] == whole['dataset_id']
 
 
-def test_suite_pilot_prepares_through_the_trainer_and_reports_unsupported_answers(tmp_path, monkeypatch):
+def test_suite_pilot_prepares_through_the_trainer_with_supported_answer_classes(tmp_path, monkeypatch):
     from bench.policy_adaptation import suites
     digest = pipeline_base(tmp_path, monkeypatch)
     with Runtime(FakeScorer()) as runtime:
@@ -645,7 +645,7 @@ def test_suite_pilot_prepares_through_the_trainer_and_reports_unsupported_answer
     assert (tmp_path / 'pilot' / 'job.yaml').exists()
     from semantic_trainer.jobs import populate
     job = tmp_path / 'pilot' / 'job.yaml'
-    assert populate(files.read_yaml(job), job.parent)[0]['support']['unsupported_classes']
+    assert not populate(files.read_yaml(job), job.parent)[0]['support']['unsupported_classes']
 
 
 def test_suite_pilot_keeps_families_in_one_role_and_audits_only_accept_and_check(tmp_path, monkeypatch):

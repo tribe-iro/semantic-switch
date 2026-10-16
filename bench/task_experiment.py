@@ -10,7 +10,7 @@ from semantic_switch.training import specialization_request, specialize
 
 from bench import evidence
 
-TASK_FAMILY, QUANT, FIT_SITUATIONS = 'bench:zt411', 'Q8_0', 100
+TASK_FAMILY, QUANT, FIT_SITUATIONS = 'bench:zt411', 'Q8_0', None
 DEVICES = {'fit': 'xpu:0', 'native': 'gpu'}
 RECIPE = ('rank=16', 'alpha=32', 'dropout=0.0', 'batch_size=8', 'microbatch=1', 'learning_rate=0.0002', 'schedule=constant', 'epochs=4', 'min_epochs=2',
           'seed=0', 'selection_unit=complete_situation')

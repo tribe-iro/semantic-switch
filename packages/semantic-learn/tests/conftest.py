@@ -69,3 +69,7 @@ def trainer(tmp_path):
 def calls(trainer):
     log = Path(trainer).parent / 'calls.jsonl'
     return [json.loads(line) for line in log.read_text().splitlines()] if log.exists() else []
+
+from semantic_testkit.fixtures import isolated_jobs
+
+__all__ = ['isolated_jobs']

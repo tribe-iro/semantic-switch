@@ -13,7 +13,7 @@ from semantic_switch.tools.specialize import request, specialize
 from semantic_switch.training import Actor, artifact_digest
 from semantic_testkit.assets import pipeline_base
 from semantic_testkit.labels import action_definition, label_file
-from semantic_testkit.pipeline import measured
+from semantic_testkit.pipeline import measured, native_scoring
 from semantic_testkit.scoring import FakeScorer
 from semantic_trainer import jobs, pipeline
 from semantic_trainer.pipeline import JOURNAL, NEEDS, STAGES, Awaiting, Controller, Operation, output, verify_cadence
@@ -241,7 +241,7 @@ def test_representation_changes_selection_identity_but_not_fitting_while_recipe_
         run(specification(tmp_path, work, cadence=8, **changes), fake)
     merged, adapter, rate = (keys(tmp_path / work / JOURNAL) for work in ('merged', 'adapter', 'rate'))
     assert [stage for stage in STAGES if merged[stage] != adapter[stage]] == ['select', 'lock']
-    assert [stage for stage in STAGES if merged[stage] != rate[stage]] == ['population', 'profile', 'cadence', 'finalize', 'fit', 'select', 'lock']
+    assert [stage for stage in STAGES if merged[stage] != rate[stage]] == ['population', 'baseline', 'profile', 'cadence', 'finalize', 'fit', 'select', 'lock']
 
 
 def test_a_different_request_never_resumes_the_journal(tmp_path):
@@ -261,7 +261,8 @@ def real_task(tmp_path, monkeypatch):
     labels = label_file(tmp_path, n=40)
     with Runtime(FakeScorer()) as runtime:
         definition = action_definition(runtime, tmp_path / 'task')
-    monkeypatch.setattr(pipeline, 'native_judge', lambda path, device: FakeScorer())
+    scorer = native_scoring(monkeypatch)
+    monkeypatch.setattr(pipeline, 'native_judge', lambda path, device: scorer)
     return manifest, definition, labels
 
 
@@ -323,7 +324,8 @@ def frozen_sources(tmp_path, monkeypatch):
         files.write_new(definition, {**spec, 'guidance': {'guidance': {'file': 'policy.txt'}}})
         runtime.load(definition).correct({'message': 'report 999'}, 'action', 'continue', actor=Actor('human'))
     judged = []
-    monkeypatch.setattr(pipeline, 'native_judge', lambda path, device: judged.append(path) or FakeScorer())
+    scorer = native_scoring(monkeypatch)
+    monkeypatch.setattr(pipeline, 'native_judge', lambda path, device: judged.append(path) or scorer)
     return manifest, definition, labels, judged
 
 
@@ -368,7 +370,7 @@ def test_downstream_stages_consume_frozen_bytes_and_resume_without_the_original_
     assert drive(frozen, 'export')['stages']['export']['state'] == 'completed'
     shutil.rmtree(sources)
     after = drive(frozen, 'finalize')
-    assert [after['stages'][name]['state'] for name in STAGES[:STAGES.index('finalize') + 1]] == ['reused'] * 3 + ['completed'] * 4
+    assert [after['stages'][name]['state'] for name in STAGES[:STAGES.index('finalize') + 1]] == ['reused'] * 3 + ['completed'] * 5
     expected = drive(reference, 'finalize')
     (resolved, observations), (wanted, presented), (moved, relabelled) = consumed(after), consumed(expected), consumed(changed)
     assert observations == presented
@@ -376,7 +378,8 @@ def test_downstream_stages_consume_frozen_bytes_and_resume_without_the_original_
     for found, values in ((observations, VALUES), (relabelled, rotated)):
         truth = {**{f'report {i}': values[i % 3] for i in range(40)}, **corrected}
         assert {message: value for message, (value, _, _) in found.items()} == {message: truth[message] for message in found}
-    assert len(observations) > 20 and 'report 998' not in observations and set(relabelled) - set(observations) == {'report 998'}
+    assert observations and 'report 998' not in observations
+    assert all(message.startswith('report ') for message in relabelled)
     assert {guidance['guidance']['text'] for _, guidance, _ in observations.values()} == {GUIDANCE}
     assert (resolved['fit'], resolved['monitor']) == (wanted['fit'], wanted['monitor']) and resolved['fit']['id'] != moved['fit']['id']
     assert [item['projection'] for item in resolved['corrections']] == ['{"message":"report 999"}']
@@ -571,3 +574,26 @@ def test_default_pipeline_finalizes_without_profile_or_a_cadence_decision_prompt
     assert found['recipe']['eval_every_examples'] == found['populations']['fit']['observations']
     assert found['recipe']['fit_probe_observations'] == 0
     assert found['budget']['max_tokens'] is None and found['budget']['max_monitor_tokens'] is None
+
+
+def test_schema_two_request_keeps_its_recorded_stage_sequence(tmp_path):
+    path, fake = specification(tmp_path, cadence=8), Fake()
+    record = files.read_json(path)
+    record.pop('baselines')
+    files.publish(path, {**record, 'schema': 2})
+    result, _ = run(path, fake)
+    assert result['state'] == 'completed' and 'baseline' not in result['stages'] and 'baseline' not in fake.calls
+    fake.calls.clear()
+    assert run(path, fake)[0]['state'] == 'completed' and fake.calls == []
+
+
+def test_failure_after_baseline_returns_completed_diagnostic_paths(tmp_path):
+    path, fake = specification(tmp_path, cadence=8), Fake()
+    def fail(*args):
+        raise ConfigError('fit failed')
+    controller = Controller(path, operations=fake.operations(fit=Operation(fail, lambda *args: None)), emit=lambda **event: None)
+    with pytest.raises(ConfigError, match='fit failed'):
+        controller.run()
+    result = pipeline.failure(controller, 'failed', ConfigError('fit failed'))
+    assert result['baseline'] == result['stages']['baseline']['path']
+    assert result['learning'] is None and result['receipt'] is None and result['stage'] == 'fit'

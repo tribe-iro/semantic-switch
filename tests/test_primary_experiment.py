@@ -113,7 +113,7 @@ def test_primary_script_specializes_through_the_controller_then_compares_before_
     stage, specialize, compare, check = (script.index(marker) for marker in ('stage "$PACK" --under "$WORK/stages"', 'specialize "$TASK"', 'if [[ -n "$REFERENCE" ]]',
                                                                              '--results "$RESULTS" --check "$WORK/checks"'))
     assert stage < specialize < compare < check and 'sha256sum' not in script and 'mv ' not in script and 'partial' not in script.lower()
-    assert '--trainer "$XPU/semantic-trainer"' in script and '--fit-situations 100' in script and 'selection_unit=complete_situation' in script
+    assert '--trainer "$XPU/semantic-trainer"' in script and 'selection_unit=complete_situation' in script
     assert 'step()' not in script and 'DONE' not in script and 'eval(' not in script and 'tail -n' not in script
     assert 'semantic-trainer" check' not in script and '/semantic-trainer check' not in script and 'semantic-trainer" prepare' not in script
     assert '--role model_select' in script[:compare] and '${UNTIL:+--until "$UNTIL"}' in script

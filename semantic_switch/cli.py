@@ -62,10 +62,34 @@ def options(ctx: typer.Context, judge: str = typer.Option(None, help=f"judge: GG
 
 
 @contextmanager
-def session(options=None):
+def session(options=None, *, source=None):
     opts = options or invocation_options()
     settings = driver_settings(opts)
-    with Runtime(judge(opts["judge"] or DEFAULT_JUDGE, **settings) if opts["judge"] or settings else None, own_judges=True) as rt:
+    bindings = None
+    selected = opts.get("judge")
+    if source is not None:
+        from .api import located
+        from .tools.deployment import frozen
+        entry = frozen(located(source))
+        if entry is not None and entry.receipt is None and settings and selected is None:
+            model = entry.data['models'].get('judge', {})
+            filename = model.get('file')
+            if filename != DEFAULT_JUDGE.rsplit(':', 1)[-1]:
+                candidates = [entry.lock.parent / filename, Path(filename)] if filename else []
+                selected = next((str(path) for path in candidates if path.is_file()), None)
+                if selected is None:
+                    raise ConfigError(f'{source}: this ordinary lock pins a model identity but carries no weights; supply --judge MODEL')
+        if entry is not None and entry.receipt is not None:
+            role = entry.receipt.data["scope"]["binding"]
+            pinned = entry.receipt.model()
+            requested = judge(selected, **settings) if selected else entry.receipt.model(**settings)
+            if requested != pinned:
+                raise ConfigError(f"{source}: CLI model/settings conflict with this fitted lock's pinned binding {role!r}; "
+                                  "use its recorded model and execution settings")
+            bindings = {role: requested}
+            selected, settings = None, {}
+    with Runtime(judge(selected or DEFAULT_JUDGE, **settings) if selected or settings else None,
+                 bindings=bindings, own_judges=True) as rt:
         yield rt
 
 
@@ -269,7 +293,7 @@ def ask(questions: Path, each: bool = False, guidance: Path = typer.Option(None,
 def run(switch: str, each: bool = False,
         batch: int = typer.Option(0, help="with --each: read ahead at most N lines (default: twice the participating judges' batch size); results stay in input order"),
         raw: bool = typer.Option(False, help="with --verbose: raw scores in the explanation")):
-    with session() as rt:
+    with session(source=switch) as rt:
         sw = rt.load(switch)
         if each:
             run_stream(sw.run, batch if batch > 0 else 2 * max((rt.batch_inputs(name) for name in sw.plan.bindings), default=1), raw)
@@ -285,7 +309,7 @@ def correct(switch: str, fact: str = typer.Option(None), value: str = typer.Opti
             actor: str = typer.Option(..., help="who writes the label: human, or agent with --model and --session"),
             model: str = typer.Option(None, help="agent model identity (agent actors)"), session_id: str = typer.Option(None, "--session", help="agent session identity (agent actors)")):
     by = {"author": author, "actor": Actor(actor, model, session_id)}
-    with session() as rt:
+    with session(source=switch) as rt:
         sw = rt.load(switch)
         data = stdin_state()
         emit(sw.correct(data, rule=rule, **by) if rule else sw.correct(data, fact=fact, value=value, **by))
@@ -298,7 +322,7 @@ def label(switch: str, inputs: str | None = typer.Argument(None), to: str = type
           model: str = typer.Option(None, help="agent model identity (agent actors)"), session_id: str = typer.Option(None, "--session", help="agent session identity (agent actors)")):
     from .tools.label import validate
     validate(inputs, stale)
-    with session() as rt:
+    with session(source=switch) as rt:
         n = tools.label(rt, switch, inputs, to, stale, ask=prompt, show=lambda s: typer.echo(s, err=True), reviewer=reviewer,
                         actor=Actor(actor, model, session_id))
         typer.echo(f"labelled {n} inputs")
@@ -312,7 +336,7 @@ def prune(directory: Path):
 
 @app.command("analyze-head")
 def analyze_head(switch: str, fact: str, head: str = typer.Option(..., help="supplied head bundle")):
-    with session() as rt:
+    with session(source=switch) as rt:
         report = tools.analyze_head(rt, switch, fact, head_bundle=head)
     if invocation_options()["json"]:
         emit(report)
@@ -347,10 +371,13 @@ def specialize(switch: str = typer.Argument(None, help="switch definition; omit 
                profile_cadence: list[int] = typer.Option(None, "--profile-cadence", help="eval_every_examples to project, repeatable"),
                cadence: int = typer.Option(None, help="monitoring cadence (eval_every_examples) chosen from the measured profile"),
                representation: str = typer.Option("merged", help="deployment representation: merged or runtime-adapter"),
+               baseline: list[str] = typer.Option(None, "--baseline", help="optional lexical control; fit-majority and native base run by default"),
                until: str = typer.Option(None, help="stop after this pipeline stage"),
                attempt: int = typer.Option(None, help="fit attempt number; a new number fits a new run")):
     from .tools.specialize import request, specialize as run
     specification = None
+    if switch is None and baseline:
+        raise ConfigError('baseline controls are frozen in the request; name a SWITCH and new --to when choosing controls')
     if switch is not None:
         if examples is None:
             raise ConfigError("specialize needs --examples LABELS")
@@ -358,7 +385,7 @@ def specialize(switch: str = typer.Argument(None, help="switch definition; omit 
                                 model=None if assets else {"repo": model, "revision": revision}, assets=assets, quant=quant, recipe=recipe or (),
                                 budget=budget or (), fit_situations=fit_situations, acceptance_fit=acceptance_fit, task_family=task_family, scope=scope,
                                 profile=profile, measure={"steps": profile_steps or 3, "warmup": profile_warmup, "cadences": sorted(profile_cadence or ())} if profile_steps is not None or profile_cadence else None,
-                                representation=representation)
+                                representation=representation, baselines=baseline or ())
     result = run(trainer, to, specification, until=until, attempt=attempt, cadence=cadence)
     emit(result)
     raise typer.Exit(SPECIALIZED.get(result["state"], result["exit"]))
@@ -457,7 +484,7 @@ def rollback(pointer: Path, reason: str = typer.Option(..., help="recorded in th
 @app.command()
 def test(switch: str, data: str = typer.Option(None, help="alternate label file; its manifest is published beside the switch dataset and its "
                                                           "consultation is recorded in the switch audit ledger")):
-    with session() as rt:
+    with session(source=switch) as rt:
         report = tools.run_test(rt, switch, data)
     if invocation_options()["json"]:
         emit(report)
@@ -467,14 +494,14 @@ def test(switch: str, data: str = typer.Option(None, help="alternate label file;
 
 @app.command()
 def diff(switch: str):
-    with session() as rt:
+    with session(source=switch) as rt:
         emit(tools.diff(rt, switch))
 
 
 @app.command()
 def lock(switch: str, dry_run: bool = typer.Option(False, help="evaluate without publishing the lock; dataset assignments and audit exposure are recorded"),
          head: list[str] = typer.Option(None, help="FACT=BUNDLE, repeat for distinct facts")):
-    with session() as rt:
+    with session(source=switch) as rt:
         bindings = {}
         for entry in head or ():
             fact, separator, bundle = entry.partition("=")
@@ -491,7 +518,7 @@ def export(switch: str, to: str = typer.Option(None, "--to", help="output JSONL 
            task_family: str = typer.Option(None, help="owner-defined policy/task family for native training"),
            scope: list[str] = typer.Option(None, "--scope", help="export only these targets (FACT or FACT/MEMBER, repeatable); family assignments still use the complete dataset"),
            labels: str = typer.Option(None, help="reviewed or synthetic label file used instead of the switch test labels; never copied")):
-    with session() as rt:
+    with session(source=switch) as rt:
         emit(tools.export(rt, switch, to, None if split == "all" else split, native=native, task_family=task_family, scope=scope or None, labels=labels))
 
 

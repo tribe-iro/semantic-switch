@@ -43,7 +43,8 @@ def test_public_pack_round_trip_through_trainer_and_snapshot_evaluation(tmp_path
     from semantic_trainer import jobs, lora, select
     published = pack(tmp_path)
     counts = published['assignment']['counts']
-    assert counts['fit']['situations'] == QUOTAS['fit'] and counts['model_select']['situations'] == QUOTAS['model_select'] and counts['check']['situations'] >= QUOTAS['check']
+    assert published['assignment']['allocation']['targets']['fit'] == QUOTAS['fit']
+    assert all(counts[role]['situations'] > 0 for role in QUOTAS)
     assert all(counts[role]['frames'] > counts[role]['situations'] for role in ('fit', 'model_select'))
     staged = evidence.stage(tmp_path / 'pack', tmp_path / 'work')
     with pytest.raises(ConfigError, match='already exists'):
@@ -58,16 +59,16 @@ def test_public_pack_round_trip_through_trainer_and_snapshot_evaluation(tmp_path
     manifest, result = exported(tmp_path, monkeypatch, staged)
     export_manifest, rows = read_export(result['path'], native=True)
     assert len({row['group'] for row in rows}) == counts['fit']['families'] + counts['model_select']['families']
-    assert result['situations'] == result['complete_situations'] == QUOTAS['fit'] + QUOTAS['model_select'] and len(rows) > result['situations']
+    assert result['situations'] == result['complete_situations'] == counts['fit']['situations'] + counts['model_select']['situations'] and len(rows) > result['situations']
     manifest, loaded, _ = fake_fitting(monkeypatch, manifest, rows)
     recipe = {'selection_unit': 'complete_situation', 'epochs': 1, 'min_epochs': 1, 'batch_size': 8, 'eval_every_examples': 8}
     with pytest.raises(ConfigError, match='exactly 7 situations'):
         jobs.prepare(staged['definition'], [result['path']], tmp_path / 'infeasible', assets_manifest=manifest, fit_situations=7, recipe=recipe)
-    prepared = jobs.prepare(staged['definition'], [result['path']], tmp_path / 'job', assets_manifest=manifest, fit_situations=QUOTAS['fit'],
+    prepared = jobs.prepare(staged['definition'], [result['path']], tmp_path / 'job', assets_manifest=manifest, fit_situations=None,
                             native=NATIVE, recipe=recipe)
     resolved, observations = jobs.resolve(prepared['job'])
     populations = resolved['populations']
-    assert populations['fit']['situations'] == QUOTAS['fit'] and populations['model_select']['complete_situations'] == QUOTAS['model_select']
+    assert populations['fit']['situations'] == counts['fit']['situations'] and populations['model_select']['complete_situations'] == counts['model_select']['situations']
     assert populations['fit']['observations'] > QUOTAS['fit'] and populations['acceptance_fit']['observations'] == 0
     by_input = {digest(situation['input']): situation['role'] for situation in evidence.read(tmp_path / 'pack')['situations']}
     assert all(by_input[digest(row['bound_input'])] == row['role'] for row in observations)
@@ -178,12 +179,12 @@ def test_bounded_printer_transfer_pack_prepares_held_out_documents(tmp_path, mon
     rows = {key: read_export(path, native=True)[1] for key, path in exports.items()}
     assert all('Convention' not in row['text'] and 'ZT-COMMAND' not in row['text'] for group in rows.values() for row in group)
     assert not {row['group'] for row in rows['c']} & {row['group'] for key in 'ab' for row in rows[key]}
-    prepared = jobs.prepare(staged['definition'], list(exports.values()), tmp_path / 'job', assets_manifest=manifest, objective='instruction_transfer', recipe={'eval_every_examples': 8})
+    prepared = jobs.prepare(staged['definition'], list(exports.values()), tmp_path / 'job', assets_manifest=manifest, objective='instruction_transfer', budget={'max_sequence_tokens': 2048}, recipe={'eval_every_examples': 8})
     resolved, observations = jobs.resolve(prepared['job'])
     assert {(source['task_family'], role) for source in resolved['sources'] for role in source['roles']} == {('zt411:a', 'fit'), ('zt411:b', 'fit'), ('zt411:c', 'model_select')}
     assert list(prepared['support']['absent_fit_support'].values()) == [['unverified_step_c']] and resolved['policy_families'] == ['zt411:a', 'zt411:b']
     assert resolved['populations']['acceptance_fit']['observations'] == 0
-    diagnostic = jobs.prepare(staged['definition'], list(exports.values()), tmp_path / 'specialization', assets_manifest=manifest, recipe={'eval_every_examples': 8})
+    diagnostic = jobs.prepare(staged['definition'], list(exports.values()), tmp_path / 'specialization', assets_manifest=manifest, budget={'max_sequence_tokens': 2048}, recipe={'eval_every_examples': 8})
     assert list(diagnostic['support']['absent_fit_support'].values()) == [['unverified_step_c']]
     spec['guidance']['zt411_c']['text'] += ' Revised.'
     files.publish(staged['definition'], spec)

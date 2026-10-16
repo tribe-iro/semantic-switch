@@ -527,15 +527,101 @@ def compared_row(plan, item, family, result, review) -> dict:
             outcome = 'unexamined' if found is None else found.status
             prediction = None if found is None else found.prediction
             targets[address] = {'key': digest([projection, list(fact.path)]), 'family': family, 'gold': label, **scored_answer(prediction, label, outcome, fact.keys),
-                                'outcome': outcome, 'prediction': predicted(prediction), 'options': list(fact.keys),
-                                'scores': {} if found is None else dict(found.scores), 'source': None if found is None else found.source,
+                                'outcome': outcome, 'prediction': prediction if isinstance(prediction, dict) else predicted(prediction),
+                                'criterion': fact.meaning_rev, 'scope': list(fact.path), 'options': list(fact.keys),
+                                'scores': {} if found is None else dict(found.scores), 'mass': None if found is None else found.mass,
+                                'failure': None if found is None else getattr(found, 'error', None),
+                                'source': None if found is None else found.source,
                                 'reference': references.get(address),
                                 'comparison': comparison_identity(task=fact.meaning_rev, projection=projection, gold=label, answers=list(fact.keys),
                                                                   scope=list(fact.path), condition=None)}
-    return {'input': projection, 'family': family, 'status': result.status, 'elapsed_ms': result.cost.get('elapsed_ms'),
+    for address, reference in item.get('decisions', {}).items():
+        parent_name, separator, member = address.partition('/')
+        if not separator or parent_name not in plan.fact_index:
+            continue
+        fact = plan.fact(parent_name)
+        if member not in {card.id for card in fact.cards}:
+            continue
+        parent = result.facts.get(parent_name)
+        state = parent.states.get(member) if parent is not None else None
+        value = {'applicable': True, 'rejected': False, 'ineligible': False, 'superseded': False}.get(state)
+        gold = reference['value']
+        label = None if gold is None else 'true' if gold else 'false'
+        answer = None if value is None else 'true' if value else 'false'
+        targets[address] = {'key': digest([projection, address]), 'family': family, 'gold': label, 'answer': answer,
+                            'correct': None if label is None or answer is None else label == answer,
+                            'accepted': value is not None, 'outcome': 'ok' if value is not None else result.status,
+                            'prediction': None if value is None else {'kind': 'value', 'key': answer, 'value': value, 'score': None},
+                            'options': ['true', 'false'], 'scores': {}, 'mass': None, 'source': 'rule',
+                            'criterion': fact.meaning_rev, 'scope': [parent_name, member], 'reference': reference,
+                            'comparison': comparison_identity(task=plan.switch_rev, projection=projection, gold=label, answers=['true', 'false'],
+                                                              scope=[parent_name, member], condition=None)}
+    return {'input': projection, 'family': family, 'tags': list(item.get('tags', ())), 'pairs': list(item.get('pairs', ())),
+            'role': item.get('role'), 'prohibited': list(item.get('prohibited', ())), 'status': result.status, 'elapsed_ms': result.cost.get('elapsed_ms'),
             'amortized_ms': (result.cost.get('operation') or {}).get('amortized_ms'), 'requests': len(requests),
             'attempts': sum(request.attempts or 0 for request in requests), 'logical_tokens': result.cost.get('logical_tokens'),
             'provider_cost': sum(entry.get('cost') or 0 for entry in usage) if usage else None, 'usage_known': len(usage), 'targets': targets}
+
+
+def development_summary(plan, rows):
+    from ..metrics import action_sets, exact_sets, prediction_report
+    targets = [{**target, 'target': address, 'tags': row.get('tags', ()), 'pairs': row.get('pairs', ())}
+               for row in rows for address, target in row['targets'].items()]
+    sets = {}
+    for fact in plan.facts:
+        if not fact.cards:
+            continue
+        scope = [card.id for card in fact.cards]
+        group = []
+        for row in rows:
+            known = {key: row['targets'].get(f'{fact.name}/{key}') for key in scope}
+            if not any(known.values()):
+                continue
+            unresolved = [key for key, target in known.items() if target is None or not target['accepted']]
+            reference_unresolved = [key for key, target in known.items() if target is None or target['gold'] not in ('true', 'false')]
+            group.append({'scope': scope, 'gold': [key for key, target in known.items() if target is not None and target['gold'] == 'true'],
+                          'reference_unresolved': reference_unresolved, 'complete_gold': not reference_unresolved,
+                          'selected': [key for key, target in known.items() if target is not None and target['accepted'] and target['answer'] == 'true'],
+                          'unresolved': unresolved, 'prediction_complete': not unresolved, 'outcome': row['status'],
+                          'prohibited': [key for key in scope if key in row.get('prohibited', ()) or f'{fact.name}/{key}' in row.get('prohibited', ())]})
+        if group:
+            sets[fact.name] = {'actions': action_sets(group), 'exact': exact_sets(group)}
+    return {'targets': prediction_report(targets),
+            'operational_actions': {'state': 'assessed', 'sets': sets} if sets else {'state': 'unassessed', 'reason': 'no_composed_membership_reference'}}
+
+
+def evaluate_development(lock, labels, evidence, to, *, role='model_select', bindings=None, references=None):
+    from ..api import Runtime
+    from ..journal import Journal
+    if role not in ('fit', 'model_select', 'acceptance_fit'):
+        raise ConfigError('development evaluation uses fit, model_select or acceptance_fit; use compare/check for held-out checks')
+    deployment = entry(lock)
+    context = EvidenceContext.from_manifest(evidence)
+    labels = context.bind(labels)
+    items = [(item, context.member(deployment.plan, item['input'])) for _, item in read_envelopes(deployment.plan, labels, labelled=True)]
+    items = [(item, family) for item, family in items if context.role(family) == role]
+    if not items:
+        raise ConfigError(f'{labels}: no labeled {role} families')
+    reference_rows = {} if references is None else {row['public_sha256']: row for row in files.iter_records(references)}
+    if reference_rows:
+        items = [({**item, **{key: reference_rows.get(digest(item['input']), {}).get(key, {} if key == 'decisions' else [])
+                             for key in ('decisions', 'prohibited')}}, family) for item, family in items]
+    configuration = {'entry': deployment.identity(), 'dataset': context.dataset_id, 'role': role, 'metrics': METRICS,
+                     'references': files.sha256_file(references) if references else None}
+    to = Path(to)
+    with Journal(to / 'rows.journal.jsonl', configuration) as journal:
+        units = {input_key(deployment.plan, item['input']): (item, family) for item, family in items}
+        pending = journal.pending(units)
+        if pending:
+            with Runtime(bindings=bindings) as runtime:
+                switch = runtime.load(deployment.path)
+                for key, result in scored(switch, [(key, units[key][0]) for key in pending]):
+                    journal.commit([(key, compared_row(deployment.plan, *units[key], result, context.review))])
+        rows = [journal.payload(key) for key in units]
+        report = {'configuration': configuration, 'population': role, 'independent': False,
+                  'latency_ms': _latency(rows), 'cost': call_cost(rows), **development_summary(deployment.plan, rows)}
+        journal.publish(to / 'evaluation.json', report, {'rows.jsonl': [files.jsonl([row]) for row in rows]})
+    return report
 
 
 def rescored(row) -> dict:
@@ -714,7 +800,7 @@ def _presented(item, mapping) -> dict:
 
 
 def scored(switch, todo) -> list:
-    rows = switch.score([item['input'] for _, item in todo], demand=[(sorted(item['facts']), True) for _, item in todo])
+    rows = switch.score([item['input'] for _, item in todo], demand=[(sorted(set(item['facts']) | {address.split('/')[0] for address in item.get('decisions', {})}), True) for _, item in todo])
     return [(key, row.decision) for (key, _), row in zip(todo, rows)]
 
 

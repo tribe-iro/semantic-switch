@@ -9,11 +9,11 @@ import time
 
 from semantic_switch import Check, ConfigError, Model, Pick, files, tools
 from semantic_switch.compiler import compile_spec
-from semantic_switch.evidence import Actor, LabelSource, Verification, each_target, label_record, reviewed_content, situation_record
+from semantic_switch.evidence import Actor, Frame, LabelSource, Verification, each_target, label_record, reviewed_content, situation_record
 from semantic_switch.tools.data import Labels, fold_of
 from semantic_switch.artifacts import artifact_digest
 from bench.outcomes import Progress
-from semantic_switch.training import Engine, fitted
+from semantic_switch.training import Engine, fitted, native_settings
 from bench.outcomes import classification_metrics, destination, failure, measure, report, runtime
 
 COHORT = Path(__file__).parents[1] / 'tests/fixtures/policy-adaptation.json'
@@ -26,8 +26,8 @@ def pair_metrics(rows):
             pairs[identifier].append(row)
     out = []
     for name, values in pairs.items():
-        if len(values) != 2:
-            raise ConfigError(f'{name}: policy pairs require exactly two observations')
+        if len(values) < 2:
+            continue
         expected = [row['expected'].get('raw_value', row['expected']['value']) for row in values]
         predicted = [row.get('raw_value') for row in values]
         out.append({'pair': name, 'relationship': 'invariance' if expected[0] == expected[1] else 'change',
@@ -138,7 +138,8 @@ def suites(runtime, directory, *, assets, quant='Q4_0', device='cpu', epochs=2):
     fitting, examples = publish('fit', rows)
     roles = family_roles(examples)
     family = {(e.fact, e.data['message']): e.group for e in examples}
-    audit, held = publish('audit', [row for row in rows if roles[family[next(iter(row['facts'])), row['input']['message']]] in ('acceptance_fit', 'check')])
+    audit, held = publish('audit', [{**row, 'role': roles[family[next(iter(row['facts'])), row['input']['message']]]}
+                                    for row in rows if roles[family[next(iter(row['facts'])), row['input']['message']]] in ('acceptance_fit', 'check')])
     if {(e.group, e.split) for e in held} != {(e.group, e.split) for e in examples if roles[e.group] in ('acceptance_fit', 'check')}:
         raise ConfigError('audit definition changed family partitions')
     exported = tools.export(runtime, fitting, native=True, task_family='regression:suites')
@@ -194,7 +195,7 @@ def criterion(data, policy) -> str:
 
 def authored(plan, row, sources):
     return label_record(plan, row['input'], row['facts'], sources=sources, groups=[row['group']], pairs=row.get('pairs', []),
-                        selections=[{'selected_by': 'manual'}], created='bench.policy_adaptation')
+                        role=row.get('role'), tags=row.get('tags', ()), selections=[{'selected_by': 'manual'}])
 
 
 def cohort_spec(data, rows):
@@ -216,10 +217,19 @@ def cohort_rows(data):
 
 def publish_definition(path, spec, rows, cohort, data):
     path.parent.mkdir(parents=True, exist_ok=True)
-    files.publish(path, spec)
+    if path.exists() and files.read_yaml(path) != spec:
+        raise ConfigError(f'{path}: materialized task differs; preserve it and materialize into another directory')
+    if not path.exists():
+        files.write_new(path, spec)
     plan = compile_spec(spec, path.name, path.parent)
-    files.publish(path.with_suffix('.test.jsonl'), ''.join(json.dumps(authored(plan, row['record'], fixture_sources(plan, row['record'], cohort, row['case_id'], criterion(data, row['policy']))),
-                                                                  ensure_ascii=False) + '\n' for row in rows))
+    records = [authored(plan, row['record'], fixture_sources(plan, row['record'], cohort, row['case_id'], criterion(data, row['policy']))) for row in rows]
+    labels = path.with_suffix('.test.jsonl')
+    if labels.exists():
+        normalize = lambda record: {key: value for key, value in record.items() if key != 'created'}
+        if list(map(normalize, files.read_jsonl(labels))) != list(map(normalize, records)):
+            raise ConfigError(f'{labels}: materialized references differ; preserve them and materialize into another directory')
+    else:
+        files.write_new(labels, files.jsonl(records))
 
 
 def materialize_cohort(runtime, directory, cohort=None):
@@ -260,7 +270,7 @@ def cohort_pilot(runtime, directory, cohort_directory, *, assets, quant='Q4_0', 
                                 objective=assignment['objective'], epochs=epochs, max_tokens=300000, modules=modules)
             for candidate, modules in CANDIDATES.items()}
     definitions = []
-    held_out = [row for row in rows if role[row['case_id']] in ('acceptance_fit', 'check')]
+    held_out = [{**row, 'record': {**row['record'], 'role': role[row['case_id']]}} for row in rows if role[row['case_id']] in ('acceptance_fit', 'check')]
     for fact in sorted({row['fact'] for row in held_out}):
         held = [row for row in held_out if row['fact'] == fact]
         path = directory / 'audit' / f'{fact}.yaml'
@@ -394,6 +404,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('definitions', help='definitions JSON to compare, or the pilot directory with --suites')
     parser.add_argument('--base', required=True)
+    parser.add_argument('--behavioral', type=Path, help='published behavioral case source; create DEFINITIONS as the study work directory')
+    parser.add_argument('--native-device', default='cpu', choices=('cpu', 'gpu', 'auto'))
     parser.add_argument('--suites', action='store_true', help='materialize the regression-suite LoRA pilot (fit/select/accept/check families, native export, prepared job)')
     parser.add_argument('--assets', help='trainer asset manifest digest; --base must be its pipeline-built quantized base')
     parser.add_argument('--quant', default='Q4_0')
@@ -403,6 +415,10 @@ def main():
     parser.add_argument('--precise')
     parser.add_argument('--output', type=Path, help='comparison report path (required unless --suites/--cohort); refused when it exists')
     args = parser.parse_args()
+    if args.behavioral:
+        result = behavioral_study(args.behavioral, args.definitions, model=Model(args.base, device=args.native_device, threads=4), assets=args.assets, quant=args.quant, device=args.device)
+        print(json.dumps(result))
+        return
     if args.suites or args.cohort:
         settings = {'assets': args.assets, 'quant': args.quant, 'device': args.device}
         with runtime(Model(args.base)) as bound:
@@ -419,6 +435,114 @@ def main():
             {name: {'rule': report['rule'], 'selected': report['selected'],
                     'candidates': [{key: candidate[key] for key in ('name', 'raw_correct', 'class_regressions', 'p50_ms')} for candidate in report['candidates']]}
              for name, receipt in receipts.items() for report in (files.read_json(Path(receipt))['selection'],)} or None)
+
+
+def behavioral_study(source, directory, *, model, assets, quant='Q4_0', device='xpu:0', epochs=4, max_seconds=3600):
+    from semantic_switch.training import allocate
+    from semantic_trainer.controls import baseline
+    from semantic_trainer.jobs import prepare, resolve
+    from semantic_trainer.assets import load
+    located = load(assets)
+    if quant not in located['gguf'] or files.sha256_file(model.path()) != located['gguf'][quant]['sha256']:
+        raise ConfigError('the baseline must use the job manifest’s exact quantized base')
+    source, directory = Path(source).resolve(), Path(directory).resolve()
+    data = files.read_json(source)
+    configuration = {'source_sha256': files.sha256_file(source), 'assets': assets, 'quant': quant, 'device': device,
+                     'epochs': epochs, 'max_seconds': max_seconds, 'native': {'source': model.source, **native_settings(model)}}
+    previous = files.read_json(directory / 'study.json')
+    if previous is not None:
+        if previous.get('configuration') != configuration:
+            raise ConfigError(f'{directory}: study inputs changed; preserve this publication and use a new directory')
+        return previous
+    definition = directory / 'decisions.yaml'
+    spec = {'name': 'behavioral_decisions', 'fields': {'message': {'type': 'text', 'required': True}}, 'reads': ['message'],
+            'facts': {policy['id']: {'check': policy['question'], 'excludes': policy.get('excludes', []), 'guidance': [policy['id']]}
+                      for policy in data['policies']},
+            'guidance': {policy['id']: {'text': policy['guidance']} for policy in data['policies']}}
+    population, pinned = {}, {}
+    for policy in data['policies']:
+        for case in policy['cases']:
+            family = case['family']
+            found = population.setdefault(family, {'size': 0, 'cells': set()})
+            found['size'] += 1
+            found['cells'].update(json.dumps([policy['id'], case['gold'], tag]) for tag in ('', *case['tags']))
+            if case.get('role'):
+                pinned[family] = case['role']
+    total = sum(row['size'] for row in population.values())
+    allocation = allocate(population, {'fit': total * .6, 'model_select': total * .2, 'acceptance_fit': total * .1, 'check': total * .1}, pinned=pinned)
+    files.publish(definition, spec)
+    plan = compile_spec(spec, definition.name, definition.parent)
+    declared = LabelSource('authored', str(source), actor=Actor.parse(data['author']))
+    envelopes = []
+    for policy in data['policies']:
+        for case in policy['cases']:
+            author_ = SUITES if case['source'] == 'bench.quality' else declared
+            envelopes.append(label_record(plan, {'message': case['text']}, {policy['id']: case['gold']},
+                sources={policy['id']: case.get('label_sources', [author_.record()])}, groups=[case['family'], *case.get('ancestry', ())], pairs=case['pairs'], tags=case['tags'],
+                role=allocation['families'][case['family']], selections=[{'selected_by': 'manual'}]))
+    files.publish(definition.with_suffix('.test.jsonl'), files.jsonl(envelopes))
+    with Engine(model, own_judges=True) as runtime_:
+        switch = runtime_.load(definition, draft=True)
+        assigned = Labels(switch)
+        exported = tools.export(runtime_, definition, native=True, task_family='bench:behavioral-decisions')
+    job_directory = directory / 'nominal'
+    if not (job_directory / 'job.yaml').exists():
+        fit_count = sum(example.split == 'tune' and example.fold < 3 for examples in assigned.by_fact.values() for example in examples)
+        prepare(definition, [exported['path']], job_directory, assets_manifest=assets, quant=quant, device=device,
+                native={'device': model.device, 'threads': model.threads}, acceptance_fit=True,
+                recipe={'epochs': epochs, 'min_epochs': min(2, epochs), 'eval_every_examples': fit_count,
+                        'fit_probe_observations': 0, 'seed': 0}, budget={'max_seconds': max_seconds, 'max_sequence_tokens': 1024})
+    baseline(*resolve(job_directory / 'job.yaml'), directory / 'controls', lexical=True)
+    baseline_path = directory / 'controls' / 'baseline.json'
+    publication = {'configuration': configuration, 'source_sha256': files.sha256_file(source), 'definition': str(definition), 'labels': str(definition.with_suffix('.test.jsonl')),
+                   'evidence': str(assigned.path), 'export': exported['path'], 'assignment': allocation,
+                   'baseline': str(baseline_path), 'job': str(job_directory / 'job.yaml'), 'independent': False,
+                   'review': data['confirmation']}
+    files.publish(directory / 'study.json', publication)
+    return publication
+
+
+def behavioral_evaluate(publication, deployment, output, *, arm='student', include_fit=False):
+    from semantic_switch.tools.deployment import compared_row
+    from semantic_switch.metrics import prediction_report
+    from semantic_switch.observations import Observation
+    from semantic_switch.tools.policy import development_curve
+    study = files.read_json(publication)
+    with Engine(own_judges=True) as runtime_:
+        switch = runtime_.load(deployment)
+        assigned = Labels(runtime_.load(study['definition'], draft=True))
+        rows = []
+        for item in assigned.items:
+            family = assigned.group(('key', Frame(switch.plan, item['input']).family))
+            assignment = assigned.manifest['families'][family]
+            role = 'check' if assignment['split'] == 'check' else ('fit', 'fit', 'fit', 'model_select', 'acceptance_fit')[assignment['fold']]
+            if role == 'fit' and not include_fit:
+                continue
+            fact_name = next(iter(item['facts']))
+            fact = switch.plan.fact(fact_name)
+            if fact.meaning_rev != assigned.sw.plan.fact(fact_name).meaning_rev:
+                raise ConfigError(f'{fact_name}: deployment criterion differs from the study')
+            scored = switch.score([item['input']], [fact_name], decide=True)[0]
+            target = compared_row(switch.plan, item, family, scored.decision, {})['targets'][fact_name]
+            rows.append({**target, 'id': artifact_digest([family, fact_name, item['input']]), 'arm': arm,
+                         'target': fact_name, 'criterion': fact.meaning_rev, 'role': role,
+                         'tags': item.get('tags', []), 'pairs': item.get('pairs', [])})
+        curves = {}
+        for fact in switch.plan.visible:
+            selected = [row for row in rows if row['target'] == fact.name and row['role'] == 'acceptance_fit']
+            def curve(found):
+                observations = [Observation(row['id'], None, fact.keys.index(row['gold']),
+                    [row['scores'][key] for key in fact.keys] if all(key in row['scores'] for key in fact.keys) else None,
+                    row['mass'], group=row['family']) for row in found]
+                return development_curve(fact, observations)
+            curves[fact.name] = {'all': curve(selected), 'behaviors': {tag: curve([row for row in selected if tag in row['tags']])
+                for tag in sorted({tag for row in selected for tag in row['tags']})}}
+        result = {'arm': arm, 'population': 'disclosed synthetic development; not independent confirmation',
+                  'deployment': str(deployment), 'independent': False, 'execution': runtime_.info(),
+                  'roles': {role: prediction_report([row for row in rows if row['role'] == role]) for role in (('fit', 'model_select', 'acceptance_fit', 'check') if include_fit else ('model_select', 'acceptance_fit', 'check'))},
+                  'acceptance_fit_curves': curves}
+        files.publish(output, result, {'rows.jsonl': [files.jsonl(rows)]})
+    return result
 
 
 if __name__ == '__main__':
